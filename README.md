@@ -218,7 +218,7 @@ certezy-frontend/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/hanu-art/certezy_frontend.git
+git clone https://github.com/saketdix-app/certezy_frontend.git
 
 
 # 2. Install dependencies
@@ -699,7 +699,7 @@ VITE_APP_URL=https://your-domain.com
 ### Development Workflow
 ```bash
 # 1. Fork and clone
-git clone https://github.com/your-username/certezy_frontend.git
+git clone https://github.com/saketdix-app/certezy_frontend.git
 
 # 2. Create feature branch
 git checkout -b feature/your-feature-name
