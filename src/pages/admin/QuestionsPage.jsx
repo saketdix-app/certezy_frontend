@@ -23,21 +23,21 @@ import { cn } from "@/lib/utils";
 
 // ─── Inline services ───────────────────────────────────────────────────────────
 const testService = {
-    getById: (id) => api.get(`/v1/tests/${id}`),
-    getFull: (id) => api.get(`/v1/tests/${id}/full`),
+    getById: (id) => api.get(`/tests/${id}`),
+    getFull: (id) => api.get(`/tests/${id}/full`),
 };
 
 const questionService = {
-    getByTestId: (testId) => api.get(`/v1/questions/test/${testId}`),
-    create: (data) => api.post("/v1/questions/create", data),
-    update: (id, d) => api.put(`/v1/questions/update/${id}`, d),
-    delete: (id) => api.delete(`/v1/questions/delete/${id}`),
+    getByTestId: (testId) => api.get(`/questions/test/${testId}`),
+    create: (data) => api.post("/questions/create", data),
+    update: (id, d) => api.put(`/questions/update/${id}`, d),
+    delete: (id) => api.delete(`/questions/delete/${id}`),
 };
 
 const optionService = {
-    bulkCreate: (opts) => api.post("/v1/options/bulk/create", opts),
-    update: (id, d) => api.put(`/v1/options/update/${id}`, d),
-    delete: (id) => api.delete(`/v1/options/delete/${id}`),
+    bulkCreate: (opts) => api.post("/options/bulk/create", opts),
+    update: (id, d) => api.put(`/options/update/${id}`, d),
+    delete: (id) => api.delete(`/options/delete/${id}`),
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────

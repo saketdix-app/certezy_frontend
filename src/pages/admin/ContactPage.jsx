@@ -36,13 +36,13 @@ const contactService = {
         if (params.page) queryParams.append("page", params.page);
         if (params.limit) queryParams.append("limit", params.limit);
 
-        const url = `/v1/contact${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
+        const url = `/contact${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
         return api.get(url);
     },
 
-    getMessageById: (id) => api.get(`/v1/contact/${id}`),
+    getMessageById: (id) => api.get(`/contact/${id}`),
 
-    updateStatus: (id, status) => api.put(`/v1/contact/${id}/status`, { status }),
+    updateStatus: (id, status) => api.put(`/contact/${id}/status`, { status }),
 };
 
 import api from "@/services/api";

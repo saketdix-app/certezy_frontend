@@ -23,10 +23,10 @@ import api from "@/services/api";
 
 // ─── Inline test service ───────────────────────────────────────────────────────
 const testService = {
-    getByCourseId: (courseId) => api.get(`/v1/tests/course/${courseId}`),
-    create: (data) => api.post("/v1/tests/create", data),
-    update: (id, data) => api.put(`/v1/tests/update/${id}`, data),
-    delete: (id) => api.delete(`/v1/tests/delete/${id}`),
+    getByCourseId: (courseId) => api.get(`/tests/course/${courseId}`),
+    create: (data) => api.post("/tests/create", data),
+    update: (id, data) => api.put(`/tests/update/${id}`, data),
+    delete: (id) => api.delete(`/tests/delete/${id}`),
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
