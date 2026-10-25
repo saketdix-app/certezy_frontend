@@ -23,7 +23,7 @@ import enrollmentService from "@/services/enrollmentService";
 import testService from "@/services/testService";
 import { cn } from "@/lib/utils";
 import { EnhancedTextLesson } from "@/components/player/EnhancedTextLesson";
-import BrandName from "@/components/shared/BrandName";
+import Logo from "@/components/shared/Logo";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PROGRESS_SYNC_INTERVAL = 15; // seconds — har 15s mein progress save
@@ -515,27 +515,7 @@ function TopBar({ navigate, progressPct, completedLessons, totalLessons, sidebar
 
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 no-underline shrink-0">
-                <div className="w-7 h-7 rounded-lg bg-[#3282B8] flex items-center justify-center">
-                    <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                    </svg>
-                </div>
-                <span
-                    className="hidden sm:block"
-                    style={{ fontSize: "14px", fontWeight: 800, color: "#fff" }}
-                >
-                    <BrandName accentColor="#3282B8" />
-                </span>
+                <Logo variant="light" height={26} />
             </Link>
 
             {/* Progress bar — center */}

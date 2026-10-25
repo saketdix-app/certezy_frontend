@@ -18,7 +18,7 @@ import { selectUser } from "@/features/auth/authSlice";
 import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import ProfilePage from "@/pages/student/ProfilePage";
-import BrandName from "@/components/shared/BrandName";
+import Logo from "@/components/shared/Logo";
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/student/dashboard" },
@@ -72,31 +72,7 @@ export default function StudentLayout() {
                         className="flex items-center gap-2 no-underline"
                         onClick={() => setSidebarOpen(false)}
                     >
-                        <div className="w-[30px] h-[30px] rounded-lg bg-[#3282B8] flex items-center justify-center shadow-sm shrink-0">
-                            <svg
-                                width="15"
-                                height="15"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="white"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                                <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                            </svg>
-                        </div>
-                        <span
-                            style={{
-                                fontSize: "16px",
-                                fontWeight: 800,
-                                color: "#0F172A",
-                                letterSpacing: "-0.02em",
-                            }}
-                        >
-                            <BrandName accentColor="#3282B8" />
-                        </span>
+                        <Logo height={30} />
                     </Link>
                 </div>
 
@@ -193,9 +169,7 @@ export default function StudentLayout() {
                     >
                         <Menu size={18} />
                     </button>
-                    <span style={{ fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>
-                        <BrandName accentColor="#3282B8" />
-                    </span>
+                    <Logo to="/" height={24} />
                 </div>
 
                 {/* Page content */}

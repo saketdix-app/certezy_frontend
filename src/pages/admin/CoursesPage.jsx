@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import courseService from "@/services/courseService";
 import categoryService from "@/services/categoryService";
-import { VideoUpload } from "@/components/admin/VideoUpload";
+import FileUpload from "@/components/admin/FileUpload";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -241,8 +241,9 @@ export default function CoursesPage() {
                 description: form.description?.trim() || undefined,
                 short_desc: form.short_desc?.trim() || undefined,
                 category_id: Number(form.category_id),
-                thumbnail: form.thumbnail?.trim() || undefined,
-                preview_video: form.preview_video?.trim() || undefined,
+                // null clears the media when an admin removes it
+                thumbnail: form.thumbnail?.trim() || null,
+                preview_video: form.preview_video?.trim() || null,
                 price: form.price === "" ? 0 : Number(form.price),
                 level: form.level || "beginner",
                 language: form.language?.trim() || "English",
@@ -897,37 +898,19 @@ export default function CoursesPage() {
 
                             {/* Thumbnail + Preview video */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <Field label="THUMBNAIL URL">
-                                    <input
-                                        type="url"
+                                <Field label="THUMBNAIL">
+                                    <FileUpload
+                                        kind="image"
                                         value={form.thumbnail}
-                                        onChange={(e) => setF("thumbnail", e.target.value)}
-                                        className={inputCls}
-                                        placeholder="https://..."
+                                        onChange={(url) => setF("thumbnail", url)}
                                     />
                                 </Field>
                                 <Field label="PREVIEW VIDEO">
-                                    <div className="space-y-3">
-                                        {/* New Video Upload Component */}
-                                        <VideoUpload
-                                            onUploadComplete={(videoUrl) => {
-                                                setF("preview_video", videoUrl);
-                                            }}
-                                            onUploadError={(error) => {
-                                                console.error("Preview video upload failed:", error);
-                                            }}
-                                        />
-
-                                        {/* Fallback Manual URL Input */}
-                                        <div className="text-center text-xs text-slate-500 my-2">OR</div>
-                                        <input
-                                            type="url"
-                                            value={form.preview_video}
-                                            onChange={(e) => setF("preview_video", e.target.value)}
-                                            className={inputCls}
-                                            placeholder="Paste video URL manually..."
-                                        />
-                                    </div>
+                                    <FileUpload
+                                        kind="video"
+                                        value={form.preview_video}
+                                        onChange={(url) => setF("preview_video", url)}
+                                    />
                                 </Field>
                             </div>
 

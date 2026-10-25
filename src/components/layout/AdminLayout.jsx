@@ -23,7 +23,7 @@ import {
 import { selectUser } from "@/features/auth/authSlice";
 import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
-import { tokens } from "@/styles/token";
+import Logo from "@/components/shared/Logo";
 
 const ADMIN_NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/admin/dashboard" },
@@ -74,9 +74,12 @@ export default function AdminLayout() {
             >
                 {/* Logo */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                    <h1 className="text-xl font-bold" style={{ color: tokens.color.primary }}>
-                        Certezy Admin
-                    </h1>
+                    <div className="flex items-center gap-2">
+                        <Logo to="/admin/dashboard" height={28} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary-light px-1.5 py-0.5 rounded">
+                            Admin
+                        </span>
+                    </div>
                     <button
                         onClick={() => setSidebarOpen(false)}
                         className="lg:hidden p-1 rounded-lg hover:bg-gray-100"
@@ -123,9 +126,7 @@ export default function AdminLayout() {
                             <p className="text-sm font-medium text-gray-900 truncate">
                                 {user?.name || "Admin User"}
                             </p>
-                            <p className="text-xs text-gray-500 truncate">
-                                {user?.email || "admin@certezy.com"}
-                            </p>
+                            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                         </div>
                     </div>
                     <button

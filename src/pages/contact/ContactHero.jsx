@@ -1,3 +1,5 @@
+import { Clock } from "lucide-react";
+import { SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/config/app";
 // src/pages/contact/ContactHero.jsx
 
 const IconMail = () => (
@@ -29,43 +31,27 @@ const IconPhone = () => (
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
     </svg>
 );
-const IconPin = () => (
-    <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-        <circle cx="12" cy="10" r="3" />
-    </svg>
-);
-
 const infoCards = [
     {
         icon: <IconMail />,
         title: "Email Us",
         sub: "Our team responds within 24 hours.",
-        value: "hello@scholareditorial.com",
-        href: "mailto:hello@scholareditorial.com",
+        value: SUPPORT_EMAIL,
+        href: `mailto:${SUPPORT_EMAIL}`,
     },
     {
         icon: <IconPhone />,
         title: "Call Us",
-        sub: "Mon – Fri from 9am to 6pm PST.",
-        value: "+1 (555) 123–4567",
-        href: "tel:+15551234567",
+        sub: "Toll-free support line.",
+        value: SUPPORT_PHONE,
+        href: SUPPORT_PHONE_HREF,
     },
     {
-        icon: <IconPin />,
-        title: "Visit Us",
-        sub: "Our studio in the heart of the city.",
-        value: "123 Scholar Plaza, San Francisco, CA",
-        href: "#map",
+        icon: <Clock size={20} strokeWidth={2} />,
+        title: "Support Hours",
+        sub: "We're here whenever you need us.",
+        value: "24/7, every day",
+        href: null,
     },
 ];
 

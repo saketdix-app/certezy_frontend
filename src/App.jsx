@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { fetchMe } from "@/features/auth/authSlice";
 import RouterProgress from "@/components/shared/RouterProgress";
 import AppRoutes from "@/routes/AppRoutes";
+import contactService from "@/services/contactService";
 
 const TOAST_OPTIONS = {
     duration: 3000,
@@ -18,6 +19,8 @@ export default function App() {
     // out — public pages render immediately and never wait on this call.
     useEffect(() => {
         dispatch(fetchMe());
+        // Re-send any contact enquiries that failed on a previous visit
+        contactService.flushPendingEnquiries();
     }, [dispatch]);
 
     return (

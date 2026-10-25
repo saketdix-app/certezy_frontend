@@ -12,7 +12,7 @@ import {
 } from "@/features/auth/authSlice";
 import SocialButtons from "@/components/auth/SocialButtons";
 import { homeForRole, safeRedirect } from "@/config/app";
-import BrandName from "@/components/shared/BrandName";
+import BrandLogo from "@/components/shared/Logo";
 
 export default function LoginPage() {
     const dispatch = useDispatch();
@@ -317,48 +317,10 @@ export default function LoginPage() {
 
 // ── Shared small components ────────────────────────────────
 
-function Logo({ size = "lg" }) {
+function Logo({ size = "lg", style }) {
+    // Large logo sits on the navy panel (white wordmark); small one on white (blue)
     const big = size === "lg";
-    return (
-        <div style={{ display: "flex", alignItems: "center", gap: big ? "10px" : "8px" }}>
-            <div
-                style={{
-                    width: big ? "32px" : "28px",
-                    height: big ? "32px" : "28px",
-                    borderRadius: big ? "9px" : "8px",
-                    background: "#3282B8",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: big ? "0 2px 8px rgba(50,130,184,0.4)" : "none",
-                }}
-            >
-                <svg
-                    width={big ? 16 : 14}
-                    height={big ? 16 : 14}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                </svg>
-            </div>
-            <span
-                style={{
-                    fontSize: big ? "17px" : "16px",
-                    fontWeight: 800,
-                    color: "#fff",
-                    letterSpacing: "-0.5px",
-                }}
-            >
-                <BrandName accentColor="#3282B8" />
-            </span>
-        </div>
-    );
+    return <BrandLogo variant={big ? "light" : "dark"} height={big ? 38 : 30} to="/" style={style} />;
 }
 
 function Divider() {

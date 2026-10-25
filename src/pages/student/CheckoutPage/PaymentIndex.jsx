@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useCheckout } from "./useCheckout";
 import PaymentMethod from "./PaymentMethod";
 import OrderSummary from "./OrderSummary";
-import BrandName from "@/components/shared/BrandName";
+import Logo from "@/components/shared/Logo";
 
 export default function CheckoutPage() {
     const [searchParams] = useSearchParams();
@@ -77,24 +77,7 @@ export default function CheckoutPage() {
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 no-underline">
-                    <div className="w-7 h-7 rounded-lg bg-[#3282B8] flex items-center justify-center">
-                        <svg
-                            width="13"
-                            height="13"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                        </svg>
-                    </div>
-                    <span className="text-[15px] font-extrabold text-slate-900">
-                        <BrandName accentClassName="text-[#3282B8]" />
-                    </span>
+                    <Logo height={28} />
                 </Link>
 
                 <div className="ml-auto flex items-center gap-1.5 text-emerald-600 text-[12px] font-semibold">

@@ -11,7 +11,7 @@ import NotificationBell from "./NotificationBell";
 import AvatarMenu from "./AvatarMenu";
 import MobileMenu from "./MobileMenu";
 import { cn } from "@/lib/utils";
-import BrandName from "@/components/shared/BrandName";
+import Logo from "@/components/shared/Logo";
 
 /**
  * Responsive strategy:
@@ -52,7 +52,7 @@ function NavBarIndex() {
                 */}
                 <div className={cn("max-w-screen-2xl mx-auto px-4 sm:px-6 flex items-center", NAV_H)}>
                     {/* ── Logo ── */}
-                    <Logo />
+                    <Logo to="/" height={34} />
 
                     {/* ── Nav links — desktop only ── */}
                     <div className="hidden md:flex items-center ml-6">
@@ -107,32 +107,6 @@ function NavBarIndex() {
             {/* Mega menu — outside header so it overlaps content */}
             {megaOpen && <MegaMenu onClose={closeMega} />}
         </>
-    );
-}
-
-// ── Logo ───────────────────────────────────────────────────
-function Logo() {
-    return (
-        <Link to="/" className="flex items-center gap-2 shrink-0 no-underline">
-            <div className="w-[30px] h-[30px] rounded-lg bg-primary flex items-center justify-center shadow-sm">
-                <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                </svg>
-            </div>
-            <span className="text-[16px] font-extrabold text-text-primary tracking-tight">
-                <BrandName accentClassName="text-primary" />
-            </span>
-        </Link>
     );
 }
 

@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import categoryService from "@/services/categoryService";
 import { cn } from "@/lib/utils";
+import FileUpload from "@/components/admin/FileUpload";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PER_PAGE = 8;
@@ -480,13 +481,11 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                     </FormField>
 
                     {/* Icon */}
-                    <FormField label="Icon (filename or URL)">
-                        <input
-                            type="text"
-                            className={fieldCls}
+                    <FormField label="Icon">
+                        <FileUpload
+                            kind="image"
                             value={form.icon}
-                            onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                            placeholder="e.g. cloud.png"
+                            onChange={(url) => setForm({ ...form, icon: url })}
                         />
                     </FormField>
 

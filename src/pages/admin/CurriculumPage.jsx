@@ -24,7 +24,7 @@ import sectionService from "@/services/sectionService";
 import lessonService from "@/services/lessonService";
 import courseService from "@/services/courseService";
 import { cn } from "@/lib/utils";
-import VideoUpload from "@/components/admin/VideoUpload";
+import FileUpload from "@/components/admin/FileUpload";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -552,37 +552,18 @@ export default function CurriculumPage() {
                             <Field
                                 label={
                                     lessonForm.type === "video"
-                                        ? "Content / Video URL (S3)"
+                                        ? "Lesson Video"
                                         : lessonForm.type === "text"
                                           ? "Lesson Content"
                                           : "Quiz Reference"
                                 }
                             >
                                 {lessonForm.type === "video" ? (
-                                    <div className="space-y-3">
-                                        {/* Video Upload Component */}
-                                        <VideoUpload
-                                            onUploadComplete={(videoUrl) => {
-                                                setLessonForm((p) => ({ ...p, content: videoUrl }));
-                                            }}
-                                            onUploadError={(error) => {
-                                                console.error("Video upload failed:", error);
-                                            }}
-                                        />
-
-                                        {/* Fallback Manual URL Input */}
-                                        <div className="text-center text-xs text-slate-500 my-2">OR</div>
-                                        <textarea
-                                            rows={2}
-                                            value={lessonForm.content}
-                                            onChange={(e) =>
-                                                setLessonForm((p) => ({ ...p, content: e.target.value }))
-                                            }
-                                            className={inputCls}
-                                            placeholder="Paste S3 video URL manually..."
-                                            style={{ resize: "none" }}
-                                        />
-                                    </div>
+                                    <FileUpload
+                                        kind="video"
+                                        value={lessonForm.content?.trim() ? lessonForm.content : ""}
+                                        onChange={(url) => setLessonForm((p) => ({ ...p, content: url }))}
+                                    />
                                 ) : (
                                     <textarea
                                         rows={3}

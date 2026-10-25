@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import BrandName from "@/components/shared/BrandName";
-import { APP_NAME, SUPPORT_EMAIL } from "@/config/app";
+import Logo from "@/components/shared/Logo";
+import { APP_NAME, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/config/app";
 
 // ─── ICONS ────────────────────────────────────────────────────
 const IconLinkedIn = () => (
@@ -201,27 +201,7 @@ function SocialBtn({ icon, href = "#" }) {
 function CertezyLogo() {
     return (
         <div className="flex items-center gap-2.5 mb-3.5">
-            <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: "#3282B8", boxShadow: "0 2px 8px rgba(50,130,184,0.4)" }}
-            >
-                <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                </svg>
-            </div>
-            <span className="text-lg font-extrabold text-slate-100 tracking-tight">
-                <BrandName accentColor="#3282B8" />
-            </span>
+            <Logo variant="light" height={36} />
         </div>
     );
 }
@@ -251,7 +231,12 @@ function SupportCard() {
                 </span>
                 <div>
                     <p className="text-xs text-slate-500 mb-0.5">Email us</p>
-                    <p className="text-sm text-slate-400 font-medium">{SUPPORT_EMAIL}</p>
+                    <a
+                        href={`mailto:${SUPPORT_EMAIL}`}
+                        className="text-sm text-slate-400 font-medium hover:text-white"
+                    >
+                        {SUPPORT_EMAIL}
+                    </a>
                 </div>
             </div>
 
@@ -262,7 +247,12 @@ function SupportCard() {
                 </span>
                 <div>
                     <p className="text-xs text-slate-500 mb-0.5">Call us</p>
-                    <p className="text-sm text-slate-400 font-medium">+91 XXXXX XXXXX</p>
+                    <a
+                        href={SUPPORT_PHONE_HREF}
+                        className="text-sm text-slate-400 font-medium hover:text-white"
+                    >
+                        {SUPPORT_PHONE}
+                    </a>
                 </div>
             </div>
 
