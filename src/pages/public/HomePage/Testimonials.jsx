@@ -4,6 +4,9 @@ import { Star, ArrowRight } from "lucide-react";
 import { APP_NAME } from "@/config/app";
 import reviewService from "@/services/reviewService";
 
+// Set to true once a /testimonials page exists
+const SHOW_MORE_STORIES = false;
+
 /* ── Styles ─────────────────────────────────────────────────────────────── */
 const CSS = `
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -383,16 +386,18 @@ export default function Testimonials() {
                         ))}
                     </div>
 
-                    {/* ── Read More button ── */}
-                    <div className="ts-f3" style={{ textAlign: "center", marginTop: "52px" }}>
-                        <Link
-                            to="/testimonials"
-                            className="ts-read-btn"
-                            aria-label="Read more student success stories"
-                        >
-                            Read More Stories <ArrowRight size={15} aria-hidden="true" />
-                        </Link>
-                    </div>
+                    {/* ── Read More button (disabled until a stories page exists) ── */}
+                    {SHOW_MORE_STORIES && (
+                        <div className="ts-f3" style={{ textAlign: "center", marginTop: "52px" }}>
+                            <Link
+                                to="/testimonials"
+                                className="ts-read-btn"
+                                aria-label="Read more student success stories"
+                            >
+                                Read More Stories <ArrowRight size={15} aria-hidden="true" />
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </section>
         </>

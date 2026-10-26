@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { selectAuthLoading, selectIsLoggedIn, selectUser, clearError } from "@/features/auth/authSlice";
 import authService from "@/services/authService";
 import SocialButtons from "@/components/auth/SocialButtons";
-import { homeForRole } from "@/config/app";
+import { homeForRole, ROUTES } from "@/config/app";
 import BrandLogo from "@/components/shared/Logo";
 
 export default function RegisterPage() {
@@ -467,11 +467,11 @@ export default function RegisterPage() {
                             }}
                         >
                             By creating an account, you agree to our{" "}
-                            <Link to="/terms" style={{ color: "#3282B8", textDecoration: "none" }}>
+                            <Link to={ROUTES.TERMS} style={{ color: "#3282B8", textDecoration: "none" }}>
                                 Terms
                             </Link>{" "}
                             and{" "}
-                            <Link to="/privacy" style={{ color: "#3282B8", textDecoration: "none" }}>
+                            <Link to={ROUTES.PRIVACY} style={{ color: "#3282B8", textDecoration: "none" }}>
                                 Privacy Policy
                             </Link>
                         </p>

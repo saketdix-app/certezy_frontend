@@ -13,6 +13,8 @@ const About = lazy(() => import("@/pages/public/AboutCompany/About"));
 const CoursesPage = lazy(() => import("@/pages/public/Courses/CoursesPage"));
 const CourseDetailPage = lazy(() => import("@/pages/public/CourseDetail/CourseDetailIndex"));
 const ContactPagePublic = lazy(() => import("@/pages/contact/ContactPagePublic"));
+const PrivacyPolicyPage = lazy(() => import("@/pages/legal/PrivacyPolicyPage"));
+const TermsOfServicePage = lazy(() => import("@/pages/legal/TermsOfServicePage"));
 
 // Auth
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
@@ -103,6 +105,12 @@ export default function AppRoutes() {
                     <Route path={ROUTES.COURSES} element={<CoursesPage />} />
                     <Route path="/courses/:slug" element={<CourseDetailPage />} />
                     <Route path={ROUTES.CONTACT} element={<ContactPagePublic />} />
+                    <Route path={ROUTES.PRIVACY} element={<PrivacyPolicyPage />} />
+                    <Route path={ROUTES.TERMS} element={<TermsOfServicePage />} />
+                    {/* Short / legacy URLs */}
+                    <Route path="/privacy" element={<Navigate to={ROUTES.PRIVACY} replace />} />
+                    <Route path="/terms" element={<Navigate to={ROUTES.TERMS} replace />} />
+                    <Route path="/contact" element={<Navigate to={ROUTES.CONTACT} replace />} />
                     <Route path={ROUTES.ABOUT} element={<About />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>

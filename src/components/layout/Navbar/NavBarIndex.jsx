@@ -18,7 +18,7 @@ import Logo from "@/components/shared/Logo";
  *
  * < md  (768px)   → Logo + Hamburger only
  * md    (768px)   → Logo + NavLinks(Home, All Courses, More) + Search(small) + Auth
- * lg    (1024px)  → Logo + NavLinks(+ Blog) + Search(medium) + Auth + MyLearning
+ * lg    (1024px)  → Logo + NavLinks + Search(medium) + Auth + MyLearning
  * xl    (1280px)  → Logo + NavLinks(+ About, Contact) + Search(large) + Auth
  * 2xl   (1536px)  → Same as xl, max-width expands to 1536px
  */

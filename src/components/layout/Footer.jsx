@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/shared/Logo";
-import { APP_NAME, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/config/app";
+import { APP_NAME, ROUTES, SOCIAL_LINKS, SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
 
 // ─── ICONS ────────────────────────────────────────────────────
 const IconLinkedIn = () => (
@@ -11,20 +11,6 @@ const IconLinkedIn = () => (
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
         <rect x="2" y="9" width="4" height="12" />
         <circle cx="4" cy="4" r="2" />
-    </svg>
-);
-const IconTwitter = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="#000000">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-);
-const IconYouTube = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24">
-        <path
-            fill="#FF0000"
-            d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"
-        />
-        <polygon fill="#FFFFFF" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
     </svg>
 );
 const IconInstagram = () => (
@@ -61,21 +47,6 @@ const IconMail = () => (
     >
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
         <polyline points="22,6 12,13 2,6" />
-    </svg>
-);
-const IconHeadset = () => (
-    <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-        <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
     </svg>
 );
 const IconPhone = () => (
@@ -133,11 +104,28 @@ const CATEGORIES = [
     { label: "Networking", to: "/courses?category_slug=networking" },
 ];
 const QUICK_LINKS = [
-    { label: "About Us", to: "/about" },
-    { label: "Blog", to: "/blog" },
-    { label: "Contact", to: "/contact" },
-    { label: "Help Center", to: "/help" },
+    { label: "About Us", to: ROUTES.ABOUT },
+    { label: "All Courses", to: ROUTES.COURSES },
+    { label: "Contact", to: ROUTES.CONTACT },
+    { label: "Privacy Policy", to: ROUTES.PRIVACY },
+    { label: "Terms of Service", to: ROUTES.TERMS },
 ];
+
+const SOCIALS = [
+    { label: "LinkedIn", href: SOCIAL_LINKS.linkedin, icon: <IconLinkedIn /> },
+    { label: "Instagram", href: SOCIAL_LINKS.instagram, icon: <IconInstagram /> },
+    { label: "Facebook", href: SOCIAL_LINKS.facebook, icon: <IconFacebook /> },
+];
+
+function SocialLinks() {
+    return (
+        <div className="flex gap-2">
+            {SOCIALS.map((s) => (
+                <SocialBtn key={s.label} icon={s.icon} href={s.href} label={s.label} />
+            ))}
+        </div>
+    );
+}
 const STUDENT_LINKS = [
     { label: "My Learning", to: "/student/my-courses", highlight: false },
     { label: "Dashboard", to: "/student/dashboard", highlight: false },
@@ -184,12 +172,14 @@ function FooterLink({ to = "#", children, highlight }) {
 }
 
 // ─── SOCIAL BUTTON ────────────────────────────────────────────
-function SocialBtn({ icon, href = "#" }) {
+function SocialBtn({ icon, href = "#", label }) {
     return (
         <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={label}
+            title={label}
             className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] hover:-translate-y-0.5 transition-all duration-200"
         >
             {icon}
@@ -225,7 +215,7 @@ function SupportCard() {
             <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">Support</p>
 
             {/* Email */}
-            <div className="flex items-start gap-2.5 mb-3">
+            <div className="flex items-start gap-2.5">
                 <span className="mt-0.5" style={{ color: "#3282B8" }}>
                     <IconMail />
                 </span>
@@ -240,32 +230,20 @@ function SupportCard() {
                 </div>
             </div>
 
-            {/* Phone */}
-            <div className="flex items-start gap-2.5 mb-3">
-                <span className="mt-0.5" style={{ color: "#3282B8" }}>
-                    <IconPhone />
-                </span>
-                <div>
-                    <p className="text-xs text-slate-500 mb-0.5">Call us</p>
-                    <a
-                        href={SUPPORT_PHONE_HREF}
-                        className="text-sm text-slate-400 font-medium hover:text-white"
-                    >
-                        {SUPPORT_PHONE}
-                    </a>
+            {/* Phones — US + India */}
+            {SUPPORT_PHONES.map((phone) => (
+                <div key={phone.region} className="flex items-start gap-2.5 mt-3">
+                    <span className="mt-0.5" style={{ color: "#3282B8" }}>
+                        <IconPhone />
+                    </span>
+                    <div>
+                        <p className="text-xs text-slate-500 mb-0.5">Call us · {phone.label}</p>
+                        <a href={phone.href} className="text-sm text-slate-400 font-medium hover:text-white">
+                            {phone.number}
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-            {/* Live chat */}
-            <div className="flex items-start gap-2.5">
-                <span className="mt-0.5" style={{ color: "#3282B8" }}>
-                    <IconHeadset />
-                </span>
-                <div>
-                    <p className="text-xs text-slate-500 mb-0.5">Live Chat</p>
-                    <p className="text-sm text-slate-400 font-medium">Available 24/7</p>
-                </div>
-            </div>
+            ))}
         </div>
     );
 }
@@ -296,13 +274,7 @@ export default function Footer() {
                             Industry-recognized certification courses taught by experts. Advance your career
                             with confidence.
                         </p>
-                        <div className="flex gap-2">
-                            <SocialBtn icon={<IconLinkedIn />} href="https://linkedin.com" />
-                            <SocialBtn icon={<IconInstagram />} href="https://instagram.com" />
-                            <SocialBtn icon={<IconFacebook />} href="https://facebook.com" />
-                            <SocialBtn icon={<IconTwitter />} href="https://twitter.com" />
-                            <SocialBtn icon={<IconYouTube />} href="https://youtube.com" />
-                        </div>
+                        <SocialLinks />
                     </div>
 
                     {/* Categories */}
@@ -357,13 +329,7 @@ export default function Footer() {
                         <p className="text-sm text-slate-500 leading-relaxed mb-4">
                             Industry-recognized certification courses to accelerate your career.
                         </p>
-                        <div className="flex gap-2">
-                            <SocialBtn icon={<IconLinkedIn />} href="https://linkedin.com" />
-                            <SocialBtn icon={<IconInstagram />} href="https://instagram.com" />
-                            <SocialBtn icon={<IconFacebook />} href="https://facebook.com" />
-                            <SocialBtn icon={<IconTwitter />} href="https://twitter.com" />
-                            <SocialBtn icon={<IconYouTube />} href="https://youtube.com" />
-                        </div>
+                        <SocialLinks />
                     </div>
 
                     <Accordion title="Categories" defaultOpen>
@@ -401,24 +367,18 @@ export default function Footer() {
                             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
                         </span>
                         <div className="flex items-center gap-5 flex-wrap">
-                            <a
-                                href="/privacy"
+                            <Link
+                                to={ROUTES.PRIVACY}
                                 className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Privacy Policy
-                            </a>
-                            <a
-                                href="/terms"
+                            </Link>
+                            <Link
+                                to={ROUTES.TERMS}
                                 className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Terms of Service
-                            </a>
-                            <a
-                                href="/help"
-                                className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
-                            >
-                                Help Center
-                            </a>
+                            </Link>
                             <BackToTop />
                         </div>
                     </div>

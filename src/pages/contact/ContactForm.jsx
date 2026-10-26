@@ -5,6 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import contactService from "@/services/contactService";
+import { SUPPORT_PHONES } from "@/config/app";
 
 const SUBJECTS = [
     "General Inquiry",
@@ -16,9 +17,8 @@ const SUBJECTS = [
 ];
 
 const officeHours = [
-    { day: "Monday – Friday", time: "24/7 Available" },
-    { day: "Saturday", time: "24/7 Available" },
-    { day: "Sunday", time: "24/7 Available" },
+    { day: "Monday – Sunday", time: "24 × 7" },
+    { day: "Public holidays", time: "24 × 7" },
 ];
 
 function FieldError({ message }) {
@@ -304,11 +304,10 @@ export default function ContactForm() {
                                 border: "1px solid rgba(50,130,184,0.2)",
                             }}
                         >
-                            <span className="text-3xl font-extrabold tracking-tight text-white">24/7</span>
+                            <span className="text-3xl font-extrabold tracking-tight text-white">24×7</span>
                             <span className="text-sm text-white font-medium leading-snug">
-                                Always available
-                                <br />
-                                for you
+                                All 7 days
+                                <br />a week
                             </span>
                         </div>
 
@@ -331,8 +330,16 @@ export default function ContactForm() {
                                 border: "1px solid rgba(50,130,184,0.2)",
                             }}
                         >
-                            <strong style={{ color: "#3282B8" }}>Note:</strong> Enterprise Plan members get
-                            priority support via the private scholar dashboard.
+                            <strong style={{ color: "#3282B8" }}>Call us anytime:</strong>{" "}
+                            {SUPPORT_PHONES.map((p, i) => (
+                                <span key={p.region}>
+                                    {i > 0 && " · "}
+                                    {p.region === "IN" ? "India" : "US"}{" "}
+                                    <a href={p.href} className="text-white font-semibold hover:opacity-80">
+                                        {p.number}
+                                    </a>
+                                </span>
+                            ))}
                         </div>
                     </div>
                 </div>

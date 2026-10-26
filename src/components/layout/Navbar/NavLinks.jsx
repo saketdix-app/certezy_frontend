@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Info, Mail, HelpCircle, BookOpen } from "lucide-react";
+import { ChevronDown, Info, Mail } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,58 +12,34 @@ import { cn } from "@/lib/utils";
 /**
  * Priority Navigation pattern:
  *
- * xl  (1280px+) → Home · All Courses · Blog · About · Contact   [no More]
- * lg  (1024px+) → Home · All Courses · Blog · More(About,Contact,Help)
- * md  (768px+)  → Home · All Courses · More(Blog,About,Contact,Help)
+ * lg  (1024px+) → Home · All Courses · About Us · Contact
+ * md  (768px+)  → Home · All Courses · More(About Us, Contact)
  * <md            → hidden (hamburger takes over)
  */
 
-// Items that go into More dropdown — keyed by when they collapse
-const BLOG = { label: "Blog", to: "/blog", icon: BookOpen, desc: "Tips, guides & resources" };
 const ABOUT = { label: "About Us", to: "/about", icon: Info, desc: "Our story and mission" };
 const CONTACT = { label: "Contact", to: "/contact-us", icon: Mail, desc: "Get in touch with us" };
-const HELP = { label: "Help Center", to: "/help", icon: HelpCircle, desc: "FAQs and support" };
 
 export default function NavLinks({ megaOpen, onToggleMega, navH = "h-[70px]" }) {
     const { pathname } = useLocation();
 
     return (
         <nav className="flex items-center gap-1">
-            {/* Home — always visible */}
             <NavLink to="/" label="Home" isActive={pathname === "/"} navH={navH} />
 
-            {/* All Courses — always visible */}
             <AllCoursesLink isOpen={megaOpen} onClick={onToggleMega} navH={navH} />
 
-            {/* Blog — visible from lg+ */}
+            {/* About + Contact — inline from lg+ */}
             <span className="hidden lg:block">
-                <NavLink to="/blog" label="Blog" isActive={pathname === "/blog"} navH={navH} />
-            </span>
-
-            {/* About — visible from xl+ */}
-            <span className="hidden xl:block">
                 <NavLink to="/about" label="About Us" isActive={pathname === "/about"} navH={navH} />
             </span>
-
-            {/* Contact — visible from xl+ */}
-            <span className="hidden xl:block">
-                <NavLink to="/contact-us" label="Contact" isActive={pathname === "/contact"} navH={navH} />
+            <span className="hidden lg:block">
+                <NavLink to="/contact-us" label="Contact" isActive={pathname === "/contact-us"} navH={navH} />
             </span>
 
-            {/* More — md: Blog+About+Contact+Help, lg: About+Contact+Help, xl: hidden */}
-            {/* md breakpoint More */}
+            {/* md only — collapse About + Contact into More */}
             <span className="hidden md:block lg:hidden">
-                <MoreDropdown items={[BLOG, ABOUT, CONTACT, { divider: true }, HELP]} navH={navH} />
-            </span>
-
-            {/* lg breakpoint More */}
-            <span className="hidden lg:block xl:hidden">
-                <MoreDropdown items={[ABOUT, CONTACT, { divider: true }, HELP]} navH={navH} />
-            </span>
-
-            {/* xl+ — Help only in a minimal More, or remove if not needed */}
-            <span className="hidden xl:block">
-                <MoreDropdown items={[{ divider: false, ...HELP }]} navH={navH} label="Help" />
+                <MoreDropdown items={[ABOUT, CONTACT]} navH={navH} />
             </span>
         </nav>
     );

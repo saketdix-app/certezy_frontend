@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ShieldCheck, Star, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Star, CheckCircle2, ClipboardCheck } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Only animations + a few layout helpers that Tailwind can't express.
@@ -234,6 +235,39 @@ const BOTTOM_COURSES = [
 /* ═══════════════════════════════════════════════════════════════════════════
    HERO SECTION
 ═══════════════════════════════════════════════════════════════════════════ */
+/* PMP logo with a neutral fallback while the image file is missing */
+const PMP_LOGO_SRC = "/brand/pmp-logo.png";
+
+function PmpBadge() {
+    const [failed, setFailed] = useState(false);
+    return (
+        <div
+            style={{
+                height: "56px",
+                minWidth: "56px",
+                padding: failed ? 0 : "6px 10px",
+                borderRadius: "16px",
+                background: "#EFF6FF",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "20px",
+            }}
+        >
+            {failed ? (
+                <ClipboardCheck size={28} color="#3282B8" aria-label="PMP" />
+            ) : (
+                <img
+                    src={PMP_LOGO_SRC}
+                    alt="PMP® certification"
+                    style={{ height: "44px", width: "auto", display: "block" }}
+                    onError={() => setFailed(true)}
+                />
+            )}
+        </div>
+    );
+}
+
 export default function HeroSection() {
     return (
         <>
@@ -317,7 +351,7 @@ export default function HeroSection() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Certezy
+                                    CERTEZY
                                 </span>
                             </h1>
 
@@ -408,37 +442,6 @@ export default function HeroSection() {
                                 >
                                     Explore Courses <ArrowRight size={16} aria-hidden="true" />
                                 </Link>
-
-                                <Link
-                                    to="/certifications"
-                                    aria-label="View certification programs"
-                                    style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        gap: "8px",
-                                        padding: "13px 26px",
-                                        borderRadius: "12px",
-                                        border: "1.5px solid rgba(255,255,255,0.18)",
-                                        color: "var(--c-text)",
-                                        fontSize: "15px",
-                                        fontWeight: 600,
-                                        textDecoration: "none",
-                                        background: "rgba(255,255,255,0.04)",
-                                        backdropFilter: "blur(6px)",
-                                        transition: "background .2s ease, transform .2s ease",
-                                        whiteSpace: "nowrap",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-                                        e.currentTarget.style.transform = "translateY(-2px)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                                        e.currentTarget.style.transform = "";
-                                    }}
-                                >
-                                    View Certifications
-                                </Link>
                             </div>
 
                             {/* Stats */}
@@ -514,35 +517,8 @@ export default function HeroSection() {
                                 >
                                     {/* Card top */}
                                     <div style={{ padding: "28px 28px 0" }}>
-                                        {/* Cloud icon */}
-                                        <div
-                                            style={{
-                                                width: "56px",
-                                                height: "56px",
-                                                borderRadius: "16px",
-                                                background: "#EFF6FF",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                marginBottom: "20px",
-                                            }}
-                                        >
-                                            <svg
-                                                width="28"
-                                                height="28"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                aria-hidden="true"
-                                            >
-                                                <path
-                                                    d="M6.5 18a4.5 4.5 0 0 1 0-9h.09A5.5 5.5 0 0 1 17 10.5a3.5 3.5 0 0 1-.5 6.97"
-                                                    stroke="#3282B8"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </div>
+                                        {/* PMP logo — drop the official file at public/brand/pmp-logo.png */}
+                                        <PmpBadge />
 
                                         {/* Rating */}
                                         <div
@@ -581,7 +557,7 @@ export default function HeroSection() {
                                                 marginBottom: "12px",
                                             }}
                                         >
-                                            AWS Certified Solutions Architect
+                                            Project Management Professional (PMP)
                                         </h2>
 
                                         {/* Description */}
@@ -593,8 +569,8 @@ export default function HeroSection() {
                                                 marginBottom: "20px",
                                             }}
                                         >
-                                            Master the architectural principles and services of AWS to design
-                                            and deploy highly available systems.
+                                            Master predictive, agile and hybrid project management and prepare
+                                            for the globally recognized PMP® certification exam.
                                         </p>
 
                                         {/* Instructors */}

@@ -16,8 +16,6 @@ export const NAV_LINKS = [
 export const MORE_ITEMS = [
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact-us" },
-    { divider: true },
-    { label: "Help Center", to: "/help" },
 ];
 
 // ── Student avatar dropdown ────────────────────────────────

@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import { SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/config/app";
+import { SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
 // src/pages/contact/ContactHero.jsx
 
 const IconMail = () => (
@@ -36,22 +36,23 @@ const infoCards = [
         icon: <IconMail />,
         title: "Email Us",
         sub: "Our team responds within 24 hours.",
-        value: SUPPORT_EMAIL,
-        href: `mailto:${SUPPORT_EMAIL}`,
+        values: [{ text: SUPPORT_EMAIL, href: `mailto:${SUPPORT_EMAIL}` }],
     },
     {
         icon: <IconPhone />,
         title: "Call Us",
-        sub: "Toll-free support line.",
-        value: SUPPORT_PHONE,
-        href: SUPPORT_PHONE_HREF,
+        sub: "India and US support lines.",
+        values: SUPPORT_PHONES.map((p) => ({
+            prefix: p.region === "IN" ? "India" : "US",
+            text: p.number,
+            href: p.href,
+        })),
     },
     {
         icon: <Clock size={20} strokeWidth={2} />,
         title: "Support Hours",
         sub: "We're here whenever you need us.",
-        value: "24/7, every day",
-        href: null,
+        values: [{ text: "24 × 7 · All 7 days" }],
     },
 ];
 
@@ -120,12 +121,28 @@ export default function ContactHero() {
                             <div className="flex flex-col max-md:flex-1">
                                 <p className="text-sm font-bold text-white mb-1">{card.title}</p>
                                 <p className="text-xs text-slate-500 mb-2.5 leading-relaxed">{card.sub}</p>
-                                <a
-                                    href={card.href}
-                                    className="text-sm font-semibold text-white transition-colors duration-200 hover:opacity-70"
-                                >
-                                    {card.value}
-                                </a>
+                                <div className="flex flex-col gap-1">
+                                    {card.values.map((v) =>
+                                        v.href ? (
+                                            <a
+                                                key={v.text}
+                                                href={v.href}
+                                                className="text-sm font-semibold text-white transition-colors duration-200 hover:opacity-70"
+                                            >
+                                                {v.prefix && (
+                                                    <span className="text-slate-400 font-medium">
+                                                        {v.prefix}:{" "}
+                                                    </span>
+                                                )}
+                                                {v.text}
+                                            </a>
+                                        ) : (
+                                            <span key={v.text} className="text-sm font-semibold text-white">
+                                                {v.text}
+                                            </span>
+                                        )
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
