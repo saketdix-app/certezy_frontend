@@ -446,13 +446,16 @@ export default function UsersPage() {
 
                     {/* Table */}
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                        className="bg-white rounded-2xl border border-slate-100 overflow-x-auto"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         {/* Head */}
                         <div
                             className="grid px-5 py-3 bg-slate-50 border-b border-slate-100"
-                            style={{ gridTemplateColumns: "1fr 120px 130px 110px 210px" }}
+                            style={{
+                                gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 210px",
+                                minWidth: 800,
+                            }}
                         >
                             {["User", "Mobile", "Joined", "Status", "Action"].map((h) => (
                                 <span
@@ -475,7 +478,10 @@ export default function UsersPage() {
                                     <div
                                         key={user.id}
                                         className="grid px-5 py-3.5 border-b border-slate-50 hover:bg-slate-50/60 transition-colors items-center"
-                                        style={{ gridTemplateColumns: "1fr 120px 130px 110px 210px" }}
+                                        style={{
+                                            gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 210px",
+                                            minWidth: 800,
+                                        }}
                                     >
                                         {/* User */}
                                         <div className="flex items-center gap-3 min-w-0">

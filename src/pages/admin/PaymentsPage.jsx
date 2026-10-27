@@ -317,7 +317,7 @@ export default function PaymentsPage() {
                     <>
                         {/* Table */}
                         <div className="overflow-x-auto">
-                            <table className="w-full">
+                            <table className="w-full min-w-[720px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
                                         <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">

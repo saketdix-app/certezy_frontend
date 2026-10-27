@@ -26,3 +26,10 @@ body {
     background: linear-gradient(180deg, #ebf4fb 0%, #f8f9fa 100%);
     min-height: 100vh;
 }
+
+/* Mobile safety net: a stray decorative element must never make the whole
+   page scroll sideways. `clip` (unlike `hidden`) keeps position: sticky working. */
+html,
+body {
+    overflow-x: clip;
+}

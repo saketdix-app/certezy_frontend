@@ -14,6 +14,7 @@ import {
     X,
     AlertCircle,
     Award,
+    FileDown,
 } from "lucide-react";
 
 import sectionService from "@/services/sectionService";
@@ -23,6 +24,7 @@ import enrollmentService from "@/services/enrollmentService";
 import testService from "@/services/testService";
 import { cn } from "@/lib/utils";
 import { EnhancedTextLesson } from "@/components/player/EnhancedTextLesson";
+import PdfLesson from "@/components/player/PdfLesson";
 import Logo from "@/components/shared/Logo";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -52,7 +54,8 @@ export default function CoursePlayerPage() {
     const [courseExams, setCourseExams] = useState([]); // Exams for this course
 
     // ── UI state ───────────────────────────────────────────────────────────────
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    // Lesson list starts open on desktop, closed on phones/tablets (it overlays there)
+    const [sidebarOpen, setSidebarOpen] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
     const [expandedSections, setExpandedSections] = useState({});
 
     // ── Video / progress refs ──────────────────────────────────────────────────
@@ -291,12 +294,24 @@ export default function CoursePlayerPage() {
                 <main className="flex-1 flex flex-col overflow-y-auto bg-[#0F172A]">
                     {currentLesson ? (
                         <>
-                            {/* Video area */}
+                            {/* Lesson area — 16:9 frame for video; text and PDF size to their content */}
                             <div
-                                className="w-full bg-black"
-                                style={{ aspectRatio: "16/9", maxHeight: "calc(100vh - 200px)" }}
+                                className={
+                                    currentLesson.type === "video"
+                                        ? "w-full shrink-0 bg-black"
+                                        : "w-full shrink-0 bg-[#0a1628]"
+                                }
+                                style={
+                                    currentLesson.type === "video"
+                                        ? { aspectRatio: "16/9", maxHeight: "calc(100vh - 200px)" }
+                                        : currentLesson.type === "pdf"
+                                          ? undefined
+                                          : { minHeight: "60vh" }
+                                }
                             >
-                                {currentLesson.type === "video" && currentLesson.content ? (
+                                {currentLesson.type === "pdf" ? (
+                                    <PdfLesson lesson={currentLesson} />
+                                ) : currentLesson.type === "video" && currentLesson.content ? (
                                     <video
                                         ref={videoRef}
                                         key={currentLesson.id}
@@ -417,8 +432,8 @@ export default function CoursePlayerPage() {
                                     </div>
                                 )}
 
-                                {/* Prev / Next buttons - Only for video lessons */}
-                                {currentLesson.type === "video" && (
+                                {/* Prev / Next buttons — video and PDF (text lessons have their own) */}
+                                {(currentLesson.type === "video" || currentLesson.type === "pdf") && (
                                     <div
                                         className="flex items-center justify-between pt-4"
                                         style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
@@ -474,6 +489,13 @@ export default function CoursePlayerPage() {
 
                 {/* ── Sidebar ─────────────────────────────────────────────── */}
                 {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                        aria-hidden="true"
+                    />
+                )}
+                {sidebarOpen && (
                     <CourseSidebar
                         sections={sections}
                         currentLesson={currentLesson}
@@ -482,7 +504,10 @@ export default function CoursePlayerPage() {
                         onToggleSection={(id) =>
                             setExpandedSections((prev) => ({ ...prev, [id]: !prev[id] }))
                         }
-                        onSelectLesson={openLesson}
+                        onSelectLesson={(lesson) => {
+                            openLesson(lesson);
+                            if (!window.matchMedia("(min-width: 1024px)").matches) setSidebarOpen(false);
+                        }}
                         courseExams={courseExams}
                         courseId={courseId}
                         navigate={navigate}
@@ -576,7 +601,7 @@ function CourseSidebar({
 }) {
     return (
         <aside
-            className="w-[300px] xl:w-[320px] shrink-0 flex flex-col overflow-hidden"
+            className="fixed inset-y-0 right-0 z-40 w-[86vw] max-w-[340px] lg:static lg:z-auto lg:w-[300px] lg:max-w-none xl:w-[320px] shrink-0 flex flex-col overflow-hidden"
             style={{
                 background: "#0a1628",
                 borderLeft: "1px solid rgba(255,255,255,0.08)",
@@ -690,7 +715,12 @@ function CourseSidebar({
                                                         {lesson.title}
                                                     </p>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        {lesson.type === "video" ? (
+                                                        {lesson.type === "pdf" ? (
+                                                            <FileDown
+                                                                size={10}
+                                                                style={{ color: "rgba(255,255,255,0.3)" }}
+                                                            />
+                                                        ) : lesson.type === "video" ? (
                                                             <PlayCircle
                                                                 size={10}
                                                                 style={{ color: "rgba(255,255,255,0.3)" }}

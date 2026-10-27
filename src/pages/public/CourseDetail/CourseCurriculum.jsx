@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, PlayCircle, FileText, HelpCircle, Lock, Eye } from "lucide-react";
+import { ChevronDown, ChevronUp, PlayCircle, FileText, FileDown, HelpCircle, Lock, Eye } from "lucide-react";
 import lessonService from "@/services/lessonService";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,8 @@ function LessonIcon({ type, isLocked }) {
     const map = {
         video: <PlayCircle size={13} style={{ color: "#2563EB", flexShrink: 0 }} />,
         article: <FileText size={13} style={{ color: "#10B981", flexShrink: 0 }} />,
+        text: <FileText size={13} style={{ color: "#10B981", flexShrink: 0 }} />,
+        pdf: <FileDown size={13} style={{ color: "#DC2626", flexShrink: 0 }} />,
         quiz: <HelpCircle size={13} style={{ color: "#F59E0B", flexShrink: 0 }} />,
     };
     return map[type] || map.video;

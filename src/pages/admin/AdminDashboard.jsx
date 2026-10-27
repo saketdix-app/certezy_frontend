@@ -126,7 +126,7 @@ function RecentPaymentsTable({ payments }) {
                 </button>
             </div>
             <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[720px]">
                     <thead>
                         <tr className="border-b border-gray-200">
                             <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">User</th>

@@ -17,6 +17,7 @@ import {
     GripVertical,
     ChevronRight,
     PlayCircle,
+    FileDown,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -31,8 +32,18 @@ import FileUpload from "@/components/admin/FileUpload";
 const LESSON_TYPES = [
     { value: "video", label: "Video", icon: Video },
     { value: "text", label: "Text", icon: FileText },
+    { value: "pdf", label: "PDF", icon: FileDown },
     { value: "quiz", label: "Quiz", icon: HelpCircle },
 ];
+
+// Icon colours per lesson type in the curriculum list
+const TYPE_STYLES = {
+    video: { color: "#3282B8", bg: "#EBF4FF" },
+    text: { color: "#F97316", bg: "#FFF7ED" },
+    article: { color: "#F97316", bg: "#FFF7ED" },
+    pdf: { color: "#DC2626", bg: "#FEF2F2" },
+    quiz: { color: "#8B5CF6", bg: "#F5F3FF" },
+};
 
 const EMPTY_SECTION = { title: "", order_num: 1 };
 const EMPTY_LESSON = { title: "", type: "video", duration: "", content: "", order_num: 1, is_free: 0 };
@@ -232,6 +243,10 @@ export default function CurriculumPage() {
         e.preventDefault();
         if (!lessonForm.title.trim()) {
             toast.error("Title required");
+            return;
+        }
+        if (lessonForm.type === "pdf" && !/^https?:\/\//.test(lessonForm.content?.trim() || "")) {
+            toast.error("Upload a PDF (or paste its URL) for this lesson");
             return;
         }
         setSavingLesson(true);
@@ -551,17 +566,24 @@ export default function CurriculumPage() {
                             {/* Content / Video URL */}
                             <Field
                                 label={
-                                    lessonForm.type === "video"
-                                        ? "Lesson Video"
-                                        : lessonForm.type === "text"
-                                          ? "Lesson Content"
-                                          : "Quiz Reference"
+                                    {
+                                        video: "Lesson Video",
+                                        pdf: "Lesson PDF",
+                                        text: "Lesson Content",
+                                        article: "Lesson Content",
+                                    }[lessonForm.type] || "Quiz Reference"
                                 }
                             >
-                                {lessonForm.type === "video" ? (
+                                {lessonForm.type === "video" || lessonForm.type === "pdf" ? (
                                     <FileUpload
-                                        kind="video"
-                                        value={lessonForm.content?.trim() ? lessonForm.content : ""}
+                                        key={lessonForm.type}
+                                        kind={lessonForm.type}
+                                        value={
+                                            lessonForm.content?.trim() &&
+                                            /^https?:\/\//.test(lessonForm.content.trim())
+                                                ? lessonForm.content.trim()
+                                                : ""
+                                        }
                                         onChange={(url) => setLessonForm((p) => ({ ...p, content: url }))}
                                     />
                                 ) : (
@@ -583,7 +605,7 @@ export default function CurriculumPage() {
                             </Field>
 
                             {/* Order + Free Preview */}
-                            <div className="grid grid-cols-2 gap-4 items-end">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:items-end">
                                 <Field label="Order Number">
                                     <div className="flex items-center gap-2">
                                         <button
@@ -608,7 +630,7 @@ export default function CurriculumPage() {
                                                     order_num: Number(e.target.value),
                                                 }))
                                             }
-                                            className="flex-1 py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8]"
+                                            className="flex-1 min-w-0 w-full py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8]"
                                         />
                                         <button
                                             type="button"
@@ -809,8 +831,7 @@ function SectionCard({
 
 function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleting }) {
     const TypeIcon = LESSON_TYPES.find((t) => t.value === lesson.type)?.icon ?? Video;
-    const typeColor = lesson.type === "video" ? "#3282B8" : lesson.type === "text" ? "#F97316" : "#8B5CF6";
-    const typeBg = lesson.type === "video" ? "#EBF4FF" : lesson.type === "text" ? "#FFF7ED" : "#F5F3FF";
+    const { color: typeColor, bg: typeBg } = TYPE_STYLES[lesson.type] || TYPE_STYLES.quiz;
 
     return (
         <div className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50/60 transition-colors group">

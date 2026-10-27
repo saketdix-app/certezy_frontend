@@ -27,6 +27,14 @@ export const UPLOAD_KINDS = {
         maxSize: 50 * 1024 * 1024,
         label: "PDF, ZIP or TXT · up to 50 MB",
     },
+    // PDF-only picker (e.g. PDF lessons); stored with the backend's document rules
+    pdf: {
+        accept: "application/pdf",
+        maxSize: 50 * 1024 * 1024,
+        label: "PDF · up to 50 MB",
+        noun: "PDF",
+        apiKind: "document",
+    },
 };
 
 const formatSize = (bytes) =>
@@ -48,14 +56,14 @@ const uploadService = {
     /**
      * Upload a file to S3 and resolve with its public URL.
      * @param {File} file
-     * @param {{ kind: "image"|"video"|"document", onProgress?: (pct:number)=>void, signal?: AbortSignal }} options
+     * @param {{ kind: "image"|"video"|"document"|"pdf", onProgress?: (pct:number)=>void, signal?: AbortSignal }} options
      */
     async uploadFile(file, { kind, onProgress, signal } = {}) {
         const { data } = await uploadService.getPresignedUrl({
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
-            kind,
+            kind: UPLOAD_KINDS[kind]?.apiKind || kind,
         });
         const { uploadUrl, signedUrl, fileUrl, headers } = data.data;
 

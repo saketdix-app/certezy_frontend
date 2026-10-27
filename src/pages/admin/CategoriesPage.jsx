@@ -211,13 +211,16 @@ export default function CategoriesPage() {
 
             {/* Table */}
             <div
-                className="bg-white rounded-2xl border border-[#EEF2F7] overflow-hidden"
+                className="bg-white rounded-2xl border border-[#EEF2F7] overflow-x-auto"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {/* Table head */}
                 <div
                     className="grid px-6 py-3 bg-[#F8FAFC] border-b border-[#F1F5F9]"
-                    style={{ gridTemplateColumns: "1fr 130px 80px 110px 100px" }}
+                    style={{
+                        gridTemplateColumns: "minmax(220px, 1fr) 130px 80px 110px 100px",
+                        minWidth: 680,
+                    }}
                 >
                     {["Category Name & Taxonomy", "Hierarchy", "Order", "Status", "Actions"].map((h) => (
                         <span
@@ -295,7 +298,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                 "grid px-6 py-4 border-b border-[#F8FAFC] hover:bg-[#FAFBFC] transition-colors items-center",
                 isChild && "bg-[#FAFBFC]"
             )}
-            style={{ gridTemplateColumns: "1fr 130px 80px 110px 100px" }}
+            style={{ gridTemplateColumns: "minmax(220px, 1fr) 130px 80px 110px 100px", minWidth: 680 }}
         >
             {/* Name & taxonomy */}
             <div className="flex items-center gap-4 min-w-0" style={{ paddingLeft: isChild ? "32px" : "0" }}>
@@ -684,7 +687,10 @@ function TableSkeleton() {
                     <div
                         key={i}
                         className="grid px-6 py-4 items-center gap-4"
-                        style={{ gridTemplateColumns: "1fr 130px 80px 110px 100px" }}
+                        style={{
+                            gridTemplateColumns: "minmax(220px, 1fr) 130px 80px 110px 100px",
+                            minWidth: 680,
+                        }}
                     >
                         <div className="flex items-center gap-4">
                             <div className="w-11 h-11 rounded-xl bg-slate-100 shrink-0" />

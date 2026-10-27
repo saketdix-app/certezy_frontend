@@ -351,13 +351,13 @@ export default function CoursesPage() {
                 </div>
 
                 {/* Main layout */}
-                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 lg:items-start">
                     {/* Sidebar — desktop only */}
                     <div className="hidden lg:block w-full lg:w-80 flex-shrink-0">
                         <CourseFilters categories={categories} />
                     </div>
 
-                    <div className="flex-1 min-w-0 space-y-4">
+                    <div className="flex-1 min-w-0 w-full space-y-4">
                         <CourseSortBar />
 
                         {/* Error */}

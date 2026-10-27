@@ -32,7 +32,7 @@ function Preview({ kind, url }) {
  *
  * <FileUpload kind="image" value={form.thumbnail} onChange={(url) => setF("thumbnail", url)} />
  *
- * - kind: "image" | "video" | "document"
+ * - kind: "image" | "video" | "document" | "pdf"
  * - value: current URL (shown as a preview)
  * - onChange(url | ""): called after a successful upload, URL paste, or removal
  * - allowUrl: also allow pasting an external URL (default true)
@@ -146,7 +146,7 @@ export default function FileUpload({
                         <>
                             <Upload className="w-6 h-6 text-slate-400" />
                             <span className="text-[13px] font-semibold text-slate-700">
-                                Click or drop a {kind} to upload
+                                Click or drop a {rules?.noun || kind} to upload
                             </span>
                             <span className="text-[11.5px] text-slate-500">{rules?.label}</span>
                         </>
