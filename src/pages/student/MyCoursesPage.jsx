@@ -264,6 +264,23 @@ function CourseCard({ enrollment, onOpen }) {
                     </span>
                 )}
 
+                {/* Assigned free by Certezy */}
+                {enrollment.source === "admin" && (
+                    <span
+                        className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg"
+                        style={{
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                            background: "rgba(16,185,129,0.92)",
+                            color: "#fff",
+                        }}
+                    >
+                        Free access
+                    </span>
+                )}
+
                 {/* Completed tick */}
                 {isCompleted && (
                     <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[#10B981] flex items-center justify-center shadow-sm">

@@ -41,13 +41,16 @@ export default function DashboardPage() {
         const fetchAll = async () => {
             try {
                 setLoading(true);
-                const [enrRes, certRes] = await Promise.all([
+                // Load independently: a failing certificates call must not hide courses
+                const [enrRes, certRes] = await Promise.allSettled([
                     enrollmentService.getMyEnrollments(),
                     certificateService.getMyCertificates(),
                 ]);
 
-                const enrList = enrRes.data?.data?.enrollments ?? [];
-                const certList = certRes.data?.data?.certificates ?? [];
+                const enrList =
+                    enrRes.status === "fulfilled" ? (enrRes.value.data?.data?.enrollments ?? []) : [];
+                const certList =
+                    certRes.status === "fulfilled" ? (certRes.value.data?.data?.certificates ?? []) : [];
 
                 setEnrollments(enrList);
                 setCertificates(certList);
@@ -78,10 +81,15 @@ export default function DashboardPage() {
     // ── Derived stats ──────────────────────────────────────────────────────────
     const totalEnrolled = enrollments.length;
     const totalCompleted = enrollments.filter((e) => e.completed_at).length;
-    const inProgress = enrollments
-        .filter((e) => !e.completed_at && (e.progress ?? 0) > 0)
-        .sort((a, b) => (b.progress ?? 0) - (a.progress ?? 0))
-        .slice(0, 3);
+    // Started courses first (most progress), then newly enrolled or assigned
+    // courses that haven't been started yet, so new access shows up right away.
+    const unfinished = enrollments.filter((e) => !e.completed_at);
+    const inProgress = [
+        ...unfinished
+            .filter((e) => (e.progress ?? 0) > 0)
+            .sort((a, b) => (b.progress ?? 0) - (a.progress ?? 0)),
+        ...unfinished.filter((e) => !(e.progress > 0)),
+    ].slice(0, 3);
 
     const totalCerts = certificates.length;
 

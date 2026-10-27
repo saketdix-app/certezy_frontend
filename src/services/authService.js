@@ -23,7 +23,7 @@ const authService = {
     githubLogin: () => window.location.assign(`${API_BASE_URL}/auth/github`),
 
     // Admin
-    getAllUsers: () => api.get("/auth/users/all"),
+    getAllUsers: (params = {}) => api.get("/auth/users/all", { params }),
     getUserById: (id) => api.get(`/auth/users/${id}`),
     updateUserStatus: (id, data) => api.put(`/auth/users/${id}/status`, data),
 };

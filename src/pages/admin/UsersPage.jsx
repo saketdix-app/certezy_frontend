@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
     Users,
     Search,
@@ -451,7 +452,7 @@ export default function UsersPage() {
                         {/* Head */}
                         <div
                             className="grid px-5 py-3 bg-slate-50 border-b border-slate-100"
-                            style={{ gridTemplateColumns: "1fr 120px 130px 110px 120px" }}
+                            style={{ gridTemplateColumns: "1fr 120px 130px 110px 210px" }}
                         >
                             {["User", "Mobile", "Joined", "Status", "Action"].map((h) => (
                                 <span
@@ -474,7 +475,7 @@ export default function UsersPage() {
                                     <div
                                         key={user.id}
                                         className="grid px-5 py-3.5 border-b border-slate-50 hover:bg-slate-50/60 transition-colors items-center"
-                                        style={{ gridTemplateColumns: "1fr 120px 130px 110px 120px" }}
+                                        style={{ gridTemplateColumns: "1fr 120px 130px 110px 210px" }}
                                     >
                                         {/* User */}
                                         <div className="flex items-center gap-3 min-w-0">
@@ -519,7 +520,14 @@ export default function UsersPage() {
                                             </span>
                                         </div>
                                         {/* Action */}
-                                        <div>
+                                        <div className="flex items-center gap-2">
+                                            <Link
+                                                to={`/admin/assign-courses?user=${user.id}`}
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-[12px] font-bold text-[#3282B8] bg-blue-50 hover:bg-blue-100 transition-colors"
+                                                title="View and assign free courses"
+                                            >
+                                                <BookOpen size={13} /> Courses
+                                            </Link>
                                             {isActive ? (
                                                 <button
                                                     onClick={() => setBlockTarget({ user, action: "block" })}

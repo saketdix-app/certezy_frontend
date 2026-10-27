@@ -10,12 +10,17 @@ import api from "./api";
  *   GET  /api/v1/enrollments/:courseId → am I enrolled in this course?
  *
  * ADMIN:
- *   GET  /api/v1/enrollments/admin/all → all enrollments with filters
- *   GET  /api/v1/enrollments/admin/stats → enrollment statistics
+ *   GET    /api/v1/enrollments/admin/all          → all enrollments with filters
+ *
+ * FREE COURSE ASSIGNMENT (admin, sub-admin with "manage students"):
+ *   GET    /api/v1/enrollments/admin/courses      → courses that can be assigned (?search)
+ *   GET    /api/v1/enrollments/admin/user/:userId → one user's courses + how each was granted
+ *   POST   /api/v1/enrollments/admin/assign       → { user_id, course_ids[], note } — ₹0, no payment
+ *   DELETE /api/v1/enrollments/admin/:id          → revoke a free (admin-assigned) enrollment
  */
 
 const enrollmentService = {
-    // GET /enrollments — student ke saare enrolled courses
+    // GET /enrollments — the signed-in student's courses
     getMyEnrollments: () => api.get("/enrollments"),
 
     // GET /enrollments/:courseId — check if enrolled
@@ -34,9 +39,16 @@ const enrollmentService = {
         return api.get(url);
     },
 
-    getEnrollmentStats: () => {
-        return api.get("/enrollments/admin/stats");
-    },
+    // Not implemented on the backend yet; EnrollmentsPage handles the failure
+    getEnrollmentStats: () => api.get("/enrollments/admin/stats"),
+
+    // Free course assignment
+    getAssignableCourses: (search) =>
+        api.get("/enrollments/admin/courses", { params: search ? { search } : {} }),
+    getUserEnrollments: (userId) => api.get(`/enrollments/admin/user/${userId}`),
+    assignCourses: ({ userId, courseIds, note }) =>
+        api.post("/enrollments/admin/assign", { user_id: userId, course_ids: courseIds, note }),
+    revokeEnrollment: (enrollmentId) => api.delete(`/enrollments/admin/${enrollmentId}`),
 };
 
 export default enrollmentService;

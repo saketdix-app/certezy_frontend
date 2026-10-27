@@ -18,6 +18,7 @@ import {
     Menu,
     X,
     ChevronRight,
+    Gift,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -28,6 +29,7 @@ import Logo from "@/components/shared/Logo";
 const ADMIN_NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/admin/dashboard" },
     { label: "Users", icon: Users, to: "/admin/users" },
+    { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
     { label: "Categories", icon: Tag, to: "/admin/categories" },
     { label: "Courses", icon: BookOpen, to: "/admin/courses" },
     { label: "Enrollments", icon: Users, to: "/admin/enrollments" },

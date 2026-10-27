@@ -37,6 +37,7 @@ const CheckoutPage = lazy(() => import("@/pages/student/CheckoutPage/PaymentInde
 const AdminLayout = lazy(() => import("@/components/layout/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
+const AssignCoursesPage = lazy(() => import("@/pages/admin/AssignCoursesPage"));
 const AdminCoursesPage = lazy(() => import("@/pages/admin/CoursesPage"));
 const CurriculumPage = lazy(() => import("@/pages/admin/CurriculumPage"));
 const CategoriesPage = lazy(() => import("@/pages/admin/CategoriesPage"));
@@ -159,6 +160,7 @@ export default function AppRoutes() {
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="assign-courses" element={<AssignCoursesPage />} />
                     <Route path="courses" element={<AdminCoursesPage />} />
                     <Route path="courses/:courseId/curriculum" element={<CurriculumPage />} />
                     <Route path="courses/:courseId/tests" element={<TestsPage />} />
