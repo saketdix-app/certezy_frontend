@@ -5,6 +5,7 @@ import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import StarRating from "@/components/shared/StarRating";
 import PriceTag from "@/components/shared/PriceTag";
 import { formatCount, formatDuration, getPricing } from "@/lib/format";
+import { getCourseHighlight } from "@/lib/courseHighlights";
 
 /**
  * CourseCard — used on the catalogue, home page and anywhere a course grid
@@ -19,12 +20,12 @@ const LEVEL_STYLES = {
 };
 const LEVEL_DOTS = { beginner: "bg-emerald-500", intermediate: "bg-blue-500", advanced: "bg-violet-500" };
 
-function getCourseBadge({ enrolled_count = 0, created_at }, pricing) {
+function getCourseBadge({ enrolled_count = 0, created_at }, pricing, highlight) {
     if (pricing.isDiscounted && pricing.discountPct >= 10) {
         return { label: `${pricing.discountPct}% off`, style: "bg-rose-500 text-white" };
     }
     if (enrolled_count >= 100) return { label: "Bestseller", style: "bg-amber-400 text-amber-900" };
-    if (created_at && (Date.now() - new Date(created_at).getTime()) / 86_400_000 <= 30) {
+    if (!highlight && created_at && (Date.now() - new Date(created_at).getTime()) / 86_400_000 <= 30) {
         return { label: "New", style: "bg-emerald-500 text-white" };
     }
     return null;
@@ -49,7 +50,9 @@ export default function CourseCard({ course }) {
 
     const pricing = getPricing(course);
     const duration = formatDuration(total_duration);
-    const badge = getCourseBadge(course, pricing);
+    const highlight = getCourseHighlight(course);
+    const badge = getCourseBadge(course, pricing, highlight);
+    const learners = highlight ? highlight.learners : enrolled_count > 0 ? formatCount(enrolled_count) : null;
 
     return (
         <Link
@@ -57,12 +60,7 @@ export default function CourseCard({ course }) {
             className="group bg-white rounded-2xl overflow-hidden flex flex-col border border-[#EEF2F7] shadow-[0_2px_8px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-[3px] hover:border-blue-100 hover:shadow-[0_12px_32px_rgba(15,23,42,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
         >
             {/* ── Thumbnail (16:9, cropped to fit) ─────────────── */}
-            <CourseThumbnail
-                src={thumbnail}
-                title={title}
-                categorySlug={category_slug}
-                zoomOnHover
-            >
+            <CourseThumbnail src={thumbnail} title={title} categorySlug={category_slug} zoomOnHover>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent pointer-events-none" />
                 {badge && (
                     <span
@@ -96,7 +94,19 @@ export default function CourseCard({ course }) {
                     <p className="text-[11.5px] text-slate-400 truncate mb-2.5">{instructor_name}</p>
                 )}
 
-                <StarRating value={rating_avg} count={rating_count} size={12} showValue className="mb-3" />
+                <div className="flex items-center gap-2 flex-wrap mb-3">
+                    <StarRating
+                        value={highlight ? highlight.rating : rating_avg}
+                        count={highlight ? undefined : rating_count}
+                        size={12}
+                        showValue
+                    />
+                    {highlight && (
+                        <span className="text-[11.5px] text-slate-500">
+                            Learned by {highlight.learners} users
+                        </span>
+                    )}
+                </div>
 
                 <div className="flex-1" />
 
@@ -123,12 +133,12 @@ export default function CourseCard({ course }) {
                                 <Clock size={12} /> {duration}
                             </span>
                         )}
-                        {enrolled_count > 0 && (
+                        {learners && (
                             <span className="inline-flex items-center gap-1 truncate">
-                                <Users size={12} /> {formatCount(enrolled_count)}
+                                <Users size={12} /> {learners}
                             </span>
                         )}
-                        {!duration && !enrolled_count && <span>Self-paced</span>}
+                        {!duration && !learners && <span>Self-paced</span>}
                     </div>
                     <PriceTag course={course} size="sm" className="justify-end text-right" />
                 </div>
