@@ -512,7 +512,10 @@ export default function CourseDetailIndex() {
 
                     {/* ── RIGHT — enroll card ── */}
                     {/* On phones the enroll card sits right under the hero so the CTA is visible */}
-                    <div className="w-full lg:w-[320px] xl:w-[340px] lg:shrink-0 order-first lg:order-none">
+                    <div
+                        id="course-enroll"
+                        className="w-full lg:w-[320px] xl:w-[340px] lg:shrink-0 order-first lg:order-none"
+                    >
                         <CourseEnrollCard
                             course={course}
                             isEnrolled={isEnrolled}
