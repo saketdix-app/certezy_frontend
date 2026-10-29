@@ -14,6 +14,7 @@ import CourseEnrollCard from "./CourseEnrollCard";
 import CourseReviews from "@/components/reviews/CourseReviews";
 import StarRating from "@/components/shared/StarRating";
 import { getPricing, formatCount } from "@/lib/format";
+import { getCourseHighlight } from "@/lib/courseHighlights";
 
 export default function CourseDetailIndex() {
     const { slug } = useParams();
@@ -103,6 +104,7 @@ export default function CourseDetailIndex() {
         );
     }
 
+    const highlight = getCourseHighlight(course);
     const whatYouLearn = course.what_you_learn ? course.what_you_learn.split("\n").filter(Boolean) : [];
 
     return (
@@ -200,17 +202,21 @@ export default function CourseDetailIndex() {
                         {/* Stats */}
                         <div className="flex items-center gap-4 flex-wrap">
                             <StarRating
-                                value={course.rating_avg}
-                                count={course.rating_count}
+                                value={highlight ? highlight.rating : course.rating_avg}
+                                count={highlight ? undefined : course.rating_count}
                                 size={14}
                                 showValue
                                 tone="dark"
                             />
-                            {course.enrolled_count > 0 && (
-                                <StatPill
-                                    icon={Users}
-                                    label={`${formatCount(course.enrolled_count)} students`}
-                                />
+                            {highlight ? (
+                                <StatPill icon={Users} label={`Learned by ${highlight.learners} users`} />
+                            ) : (
+                                course.enrolled_count > 0 && (
+                                    <StatPill
+                                        icon={Users}
+                                        label={`${formatCount(course.enrolled_count)} students`}
+                                    />
+                                )
                             )}
                             {sections.length > 0 && (
                                 <StatPill icon={BookOpen} label={`${sections.length} sections`} />

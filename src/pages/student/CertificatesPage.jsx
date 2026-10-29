@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Award, Download, ExternalLink, Calendar, Hash } from "lucide-react";
+import { Award, Download, ExternalLink, Calendar, Hash, ShieldCheck, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import certificateService from "@/services/certificateService";
 
@@ -71,7 +72,15 @@ export default function CertificatesPage() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                         {certificates.map((cert) => (
-                            <CertCard key={cert.id} cert={cert} />
+                            <CertCard
+                                key={cert.id}
+                                cert={cert}
+                                onPdfReady={(id, pdf_url) =>
+                                    setCertificates((list) =>
+                                        list.map((c) => (c.id === id ? { ...c, pdf_url } : c))
+                                    )
+                                }
+                            />
                         ))}
                     </div>
                 )}
@@ -82,7 +91,37 @@ export default function CertificatesPage() {
 
 // ─── Certificate Card ─────────────────────────────────────────────────────────
 
-function CertCard({ cert }) {
+// PDF missing (e.g. storage was down when it was issued) → build it now
+function GeneratePdfButton({ cert, onReady }) {
+    const [busy, setBusy] = useState(false);
+    const generate = async () => {
+        setBusy(true);
+        try {
+            const res = await certificateService.claim(cert.course_id);
+            const updated = res.data?.data?.certificate;
+            if (updated?.pdf_url) onReady?.(cert.id, updated.pdf_url);
+            else toast.error("PDF could not be created — please try again later");
+        } catch (err) {
+            toast.error(err.response?.data?.message || "PDF could not be created");
+        } finally {
+            setBusy(false);
+        }
+    };
+    return (
+        <button
+            type="button"
+            onClick={generate}
+            disabled={busy}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl disabled:opacity-60"
+            style={{ background: "#F1F5F9", color: "#334155", fontSize: "13px", fontWeight: 700 }}
+        >
+            {busy ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+            Generate PDF
+        </button>
+    );
+}
+
+function CertCard({ cert, onPdfReady }) {
     return (
         <div
             className="bg-white rounded-2xl overflow-hidden flex flex-col"
@@ -214,18 +253,18 @@ function CertCard({ cert }) {
                             </a>
                         </>
                     ) : (
-                        <div
-                            className="flex-1 flex items-center justify-center py-2.5 rounded-xl"
-                            style={{
-                                background: "#F8FAFC",
-                                fontSize: "13px",
-                                color: "#94A3B8",
-                                fontWeight: 600,
-                            }}
-                        >
-                            PDF not available yet
-                        </div>
+                        <GeneratePdfButton cert={cert} onReady={onPdfReady} />
                     )}
+                    <a
+                        href={`/verify/${cert.certificate_no}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center no-underline transition-colors duration-150"
+                        style={{ background: "#ECFDF5", color: "#059669" }}
+                        title="Public verification page — share this link"
+                    >
+                        <ShieldCheck size={15} />
+                    </a>
                 </div>
             </div>
         </div>

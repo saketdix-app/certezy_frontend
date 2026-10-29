@@ -26,6 +26,9 @@ import lessonService from "@/services/lessonService";
 import progressService from "@/services/progressService";
 import enrollmentService from "@/services/enrollmentService";
 import testService from "@/services/testService";
+import certificateService from "@/services/certificateService";
+import { showCertificateEarned } from "@/components/shared/CertificateEarnedToast";
+import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { EnhancedTextLesson } from "@/components/player/EnhancedTextLesson";
 import PdfLesson from "@/components/player/PdfLesson";
@@ -193,11 +196,13 @@ export default function CoursePlayerPage() {
             const is_completed = markComplete || !!completedRef.current[currentLesson.id]?.is_completed;
 
             try {
-                await progressService.updateLessonProgress({
+                const res = await progressService.updateLessonProgress({
                     lesson_id: currentLesson.id,
                     is_completed: is_completed ? 1 : 0,
                     watch_time: Math.floor(watchTimeRef.current),
                 });
+                // Last lesson done → the API issues the certificate automatically
+                showCertificateEarned(res.data?.data?.certificate, navigate);
 
                 if (is_completed) {
                     completedRef.current = {
@@ -213,7 +218,7 @@ export default function CoursePlayerPage() {
                 console.error("Progress sync failed:", err);
             }
         },
-        [currentLesson]
+        [currentLesson, navigate]
     );
 
     // ── Video event handlers ───────────────────────────────────────────────────
@@ -294,6 +299,17 @@ export default function CoursePlayerPage() {
     const completedLessons = Object.values(progressMap).filter((p) => p.is_completed).length;
     const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+    const getCertificate = async () => {
+        try {
+            const res = await certificateService.claim(courseId);
+            const cert = res.data?.data?.certificate;
+            if (cert?.pdf_url) window.open(cert.pdf_url, "_blank", "noopener");
+            else navigate("/student/certificates");
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Certificate is not available yet");
+        }
+    };
+
     return (
         <div
             className="h-screen flex flex-col overflow-hidden"
@@ -306,6 +322,7 @@ export default function CoursePlayerPage() {
                 progressPct={progressPct}
                 completedLessons={completedLessons}
                 totalLessons={totalLessons}
+                onGetCertificate={progressPct >= 100 ? getCertificate : null}
                 sidebarOpen={sidebarOpen}
                 onToggleSidebar={() => setSidebarOpen((p) => !p)}
             />
@@ -545,7 +562,15 @@ export default function CoursePlayerPage() {
 }
 
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
-function TopBar({ navigate, progressPct, completedLessons, totalLessons, sidebarOpen, onToggleSidebar }) {
+function TopBar({
+    navigate,
+    progressPct,
+    completedLessons,
+    totalLessons,
+    onGetCertificate,
+    sidebarOpen,
+    onToggleSidebar,
+}) {
     return (
         <div
             className="h-[60px] flex items-center px-4 gap-4 shrink-0"
@@ -595,10 +620,21 @@ function TopBar({ navigate, progressPct, completedLessons, totalLessons, sidebar
                 </span>
             </div>
 
+            {onGetCertificate && (
+                <button
+                    onClick={onGetCertificate}
+                    className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 text-amber-950 hover:bg-amber-300 transition-colors"
+                    style={{ fontSize: "12px", fontWeight: 700 }}
+                >
+                    <Award size={14} />
+                    <span className="hidden sm:block">Get certificate</span>
+                </button>
+            )}
+
             {/* Sidebar toggle */}
             <button
                 onClick={onToggleSidebar}
-                className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors"
+                className={`${onGetCertificate ? "" : "ml-auto "}flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors`}
                 style={{
                     background: sidebarOpen ? "rgba(50,130,184,0.2)" : "rgba(255,255,255,0.06)",
                     color: sidebarOpen ? "#3282B8" : "rgba(255,255,255,0.55)",

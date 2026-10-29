@@ -6,7 +6,11 @@ import api from "./api";
  * Backend base: /api/v1/certificates
  *
  * STUDENT:
- *   GET  /api/v1/certificates → my certificates
+ *   GET  /api/v1/certificates                  → my certificates
+ *   POST /api/v1/certificates/claim/:courseId  → get / issue my certificate for a finished course
+ *
+ * PUBLIC:
+ *   GET  /api/v1/certificates/verify/:certNo   → verify a certificate number
  *
  * PUBLIC:
  *   GET  /api/v1/certificates/:id      → download certificate
@@ -20,6 +24,8 @@ import api from "./api";
 const certificateService = {
     // GET /certificates — student ke saare certificates
     getMyCertificates: () => api.get("/certificates"),
+    claim: (courseId) => api.post(`/certificates/claim/${courseId}`),
+    verify: (certificateNo) => api.get(`/certificates/verify/${encodeURIComponent(certificateNo)}`),
 
     // Public
     download: (id) => api.get(`/certificates/${id}`, { responseType: "blob" }),

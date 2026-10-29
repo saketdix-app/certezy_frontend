@@ -13,6 +13,7 @@ import {
 import toast from "react-hot-toast";
 
 import testService from "@/services/testService";
+import { showCertificateEarned } from "@/components/shared/CertificateEarnedToast";
 import { QuestionRenderer, ExamResults } from "@/components/exam/QuestionRenderer";
 import { ExamTimer, QuestionNavigator, SubmitExamModal } from "@/components/exam/ExamComponents";
 
@@ -119,6 +120,7 @@ export default function ExamInterface() {
             setResults(resultData);
             setShowResults(true);
             toast.success("Exam submitted successfully!");
+            showCertificateEarned(resultData?.certificate, navigate);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to submit exam");
         } finally {

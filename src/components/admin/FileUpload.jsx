@@ -1,8 +1,9 @@
 import { useId, useRef, useState } from "react";
-import { Upload, X, Loader2, FileText, Link2 } from "lucide-react";
+import { Upload, X, Loader2, FileText, Link2, Crop } from "lucide-react";
 import toast from "react-hot-toast";
 import uploadService, { UPLOAD_KINDS, validateUpload } from "@/services/uploadService";
-import { resizeImage, isResizableImage } from "@/lib/image";
+import { isResizableImage, loadImageUrl, renderAdjusted } from "@/lib/image";
+import ThumbnailAdjuster from "@/components/admin/ThumbnailAdjuster";
 
 const inputCls =
     "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-primary focus:bg-white transition-colors";
@@ -45,8 +46,10 @@ function Preview({ kind, url, aspect }) {
  * - onChange(url | ""): called after a successful upload, URL paste, or removal
  * - allowUrl: also allow pasting an external URL (default true)
  * - resize: images only — { width, height } to redraw the image to before upload,
- *   e.g. { width: 1280, height: 720 } for 16:9 course thumbnails. The admin picks
- *   "Crop to fill" or "Fit whole image"; the result is a light WebP/JPEG.
+ *   e.g. { width: 1280, height: 720 } for 16:9 course thumbnails. After picking a
+ *   file the admin positions it in ThumbnailAdjuster (drag / zoom, crop or fit,
+ *   previews per screen); the result is a light WebP/JPEG. "Adjust" re-opens the
+ *   editor on the current image.
  */
 export default function FileUpload({
     kind = "image",
@@ -61,7 +64,8 @@ export default function FileUpload({
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [showUrl, setShowUrl] = useState(false);
-    const [fit, setFit] = useState("cover");
+    const [editing, setEditing] = useState(null); // { image, name, revoke? }
+    const [rendering, setRendering] = useState(false);
     const rules = UPLOAD_KINDS[kind];
     const canResize = kind === "image" && resize;
     const aspect = canResize ? `${resize.width}/${resize.height}` : undefined;
@@ -74,16 +78,58 @@ export default function FileUpload({
             return;
         }
 
-        let file = picked;
         if (canResize && isResizableImage(picked)) {
+            const objectUrl = URL.createObjectURL(picked);
             try {
-                file = await resizeImage(picked, { width: resize.width, height: resize.height, fit });
+                const image = await loadImageUrl(objectUrl);
+                setEditing({ image, name: picked.name, revoke: () => URL.revokeObjectURL(objectUrl) });
             } catch (err) {
+                URL.revokeObjectURL(objectUrl);
                 toast.error(err.message || "Could not process this image");
-                return;
             }
+            return;
         }
+        await upload(picked);
+    };
 
+    // Re-open the editor on the image that is already saved
+    const adjustCurrent = async () => {
+        try {
+            // cache-buster: a copy cached without CORS headers can't be exported
+            const sep = value.includes("?") ? "&" : "?";
+            const image = await loadImageUrl(`${value}${sep}adjust=${Date.now()}`);
+            setEditing({ image, name: decodeURIComponent(value.split("/").pop().split("?")[0]) });
+        } catch {
+            toast.error("This image can't be edited here — upload the original file again to adjust it");
+        }
+    };
+
+    const closeEditor = () => {
+        editing?.revoke?.();
+        setEditing(null);
+    };
+
+    const applyAdjust = async (settings) => {
+        setRendering(true);
+        let file;
+        try {
+            file = await renderAdjusted(editing.image, {
+                width: resize.width,
+                height: resize.height,
+                name: editing.name,
+                ...settings,
+            });
+        } catch (err) {
+            toast.error(err.message || "Could not process this image");
+            return;
+        } finally {
+            setRendering(false);
+        }
+        closeEditor();
+        await upload(file);
+    };
+
+    const upload = async (file) => {
         abortRef.current = new AbortController();
         setUploading(true);
         setProgress(0);
@@ -117,41 +163,27 @@ export default function FileUpload({
 
     return (
         <div className="space-y-2">
-            {canResize && (
-                <div className="flex flex-wrap items-center gap-2 text-[12px]">
-                    <span className="text-slate-500 font-medium">Thumbnail fit:</span>
-                    {[
-                        ["cover", "Crop to fill"],
-                        ["contain", "Fit whole image"],
-                    ].map(([mode, label]) => (
-                        <button
-                            key={mode}
-                            type="button"
-                            onClick={() => setFit(mode)}
-                            className={`px-2.5 py-1 rounded-lg border font-semibold transition-colors ${
-                                fit === mode
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-slate-200 text-slate-500 hover:border-slate-300"
-                            }`}
-                        >
-                            {label}
-                        </button>
-                    ))}
-                    <span className="text-slate-400">
-                        Saved as {resize.width}×{resize.height}
-                    </span>
-                </div>
-            )}
             {value && !uploading ? (
                 <div className="relative border border-slate-200 rounded-xl p-2 bg-white">
                     <Preview kind={kind} url={value} aspect={aspect} />
                     <div className="flex items-center justify-between gap-2 mt-2 px-1">
-                        <label
-                            htmlFor={inputId}
-                            className="text-[12px] font-semibold text-primary cursor-pointer hover:underline"
-                        >
-                            Replace
-                        </label>
+                        <div className="flex items-center gap-3">
+                            <label
+                                htmlFor={inputId}
+                                className="text-[12px] font-semibold text-primary cursor-pointer hover:underline"
+                            >
+                                Replace
+                            </label>
+                            {canResize && (
+                                <button
+                                    type="button"
+                                    onClick={adjustCurrent}
+                                    className="flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
+                                >
+                                    <Crop size={13} /> Adjust
+                                </button>
+                            )}
+                        </div>
                         <button
                             type="button"
                             onClick={() => onChange?.("")}
@@ -198,7 +230,11 @@ export default function FileUpload({
                             <span className="text-[13px] font-semibold text-slate-700">
                                 Click or drop a {rules?.noun || kind} to upload
                             </span>
-                            <span className="text-[11.5px] text-slate-500">{rules?.label}</span>
+                            <span className="text-[11.5px] text-slate-500">
+                                {rules?.label}
+                                {canResize &&
+                                    ` · you can crop & position it next (${resize.width}×${resize.height})`}
+                            </span>
                         </>
                     )}
                 </label>
@@ -212,6 +248,17 @@ export default function FileUpload({
                 disabled={uploading || disabled}
                 className="hidden"
             />
+
+            {editing && (
+                <ThumbnailAdjuster
+                    image={editing.image}
+                    width={resize.width}
+                    height={resize.height}
+                    busy={rendering}
+                    onApply={applyAdjust}
+                    onCancel={closeEditor}
+                />
+            )}
 
             {allowUrl && (
                 <div>
