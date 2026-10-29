@@ -471,7 +471,12 @@ function StandardPacks() {
         try {
             await importService.importStandardPack(pack.id);
             setDone((d) => ({ ...d, [pack.id]: true }));
-            toast.success(`${pack.exam} imported as a draft course`);
+            if (pack.id === "all") {
+                setDone(Object.fromEntries(packs.map((p) => [p.id, true])));
+                toast.success("All standard courses imported and published");
+            } else {
+                toast.success(`${pack.title} imported`);
+            }
         } catch (err) {
             toast.error(apiError(err, "Could not import this pack"));
         } finally {
@@ -483,15 +488,35 @@ function StandardPacks() {
 
     return (
         <Card className="p-5">
-            <div className="flex items-center gap-2 mb-1">
-                <Cloud size={17} className="text-primary" />
-                <h2 className="text-[15px] font-extrabold text-slate-900">Standard certification courses</h2>
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+                <div>
+                    <div className="flex items-center gap-2 mb-1">
+                        <Cloud size={17} className="text-primary" />
+                        <h2 className="text-[15px] font-extrabold text-slate-900">Standard courses</h2>
+                    </div>
+                    <p className="text-[12.5px] text-slate-500">
+                        Ready-made courses with an overview, free full-length YouTube video courses, official
+                        links and a practice quiz. They import as <b>published, free</b> courses in the
+                        matching category; your other courses (e.g. PMP) are not touched. Importing again
+                        updates the content.
+                    </p>
+                </div>
+                {packs.length > 1 && (
+                    <button
+                        type="button"
+                        disabled={!!importing}
+                        onClick={() => importPack({ id: "all", title: "All courses" })}
+                        className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-60"
+                    >
+                        {importing === "all" ? (
+                            <Loader2 size={14} className="animate-spin" />
+                        ) : (
+                            <Download size={14} />
+                        )}
+                        Import all courses
+                    </button>
+                )}
             </div>
-            <p className="text-[12.5px] text-slate-500 mb-4">
-                Ready-made AWS and Azure courses with study notes, official links and a practice quiz. They
-                import as <b>draft, free</b> courses — add a thumbnail, set the price and publish when ready.
-                Importing again updates the content.
-            </p>
 
             {loading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
