@@ -15,6 +15,11 @@ import api from "./api";
  *   GET    /reviews/admin/all                 ?page&limit&is_approved&course_id
  *   GET    /reviews/admin/pending             ?limit
  *   PUT    /reviews/:id/approval              { is_approved: 0 | 1 }
+ *   GET    /reviews/admin/sources             { platform: "Verified Certezy learner", classroom: … }
+ *   POST   /reviews/admin                     add a genuine review collected outside the site
+ *                                             { course_id, reviewer_name, rating, comment?, source,
+ *                                               source_note?, reviewed_at?, is_approved?, confirm_genuine: true }
+ *   PUT    /reviews/admin/:id                 edit an admin-entered review
  *   DELETE /reviews/:id
  */
 
@@ -35,6 +40,9 @@ const reviewService = {
     approveReview: (id) => api.put(`/reviews/${id}/approval`, { is_approved: 1 }),
     rejectReview: (id) => api.put(`/reviews/${id}/approval`, { is_approved: 0 }),
     deleteReview: (id) => api.delete(`/reviews/${id}`),
+    getSources: () => api.get("/reviews/admin/sources"),
+    createAdminReview: (data) => api.post("/reviews/admin", data),
+    updateAdminReview: (id, data) => api.put(`/reviews/admin/${id}`, data),
 };
 
 export default reviewService;

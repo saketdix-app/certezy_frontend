@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import reviewService from "@/services/reviewService";
 import StarRating, { RatingInput } from "@/components/shared/StarRating";
+import { REVIEW_SOURCES, describeSource } from "@/lib/reviewSources";
 
 /**
  * CourseReviews — the whole "Student Reviews" block of a course page.
@@ -365,8 +366,11 @@ function ReviewList({ reviews, loading, filtered }) {
                                     {r.student_name || "Student"}
                                 </span>
                                 <StarRating value={r.rating} size={12} />
-                                <span className="text-[12px] text-slate-400">{formatDate(r.created_at)}</span>
+                                <span className="text-[12px] text-slate-400">
+                                    {formatDate(r.review_date || r.created_at)}
+                                </span>
                             </div>
+                            <SourceBadge review={r} />
                             {r.comment && (
                                 <p className="mt-1.5 text-[14px] text-slate-600 leading-relaxed whitespace-pre-line break-words">
                                     {r.comment}
@@ -377,5 +381,26 @@ function ReviewList({ reviews, loading, filtered }) {
                 </li>
             ))}
         </ul>
+    );
+}
+
+// Shows where a review came from: on-site reviews are "Verified learner";
+// reviews entered by the Certezy team carry their source (classroom batch, …)
+function SourceBadge({ review }) {
+    const src = REVIEW_SOURCES[review.source] || REVIEW_SOURCES.platform;
+    return (
+        <span
+            className={cn(
+                "mt-1 inline-flex max-w-full items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold truncate",
+                src.cls
+            )}
+            title={
+                review.source && review.source !== "platform"
+                    ? "Collected by the Certezy team outside this website"
+                    : "Written by a learner enrolled on Certezy"
+            }
+        >
+            {describeSource(review)}
+        </span>
     );
 }

@@ -23,6 +23,7 @@ import {
     Cloud,
     Info,
     ChevronDown,
+    Star,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,12 @@ const TYPES = [
         icon: ClipboardList,
         hint: "Single-choice, multiple-choice (MCQ) and true/false",
     },
+    {
+        type: "reviews",
+        label: "Reviews",
+        icon: Star,
+        hint: "Genuine reviews from classroom batches, corporate training or other platforms",
+    },
 ];
 
 const MAX_FILE_MB = 5;
@@ -57,6 +64,7 @@ const ENTITY_LABELS = {
     lessons: "lessons",
     quizzes: "quizzes",
     questions: "questions",
+    reviews: "reviews",
 };
 
 const apiError = (err, fallback) => err.response?.data?.message || err.message || fallback;
@@ -77,6 +85,7 @@ export default function BulkImportPage() {
     const [file, setFile] = useState(null);
     const [csv, setCsv] = useState("");
     const [createCategories, setCreateCategories] = useState(true);
+    const [confirmGenuine, setConfirmGenuine] = useState(false);
 
     const [busy, setBusy] = useState(null); // "check" | "import" | null
     const [result, setResult] = useState(null); // { ok, dryRun, summary, rows } | { ok:false, message, errors }
@@ -96,6 +105,7 @@ export default function BulkImportPage() {
         setFile(null);
         setCsv("");
         setResult(null);
+        setConfirmGenuine(false);
         if (fileInput.current) fileInput.current.value = "";
     };
 
@@ -128,6 +138,7 @@ export default function BulkImportPage() {
                 csv,
                 dryRun,
                 createMissingCategories: createCategories,
+                confirmGenuine,
             });
             setResult({ ok: true, dryRun, ...data.data });
             if (!dryRun) toast.success("Import completed");
@@ -163,13 +174,13 @@ export default function BulkImportPage() {
                 </div>
                 <p className="text-[13px] text-slate-500 mt-2">
                     Create or update courses, curriculum and quizzes from a CSV. Import <b>Courses</b> first,
-                    then <b>Sections &amp; Lessons</b>, then <b>Quizzes</b>. Re-importing a file updates
-                    matching records instead of duplicating them.
+                    then <b>Sections &amp; Lessons</b>, then <b>Quizzes</b> (and <b>Reviews</b> any time).
+                    Re-importing a file updates matching records instead of duplicating them.
                 </p>
             </div>
 
             {/* Step 1 — type */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {TYPES.map(({ type: t, label, icon: Icon, hint }) => (
                     <button
                         key={t}
@@ -304,6 +315,22 @@ export default function BulkImportPage() {
                     </label>
                 )}
 
+                {type === "reviews" && (
+                    <label className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[13px] text-amber-900">
+                        <input
+                            type="checkbox"
+                            checked={confirmGenuine}
+                            onChange={(e) => setConfirmGenuine(e.target.checked)}
+                            className="w-4 h-4 mt-0.5 accent-[#3282B8] shrink-0"
+                        />
+                        <span>
+                            I confirm every row is a genuine review given by a real learner, with their rating
+                            and words unchanged. These reviews are shown publicly with their source (e.g.
+                            “Classroom batch”).
+                        </span>
+                    </label>
+                )}
+
                 <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
                     <button
                         type="button"
@@ -316,7 +343,7 @@ export default function BulkImportPage() {
                     </button>
                     <button
                         type="button"
-                        disabled={!csv || !!busy}
+                        disabled={!csv || !!busy || (type === "reviews" && !confirmGenuine)}
                         onClick={() => run(false)}
                         className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
                     >
