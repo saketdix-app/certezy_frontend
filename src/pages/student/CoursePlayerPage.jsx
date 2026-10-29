@@ -15,6 +15,10 @@ import {
     AlertCircle,
     Award,
     FileDown,
+    Link2,
+    MonitorPlay,
+    Headphones,
+    ClipboardList,
 } from "lucide-react";
 
 import sectionService from "@/services/sectionService";
@@ -25,11 +29,29 @@ import testService from "@/services/testService";
 import { cn } from "@/lib/utils";
 import { EnhancedTextLesson } from "@/components/player/EnhancedTextLesson";
 import PdfLesson from "@/components/player/PdfLesson";
+import {
+    VideoLesson,
+    EmbedLesson,
+    LinkLesson,
+    AudioLesson,
+    QuizLesson,
+} from "@/components/player/MediaLessons";
 import Logo from "@/components/shared/Logo";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PROGRESS_SYNC_INTERVAL = 15; // seconds — har 15s mein progress save
 const AUTO_COMPLETE_THRESHOLD = 0.9; // 90% dekha toh complete
+// Text lessons render their own prev/next + complete controls
+const TEXT_TYPES = ["text", "article"];
+
+const LESSON_ICONS = {
+    video: PlayCircle,
+    pdf: FileDown,
+    link: Link2,
+    embed: MonitorPlay,
+    audio: Headphones,
+    quiz: ClipboardList,
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmtDuration(seconds) {
@@ -294,7 +316,7 @@ export default function CoursePlayerPage() {
                 <main className="flex-1 flex flex-col overflow-y-auto bg-[#0F172A]">
                     {currentLesson ? (
                         <>
-                            {/* Lesson area — 16:9 frame for video; text and PDF size to their content */}
+                            {/* Lesson area — 16:9 frame for video; everything else sizes to its content */}
                             <div
                                 className={
                                     currentLesson.type === "video"
@@ -304,29 +326,39 @@ export default function CoursePlayerPage() {
                                 style={
                                     currentLesson.type === "video"
                                         ? { aspectRatio: "16/9", maxHeight: "calc(100vh - 200px)" }
-                                        : currentLesson.type === "pdf"
-                                          ? undefined
-                                          : { minHeight: "60vh" }
+                                        : TEXT_TYPES.includes(currentLesson.type)
+                                          ? { minHeight: "60vh" }
+                                          : undefined
                                 }
                             >
                                 {currentLesson.type === "pdf" ? (
                                     <PdfLesson lesson={currentLesson} />
-                                ) : currentLesson.type === "video" && currentLesson.content ? (
-                                    <video
-                                        ref={videoRef}
-                                        key={currentLesson.id}
-                                        src={currentLesson.content}
-                                        controls
-                                        className="w-full h-full"
+                                ) : currentLesson.type === "video" ? (
+                                    <VideoLesson
+                                        lesson={currentLesson}
+                                        videoRef={videoRef}
                                         onTimeUpdate={handleTimeUpdate}
                                         onEnded={handleVideoEnded}
-                                        style={{ outline: "none" }}
+                                    />
+                                ) : currentLesson.type === "embed" ? (
+                                    <EmbedLesson lesson={currentLesson} />
+                                ) : currentLesson.type === "link" ? (
+                                    <LinkLesson lesson={currentLesson} />
+                                ) : currentLesson.type === "audio" ? (
+                                    <AudioLesson lesson={currentLesson} onEnded={markLessonComplete} />
+                                ) : currentLesson.type === "quiz" ? (
+                                    <QuizLesson
+                                        lesson={currentLesson}
+                                        exams={courseExams}
+                                        onStart={(exam) =>
+                                            navigate(`/student/course/${courseId}/exam/${exam.id}`)
+                                        }
                                     />
                                 ) : (
                                     // Text / article lesson content area
                                     <div className="w-full h-full bg-[#0a1628] overflow-y-auto">
                                         {currentLesson.content ? (
-                                            <div className="p-6">
+                                            <div className="p-4 sm:p-6">
                                                 <EnhancedTextLesson
                                                     lesson={currentLesson}
                                                     onMarkComplete={markLessonComplete}
@@ -340,19 +372,13 @@ export default function CoursePlayerPage() {
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
+                                            <div className="w-full h-full flex items-center justify-center py-20">
                                                 <div className="text-center">
                                                     <FileText
                                                         size={48}
-                                                        style={{ color: "rgba(255,255,255,0.2)" }}
-                                                        className="mx-auto mb-3"
+                                                        className="mx-auto mb-3 text-white/20"
                                                     />
-                                                    <p
-                                                        style={{
-                                                            color: "rgba(255,255,255,0.4)",
-                                                            fontSize: "14px",
-                                                        }}
-                                                    >
+                                                    <p className="text-white/40 text-[14px]">
                                                         No content available
                                                     </p>
                                                 </div>
@@ -433,7 +459,7 @@ export default function CoursePlayerPage() {
                                 )}
 
                                 {/* Prev / Next buttons — video and PDF (text lessons have their own) */}
-                                {(currentLesson.type === "video" || currentLesson.type === "pdf") && (
+                                {!TEXT_TYPES.includes(currentLesson.type) && (
                                     <div
                                         className="flex items-center justify-between pt-4"
                                         style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
@@ -715,22 +741,16 @@ function CourseSidebar({
                                                         {lesson.title}
                                                     </p>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        {lesson.type === "pdf" ? (
-                                                            <FileDown
-                                                                size={10}
-                                                                style={{ color: "rgba(255,255,255,0.3)" }}
-                                                            />
-                                                        ) : lesson.type === "video" ? (
-                                                            <PlayCircle
-                                                                size={10}
-                                                                style={{ color: "rgba(255,255,255,0.3)" }}
-                                                            />
-                                                        ) : (
-                                                            <FileText
-                                                                size={10}
-                                                                style={{ color: "rgba(255,255,255,0.3)" }}
-                                                            />
-                                                        )}
+                                                        {(() => {
+                                                            const TypeIcon =
+                                                                LESSON_ICONS[lesson.type] || FileText;
+                                                            return (
+                                                                <TypeIcon
+                                                                    size={10}
+                                                                    style={{ color: "rgba(255,255,255,0.3)" }}
+                                                                />
+                                                            );
+                                                        })()}
                                                         {lesson.duration > 0 && (
                                                             <span
                                                                 style={{
@@ -800,10 +820,10 @@ function CourseSidebar({
                                     </p>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
-                                            {exam.duration_minutes} min
+                                            {exam.duration ?? exam.duration_minutes} min
                                         </span>
                                         <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
-                                            {exam.questions_count} questions
+                                            {exam.total_questions ?? exam.questions_count ?? 0} questions
                                         </span>
                                     </div>
                                 </div>

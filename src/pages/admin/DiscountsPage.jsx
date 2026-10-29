@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import { Search, X, Send, Clock, CheckCircle, Copy, Users, BookOpen, IndianRupee } from "lucide-react";
 import toast from "react-hot-toast";
 import courseService from "@/services/courseService";
@@ -187,17 +188,12 @@ export default function DiscountsPage() {
                             {selectedCourse && (
                                 <div className="mt-3 p-4 bg-white rounded-xl border border-slate-200">
                                     <div className="flex gap-3">
-                                        {selectedCourse.thumbnail ? (
-                                            <img
-                                                src={selectedCourse.thumbnail}
-                                                alt={selectedCourse.title}
-                                                className="w-16 h-16 rounded-lg object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[#3282B8] to-[#0a1628] flex items-center justify-center">
-                                                <BookOpen className="w-6 h-6 text-white" />
-                                            </div>
-                                        )}
+                                        <CourseThumbnail
+                                            src={selectedCourse.thumbnail}
+                                            title={selectedCourse.title}
+                                            className="w-24 rounded-lg"
+                                            compact
+                                        />
                                         <div className="flex-1">
                                             <h4 className="font-semibold text-slate-900 text-sm">
                                                 {selectedCourse.title}

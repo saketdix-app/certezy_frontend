@@ -25,6 +25,9 @@ import { cn } from "@/lib/utils";
 import courseService from "@/services/courseService";
 import categoryService from "@/services/categoryService";
 import FileUpload from "@/components/admin/FileUpload";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
+import PriceTag from "@/components/shared/PriceTag";
+import { formatCount } from "@/lib/format";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -52,7 +55,9 @@ const EMPTY_FORM = {
     category_id: "",
     thumbnail: "",
     preview_video: "",
+    pricing_type: "paid",
     price: "",
+    original_price: "",
     level: "beginner",
     language: "English",
     status: "draft",
@@ -64,8 +69,7 @@ const EMPTY_FORM = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const fmt = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : n);
-const fmtPrice = (p) => (p == null || p === 0 ? "Free" : `$${Number(p).toLocaleString("en-US")}`);
+const fmt = formatCount;
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
@@ -203,7 +207,9 @@ export default function CoursesPage() {
             category_id: course.category_id ?? "",
             thumbnail: course.thumbnail ?? "",
             preview_video: course.preview_video ?? "",
+            pricing_type: course.pricing_type ?? (Number(course.price) > 0 ? "paid" : "free"),
             price: course.price ?? "",
+            original_price: course.original_price ?? "",
             level: course.level ?? "beginner",
             language: course.language ?? "English",
             status: course.status ?? "draft",
@@ -232,6 +238,15 @@ export default function CoursesPage() {
             toast.error("Category is required");
             return;
         }
+        const isPaid = form.pricing_type === "paid";
+        if (isPaid && !(Number(form.price) > 0)) {
+            toast.error("Enter a price for a paid course (or choose Free)");
+            return;
+        }
+        if (isPaid && form.original_price !== "" && Number(form.original_price) <= Number(form.price)) {
+            toast.error("Original price must be higher than the selling price");
+            return;
+        }
 
         setSaving(true);
         try {
@@ -244,7 +259,9 @@ export default function CoursesPage() {
                 // null clears the media when an admin removes it
                 thumbnail: form.thumbnail?.trim() || null,
                 preview_video: form.preview_video?.trim() || null,
-                price: form.price === "" ? 0 : Number(form.price),
+                pricing_type: isPaid ? "paid" : "free",
+                price: isPaid ? Number(form.price) : 0,
+                original_price: isPaid && form.original_price !== "" ? Number(form.original_price) : null,
                 level: form.level || "beginner",
                 language: form.language?.trim() || "English",
                 status: form.status || "draft",
@@ -580,17 +597,13 @@ export default function CoursesPage() {
                                             {/* Course */}
                                             <td className="py-3.5 px-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-slate-100 flex items-center justify-center">
-                                                        {course.thumbnail ? (
-                                                            <img
-                                                                src={course.thumbnail}
-                                                                alt={course.title}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <BookOpen size={15} className="text-slate-400" />
-                                                        )}
-                                                    </div>
+                                                    <CourseThumbnail
+                                                        src={course.thumbnail}
+                                                        title={course.title}
+                                                        categorySlug={course.category_slug}
+                                                        className="w-16 rounded-lg"
+                                                        compact
+                                                    />
                                                     <div className="min-w-0">
                                                         <p className="text-[13px] font-bold text-slate-900 truncate max-w-[180px] lg:max-w-[240px]">
                                                             {course.title}
@@ -627,7 +640,7 @@ export default function CoursesPage() {
                                             </td>
                                             {/* Price */}
                                             <td className="py-3.5 px-4 text-[13px] font-bold text-slate-800 whitespace-nowrap">
-                                                {fmtPrice(course.price)}
+                                                <PriceTag course={course} size="sm" />
                                             </td>
                                             {/* Students */}
                                             <td className="py-3.5 px-4 text-[13px] text-slate-700 hidden 2xl:table-cell">
@@ -903,6 +916,7 @@ export default function CoursesPage() {
                                         kind="image"
                                         value={form.thumbnail}
                                         onChange={(url) => setF("thumbnail", url)}
+                                        resize={{ width: 1280, height: 720 }}
                                     />
                                 </Field>
                                 <Field label="PREVIEW VIDEO">
@@ -914,18 +928,53 @@ export default function CoursesPage() {
                                 </Field>
                             </div>
 
-                            {/* Price + Level + Language + Status */}
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                <Field label="PRICE ($)">
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={form.price}
-                                        onChange={(e) => setF("price", e.target.value)}
+                            {/* Pricing */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <Field label="PRICING">
+                                    <select
+                                        value={form.pricing_type}
+                                        onChange={(e) => setF("pricing_type", e.target.value)}
                                         className={inputCls}
-                                        placeholder="0"
-                                    />
+                                    >
+                                        <option value="paid">Paid</option>
+                                        <option value="free">Free</option>
+                                    </select>
                                 </Field>
+                                {form.pricing_type === "paid" && (
+                                    <>
+                                        <Field label="SELLING PRICE ($)">
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                step="0.01"
+                                                value={form.price}
+                                                onChange={(e) => setF("price", e.target.value)}
+                                                className={inputCls}
+                                                placeholder="e.g. 149"
+                                            />
+                                        </Field>
+                                        <Field label="ORIGINAL PRICE ($) — OPTIONAL">
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                step="0.01"
+                                                value={form.original_price}
+                                                onChange={(e) => setF("original_price", e.target.value)}
+                                                className={inputCls}
+                                                placeholder="Shown struck-through"
+                                            />
+                                        </Field>
+                                    </>
+                                )}
+                            </div>
+                            {form.pricing_type === "paid" && Number(form.price) > 0 && (
+                                <p className="-mt-2 text-[12px] text-slate-500 flex items-center gap-2">
+                                    Students will see: <PriceTag course={form} size="sm" />
+                                </p>
+                            )}
+
+                            {/* Level + Language + Status */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <Field label="LEVEL">
                                     <select
                                         value={form.level}

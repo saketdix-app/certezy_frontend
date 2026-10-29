@@ -8,6 +8,7 @@ import api from "./api";
  * STUDENT:
  *   GET  /api/v1/enrollments          → my enrolled courses (with progress)
  *   GET  /api/v1/enrollments/:courseId → am I enrolled in this course?
+ *   POST /api/v1/enrollments/free/:courseId → enrol in a FREE course (no checkout)
  *
  * ADMIN:
  *   GET    /api/v1/enrollments/admin/all          → all enrollments with filters
@@ -25,6 +26,9 @@ const enrollmentService = {
 
     // GET /enrollments/:courseId — check if enrolled
     checkEnrollment: (courseId) => api.get(`/enrollments/${courseId}`),
+
+    // POST /enrollments/free/:courseId — instant enrolment for free courses
+    enrollFree: (courseId) => api.post(`/enrollments/free/${courseId}`),
 
     // Admin endpoints as specified
     getAllEnrollments: (params = {}) => {

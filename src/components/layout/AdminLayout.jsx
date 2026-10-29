@@ -19,6 +19,7 @@ import {
     X,
     ChevronRight,
     Gift,
+    FileUp,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -32,6 +33,7 @@ const ADMIN_NAV_ITEMS = [
     { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
     { label: "Categories", icon: Tag, to: "/admin/categories" },
     { label: "Courses", icon: BookOpen, to: "/admin/courses" },
+    { label: "Bulk Import", icon: FileUp, to: "/admin/import" },
     { label: "Enrollments", icon: Users, to: "/admin/enrollments" },
     { label: "Payments", icon: CreditCard, to: "/admin/payments" },
     { label: "Discounts", icon: Percent, to: "/admin/discounts" },

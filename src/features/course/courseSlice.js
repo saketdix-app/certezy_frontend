@@ -58,6 +58,7 @@ const courseSlice = createSlice({
         filters: {
             category_id: null, // number — backend expects category_id
             level: null, // "beginner" | "intermediate" | "advanced"
+            pricing: null, // "free" | "paid" | "discounted"
             search: null, // search query string
             sort: null, // sort option
         },
@@ -76,6 +77,7 @@ const courseSlice = createSlice({
             state.filters = {
                 category_id: null,
                 level: null,
+                pricing: null,
                 search: null,
                 sort: null,
             };

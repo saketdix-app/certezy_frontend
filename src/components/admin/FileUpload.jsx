@@ -2,13 +2,21 @@ import { useId, useRef, useState } from "react";
 import { Upload, X, Loader2, FileText, Link2 } from "lucide-react";
 import toast from "react-hot-toast";
 import uploadService, { UPLOAD_KINDS, validateUpload } from "@/services/uploadService";
+import { resizeImage, isResizableImage } from "@/lib/image";
 
 const inputCls =
     "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-primary focus:bg-white transition-colors";
 
-function Preview({ kind, url }) {
+function Preview({ kind, url, aspect }) {
     if (kind === "image") {
-        return <img src={url} alt="" className="w-full h-36 object-cover rounded-lg bg-slate-100" />;
+        return (
+            <div
+                className="w-full rounded-lg overflow-hidden bg-slate-100"
+                style={{ aspectRatio: aspect || "16/9" }}
+            >
+                <img src={url} alt="" className="w-full h-full object-cover" />
+            </div>
+        );
     }
     if (kind === "video") {
         return (
@@ -36,6 +44,9 @@ function Preview({ kind, url }) {
  * - value: current URL (shown as a preview)
  * - onChange(url | ""): called after a successful upload, URL paste, or removal
  * - allowUrl: also allow pasting an external URL (default true)
+ * - resize: images only — { width, height } to redraw the image to before upload,
+ *   e.g. { width: 1280, height: 720 } for 16:9 course thumbnails. The admin picks
+ *   "Crop to fill" or "Fit whole image"; the result is a light WebP/JPEG.
  */
 export default function FileUpload({
     kind = "image",
@@ -43,20 +54,34 @@ export default function FileUpload({
     onChange,
     allowUrl = true,
     disabled = false,
+    resize = null,
 }) {
     const inputId = useId();
     const abortRef = useRef(null);
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [showUrl, setShowUrl] = useState(false);
+    const [fit, setFit] = useState("cover");
     const rules = UPLOAD_KINDS[kind];
+    const canResize = kind === "image" && resize;
+    const aspect = canResize ? `${resize.width}/${resize.height}` : undefined;
 
-    const handleFile = async (file) => {
-        if (!file) return;
-        const problem = validateUpload(file, kind);
+    const handleFile = async (picked) => {
+        if (!picked) return;
+        const problem = validateUpload(picked, kind);
         if (problem) {
             toast.error(problem);
             return;
+        }
+
+        let file = picked;
+        if (canResize && isResizableImage(picked)) {
+            try {
+                file = await resizeImage(picked, { width: resize.width, height: resize.height, fit });
+            } catch (err) {
+                toast.error(err.message || "Could not process this image");
+                return;
+            }
         }
 
         abortRef.current = new AbortController();
@@ -92,9 +117,34 @@ export default function FileUpload({
 
     return (
         <div className="space-y-2">
+            {canResize && (
+                <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                    <span className="text-slate-500 font-medium">Thumbnail fit:</span>
+                    {[
+                        ["cover", "Crop to fill"],
+                        ["contain", "Fit whole image"],
+                    ].map(([mode, label]) => (
+                        <button
+                            key={mode}
+                            type="button"
+                            onClick={() => setFit(mode)}
+                            className={`px-2.5 py-1 rounded-lg border font-semibold transition-colors ${
+                                fit === mode
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-slate-200 text-slate-500 hover:border-slate-300"
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                    <span className="text-slate-400">
+                        Saved as {resize.width}×{resize.height}
+                    </span>
+                </div>
+            )}
             {value && !uploading ? (
                 <div className="relative border border-slate-200 rounded-xl p-2 bg-white">
-                    <Preview kind={kind} url={value} />
+                    <Preview kind={kind} url={value} aspect={aspect} />
                     <div className="flex items-center justify-between gap-2 mt-2 px-1">
                         <label
                             htmlFor={inputId}

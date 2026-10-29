@@ -10,11 +10,17 @@ const LEVELS = [
     { label: "Advanced", value: "advanced", dot: "bg-violet-500" },
 ];
 
+const PRICING = [
+    { label: "Free", value: "free", dot: "bg-emerald-500" },
+    { label: "Paid", value: "paid", dot: "bg-primary" },
+    { label: "On sale", value: "discounted", dot: "bg-rose-500" },
+];
+
 export default function CourseFilters({ categories = [] }) {
     const dispatch = useDispatch();
     const filters = useSelector(selectFilters);
 
-    const activeCount = [filters.category_id, filters.level].filter(Boolean).length;
+    const activeCount = [filters.category_id, filters.level, filters.pricing].filter(Boolean).length;
 
     return (
         // sticky — navbar 70px + 16px gap = top-[86px]
@@ -72,53 +78,21 @@ export default function CourseFilters({ categories = [] }) {
                 </FilterSection>
 
                 {/* Level */}
-                <FilterSection title="Level" isLast>
-                    <div className="space-y-2">
-                        {LEVELS.map((lvl) => {
-                            const active = filters.level === lvl.value;
-                            return (
-                                <button
-                                    key={lvl.value}
-                                    onClick={() =>
-                                        dispatch(
-                                            setFilter({
-                                                key: "level",
-                                                value: active ? null : lvl.value,
-                                            })
-                                        )
-                                    }
-                                    className={cn(
-                                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left",
-                                        "border transition-all duration-150",
-                                        active
-                                            ? "border-primary bg-primary-light"
-                                            : "border-border bg-white hover:border-primary/30 hover:bg-[#FAFBFF]"
-                                    )}
-                                >
-                                    {/* Radio */}
-                                    <div
-                                        className={cn(
-                                            "w-[18px] h-[18px] rounded-full border-2 shrink-0 flex items-center justify-center transition-all",
-                                            active ? "border-primary bg-primary" : "border-[#CBD5E1] bg-white"
-                                        )}
-                                    >
-                                        {active && <div className="w-2 h-2 rounded-full bg-white" />}
-                                    </div>
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <div className={cn("w-2 h-2 rounded-full shrink-0", lvl.dot)} />
-                                        <span
-                                            className={cn(
-                                                "text-[13px] font-semibold transition-colors",
-                                                active ? "text-primary" : "text-text-primary"
-                                            )}
-                                        >
-                                            {lvl.label}
-                                        </span>
-                                    </div>
-                                </button>
-                            );
-                        })}
-                    </div>
+                <FilterSection title="Level">
+                    <OptionGroup
+                        options={LEVELS}
+                        active={filters.level}
+                        onSelect={(value) => dispatch(setFilter({ key: "level", value }))}
+                    />
+                </FilterSection>
+
+                {/* Price */}
+                <FilterSection title="Price" isLast>
+                    <OptionGroup
+                        options={PRICING}
+                        active={filters.pricing}
+                        onSelect={(value) => dispatch(setFilter({ key: "pricing", value }))}
+                    />
                 </FilterSection>
             </div>
         </aside>
@@ -197,6 +171,51 @@ function ParentCategory({ parent, activeId, onSelect }) {
                     })}
                 </div>
             )}
+        </div>
+    );
+}
+
+// Single-select radio list; clicking the active option clears it
+function OptionGroup({ options, active, onSelect }) {
+    return (
+        <div className="space-y-2">
+            {options.map((opt) => {
+                const isActive = active === opt.value;
+                return (
+                    <button
+                        key={opt.value}
+                        type="button"
+                        aria-pressed={isActive}
+                        onClick={() => onSelect(isActive ? null : opt.value)}
+                        className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left border transition-all duration-150",
+                            isActive
+                                ? "border-primary bg-primary-light"
+                                : "border-border bg-white hover:border-primary/30 hover:bg-[#FAFBFF]"
+                        )}
+                    >
+                        <div
+                            className={cn(
+                                "w-[18px] h-[18px] rounded-full border-2 shrink-0 flex items-center justify-center transition-all",
+                                isActive ? "border-primary bg-primary" : "border-[#CBD5E1] bg-white"
+                            )}
+                        >
+                            {isActive && <div className="w-2 h-2 rounded-full bg-white" />}
+                        </div>
+                        <div className="flex items-center gap-2 flex-1">
+                            <div className={cn("w-2 h-2 rounded-full shrink-0", opt.dot)} />
+                            <span
+                                className={cn(
+                                    "text-[13px] font-semibold transition-colors",
+                                    isActive ? "text-primary" : "text-text-primary"
+                                )}
+                            >
+                                {opt.label}
+                            </span>
+                        </div>
+                    </button>
+                );
+            })}
         </div>
     );
 }

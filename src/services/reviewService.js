@@ -4,14 +4,17 @@ import api from "./api";
  * reviewService.js — /api/v1/reviews
  *
  * PUBLIC
- *   GET    /reviews/featured            latest approved reviews (homepage)
- *   GET    /reviews/:courseId           approved reviews for a course
+ *   GET    /reviews/featured                  latest approved reviews (homepage)
+ *   GET    /reviews/:courseIdOrSlug           { rating_avg, rating_count, distribution, reviews, pagination }
+ *                                             ?page&limit&rating (filter by star)
  * STUDENT
- *   POST   /reviews                     create a review
+ *   POST   /reviews                           { course_id, rating 1–5, comment? }
+ *   GET    /reviews/course/:courseId/mine     my review, including one awaiting approval
+ *   PUT    /reviews/course/:courseId/mine     edit my review { rating, comment? }
  * ADMIN
- *   GET    /reviews/admin/all           all reviews (?page&limit&is_approved)
- *   GET    /reviews/admin/pending       pending reviews (?limit)
- *   PUT    /reviews/:id/approval        { is_approved: 0 | 1 }
+ *   GET    /reviews/admin/all                 ?page&limit&is_approved&course_id
+ *   GET    /reviews/admin/pending             ?limit
+ *   PUT    /reviews/:id/approval              { is_approved: 0 | 1 }
  *   DELETE /reviews/:id
  */
 
@@ -22,6 +25,8 @@ const reviewService = {
 
     // Student
     createReview: (data) => api.post("/reviews", data),
+    getMyReview: (courseId) => api.get(`/reviews/course/${courseId}/mine`),
+    updateMyReview: (courseId, data) => api.put(`/reviews/course/${courseId}/mine`, data),
 
     // Admin
     getAllReviews: (params = {}) => api.get("/reviews/admin/all", { params }),

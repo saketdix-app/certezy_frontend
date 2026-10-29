@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Star, Users, BookOpen, Award, ChevronRight, CheckCircle, GraduationCap } from "lucide-react";
+import toast from "react-hot-toast";
 
 import courseService from "@/services/courseService";
 import sectionService from "@/services/sectionService";
@@ -10,10 +11,9 @@ import { selectIsLoggedIn } from "@/features/auth/authSlice";
 
 import CourseCurriculum from "./CourseCurriculum";
 import CourseEnrollCard from "./CourseEnrollCard";
-import ReviewList from "@/components/student/ReviewList";
-import ReviewStats from "@/components/student/ReviewStats";
-import ReviewForm from "@/components/student/ReviewForm";
-import { cn } from "@/lib/utils";
+import CourseReviews from "@/components/reviews/CourseReviews";
+import StarRating from "@/components/shared/StarRating";
+import { getPricing, formatCount } from "@/lib/format";
 
 export default function CourseDetailIndex() {
     const { slug } = useParams();
@@ -25,6 +25,7 @@ export default function CourseDetailIndex() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEnrolled, setIsEnrolled] = useState(false);
+    const [enrolling, setEnrolling] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,13 +53,36 @@ export default function CourseDetailIndex() {
             .catch(() => {});
     }, [isLoggedIn, course?.id]);
 
-    const handleEnroll = () => {
-        sessionStorage.setItem(`course_${course.id}`, JSON.stringify(course));
+    // Keep the hero rating in sync after a student rates the course
+    const handleStatsChange = useCallback(({ rating_avg, rating_count }) => {
+        setCourse((c) => (c ? { ...c, rating_avg, rating_count } : c));
+    }, []);
+
+    const handleEnroll = async () => {
+        const isFree = getPricing(course).isFree;
+        const target = isFree ? `/courses/${course.slug}` : `/checkout?course=${course.id}`;
         if (!isLoggedIn) {
-            navigate(`/login?redirect=${encodeURIComponent(`/checkout?course=${course.id}`)}`);
+            navigate(`/login?redirect=${encodeURIComponent(target)}`);
             return;
         }
-        navigate(`/checkout?course=${course.id}`);
+        if (!isFree) {
+            sessionStorage.setItem(`course_${course.id}`, JSON.stringify(course));
+            navigate(target);
+            return;
+        }
+        // Free course → enrol instantly, no checkout
+        setEnrolling(true);
+        try {
+            await enrollmentService.enrollFree(course.id);
+            setIsEnrolled(true);
+            setCourse((c) => ({ ...c, enrolled_count: (c.enrolled_count || 0) + 1 }));
+            toast.success("You're enrolled! Start learning any time.");
+            navigate(`/student/course/${course.id}/learn`);
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not enrol right now");
+        } finally {
+            setEnrolling(false);
+        }
     };
 
     if (loading) return <CourseDetailSkeleton />;
@@ -175,35 +199,17 @@ export default function CourseDetailIndex() {
 
                         {/* Stats */}
                         <div className="flex items-center gap-4 flex-wrap">
-                            <div className="flex items-center gap-1.5">
-                                <div className="flex items-center gap-0.5">
-                                    {Array(5)
-                                        .fill(0)
-                                        .map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                size={12}
-                                                className={cn(
-                                                    i < Math.round(course.rating_avg || 0)
-                                                        ? "text-amber-400 fill-amber-400"
-                                                        : "fill-white/20 text-white/20"
-                                                )}
-                                            />
-                                        ))}
-                                </div>
-                                <span style={{ fontSize: "13px", fontWeight: 700, color: "#fff" }}>
-                                    {course.rating_avg > 0 ? Number(course.rating_avg).toFixed(1) : "New"}
-                                </span>
-                                {course.rating_count > 0 && (
-                                    <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.42)" }}>
-                                        ({course.rating_count.toLocaleString()})
-                                    </span>
-                                )}
-                            </div>
+                            <StarRating
+                                value={course.rating_avg}
+                                count={course.rating_count}
+                                size={14}
+                                showValue
+                                tone="dark"
+                            />
                             {course.enrolled_count > 0 && (
                                 <StatPill
                                     icon={Users}
-                                    label={`${course.enrolled_count.toLocaleString()} students`}
+                                    label={`${formatCount(course.enrolled_count)} students`}
                                 />
                             )}
                             {sections.length > 0 && (
@@ -474,35 +480,26 @@ export default function CourseDetailIndex() {
                                 ))}
                             </div>
                         </ContentCard>
-                    </div>
 
-                    {/* ── Reviews Section ───────────────────────────── */}
-                    <div className="flex-1 space-y-5">
+                        {/* Reviews */}
                         <ContentCard title="Student Reviews">
-                            <div className="space-y-6">
-                                {/* Review Stats */}
-                                <ReviewStats courseId={course?.id} />
-
-                                {/* Review Form - Only show if enrolled */}
-                                {isEnrolled && (
-                                    <ReviewForm
-                                        courseId={course?.id}
-                                        onReviewSubmitted={() => {
-                                            // Refresh reviews after submission
-                                            // This will trigger a re-render of ReviewList
-                                        }}
-                                    />
-                                )}
-
-                                {/* Reviews List */}
-                                <ReviewList courseId={course?.id} />
-                            </div>
+                            <CourseReviews
+                                courseId={course.id}
+                                isEnrolled={isEnrolled}
+                                onStatsChange={handleStatsChange}
+                            />
                         </ContentCard>
                     </div>
 
                     {/* ── RIGHT — enroll card ── */}
-                    <div className="w-full lg:w-[320px] xl:w-[340px] lg:shrink-0">
-                        <CourseEnrollCard course={course} isEnrolled={isEnrolled} onEnroll={handleEnroll} />
+                    {/* On phones the enroll card sits right under the hero so the CTA is visible */}
+                    <div className="w-full lg:w-[320px] xl:w-[340px] lg:shrink-0 order-first lg:order-none">
+                        <CourseEnrollCard
+                            course={course}
+                            isEnrolled={isEnrolled}
+                            onEnroll={handleEnroll}
+                            enrolling={enrolling}
+                        />
                     </div>
                 </div>
             </div>

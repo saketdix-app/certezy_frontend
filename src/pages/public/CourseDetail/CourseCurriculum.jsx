@@ -1,20 +1,25 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, PlayCircle, FileText, FileDown, HelpCircle, Lock, Eye } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronUp,
+    PlayCircle,
+    FileText,
+    FileDown,
+    HelpCircle,
+    Lock,
+    Eye,
+    Link2,
+    MonitorPlay,
+    Headphones,
+} from "lucide-react";
 import lessonService from "@/services/lessonService";
 import { cn } from "@/lib/utils";
+import { formatDuration } from "@/lib/format"; // seconds → "1h 30m"
 
 /**
  * CourseCurriculum.jsx
  * Accordion — sections + lazy-loaded lessons per section
  */
-
-function formatDuration(seconds) {
-    if (!seconds) return null;
-    const m = Math.floor(seconds / 60);
-    const h = Math.floor(m / 60);
-    const rem = m % 60;
-    return h > 0 ? `${h}h ${rem > 0 ? `${rem}m` : ""}`.trim() : `${m}m`;
-}
 
 // ── Lesson type icon ───────────────────────────────────────
 function LessonIcon({ type, isLocked }) {
@@ -25,6 +30,9 @@ function LessonIcon({ type, isLocked }) {
         text: <FileText size={13} style={{ color: "#10B981", flexShrink: 0 }} />,
         pdf: <FileDown size={13} style={{ color: "#DC2626", flexShrink: 0 }} />,
         quiz: <HelpCircle size={13} style={{ color: "#F59E0B", flexShrink: 0 }} />,
+        link: <Link2 size={13} style={{ color: "#0EA5E9", flexShrink: 0 }} />,
+        embed: <MonitorPlay size={13} style={{ color: "#14B8A6", flexShrink: 0 }} />,
+        audio: <Headphones size={13} style={{ color: "#A855F7", flexShrink: 0 }} />,
     };
     return map[type] || map.video;
 }
