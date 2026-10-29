@@ -13,6 +13,16 @@ export const API_BASE_URL = trimSlash(import.meta.env.VITE_API_BASE_URL || "http
 
 export const SUPPORT_EMAIL = "contact@certezy.com";
 
+/**
+ * Every course is presented as taught by the company, whichever admin account
+ * created it. Public pages show this instead of the creator's user name; the
+ * admin course list still shows the real creator.
+ */
+export const COURSE_INSTRUCTOR = {
+    name: "Certezy E-Learning Pvt. Ltd.",
+    avatar: "/brand/certezy-icon-192.png",
+};
+
 const telHref = (number) => `tel:+${number.replace(/\D/g, "")}`;
 
 /** Support phone lines, shown in the footer and on the contact page. */

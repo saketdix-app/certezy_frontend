@@ -6,6 +6,7 @@ import StarRating from "@/components/shared/StarRating";
 import PriceTag from "@/components/shared/PriceTag";
 import { formatCount, formatDuration, getPricing } from "@/lib/format";
 import { getCourseHighlight } from "@/lib/courseHighlights";
+import { COURSE_INSTRUCTOR } from "@/config/app";
 
 /**
  * CourseCard — used on the catalogue, home page and anywhere a course grid
@@ -45,7 +46,6 @@ export default function CourseCard({ course }) {
         enrolled_count = 0,
         total_duration = 0,
         certificate_eligible,
-        instructor_name,
     } = course;
 
     const pricing = getPricing(course);
@@ -90,9 +90,7 @@ export default function CourseCard({ course }) {
                     {title}
                 </h3>
 
-                {instructor_name && (
-                    <p className="text-[11.5px] text-slate-400 truncate mb-2.5">{instructor_name}</p>
-                )}
+                <p className="text-[11.5px] text-slate-400 truncate mb-2.5">{COURSE_INSTRUCTOR.name}</p>
 
                 <div className="flex items-center gap-2 flex-wrap mb-3">
                     <StarRating

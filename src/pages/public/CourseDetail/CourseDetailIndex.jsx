@@ -15,6 +15,20 @@ import CourseReviews from "@/components/reviews/CourseReviews";
 import StarRating from "@/components/shared/StarRating";
 import { getPricing, formatCount } from "@/lib/format";
 import { getCourseHighlight } from "@/lib/courseHighlights";
+import { COURSE_INSTRUCTOR } from "@/config/app";
+
+// Public pages show the company as the instructor (not the admin who created the course),
+// so per-person fields from the creator's profile are dropped too.
+const withCompanyInstructor = (c) => ({
+    ...c,
+    instructor_name: COURSE_INSTRUCTOR.name,
+    instructor_avatar: COURSE_INSTRUCTOR.avatar,
+    instructor_title: "Certification training provider",
+    instructor_bio: null,
+    instructor_rating: null,
+    instructor_students: null,
+    instructor_courses: null,
+});
 
 export default function CourseDetailIndex() {
     const { slug } = useParams();
@@ -34,7 +48,7 @@ export default function CourseDetailIndex() {
                 setLoading(true);
                 const { data: cd } = await courseService.getBySlug(slug);
                 const c = cd?.data?.course;
-                setCourse(c);
+                setCourse(withCompanyInstructor(c));
                 const { data: sd } = await sectionService.getByCourseId(c.id);
                 setSections(sd?.data?.sections || []);
             } catch (err) {
@@ -229,12 +243,11 @@ export default function CourseDetailIndex() {
                         {/* Instructor — hero mein sirf naam */}
                         {course.instructor_name && (
                             <div className="flex items-center gap-2.5 mt-5">
-                                <div
-                                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
-                                    style={{ background: "rgba(255,255,255,0.12)" }}
-                                >
-                                    {course.instructor_name.charAt(0).toUpperCase()}
-                                </div>
+                                <img
+                                    src={course.instructor_avatar}
+                                    alt=""
+                                    className="w-8 h-8 rounded-full shrink-0 bg-white"
+                                />
                                 <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>
                                     Instructor:{" "}
                                     <span style={{ color: "#fff", fontWeight: 600 }}>
@@ -327,7 +340,7 @@ export default function CourseDetailIndex() {
                                         <img
                                             src={course.instructor_avatar}
                                             alt={course.instructor_name}
-                                            className="w-16 h-16 rounded-2xl object-cover shrink-0"
+                                            className="w-16 h-16 rounded-2xl object-contain bg-white p-1.5 shrink-0"
                                             style={{ border: "2px solid #EEF2F7" }}
                                         />
                                     ) : (
