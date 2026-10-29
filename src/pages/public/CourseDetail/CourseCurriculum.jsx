@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import lessonService from "@/services/lessonService";
 import { cn } from "@/lib/utils";
+import LessonPreviewModal from "./LessonPreviewModal";
 import { formatDuration } from "@/lib/format"; // seconds → "1h 30m"
 
 /**
@@ -38,12 +39,22 @@ function LessonIcon({ type, isLocked }) {
 }
 
 // ── Single lesson row ──────────────────────────────────────
-function LessonRow({ lesson, isEnrolled }) {
+function LessonRow({ lesson, isEnrolled, onPreview }) {
     const isLocked = !lesson.is_free && !isEnrolled;
     const duration = formatDuration(lesson.duration);
+    // Visitors can open free lessons right here; enrolled students use the player
+    const canPreview = lesson.is_free === 1 && !isEnrolled && onPreview;
 
     return (
         <div
+            {...(canPreview && {
+                role: "button",
+                tabIndex: 0,
+                onClick: () => onPreview(lesson),
+                onKeyDown: (e) =>
+                    (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onPreview(lesson)),
+                "aria-label": `Preview lesson: ${lesson.title}`,
+            })}
             className={cn(
                 "flex items-center gap-3 px-5 py-3",
                 "border-b last:border-0",
@@ -94,7 +105,7 @@ function LessonRow({ lesson, isEnrolled }) {
 }
 
 // ── Single section ─────────────────────────────────────────
-function SectionRow({ section, index, isEnrolled }) {
+function SectionRow({ section, index, isEnrolled, onPreview }) {
     const [open, setOpen] = useState(index === 0);
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -199,7 +210,12 @@ function SectionRow({ section, index, isEnrolled }) {
                         </div>
                     ) : lessons.length > 0 ? (
                         lessons.map((lesson) => (
-                            <LessonRow key={lesson.id} lesson={lesson} isEnrolled={isEnrolled} />
+                            <LessonRow
+                                key={lesson.id}
+                                lesson={lesson}
+                                isEnrolled={isEnrolled}
+                                onPreview={onPreview}
+                            />
                         ))
                     ) : (
                         <p
@@ -220,7 +236,9 @@ function SectionRow({ section, index, isEnrolled }) {
 }
 
 // ── Main export ────────────────────────────────────────────
-export default function CourseCurriculum({ sections = [], isEnrolled = false }) {
+export default function CourseCurriculum({ sections = [], courseId, isEnrolled = false }) {
+    const [previewing, setPreviewing] = useState(null);
+
     if (sections.length === 0) {
         return (
             <p style={{ fontSize: "13px", color: "#94A3B8", fontStyle: "italic", padding: "8px 0" }}>
@@ -232,8 +250,21 @@ export default function CourseCurriculum({ sections = [], isEnrolled = false }) 
     return (
         <div className="space-y-2.5">
             {sections.map((section, index) => (
-                <SectionRow key={section.id} section={section} index={index} isEnrolled={isEnrolled} />
+                <SectionRow
+                    key={section.id}
+                    section={section}
+                    index={index}
+                    isEnrolled={isEnrolled}
+                    onPreview={courseId ? setPreviewing : null}
+                />
             ))}
+            {previewing && (
+                <LessonPreviewModal
+                    lesson={previewing}
+                    courseId={courseId}
+                    onClose={() => setPreviewing(null)}
+                />
+            )}
         </div>
     );
 }
