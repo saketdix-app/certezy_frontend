@@ -33,3 +33,66 @@ html,
 body {
     overflow-x: clip;
 }
+
+/* Rich-text lessons (HTML from the admin / CSV import) */
+.lesson-html p {
+    margin-bottom: 1rem;
+}
+.lesson-html ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+.lesson-html ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+.lesson-html li {
+    margin-bottom: 0.35rem;
+}
+.lesson-html h1,
+.lesson-html h2,
+.lesson-html h3 {
+    font-weight: 700;
+    color: #111827;
+    margin: 1.5rem 0 0.75rem;
+}
+.lesson-html h2 {
+    font-size: 1.5rem;
+}
+.lesson-html h3 {
+    font-size: 1.25rem;
+}
+.lesson-html a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+.lesson-html strong {
+    font-weight: 600;
+    color: #111827;
+}
+.lesson-html img,
+.lesson-html video,
+.lesson-html iframe {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+.lesson-html pre {
+    background: #111827;
+    color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+.lesson-html table {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+.lesson-html td,
+.lesson-html th {
+    border: 1px solid #e5e7eb;
+    padding: 0.4rem 0.6rem;
+}

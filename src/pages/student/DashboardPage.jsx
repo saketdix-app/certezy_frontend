@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -344,33 +345,12 @@ function CourseProgressCard({ enrollment, onContinue }) {
             style={{ border: "1px solid #EEF2F7", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             {/* Thumbnail */}
-            <div
-                className="h-[140px] flex items-center justify-center relative"
-                style={{
-                    background: enrollment.thumbnail
-                        ? undefined
-                        : "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
-                }}
+            <CourseThumbnail
+                src={enrollment.thumbnail}
+                title={enrollment.title}
+                category={enrollment.category_name}
+                className="w-full"
             >
-                {enrollment.thumbnail ? (
-                    <img
-                        src={enrollment.thumbnail}
-                        alt={enrollment.title}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <span
-                        style={{
-                            fontSize: "36px",
-                            fontWeight: 900,
-                            color: "rgba(255,255,255,0.15)",
-                            letterSpacing: "-2px",
-                        }}
-                    >
-                        {enrollment.title?.slice(0, 2).toUpperCase()}
-                    </span>
-                )}
-
                 {/* Category badge */}
                 {enrollment.category_name && (
                     <span
@@ -403,7 +383,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                         ✓ Done
                     </span>
                 )}
-            </div>
+            </CourseThumbnail>
 
             {/* Content */}
             <div className="p-4 flex flex-col flex-1">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
 import {
     BookOpen,
     Clock,
@@ -10,6 +11,9 @@ import {
     Maximize2,
     Minimize2,
 } from "lucide-react";
+
+// Markdown-ish text is escaped first so typed "<" characters can't inject markup
+const escapeHtml = (str) => str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export function EnhancedTextLesson({
     lesson,
@@ -54,8 +58,18 @@ export function EnhancedTextLesson({
     const renderContent = () => {
         if (!lesson.content) return null;
 
+        // Rich HTML (from the admin editor or CSV import) is sanitised and rendered as-is
+        if (/^\s*<[a-z!]/i.test(lesson.content)) {
+            return (
+                <div
+                    className={`lesson-html max-w-none ${getFontSizeClass(fontSize)} leading-relaxed text-gray-800`}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
+                />
+            );
+        }
+
         // Simple markdown-like parsing
-        const processedContent = lesson.content
+        const processedContent = escapeHtml(lesson.content)
             .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-gray-900 mt-6 mb-3">$1</h3>')
             .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
             .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-5">$1</h1>')
@@ -81,7 +95,9 @@ export function EnhancedTextLesson({
         return (
             <div
                 className={`prose prose-lg max-w-none ${getFontSizeClass(fontSize)} leading-relaxed`}
-                dangerouslySetInnerHTML={{ __html: `<p class="mb-4">${processedContent}</p>` }}
+                dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(`<p class="mb-4">${processedContent}</p>`),
+                }}
             />
         );
     };

@@ -46,6 +46,8 @@ export default function CoursesPage() {
         if (category_id) dispatch(setFilter({ key: "category_id", value: Number(category_id) }));
         if (search) dispatch(setFilter({ key: "search", value: search }));
         if (level) dispatch(setFilter({ key: "level", value: level }));
+        const pricing = searchParams.get("pricing");
+        if (pricing) dispatch(setFilter({ key: "pricing", value: pricing }));
     }, []);
 
     // ── Fetch categories ───────────────────────────────────
@@ -61,10 +63,11 @@ export default function CoursesPage() {
         const params = { page: pagination.page, limit: pagination.limit };
         if (filters.category_id) params.category_id = filters.category_id;
         if (filters.level) params.level = filters.level;
+        if (filters.pricing) params.pricing = filters.pricing;
         if (filters.search) params.search = filters.search;
         if (filters.sort) params.sort = filters.sort;
         dispatch(fetchCourses(params));
-    }, [filters.category_id, filters.level, filters.search, filters.sort, pagination.page]);
+    }, [filters.category_id, filters.level, filters.pricing, filters.search, filters.sort, pagination.page]);
 
     // ── Hero search submit ─────────────────────────────────
     const handleHeroSearch = (e) => {
@@ -88,7 +91,7 @@ export default function CoursesPage() {
         };
     }, [mobileFilterOpen]);
 
-    const activeFilterCount = [filters.category_id, filters.level].filter(Boolean).length;
+    const activeFilterCount = [filters.category_id, filters.level, filters.pricing].filter(Boolean).length;
 
     // Real courses count from Redux
     const coursesCount = pagination.total ? `${pagination.total.toLocaleString()}+` : null;

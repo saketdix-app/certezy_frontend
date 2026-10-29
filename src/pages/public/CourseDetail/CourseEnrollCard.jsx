@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Clock, BarChart2, BookOpen, Award, Globe, PlayCircle, CheckCircle } from "lucide-react";
+import { Clock, BarChart2, BookOpen, Award, Globe, PlayCircle, CheckCircle, Loader2 } from "lucide-react";
 import { selectIsLoggedIn } from "@/features/auth/authSlice";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
+import PriceTag from "@/components/shared/PriceTag";
+import { formatDuration as fmtSeconds, getPricing } from "@/lib/format";
 
 /**
  * CourseEnrollCard.jsx
@@ -11,15 +14,10 @@ import { selectIsLoggedIn } from "@/features/auth/authSlice";
  * Both handled by parent (CourseDetailIndex)
  */
 
-function formatDuration(mins) {
-    if (!mins || mins === 0) return "Self-paced";
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return h > 0 ? `${h}h ${m > 0 ? `${m}m` : ""}`.trim() : `${m}m`;
-}
+const formatDuration = (seconds) => fmtSeconds(seconds) || "Self-paced";
 
 // Single reusable enroll button — color always #3282B8
-function EnrollButton({ onClick, href, children }) {
+function EnrollButton({ onClick, href, children, disabled = false }) {
     const style = {
         width: "100%",
         height: "44px",
@@ -55,7 +53,8 @@ function EnrollButton({ onClick, href, children }) {
     return (
         <button
             onClick={onClick}
-            style={style}
+            disabled={disabled}
+            style={{ ...style, opacity: disabled ? 0.7 : 1, cursor: disabled ? "wait" : "pointer" }}
             onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
         >
@@ -64,20 +63,13 @@ function EnrollButton({ onClick, href, children }) {
     );
 }
 
-export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll }) {
+export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll, enrolling = false }) {
     const isLoggedIn = useSelector(selectIsLoggedIn);
     if (!course) return null;
 
-    const {
-        thumbnail,
-        price,
-        level,
-        language,
-        total_duration,
-        total_lessons,
-        certificate_eligible,
-        preview_video,
-    } = course;
+    const pricing = getPricing(course);
+    const { thumbnail, level, language, total_duration, total_lessons, certificate_eligible, preview_video } =
+        course;
 
     const META = [
         { icon: Clock, label: "Duration", value: formatDuration(total_duration) },
@@ -98,72 +90,35 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll 
             className="bg-white rounded-2xl overflow-hidden lg:sticky lg:top-[86px]"
             style={{ border: "1px solid #EEF2F7", boxShadow: "0 4px 24px rgba(15,23,42,0.08)" }}
         >
-            {/* Thumbnail */}
-            <div
-                className="relative h-[180px] overflow-hidden"
-                style={{ background: "linear-gradient(135deg, #0a1628 0%, #162d5a 100%)" }}
+            {/* Thumbnail — 16:9, same crop as course cards */}
+            <CourseThumbnail
+                src={thumbnail}
+                title={course.title}
+                category={course.category_name}
+                categorySlug={course.category_slug}
+                loading="eager"
             >
-                {thumbnail ? (
-                    <img src={thumbnail} alt={course.title} className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-center">
-                            <BookOpen
-                                size={36}
-                                style={{ color: "rgba(255,255,255,0.18)", margin: "0 auto 8px" }}
-                            />
-                            <p
-                                style={{
-                                    fontSize: "11px",
-                                    color: "rgba(255,255,255,0.28)",
-                                    fontWeight: 600,
-                                    letterSpacing: "0.08em",
-                                    textTransform: "uppercase",
-                                }}
-                            >
-                                Course Preview
-                            </p>
-                        </div>
-                    </div>
-                )}
-
-                {/* Overlay */}
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "linear-gradient(to top, rgba(0,0,0,0.3), transparent)",
-                    }}
-                />
-
-                {/* Play button — only if preview exists */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                 {preview_video && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div
-                            className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                            style={{ background: "rgba(255,255,255,0.20)", backdropFilter: "blur(4px)" }}
-                        >
-                            <PlayCircle size={28} style={{ color: "#fff" }} />
-                        </div>
-                    </div>
+                    <a
+                        href={preview_video}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Watch course preview"
+                        className="absolute inset-0 flex items-center justify-center"
+                    >
+                        <span className="w-12 h-12 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm transition-transform hover:scale-105">
+                            <PlayCircle size={28} className="text-white" />
+                        </span>
+                    </a>
                 )}
-            </div>
+            </CourseThumbnail>
 
             {/* Body */}
             <div className="p-5">
                 {/* Price */}
                 <div className="mb-5">
-                    <span
-                        style={{
-                            fontSize: "32px",
-                            fontWeight: 800,
-                            color: "#0F172A",
-                            letterSpacing: "-0.03em",
-                            lineHeight: 1,
-                        }}
-                    >
-                        ${price}
-                    </span>
+                    <PriceTag course={course} size="lg" />
                 </div>
 
                 {/* CTA */}
@@ -172,17 +127,26 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll 
                         <PlayCircle size={16} />
                         Continue Learning
                     </EnrollButton>
-                ) : isLoggedIn ? (
-                    <EnrollButton onClick={onEnroll}>Enroll Now</EnrollButton>
                 ) : (
-                    <EnrollButton onClick={onEnroll}>Login to Enroll</EnrollButton>
+                    <EnrollButton onClick={onEnroll} disabled={enrolling}>
+                        {enrolling && <Loader2 size={16} className="animate-spin" />}
+                        {!isLoggedIn
+                            ? pricing.isFree
+                                ? "Login to Enroll for Free"
+                                : "Login to Enroll"
+                            : pricing.isFree
+                              ? "Enroll for Free"
+                              : "Enroll Now"}
+                    </EnrollButton>
                 )}
 
-                {/* Guarantee */}
-                <div className="flex items-center justify-center gap-1.5 mt-3">
-                    <CheckCircle size={12} style={{ color: "#10B981" }} />
-                    <p style={{ fontSize: "11.5px", color: "#64748B" }}>30-day money-back guarantee</p>
-                </div>
+                {/* Guarantee (paid courses only) */}
+                {!pricing.isFree && (
+                    <div className="flex items-center justify-center gap-1.5 mt-3">
+                        <CheckCircle size={12} style={{ color: "#10B981" }} />
+                        <p style={{ fontSize: "11.5px", color: "#64748B" }}>30-day money-back guarantee</p>
+                    </div>
+                )}
 
                 {/* Divider */}
                 <div className="my-4" style={{ height: "1px", background: "#F1F5F9" }} />

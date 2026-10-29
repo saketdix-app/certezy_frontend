@@ -1,18 +1,15 @@
 import { useEffect, useState, useMemo } from "react";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, Play, CheckCircle2, Clock, Search, SlidersHorizontal, Award } from "lucide-react";
 
 import enrollmentService from "@/services/enrollmentService";
 import { cn } from "@/lib/utils";
+import { formatDuration } from "@/lib/format";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function fmtDuration(seconds) {
-    if (!seconds) return null;
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    return h > 0 ? `${h}h ${m}m` : `${m}m`;
-}
+const fmtDuration = formatDuration; // seconds → "1h 30m"
 
 function fmtDate(dateStr) {
     if (!dateStr) return "—";
@@ -210,35 +207,13 @@ function CourseCard({ enrollment, onOpen }) {
             onClick={onOpen}
         >
             {/* Thumbnail */}
-            <div
-                className="relative h-[150px] overflow-hidden"
-                style={{
-                    background: enrollment.thumbnail
-                        ? undefined
-                        : "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
-                }}
+            <CourseThumbnail
+                src={enrollment.thumbnail}
+                title={enrollment.title}
+                category={enrollment.category_name}
+                className="w-full"
+                zoomOnHover
             >
-                {enrollment.thumbnail ? (
-                    <img
-                        src={enrollment.thumbnail}
-                        alt={enrollment.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <span
-                            style={{
-                                fontSize: "42px",
-                                fontWeight: 900,
-                                color: "rgba(255,255,255,0.12)",
-                                letterSpacing: "-2px",
-                            }}
-                        >
-                            {enrollment.title?.slice(0, 2).toUpperCase()}
-                        </span>
-                    </div>
-                )}
-
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
                     <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg">
@@ -287,7 +262,7 @@ function CourseCard({ enrollment, onOpen }) {
                         <CheckCircle2 size={14} className="text-white" />
                     </div>
                 )}
-            </div>
+            </CourseThumbnail>
 
             {/* Body */}
             <div className="p-4 flex flex-col flex-1 gap-3">

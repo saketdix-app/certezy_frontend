@@ -1,12 +1,10 @@
+import { formatDuration } from "@/lib/format";
+import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import { Clock, BarChart2, BookOpen, Award, CheckCircle2 } from "lucide-react";
 import { SectionTitle } from "./PaymentMethod";
 
-function fmtDuration(mins) {
-    if (!mins) return "Self-paced";
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return h > 0 ? `${h}h ${m > 0 ? `${m}m` : ""}`.trim() : `${m}m`;
-}
+// total_duration is in seconds
+const fmtDuration = (seconds) => formatDuration(seconds) || "Self-paced";
 
 export default function OrderSummary({ course, paymentAmount, paymentCurrency }) {
     // Format price using backend values
@@ -42,17 +40,13 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency })
     return (
         <div className="w-full lg:w-[320px] shrink-0 bg-white rounded-2xl overflow-hidden border border-[#EEF2F7]">
             {/* Thumbnail */}
-            <div className="h-[160px] relative bg-gradient-to-br from-[#0a1628] via-[#0f2545] to-[#162d5a]">
-                {course.thumbnail ? (
-                    <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-5xl font-black text-white/10 tracking-tighter">
-                            {course.title?.slice(0, 2).toUpperCase()}
-                        </span>
-                    </div>
-                )}
-            </div>
+            <CourseThumbnail
+                src={course.thumbnail}
+                title={course.title}
+                category={course.category_name}
+                categorySlug={course.category_slug}
+                loading="eager"
+            />
 
             <div className="p-5 space-y-4">
                 <SectionTitle title="Order Summary" />

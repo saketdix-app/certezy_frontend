@@ -18,6 +18,9 @@ import {
     ChevronRight,
     PlayCircle,
     FileDown,
+    Link2,
+    MonitorPlay,
+    Headphones,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -33,8 +36,21 @@ const LESSON_TYPES = [
     { value: "video", label: "Video", icon: Video },
     { value: "text", label: "Text", icon: FileText },
     { value: "pdf", label: "PDF", icon: FileDown },
+    { value: "link", label: "Link", icon: Link2 },
+    { value: "embed", label: "Embed", icon: MonitorPlay },
+    { value: "audio", label: "Audio", icon: Headphones },
     { value: "quiz", label: "Quiz", icon: HelpCircle },
 ];
+
+// Lesson types whose content must be a full URL
+const URL_TYPES = ["pdf", "link", "embed", "audio"];
+const CONTENT_PLACEHOLDER = {
+    text: "Lesson content — Markdown or HTML",
+    link: "https://docs.aws.amazon.com/… (opens in a new tab)",
+    embed: "https://docs.google.com/presentation/d/…/embed · Figma · CodePen · Loom",
+    audio: "https://…/episode.mp3",
+    quiz: "Quiz title or ID (from this course's Tests)",
+};
 
 // Icon colours per lesson type in the curriculum list
 const TYPE_STYLES = {
@@ -42,6 +58,9 @@ const TYPE_STYLES = {
     text: { color: "#F97316", bg: "#FFF7ED" },
     article: { color: "#F97316", bg: "#FFF7ED" },
     pdf: { color: "#DC2626", bg: "#FEF2F2" },
+    link: { color: "#0EA5E9", bg: "#F0F9FF" },
+    embed: { color: "#14B8A6", bg: "#F0FDFA" },
+    audio: { color: "#A855F7", bg: "#FAF5FF" },
     quiz: { color: "#8B5CF6", bg: "#F5F3FF" },
 };
 
@@ -245,8 +264,12 @@ export default function CurriculumPage() {
             toast.error("Title required");
             return;
         }
-        if (lessonForm.type === "pdf" && !/^https?:\/\//.test(lessonForm.content?.trim() || "")) {
-            toast.error("Upload a PDF (or paste its URL) for this lesson");
+        if (URL_TYPES.includes(lessonForm.type) && !/^https?:\/\//.test(lessonForm.content?.trim() || "")) {
+            toast.error(
+                lessonForm.type === "pdf"
+                    ? "Upload a PDF (or paste its URL) for this lesson"
+                    : "Enter a full URL starting with https://"
+            );
             return;
         }
         setSavingLesson(true);
@@ -567,10 +590,13 @@ export default function CurriculumPage() {
                             <Field
                                 label={
                                     {
-                                        video: "Lesson Video",
+                                        video: "Lesson Video (upload, or paste YouTube / Vimeo / MP4 URL)",
                                         pdf: "Lesson PDF",
                                         text: "Lesson Content",
                                         article: "Lesson Content",
+                                        link: "Resource URL",
+                                        embed: "Embed URL",
+                                        audio: "Audio URL",
                                     }[lessonForm.type] || "Quiz Reference"
                                 }
                             >
@@ -588,18 +614,18 @@ export default function CurriculumPage() {
                                     />
                                 ) : (
                                     <textarea
-                                        rows={3}
                                         value={lessonForm.content}
                                         onChange={(e) =>
                                             setLessonForm((p) => ({ ...p, content: e.target.value }))
                                         }
                                         className={inputCls}
-                                        placeholder={
-                                            lessonForm.type === "text"
-                                                ? "Lesson content (Markdown supported)"
-                                                : "Quiz ID or reference"
+                                        placeholder={CONTENT_PLACEHOLDER[lessonForm.type] || ""}
+                                        rows={
+                                            lessonForm.type === "text" || lessonForm.type === "article"
+                                                ? 8
+                                                : 2
                                         }
-                                        style={{ resize: "none" }}
+                                        style={{ resize: "vertical" }}
                                     />
                                 )}
                             </Field>
