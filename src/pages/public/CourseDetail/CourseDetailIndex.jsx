@@ -121,7 +121,7 @@ export default function CourseDetailIndex() {
             toast.success("You're enrolled! Start learning any time.");
             navigate(`/student/course/${course.id}/learn`);
         } catch (err) {
-            toast.error(err.response?.data?.message || "Could not enrol right now");
+            toast.error(err.response?.data?.message || "Couldn't enroll right now. Please try again.");
         } finally {
             setEnrolling(false);
         }
@@ -267,7 +267,7 @@ export default function CourseDetailIndex() {
                                 tone="dark"
                             />
                             {highlight ? (
-                                <StatPill icon={Users} label={`Learned by ${highlight.learners} users`} />
+                                <StatPill icon={Users} label={`Taken by ${highlight.learners} learners`} />
                             ) : (
                                 course.enrolled_count > 0 && (
                                     <StatPill

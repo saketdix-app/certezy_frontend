@@ -169,7 +169,7 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                         }}
                         className="rounded-lg bg-primary px-3.5 py-1.5 text-[12.5px] font-bold text-white hover:opacity-90"
                     >
-                        View enrolment options
+                        View enrollment options
                     </button>
                 </div>
             </div>

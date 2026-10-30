@@ -1,5 +1,5 @@
-import { Clock } from "lucide-react";
-import { SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
+import { MessageCircle } from "lucide-react";
+import { SUPPORT_EMAIL, SUPPORT_PHONES, WHATSAPP_LINES } from "@/config/app";
 // src/pages/contact/ContactHero.jsx
 
 const IconMail = () => (
@@ -35,13 +35,13 @@ const infoCards = [
     {
         icon: <IconMail />,
         title: "Email Us",
-        sub: "Our team responds within 24 hours.",
+        sub: "Our team replies within 24 hours.",
         values: [{ text: SUPPORT_EMAIL, href: `mailto:${SUPPORT_EMAIL}` }],
     },
     {
         icon: <IconPhone />,
         title: "Call Us",
-        sub: "India and US support lines.",
+        sub: "Support lines in India and the US.",
         values: SUPPORT_PHONES.map((p) => ({
             prefix: p.region === "IN" ? "India" : "US",
             text: p.number,
@@ -49,10 +49,15 @@ const infoCards = [
         })),
     },
     {
-        icon: <Clock size={20} strokeWidth={2} />,
-        title: "Support Hours",
-        sub: "We're here whenever you need us.",
-        values: [{ text: "24 × 7 · All 7 days" }],
+        icon: <MessageCircle size={20} strokeWidth={2} />,
+        title: "WhatsApp Chat · 24 × 7",
+        sub: "Message us any time, day or night.",
+        values: WHATSAPP_LINES.map((p) => ({
+            prefix: p.region === "IN" ? "India" : "US",
+            text: p.number,
+            href: p.href,
+            external: true,
+        })),
     },
 ];
 
@@ -69,7 +74,7 @@ export default function ContactHero() {
                         className="inline-block text-xs font-bold uppercase tracking-[0.14em] mb-4"
                         style={{ color: "#3282B8" }}
                     >
-                        Get in Touch
+                        Contact Us
                     </span>
 
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-100 leading-tight mb-4">
@@ -77,8 +82,8 @@ export default function ContactHero() {
                     </h1>
 
                     <p className="text-base text-slate-500 max-w-lg mx-auto leading-relaxed">
-                        We're here to help you on your educational journey. Reach out for technical support,
-                        partnership inquiries, or general questions.
+                        We're here to help with your learning journey. Reach out for technical support,
+                        partnerships or any other question.
                     </p>
                 </div>
 
@@ -127,6 +132,7 @@ export default function ContactHero() {
                                             <a
                                                 key={v.text}
                                                 href={v.href}
+                                                {...(v.external && { target: "_blank", rel: "noreferrer" })}
                                                 className="text-sm font-semibold text-white transition-colors duration-200 hover:opacity-70"
                                             >
                                                 {v.prefix && (

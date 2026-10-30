@@ -79,7 +79,7 @@ const FEATURES = [
         iconBg: "bg-blue-50",
         iconColor: "#3282B8",
         title: "Expert Instructors",
-        desc: "Learn from verified experts who have held these certifications for decades.",
+        desc: "Learn from certified experts with years of hands-on industry experience.",
         cls: "wc-f2",
     },
     {
@@ -95,7 +95,7 @@ const FEATURES = [
         iconBg: "bg-blue-50",
         iconColor: "#3282B8",
         title: "Verified Certificates",
-        desc: "Shareable, blockchain-verified certificates that recruiters can trust instantly.",
+        desc: "Shareable certificates with a public verification link that recruiters can check instantly.",
         cls: "wc-f4",
     },
     {
@@ -135,7 +135,7 @@ export default function WhyCertezy() {
                             </span>
                         </h2>
                         <p className="text-[#64748B] text-base lg:text-lg max-w-xl mx-auto leading-relaxed">
-                            We've refined our learning experience to ensure every student doesn't just learn,
+                            We've refined our learning experience so that every student doesn't just learn,
                             but masters their craft.
                         </p>
                     </div>

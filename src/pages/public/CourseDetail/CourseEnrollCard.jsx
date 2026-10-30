@@ -132,8 +132,8 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                         {enrolling && <Loader2 size={16} className="animate-spin" />}
                         {!isLoggedIn
                             ? pricing.isFree
-                                ? "Login to Enroll for Free"
-                                : "Login to Enroll"
+                                ? "Log In to Enroll for Free"
+                                : "Log In to Enroll"
                             : pricing.isFree
                               ? "Enroll for Free"
                               : "Enroll Now"}

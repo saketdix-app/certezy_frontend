@@ -19,6 +19,9 @@ const CSS = `
   .ts-track { display: flex; gap: 24px; width: max-content; animation: tsMarquee var(--ts-duration, 60s) linear infinite; }
   .ts-marquee:hover .ts-track, .ts-marquee:focus-within .ts-track { animation-play-state: paused; }
   .ts-track .ts-card { width: 360px; flex-shrink: 0; }
+  .ts-ticker { display: flex; width: max-content; animation: tsMarquee 45s linear infinite; }
+  .ts-marquee:hover .ts-ticker { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .ts-ticker { animation: none; } }
   @media (max-width: 640px) { .ts-track .ts-card { width: 290px; } }
   @media (prefers-reduced-motion: reduce) {
     .ts-marquee { overflow-x: auto; }
@@ -127,6 +130,25 @@ const STATS = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
+// Rotating strip: certifications our courses prepare learners for
+const CERTIFICATIONS = [
+    "PMP®",
+    "AWS Cloud Practitioner",
+    "AWS Solutions Architect",
+    "Azure Fundamentals",
+    "Azure Administrator",
+    "Google Cloud Digital Leader",
+    "CompTIA Security+",
+    "CompTIA Network+",
+    "CISSP",
+    "CEH",
+    "Cisco CCNA",
+    "ITIL® 4",
+    "PRINCE2®",
+    "Kubernetes",
+    "Power BI",
+];
+
 const AVATAR_COLORS = [
     "linear-gradient(135deg, #3282B8, #1A5F8A)",
     "linear-gradient(135deg, #6C3BD5, #4C1D95)",
@@ -245,6 +267,34 @@ export default function Testimonials() {
                             </span>{" "}
                             Learners Worldwide
                         </h2>
+                    </div>
+
+                    {/* ── Rotating certifications strip ── */}
+                    <div className="ts-f1" style={{ marginBottom: "36px" }}>
+                        <p
+                            style={{
+                                textAlign: "center",
+                                fontSize: "12px",
+                                fontWeight: 600,
+                                color: "#64748B",
+                                marginBottom: "14px",
+                            }}
+                        >
+                            Our learners prepare for
+                        </p>
+                        <div className="ts-marquee">
+                            <div className="ts-ticker">
+                                {[...CERTIFICATIONS, ...CERTIFICATIONS].map((name, i) => (
+                                    <span
+                                        key={`${name}-${i}`}
+                                        aria-hidden={i >= CERTIFICATIONS.length ? true : undefined}
+                                        className="px-10 text-[#94A3B8] font-bold text-lg lg:text-xl hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
+                                    >
+                                        {name}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     {/* ── Stats strip ── */}
