@@ -40,8 +40,13 @@ export const WHATSAPP_LINES = SUPPORT_PHONES.map((p) => ({
 /** Registered office — shown on the Contact page. */
 export const COMPANY = {
     legalName: "Certezy E-Learning Pvt. Ltd.",
-    // One line per row; add the street address / PIN code here
-    addressLines: ["Indore, Madhya Pradesh", "India"],
+    // One line per row
+    addressLines: [
+        "3rd Floor, Streamline J-1 Tower",
+        "PU-4, Scheme No. 54",
+        "Indore, Madhya Pradesh 452010",
+        "India",
+    ],
 };
 
 /** Primary number (US toll-free) for places with room for only one. */
