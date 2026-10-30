@@ -189,46 +189,53 @@ export function EnhancedTextLesson({
             {/* Content */}
             <div className={`p-6 ${isFullscreen ? "max-w-4xl mx-auto" : ""}`}>{renderContent()}</div>
 
-            {/* Actions */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                    <div className="flex gap-3">
-                        <button
-                            onClick={onPrevious}
-                            disabled={!hasPrevious}
-                            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            <ChevronLeft size={18} />
-                            Previous
-                        </button>
-                        <button
-                            onClick={onNext}
-                            disabled={!hasNext}
-                            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            Next
-                            <ChevronRight size={18} />
-                        </button>
+            {/* Actions — only when the parent doesn't show its own complete / next controls */}
+            {(onMarkComplete || onNext) && (
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                        {/* Own Previous / Next only when the parent doesn't provide navigation */}
+                        {onNext ? (
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={onPrevious}
+                                    disabled={!hasPrevious}
+                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    <ChevronLeft size={18} />
+                                    Previous
+                                </button>
+                                <button
+                                    onClick={onNext}
+                                    disabled={!hasNext}
+                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                    <ChevronRight size={18} />
+                                </button>
+                            </div>
+                        ) : (
+                            <span />
+                        )}
+
+                        {!isCompleted && (
+                            <button
+                                onClick={onMarkComplete}
+                                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                            >
+                                <CheckCircle2 size={18} />
+                                Mark Complete
+                            </button>
+                        )}
+
+                        {isCompleted && (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg">
+                                <CheckCircle2 size={18} />
+                                <span className="font-medium">Completed</span>
+                            </div>
+                        )}
                     </div>
-
-                    {!isCompleted && (
-                        <button
-                            onClick={onMarkComplete}
-                            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                        >
-                            <CheckCircle2 size={18} />
-                            Mark Complete
-                        </button>
-                    )}
-
-                    {isCompleted && (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg">
-                            <CheckCircle2 size={18} />
-                            <span className="font-medium">Completed</span>
-                        </div>
-                    )}
                 </div>
-            </div>
+            )}
         </div>
     );
 
