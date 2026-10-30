@@ -120,7 +120,9 @@ export default function ExamInterface() {
             setResults(resultData);
             setShowResults(true);
             toast.success("Exam submitted successfully!");
-            showCertificateEarned(resultData?.certificate, navigate);
+            showCertificateEarned(resultData?.certificate, navigate, {
+                reissued: resultData?.certificate_reissued,
+            });
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to submit exam");
         } finally {
@@ -168,7 +170,7 @@ export default function ExamInterface() {
                 <ExamResults
                     results={results}
                     questions={questions}
-                    onRetry={!results.is_passed ? handleRetry : null}
+                    onRetry={handleRetry}
                     onBackToCourse={handleBackToCourse}
                 />
             </div>
