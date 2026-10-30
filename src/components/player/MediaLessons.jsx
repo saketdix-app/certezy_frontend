@@ -25,11 +25,15 @@ function Unavailable({ icon: Icon = FileText, text = "This lesson's content isn'
     );
 }
 
-export function VideoLesson({ lesson, videoRef, onTimeUpdate, onEnded }) {
+// startAt (seconds): resume point — YouTube via ?start=, uploaded videos via currentTime
+export function VideoLesson({ lesson, videoRef, onTimeUpdate, onEnded, startAt = 0 }) {
     const src = (lesson.content || "").trim();
     if (!src) return <Unavailable icon={PlayCircle} text="This video isn't available yet." />;
 
-    const embed = getVideoEmbedUrl(src);
+    let embed = getVideoEmbedUrl(src);
+    if (embed && startAt > 5 && /youtube/.test(embed)) {
+        embed += `${embed.includes("?") ? "&" : "?"}start=${Math.floor(startAt)}`;
+    }
     if (embed) {
         return (
             <iframe
@@ -55,6 +59,11 @@ export function VideoLesson({ lesson, videoRef, onTimeUpdate, onEnded }) {
             className="w-full h-full outline-none"
             onTimeUpdate={onTimeUpdate}
             onEnded={onEnded}
+            onLoadedMetadata={(e) => {
+                const v = e.currentTarget;
+                // resume unless it was almost finished
+                if (startAt > 5 && startAt < (v.duration || Infinity) - 10) v.currentTime = startAt;
+            }}
         />
     );
 }

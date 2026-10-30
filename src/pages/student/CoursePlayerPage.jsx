@@ -86,6 +86,7 @@ export default function CoursePlayerPage() {
     // ── Video / progress refs ──────────────────────────────────────────────────
     const videoRef = useRef(null);
     const watchTimeRef = useRef(0); // seconds watched this session
+    const watchTimesRef = useRef({}); // saved position per lesson { lesson_id: seconds } — for resuming
     const lastSyncRef = useRef(0); // last time we synced to backend
     const completedRef = useRef({}); // local completed set (avoid re-renders)
 
@@ -136,6 +137,9 @@ export default function CoursePlayerPage() {
                 });
                 setProgressMap(map);
                 completedRef.current = map;
+                watchTimesRef.current = Object.fromEntries(
+                    progList.map((p) => [p.lesson_id, p.watch_time || 0])
+                );
 
                 // 6. Fetch exams for this course
                 try {
@@ -146,11 +150,23 @@ export default function CoursePlayerPage() {
                     setCourseExams([]);
                 }
 
-                // 7. Set current lesson — first incomplete or first lesson
+                // 7. Resume where the student left off: the lesson opened most recently
+                // (or the next unfinished one after it, if that one is done)
                 const allLessons = sectionsWithLessons.flatMap((s) => s.lessons);
                 if (allLessons.length > 0) {
-                    const firstIncomplete = allLessons.find((l) => !map[l.id]?.is_completed);
-                    const lesson = firstIncomplete ?? allLessons[0];
+                    const lastOpened = progList
+                        .filter((p) => p.last_watched)
+                        .sort((a, b) => new Date(b.last_watched) - new Date(a.last_watched))[0];
+                    const lastIdx = lastOpened
+                        ? allLessons.findIndex((l) => l.id === lastOpened.lesson_id)
+                        : -1;
+                    const isDone = (l) => !!map[l.id]?.is_completed;
+                    const lesson =
+                        (lastIdx >= 0 && !isDone(allLessons[lastIdx]) && allLessons[lastIdx]) ||
+                        (lastIdx >= 0 && allLessons.slice(lastIdx + 1).find((l) => !isDone(l))) ||
+                        allLessons.find((l) => !isDone(l)) ||
+                        allLessons[lastIdx >= 0 ? lastIdx : 0];
+                    watchTimeRef.current = map[lesson.id]?.watch_time ?? 0;
                     const fullLesson = await lessonService.getById(lesson.id);
                     setCurrentLesson(fullLesson.data?.data?.lesson ?? lesson);
 
@@ -183,6 +199,10 @@ export default function CoursePlayerPage() {
                     is_completed: is_completed ? 1 : 0,
                     watch_time: Math.floor(watchTimeRef.current),
                 });
+                watchTimesRef.current[currentLesson.id] = Math.max(
+                    watchTimesRef.current[currentLesson.id] || 0,
+                    Math.floor(watchTimeRef.current)
+                );
                 // Last lesson done → the API issues the certificate automatically
                 showCertificateEarned(res.data?.data?.certificate, navigate);
 
@@ -209,9 +229,9 @@ export default function CoursePlayerPage() {
             // Save current video progress before switching
             await syncProgress(false);
 
-            // Reset watch time
-            watchTimeRef.current = 0;
-            lastSyncRef.current = 0;
+            // Resume from the saved position of the lesson being opened
+            watchTimeRef.current = watchTimesRef.current[lesson.id] || 0;
+            lastSyncRef.current = watchTimeRef.current;
 
             // Fetch full lesson (with content/video URL)
             try {
@@ -220,6 +240,16 @@ export default function CoursePlayerPage() {
             } catch {
                 setCurrentLesson(lesson);
             }
+
+            // Remember it as the last lesson opened, so the next visit resumes here
+            // (completion and watch time are never lowered by the server)
+            progressService
+                .updateLessonProgress({
+                    lesson_id: lesson.id,
+                    is_completed: completedRef.current[lesson.id]?.is_completed ? 1 : 0,
+                    watch_time: Math.floor(watchTimeRef.current),
+                })
+                .catch(() => {});
         },
         // syncProgress changes with the current lesson, so the save above runs
         // for the lesson being left (it used to be stuck on the first one)
@@ -289,12 +319,15 @@ export default function CoursePlayerPage() {
     // ── Manual complete ────────────────────────────────────────────────────────
     const markLessonComplete = () => syncProgress(true);
 
-    // ── Cleanup on unmount ─────────────────────────────────────────────────────
+    // ── Save on leaving the page ───────────────────────────────────────────────
+    // Only on unmount: running this on every lesson change re-saved the lesson
+    // just left (with watch time 0) after the new one was opened, which made the
+    // old lesson look like the last one visited.
+    const syncProgressRef = useRef(syncProgress);
     useEffect(() => {
-        return () => {
-            syncProgress(false);
-        };
+        syncProgressRef.current = syncProgress;
     }, [syncProgress]);
+    useEffect(() => () => syncProgressRef.current(false), []);
 
     // ─── Guards ────────────────────────────────────────────────────────────────
     if (loading) return <PlayerSkeleton />;
@@ -376,6 +409,7 @@ export default function CoursePlayerPage() {
                                 ) : currentLesson.type === "video" ? (
                                     <VideoLesson
                                         lesson={currentLesson}
+                                        startAt={watchTimesRef.current[currentLesson.id] || 0}
                                         videoRef={videoRef}
                                         onTimeUpdate={handleTimeUpdate}
                                         onEnded={handleVideoEnded}

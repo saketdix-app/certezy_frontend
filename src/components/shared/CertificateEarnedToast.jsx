@@ -4,9 +4,9 @@ import { Award, X } from "lucide-react";
 /**
  * showCertificateEarned(certificate, navigate) — celebration toast shown when
  * the API reports a freshly issued certificate (last lesson completed or final
- * test passed). Links to the PDF and to My Certificates.
+ * test passed), or a reissued one (passed a test again — new date, same number). Links to the PDF and to My Certificates.
  */
-export function showCertificateEarned(certificate, navigate) {
+export function showCertificateEarned(certificate, navigate, { reissued = false } = {}) {
     if (!certificate) return;
     toast.custom(
         (t) => (
@@ -17,9 +17,13 @@ export function showCertificateEarned(certificate, navigate) {
                     <Award size={20} />
                 </div>
                 <div className="min-w-0 flex-1">
-                    <p className="text-[14px] font-bold text-slate-900">Certificate earned! 🎉</p>
+                    <p className="text-[14px] font-bold text-slate-900">
+                        {reissued ? "Certificate reissued 🎉" : "Certificate earned! 🎉"}
+                    </p>
                     <p className="text-[12.5px] text-slate-500 mt-0.5">
-                        You completed the course. Your certificate from Certezy E-Learning Pvt. Ltd. is ready.
+                        {reissued
+                            ? "You passed again — your certificate now shows today's date. Same certificate number and verification link."
+                            : "You completed the course. Your certificate from Certezy E-Learning Pvt. Ltd. is ready."}
                     </p>
                     <div className="flex items-center gap-3 mt-2.5">
                         {certificate.pdf_url && (
