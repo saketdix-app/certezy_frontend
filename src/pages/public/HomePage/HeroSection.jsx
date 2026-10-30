@@ -307,7 +307,7 @@ export default function HeroSection() {
                     <div className="hero-wrap">
                         {/* ════ LEFT ═══════════════════════════════════════════════ */}
                         <div className="hero-left">
-                            {/* CompTIA badge — SEO: meaningful text, not just decorative */}
+                            {/* PMP pass-guarantee badge — SEO: meaningful text, not just decorative */}
                             <div className="afu1" style={{ marginBottom: "24px" }}>
                                 <span
                                     style={{
@@ -325,7 +325,7 @@ export default function HeroSection() {
                                     }}
                                 >
                                     <ShieldCheck size={14} color="#3282B8" aria-hidden="true" />
-                                    CompTIA Authorized Partner
+                                    Clear PMP® on Your First Try — 100% Pass Guarantee
                                 </span>
                             </div>
 
@@ -366,8 +366,8 @@ export default function HeroSection() {
                                     marginBottom: "32px",
                                 }}
                             >
-                                We are a trusted CompTIA authorized partner delivering expert IT training,
-                                certifications, and real-world skills for modern technology careers.
+                                Expert-led PMP® and IT certification training with real-world skills for
+                                modern careers — and a 100% pass guarantee on our PMP® program.
                             </p>
 
                             {/* Trust proof row */}

@@ -1,5 +1,8 @@
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, BookOpen, BadgeCheck, ArrowRight } from "lucide-react";
+import { useSelector } from "react-redux";
+import { Search, BookOpen, BadgeCheck, ArrowRight, X } from "lucide-react";
+import { selectIsLoggedIn } from "@/features/auth/authSlice";
 
 const CSS = `
   @keyframes hiwFadeUp {
@@ -11,6 +14,12 @@ const CSS = `
   .hiw-f2 { animation: hiwFadeUp .55s .18s ease both; }
   .hiw-f3 { animation: hiwFadeUp .55s .26s ease both; }
   .hiw-f4 { animation: hiwFadeUp .55s .34s ease both; }
+
+  .hiw-card-link { display: block; height: 100%; text-decoration: none; color: inherit; cursor: pointer; border-radius: 22px; text-align: left; width: 100%; }
+  .hiw-card-link:focus-visible { outline: 2px solid #3282B8; outline-offset: 4px; }
+  .hiw-action { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #60A5FA; margin-top: 14px; }
+  .hiw-card-link:hover .hiw-action svg { transform: translateX(3px); }
+  .hiw-action svg { transition: transform .2s ease; }
 
   .hiw-card {
     background: #0D1929;
@@ -115,6 +124,7 @@ const STEPS = [
         title: "Browse Courses",
         desc: "Explore our comprehensive catalog of expert-led courses across technology, design, and business domains.",
         tag: "5,000+ Curated Lessons",
+        action: "Browse courses",
     },
     {
         num: "02",
@@ -122,6 +132,7 @@ const STEPS = [
         title: "Enroll & Learn",
         desc: "Get instant access to interactive modules, hands-on projects, and a community of peer learners.",
         tag: "Personalized Dashboard",
+        action: "Log in to start",
     },
     {
         num: "03",
@@ -129,10 +140,65 @@ const STEPS = [
         title: "Get Certified",
         desc: "Validate your expertise with certificates that are easily shared to LinkedIn and respected by top employers.",
         tag: "Industry Recognition",
+        action: "See a sample certificate",
     },
 ];
 
+// Sample certificate preview (public/sample-certificate.webp, made with the real certificate template)
+function SampleCertificateModal({ onClose }) {
+    useEffect(() => {
+        const onKey = (e) => e.key === "Escape" && onClose();
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [onClose]);
+
+    return (
+        <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4"
+            onClick={onClose}
+        >
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label="Sample certificate"
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-4xl rounded-2xl bg-white p-3 sm:p-4 shadow-2xl"
+            >
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close"
+                    className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white shadow-lg flex items-center justify-center text-slate-600 hover:text-slate-900"
+                >
+                    <X size={18} />
+                </button>
+                <img
+                    src="/sample-certificate.webp"
+                    alt="Sample Certezy certificate of completion"
+                    className="w-full h-auto rounded-lg"
+                />
+                <div className="flex flex-wrap items-center justify-between gap-3 px-1 pt-3">
+                    <p className="text-[13px] text-slate-500">
+                        Every certificate has a unique number and a public verification link.
+                    </p>
+                    <Link
+                        to="/courses"
+                        className="rounded-lg bg-[#3282B8] px-4 py-2 text-[13px] font-bold text-white no-underline hover:opacity-90"
+                    >
+                        Start earning yours
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function HowItWorks() {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const [showSample, setShowSample] = useState(false);
+    // Where each step's card leads
+    const stepLinks = ["/courses", isLoggedIn ? "/student/my-courses" : "/login", null];
+
     return (
         <>
             <style>{CSS}</style>
@@ -203,100 +269,112 @@ export default function HowItWorks() {
 
                     {/* ── Steps row ── */}
                     <div className="hiw-row hiw-f1">
-                        {STEPS.map(({ num, Icon, title, desc, tag }, i) => (
-                            <>
-                                {/* Card */}
-                                <div key={title} className="hiw-card-wrap">
-                                    <article className="hiw-card" style={{ height: "100%" }}>
-                                        {/* Top row: number + icon */}
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                                alignItems: "flex-start",
-                                                marginBottom: "28px",
-                                            }}
-                                        >
-                                            {/* Faded step number */}
-                                            <span
-                                                style={{
-                                                    fontSize: "72px",
-                                                    fontWeight: 900,
-                                                    lineHeight: 1,
-                                                    color: "rgba(50,130,184,0.18)",
-                                                    letterSpacing: "-0.04em",
-                                                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                                    userSelect: "none",
-                                                }}
-                                                aria-hidden="true"
-                                            >
-                                                {num}
-                                            </span>
+                        {STEPS.map(({ num, Icon, title, desc, tag, action }, i) => {
+                            const to = stepLinks[i];
+                            const Wrapper = to ? Link : "button";
+                            const wrapperProps = to
+                                ? { to }
+                                : { type: "button", onClick: () => setShowSample(true) };
+                            return (
+                                <Fragment key={title}>
+                                    {/* Card */}
+                                    <div className="hiw-card-wrap">
+                                        <Wrapper className="hiw-card-link" {...wrapperProps}>
+                                            <article className="hiw-card" style={{ height: "100%" }}>
+                                                {/* Top row: number + icon */}
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "flex-start",
+                                                        marginBottom: "28px",
+                                                    }}
+                                                >
+                                                    {/* Faded step number */}
+                                                    <span
+                                                        style={{
+                                                            fontSize: "72px",
+                                                            fontWeight: 900,
+                                                            lineHeight: 1,
+                                                            color: "rgba(50,130,184,0.18)",
+                                                            letterSpacing: "-0.04em",
+                                                            fontFamily: "'Plus Jakarta Sans', sans-serif",
+                                                            userSelect: "none",
+                                                        }}
+                                                        aria-hidden="true"
+                                                    >
+                                                        {num}
+                                                    </span>
 
-                                            {/* Icon box */}
-                                            <div className="hiw-icon-box" aria-hidden="true">
-                                                <Icon size={22} color="#3282B8" strokeWidth={1.8} />
-                                            </div>
-                                        </div>
+                                                    {/* Icon box */}
+                                                    <div className="hiw-icon-box" aria-hidden="true">
+                                                        <Icon size={22} color="#3282B8" strokeWidth={1.8} />
+                                                    </div>
+                                                </div>
 
-                                        {/* Title */}
-                                        <h3
-                                            style={{
-                                                fontSize: "20px",
-                                                fontWeight: 800,
-                                                color: "#F1F5F9",
-                                                lineHeight: 1.3,
-                                                marginBottom: "12px",
-                                            }}
-                                        >
-                                            {title}
-                                        </h3>
+                                                {/* Title */}
+                                                <h3
+                                                    style={{
+                                                        fontSize: "20px",
+                                                        fontWeight: 800,
+                                                        color: "#F1F5F9",
+                                                        lineHeight: 1.3,
+                                                        marginBottom: "12px",
+                                                    }}
+                                                >
+                                                    {title}
+                                                </h3>
 
-                                        {/* Description */}
-                                        <p
-                                            style={{
-                                                fontSize: "13.5px",
-                                                color: "#64748B",
-                                                lineHeight: 1.7,
-                                                flex: 1,
-                                                marginBottom: "28px",
-                                            }}
-                                        >
-                                            {desc}
-                                        </p>
+                                                {/* Description */}
+                                                <p
+                                                    style={{
+                                                        fontSize: "13.5px",
+                                                        color: "#64748B",
+                                                        lineHeight: 1.7,
+                                                        flex: 1,
+                                                        marginBottom: "28px",
+                                                    }}
+                                                >
+                                                    {desc}
+                                                </p>
 
-                                        {/* Divider */}
-                                        <div
-                                            style={{
-                                                height: "1px",
-                                                background: "rgba(255,255,255,0.06)",
-                                                marginBottom: "18px",
-                                            }}
-                                        />
+                                                {/* Divider */}
+                                                <div
+                                                    style={{
+                                                        height: "1px",
+                                                        background: "rgba(255,255,255,0.06)",
+                                                        marginBottom: "18px",
+                                                    }}
+                                                />
 
-                                        {/* Bottom tag */}
-                                        <p
-                                            style={{
-                                                fontSize: "11px",
-                                                fontWeight: 700,
-                                                color: "#3282B8",
-                                                letterSpacing: "0.1em",
-                                                textTransform: "uppercase",
-                                            }}
-                                        >
-                                            {tag}
-                                        </p>
-                                    </article>
-                                </div>
-
-                                {/* Connector dashes between cards */}
-                                {i < STEPS.length - 1 && (
-                                    <div key={`conn-${i}`} className="hiw-connector">
-                                        <div className="hiw-dash" />
+                                                {/* Bottom tag */}
+                                                <p
+                                                    style={{
+                                                        fontSize: "11px",
+                                                        fontWeight: 700,
+                                                        color: "#3282B8",
+                                                        letterSpacing: "0.1em",
+                                                        textTransform: "uppercase",
+                                                    }}
+                                                >
+                                                    {tag}
+                                                </p>
+                                                <span className="hiw-action">
+                                                    {action} <ArrowRight size={14} aria-hidden="true" />
+                                                </span>
+                                            </article>
+                                        </Wrapper>
                                     </div>
-                                )}
-                            </>
-                        ))}
+
+                                    {/* Connector dashes between cards */}
+                                    {i < STEPS.length - 1 && (
+                                        <div className="hiw-connector">
+                                            <div className="hiw-dash" />
+                                        </div>
+                                    )}
+                                </Fragment>
+                            );
+                        })}
                     </div>
 
                     {/* ── CTA Button ── */}
@@ -311,6 +389,8 @@ export default function HowItWorks() {
                     </div>
                 </div>
             </section>
+
+            {showSample && <SampleCertificateModal onClose={() => setShowSample(false)} />}
         </>
     );
 }

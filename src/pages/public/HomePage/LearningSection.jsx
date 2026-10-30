@@ -94,7 +94,7 @@ const CSS = `
 `;
 
 const STATS = [
-    { icon: ShieldCheck, label: "CompTIA", sub: "Authorized Partner", color: true },
+    { icon: ShieldCheck, label: "PMP®", sub: "100% Pass Guarantee", color: true },
     { num: "10K+", label: "Active", sub: "Learners", color: false },
     { num: "50+", label: "Programs", sub: "Certifications", color: false },
     { num: "98%", label: "Success", sub: "Rate", color: false },
@@ -123,7 +123,7 @@ const FEATURES = [
     },
 ];
 
-const LOGOS = ["CompTIA", "AWS", "Microsoft", "Cisco"];
+const LOGOS = ["PMP®", "CompTIA", "AWS", "Microsoft Azure", "Cisco"];
 
 export default function LearningSection() {
     return (
@@ -168,7 +168,7 @@ export default function LearningSection() {
                                 marginBottom: "20px",
                             }}
                         >
-                            Trusted by Global Industry Leaders
+                            Certifications We Prepare You For
                         </p>
                         <div
                             style={{

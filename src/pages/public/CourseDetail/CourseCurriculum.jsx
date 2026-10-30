@@ -105,8 +105,13 @@ function LessonRow({ lesson, isEnrolled, onPreview }) {
 }
 
 // ── Single section ─────────────────────────────────────────
-function SectionRow({ section, index, isEnrolled, onPreview }) {
+function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
     const [open, setOpen] = useState(index === 0);
+
+    // "Expand all / Collapse all" overrides each section's own toggle
+    useEffect(() => {
+        if (expandAll !== null) setOpen(expandAll);
+    }, [expandAll]);
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -236,8 +241,15 @@ function SectionRow({ section, index, isEnrolled, onPreview }) {
 }
 
 // ── Main export ────────────────────────────────────────────
-export default function CourseCurriculum({ sections = [], courseId, isEnrolled = false }) {
+export default function CourseCurriculum({
+    sections = [],
+    courseId,
+    isEnrolled = false,
+    totalLessons,
+    totalDuration,
+}) {
     const [previewing, setPreviewing] = useState(null);
+    const [expandAll, setExpandAll] = useState(null); // null = each section decides
 
     if (sections.length === 0) {
         return (
@@ -247,8 +259,24 @@ export default function CourseCurriculum({ sections = [], courseId, isEnrolled =
         );
     }
 
+    const length = formatDuration(totalDuration);
+
     return (
         <div className="space-y-2.5">
+            <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                <p className="text-[13px] text-slate-500">
+                    {sections.length} sections
+                    {totalLessons > 0 && ` • ${totalLessons} lessons`}
+                    {length && ` • ${length} total length`}
+                </p>
+                <button
+                    type="button"
+                    onClick={() => setExpandAll((v) => !v)}
+                    className="text-[13px] font-bold text-primary hover:underline"
+                >
+                    {expandAll ? "Collapse all sections" : "Expand all sections"}
+                </button>
+            </div>
             {sections.map((section, index) => (
                 <SectionRow
                     key={section.id}
@@ -256,6 +284,7 @@ export default function CourseCurriculum({ sections = [], courseId, isEnrolled =
                     index={index}
                     isEnrolled={isEnrolled}
                     onPreview={courseId ? setPreviewing : null}
+                    expandAll={expandAll}
                 />
             ))}
             {previewing && (

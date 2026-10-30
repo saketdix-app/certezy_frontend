@@ -108,7 +108,7 @@ const CSS = `
 `;
 
 const TRUST_PILLS = [
-    { icon: BadgeCheck, label: "✓ CompTIA Authorized" },
+    { icon: BadgeCheck, label: "✓ 100% PMP® Pass Guarantee" },
     { icon: BadgeCheck, label: "✓ Industry Recognized Certs" },
     { icon: Clock, label: "✓ Learn at Your Own Pace" },
 ];
@@ -169,7 +169,7 @@ export default function CTABanner() {
                             }}
                         />
 
-                        {/* CompTIA badge — top right */}
+                        {/* PMP pass-guarantee badge — top right */}
                         <div
                             className="cta-badge"
                             style={{
@@ -210,10 +210,10 @@ export default function CTABanner() {
                                         textTransform: "uppercase",
                                     }}
                                 >
-                                    Certified Partner
+                                    Clear PMP® with Confidence
                                 </div>
                                 <div style={{ fontSize: "13px", fontWeight: 800, color: "#F1F5F9" }}>
-                                    CompTIA Authorized
+                                    100% Pass Guarantee
                                 </div>
                             </div>
                         </div>

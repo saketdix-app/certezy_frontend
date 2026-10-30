@@ -23,11 +23,11 @@ export default function CourseFilters({ categories = [] }) {
     const activeCount = [filters.category_id, filters.level, filters.pricing].filter(Boolean).length;
 
     return (
-        // sticky — navbar 70px + 16px gap = top-[86px]
+        // sticky — navbar 70px + category tabs 44px + 16px gap = top-[130px]
         // scrollbarWidth none so no ugly scrollbar if content overflows
         <aside
-            className="w-[250px] xl:w-[270px] shrink-0 sticky top-[86px]"
-            style={{ maxHeight: "calc(100vh - 104px)", overflowY: "auto", scrollbarWidth: "none" }}
+            className="w-[250px] xl:w-[270px] shrink-0 sticky top-[130px]"
+            style={{ maxHeight: "calc(100vh - 148px)", overflowY: "auto", scrollbarWidth: "none" }}
         >
             <div
                 className="bg-white rounded-2xl overflow-hidden"

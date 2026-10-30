@@ -43,7 +43,7 @@ export default function MegaMenu({ onClose }) {
 
     return (
         // ── Backdrop ──────────────────────────────────────────
-        <div className="fixed inset-0 z-50 top-[75px]" onClick={onClose}>
+        <div className="fixed inset-0 z-50 top-[114px]" onClick={onClose}>
             {/* ── Panel ── */}
             <div className="relative max-w-[1280px] mx-auto px-6" onClick={(e) => e.stopPropagation()}>
                 <div

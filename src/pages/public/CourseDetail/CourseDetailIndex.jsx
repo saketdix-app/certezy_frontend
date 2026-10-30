@@ -1,7 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Star, Users, BookOpen, Award, ChevronRight, CheckCircle, GraduationCap } from "lucide-react";
+import {
+    Star,
+    Users,
+    BookOpen,
+    Award,
+    ChevronRight,
+    CheckCircle,
+    GraduationCap,
+    Clock,
+    Globe,
+    BarChart3,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 import courseService from "@/services/courseService";
@@ -11,9 +22,12 @@ import { selectIsLoggedIn } from "@/features/auth/authSlice";
 
 import CourseCurriculum from "./CourseCurriculum";
 import CourseEnrollCard from "./CourseEnrollCard";
+import CourseIncludes from "./CourseIncludes";
+import ShowMore from "./ShowMore";
+import PriceTag from "@/components/shared/PriceTag";
 import CourseReviews from "@/components/reviews/CourseReviews";
 import StarRating from "@/components/shared/StarRating";
-import { getPricing, formatCount } from "@/lib/format";
+import { getPricing, formatCount, formatDuration } from "@/lib/format";
 import { getCourseHighlight } from "@/lib/courseHighlights";
 import { COURSE_INSTRUCTOR } from "@/config/app";
 
@@ -41,6 +55,19 @@ export default function CourseDetailIndex() {
     const [error, setError] = useState(null);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [enrolling, setEnrolling] = useState(false);
+
+    // Sticky title bar appears once the hero has scrolled out of view
+    const heroRef = useRef(null);
+    const [heroVisible, setHeroVisible] = useState(true);
+    useEffect(() => {
+        const el = heroRef.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), {
+            rootMargin: "-114px 0px 0px 0px",
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [loading]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -120,11 +147,28 @@ export default function CourseDetailIndex() {
 
     const highlight = getCourseHighlight(course);
     const whatYouLearn = course.what_you_learn ? course.what_you_learn.split("\n").filter(Boolean) : [];
+    const requirements = course.requirements
+        ? course.requirements
+              .split(/\n|\s\|\s/)
+              .map((r) => r.trim())
+              .filter(Boolean)
+        : [];
+    const updated = course.updated_at || course.created_at;
 
     return (
         <div className="min-h-screen bg-[#F1F5F9]">
+            <StickyCourseBar
+                visible={!heroVisible}
+                course={course}
+                highlight={highlight}
+                isEnrolled={isEnrolled}
+                enrolling={enrolling}
+                onEnroll={isEnrolled ? () => navigate(`/student/course/${course.id}/learn`) : handleEnroll}
+            />
+
             {/* ── Hero ──────────────────────────────────────── */}
             <div
+                ref={heroRef}
                 style={{
                     background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
                     position: "relative",
@@ -240,6 +284,37 @@ export default function CourseDetailIndex() {
                             )}
                         </div>
 
+                        {/* Updated · language · level */}
+                        <div
+                            className="flex items-center gap-x-4 gap-y-1.5 flex-wrap mt-4"
+                            style={{ color: "rgba(255,255,255,0.6)", fontSize: "12.5px" }}
+                        >
+                            {updated && (
+                                <span className="flex items-center gap-1.5">
+                                    <Clock size={13} /> Last updated{" "}
+                                    {new Date(updated).toLocaleDateString("en-US", {
+                                        month: "2-digit",
+                                        year: "numeric",
+                                    })}
+                                </span>
+                            )}
+                            {course.language && (
+                                <span className="flex items-center gap-1.5">
+                                    <Globe size={13} /> {course.language}
+                                </span>
+                            )}
+                            {course.level && (
+                                <span className="flex items-center gap-1.5 capitalize">
+                                    <BarChart3 size={13} /> {course.level}
+                                </span>
+                            )}
+                            {course.total_duration > 0 && (
+                                <span className="flex items-center gap-1.5">
+                                    <BookOpen size={13} /> {formatDuration(course.total_duration)} total
+                                </span>
+                            )}
+                        </div>
+
                         {/* Instructor — hero mein sirf naam */}
                         {course.instructor_name && (
                             <div className="flex items-center gap-2.5 mt-5">
@@ -287,43 +362,52 @@ export default function CourseDetailIndex() {
                             </ContentCard>
                         )}
 
-                        {/* About */}
-                        {course.description && (
-                            <ContentCard title="About this Course">
-                                <p
-                                    style={{
-                                        fontSize: "14px",
-                                        color: "#475569",
-                                        lineHeight: 1.75,
-                                        whiteSpace: "pre-line",
-                                    }}
-                                >
-                                    {course.description}
-                                </p>
-                            </ContentCard>
-                        )}
+                        {/* This course includes */}
+                        <ContentCard title="This Course Includes">
+                            <CourseIncludes course={course} sections={sections} />
+                        </ContentCard>
 
-                        {/* Curriculum */}
-                        <ContentCard title="Curriculum">
-                            <div className="flex items-center gap-2 mb-5 flex-wrap">
-                                <span style={{ fontSize: "13px", color: "#94A3B8" }}>
-                                    {sections.length} sections
-                                </span>
-                                {course.total_lessons > 0 && (
-                                    <>
-                                        <span style={{ color: "#E2E8F0" }}>•</span>
-                                        <span style={{ fontSize: "13px", color: "#94A3B8" }}>
-                                            {course.total_lessons} lessons
-                                        </span>
-                                    </>
-                                )}
-                            </div>
+                        {/* Course content */}
+                        <ContentCard title="Course Content">
                             <CourseCurriculum
                                 sections={sections}
                                 courseId={course.id}
                                 isEnrolled={isEnrolled}
+                                totalLessons={course.total_lessons}
+                                totalDuration={course.total_duration}
                             />
                         </ContentCard>
+
+                        {/* Requirements */}
+                        {requirements.length > 0 && (
+                            <ContentCard title="Requirements">
+                                <ul className="space-y-2 list-disc pl-5 marker:text-slate-400">
+                                    {requirements.map((r) => (
+                                        <li key={r} className="text-[14px] text-slate-600 leading-relaxed">
+                                            {r}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </ContentCard>
+                        )}
+
+                        {/* Description */}
+                        {course.description && (
+                            <ContentCard title="Description">
+                                <ShowMore>
+                                    <p
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#475569",
+                                            lineHeight: 1.75,
+                                            whiteSpace: "pre-line",
+                                        }}
+                                    >
+                                        {course.description}
+                                    </p>
+                                </ShowMore>
+                            </ContentCard>
+                        )}
 
                         {/* ── Instructor Section ─────────────────────
                             Backend se jo fields aate hain unhi se banaya:
@@ -524,6 +608,41 @@ export default function CourseDetailIndex() {
                         />
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+// Compact bar with title, rating and the enrol button once the hero scrolls away (desktop)
+function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, onEnroll }) {
+    return (
+        <div
+            aria-hidden={!visible}
+            className={`hidden lg:block fixed left-0 right-0 top-[114px] z-30 bg-[#0a1628] text-white shadow-lg transition-all duration-200 ${
+                visible ? "translate-y-0 opacity-100" : "-translate-y-3 opacity-0 pointer-events-none"
+            }`}
+        >
+            <div className="max-w-screen-2xl mx-auto px-6 h-[60px] flex items-center gap-6">
+                <div className="min-w-0 flex-1">
+                    <p className="text-[14.5px] font-bold truncate">{course.title}</p>
+                    <StarRating
+                        value={highlight ? highlight.rating : course.rating_avg}
+                        count={highlight ? undefined : course.rating_count}
+                        size={11}
+                        showValue
+                        tone="dark"
+                    />
+                </div>
+                {!isEnrolled && <PriceTag course={course} size="md" className="text-white shrink-0" />}
+                <button
+                    type="button"
+                    onClick={onEnroll}
+                    disabled={enrolling}
+                    tabIndex={visible ? 0 : -1}
+                    className="shrink-0 rounded-lg bg-primary px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
+                >
+                    {isEnrolled ? "Go to course" : "Enroll now"}
+                </button>
             </div>
         </div>
     );

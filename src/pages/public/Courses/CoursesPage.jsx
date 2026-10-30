@@ -38,7 +38,7 @@ export default function CoursesPage() {
     const [heroSearch, setHeroSearch] = useState("");
     const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-    // ── Sync URL → Redux ───────────────────────────────────
+    // ── Sync URL → Redux (also when a menu link changes the URL on this page) ──
     useEffect(() => {
         const category_id = searchParams.get("category_id");
         const search = searchParams.get("search");
@@ -48,7 +48,16 @@ export default function CoursesPage() {
         if (level) dispatch(setFilter({ key: "level", value: level }));
         const pricing = searchParams.get("pricing");
         if (pricing) dispatch(setFilter({ key: "pricing", value: pricing }));
-    }, []);
+    }, [searchParams, dispatch]);
+
+    // Category links by slug (?category=cloud-computing, older ?category_slug=…) → id
+    useEffect(() => {
+        const slug = searchParams.get("category") || searchParams.get("category_slug");
+        if (!slug || !categories.length) return;
+        const all = categories.flatMap((c) => [c, ...(c.children ?? [])]);
+        const match = all.find((c) => c.slug === slug);
+        if (match) dispatch(setFilter({ key: "category_id", value: match.id }));
+    }, [searchParams, categories, dispatch]);
 
     // ── Fetch categories ───────────────────────────────────
     useEffect(() => {

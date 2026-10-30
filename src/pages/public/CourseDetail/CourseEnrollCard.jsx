@@ -87,7 +87,7 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
 
     return (
         <div
-            className="bg-white rounded-2xl overflow-hidden lg:sticky lg:top-[86px]"
+            className="bg-white rounded-2xl overflow-hidden lg:sticky lg:top-[190px]"
             style={{ border: "1px solid #EEF2F7", boxShadow: "0 4px 24px rgba(15,23,42,0.08)" }}
         >
             {/* Thumbnail — 16:9, same crop as course cards */}
