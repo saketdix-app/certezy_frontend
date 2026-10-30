@@ -170,24 +170,6 @@ export default function CoursePlayerPage() {
         fetchAll();
     }, [courseId]);
 
-    // ── Open a lesson ──────────────────────────────────────────────────────────
-    const openLesson = useCallback(async (lesson) => {
-        // Save current video progress before switching
-        await syncProgress(false);
-
-        // Reset watch time
-        watchTimeRef.current = 0;
-        lastSyncRef.current = 0;
-
-        // Fetch full lesson (with content/video URL)
-        try {
-            const res = await lessonService.getById(lesson.id);
-            setCurrentLesson(res.data?.data?.lesson ?? lesson);
-        } catch {
-            setCurrentLesson(lesson);
-        }
-    }, []);
-
     // ── Progress sync ──────────────────────────────────────────────────────────
     const syncProgress = useCallback(
         async (markComplete = false) => {
@@ -221,6 +203,29 @@ export default function CoursePlayerPage() {
         [currentLesson, navigate]
     );
 
+    // ── Open a lesson ──────────────────────────────────────────────────────────
+    const openLesson = useCallback(
+        async (lesson) => {
+            // Save current video progress before switching
+            await syncProgress(false);
+
+            // Reset watch time
+            watchTimeRef.current = 0;
+            lastSyncRef.current = 0;
+
+            // Fetch full lesson (with content/video URL)
+            try {
+                const res = await lessonService.getById(lesson.id);
+                setCurrentLesson(res.data?.data?.lesson ?? lesson);
+            } catch {
+                setCurrentLesson(lesson);
+            }
+        },
+        // syncProgress changes with the current lesson, so the save above runs
+        // for the lesson being left (it used to be stuck on the first one)
+        [syncProgress]
+    );
+
     // ── Video event handlers ───────────────────────────────────────────────────
     const handleTimeUpdate = useCallback(() => {
         const video = videoRef.current;
@@ -241,21 +246,39 @@ export default function CoursePlayerPage() {
         }
     }, [currentLesson, syncProgress]);
 
-    const handleVideoEnded = useCallback(() => {
-        syncProgress(true);
-        // Auto-advance to next lesson
-        goToNextLesson();
-    }, [syncProgress]);
-
     // ── Next / Prev lesson ─────────────────────────────────────────────────────
     const allLessons = sections.flatMap((s) => s.lessons);
     const currentIdx = allLessons.findIndex((l) => l.id === currentLesson?.id);
 
+    const isLastLesson = currentIdx === allLessons.length - 1;
+    const currentDone = !!progressMap[currentLesson?.id]?.is_completed;
+
+    // "Next" finishes the current lesson first (quizzes complete by passing their test),
+    // then opens the next one. On the last lesson it finishes the course: if earlier
+    // lessons are still open it jumps to the first of them.
     const goToNextLesson = useCallback(async () => {
+        if (!currentLesson) return;
+        if (currentLesson.type !== "quiz" && !completedRef.current[currentLesson.id]?.is_completed) {
+            await syncProgress(true);
+        }
         if (currentIdx < allLessons.length - 1) {
             await openLesson(allLessons[currentIdx + 1]);
+            return;
         }
-    }, [currentIdx, allLessons, openLesson]);
+        const remaining = allLessons.filter((l) => !completedRef.current[l.id]?.is_completed);
+        if (remaining.length === 0) {
+            toast.success("Course complete — well done! 🎉");
+        } else {
+            toast(`${remaining.length} lesson${remaining.length > 1 ? "s" : ""} left to complete the course`);
+            await openLesson(remaining[0]);
+            setExpandedSections((prev) => ({ ...prev, [remaining[0].section_id]: true }));
+        }
+    }, [currentLesson, currentIdx, allLessons, openLesson, syncProgress]);
+
+    const handleVideoEnded = useCallback(() => {
+        // Marks the lesson complete and moves on
+        goToNextLesson();
+    }, [goToNextLesson]);
 
     const goToPrevLesson = useCallback(async () => {
         if (currentIdx > 0) {
@@ -384,7 +407,7 @@ export default function CoursePlayerPage() {
                                                     }
                                                     onPrevious={goToPrevLesson}
                                                     onNext={goToNextLesson}
-                                                    hasNext={currentIdx < allLessons.length - 1}
+                                                    hasNext
                                                     hasPrevious={currentIdx > 0}
                                                 />
                                             </div>
@@ -498,17 +521,20 @@ export default function CoursePlayerPage() {
 
                                         <button
                                             onClick={goToNextLesson}
-                                            disabled={currentIdx === allLessons.length - 1}
                                             className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
                                             style={{
-                                                background: "#3282B8",
+                                                background: isLastLesson ? "#10B981" : "#3282B8",
                                                 color: "#fff",
                                                 fontSize: "13px",
                                                 fontWeight: 700,
                                             }}
                                         >
-                                            Next Lesson
-                                            <ChevronRight size={16} />
+                                            {isLastLesson
+                                                ? "Finish Course"
+                                                : currentDone || currentLesson.type === "quiz"
+                                                  ? "Next Lesson"
+                                                  : "Complete & Next"}
+                                            {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
                                         </button>
                                     </div>
                                 )}
