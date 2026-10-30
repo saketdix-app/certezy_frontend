@@ -140,6 +140,18 @@ export default function VerifyCertificatePage() {
                                     )
                                 }
                             />
+                            {cert.contact_hours && (
+                                <Row
+                                    label="Training"
+                                    value={`${cert.contact_hours} contact hours completed`}
+                                />
+                            )}
+                            {cert.pdu_id && (
+                                <Row
+                                    label="PDU ID"
+                                    value={<span className="font-mono">{cert.pdu_id}</span>}
+                                />
+                            )}
                             <Row label="Issued on" value={fmtDate(cert.issued_at)} />
                             {cert.valid_until && (
                                 <Row label="Valid until" value={fmtDate(cert.valid_until)} />

@@ -96,3 +96,11 @@ body {
     border: 1px solid #e5e7eb;
     padding: 0.4rem 0.6rem;
 }
+
+/* Horizontal tab rows that scroll on narrow screens without a visible bar */
+.no-scrollbar {
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Star, ArrowRight } from "lucide-react";
-import { APP_NAME } from "@/config/app";
 import reviewService from "@/services/reviewService";
 
 // Set to true once a /testimonials page exists
@@ -13,6 +12,17 @@ const CSS = `
   @keyframes tsFadeUp {
     from { opacity:0; transform:translateY(16px); }
     to   { opacity:1; transform:translateY(0);    }
+  }
+  /* Moving row of stories — the list is rendered twice and slides by half its width */
+  @keyframes tsMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ts-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .ts-track { display: flex; gap: 24px; width: max-content; animation: tsMarquee var(--ts-duration, 60s) linear infinite; }
+  .ts-marquee:hover .ts-track, .ts-marquee:focus-within .ts-track { animation-play-state: paused; }
+  .ts-track .ts-card { width: 360px; flex-shrink: 0; }
+  @media (max-width: 640px) { .ts-track .ts-card { width: 290px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .ts-marquee { overflow-x: auto; }
+    .ts-track { animation: none; }
   }
   .ts-f0 { animation: tsFadeUp .55s .00s ease both; }
   .ts-f1 { animation: tsFadeUp .55s .08s ease both; }
@@ -110,38 +120,6 @@ const CSS = `
   }
 `;
 
-/* ── Static fallback data (used until API responds) ─────────────────────── */
-
-const TESTIMONIALS = [
-    {
-        id: 1,
-        quote: "Certezy helped me crack the AWS Solutions Architect exam in just 6 weeks. The instructor quality is unmatched anywhere online.",
-        name: "Rahul S.",
-        role: "AWS Solutions Architect",
-        company: "@Amazon",
-        avatar: { initial: "R", color: "linear-gradient(135deg, #3282B8, #1A5F8A)" },
-        rating: 5,
-    },
-    {
-        id: 2,
-        quote: "From zero to CompTIA certified in 2 months. The 1-on-1 support and live classes made all the difference for my career switch.",
-        name: "Alex M.",
-        role: "CompTIA Engineer",
-        company: "@Microsoft",
-        avatar: { initial: "A", color: "linear-gradient(135deg, #6C3BD5, #4C1D95)" },
-        rating: 5,
-    },
-    {
-        id: 3,
-        quote: "Best investment I made for my IT career. Got promoted to Senior DevOps Engineer right after completing the course.",
-        name: "Sarah K.",
-        role: "Senior DevOps Engineer",
-        company: "@Google",
-        avatar: { initial: "S", color: "linear-gradient(135deg, #0891B2, #0E7490)" },
-        rating: 5,
-    },
-];
-
 const STATS = [
     { value: "96%", label: "Completion Rate" },
     { value: "4.9★", label: "Average Rating" },
@@ -149,36 +127,50 @@ const STATS = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
-export default function Testimonials() {
-    const [testimonials, setTestimonials] = useState(TESTIMONIALS);
+const AVATAR_COLORS = [
+    "linear-gradient(135deg, #3282B8, #1A5F8A)",
+    "linear-gradient(135deg, #6C3BD5, #4C1D95)",
+    "linear-gradient(135deg, #0891B2, #0E7490)",
+    "linear-gradient(135deg, #059669, #065F46)",
+    "linear-gradient(135deg, #D97706, #92400E)",
+];
 
-    // Static testimonials render immediately; real approved reviews replace them
-    // when the public /reviews/featured endpoint returns data. No login needed.
+export default function Testimonials() {
+    // Genuine, approved reviews only (learners on the site + ones admins add from
+    // classroom / corporate / feedback forms). Nothing is made up here.
+    const [testimonials, setTestimonials] = useState([]);
+
     useEffect(() => {
         reviewService
-            .getFeaturedReviews(3)
+            .getFeaturedReviews(20)
             .then((res) => {
                 const data = res.data?.data;
-                if (!Array.isArray(data) || data.length === 0) return;
+                if (!Array.isArray(data)) return;
                 setTestimonials(
-                    data.slice(0, 3).map((review) => ({
-                        id: review.id,
-                        quote: review.comment || "Great course experience!",
-                        name: review.student_name || "Anonymous Student",
-                        role: review.course_title || "Student",
-                        company: `@${APP_NAME}`,
-                        avatar: {
-                            initial: (review.student_name || "A")[0].toUpperCase(),
-                            color: "linear-gradient(135deg, #3282B8, #1A5F8A)",
-                        },
-                        rating: review.rating || 5,
-                    }))
+                    data
+                        .filter((review) => review.comment?.trim())
+                        .map((review, i) => ({
+                            id: review.id,
+                            quote: review.comment.trim(),
+                            name: review.student_name || review.reviewer_name || "Certezy learner",
+                            role: review.course_title || "Student",
+                            avatar: {
+                                initial: (review.student_name ||
+                                    review.reviewer_name ||
+                                    "C")[0].toUpperCase(),
+                                color: AVATAR_COLORS[i % AVATAR_COLORS.length],
+                            },
+                            rating: Math.max(1, Math.min(5, Math.round(review.rating || 5))),
+                        }))
                 );
             })
-            .catch(() => {
-                // Keep static testimonials on any error
-            });
+            .catch(() => {});
     }, []);
+
+    // Slow, steady speed whatever the number of stories (~6s per card)
+    const duration = `${Math.max(30, testimonials.length * 6)}s`;
+    const moving = testimonials.length >= 3;
+    const rows = moving ? [...testimonials, ...testimonials] : testimonials;
 
     return (
         <>
@@ -258,9 +250,9 @@ export default function Testimonials() {
                     {/* ── Stats strip ── */}
                     <div className="ts-stats ts-f1" style={{ marginBottom: "56px" }}>
                         {STATS.map(({ value, label }, i) => (
-                            <>
-                                {i > 0 && <div key={`div-${i}`} className="ts-stat-divider" />}
-                                <div key={value} className="ts-stat-item">
+                            <Fragment key={value}>
+                                {i > 0 && <div className="ts-stat-divider" />}
+                                <div className="ts-stat-item">
                                     <span
                                         style={{
                                             fontSize: "26px",
@@ -282,109 +274,135 @@ export default function Testimonials() {
                                         {label}
                                     </span>
                                 </div>
-                            </>
+                            </Fragment>
                         ))}
                     </div>
 
-                    {/* ── Cards ── */}
-                    <div className="ts-grid ts-f2">
-                        {testimonials.map((t) => (
-                            <article key={t.id} className="ts-card">
-                                {/* Stars */}
-                                <div style={{ display: "flex", gap: "3px", marginBottom: "16px" }}>
-                                    {[...Array(t.rating)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            size={16}
-                                            fill="#F59E0B"
-                                            color="#F59E0B"
-                                            aria-hidden="true"
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Quote mark */}
-                                <div
-                                    style={{
-                                        fontSize: "52px",
-                                        lineHeight: 1,
-                                        color: "#3282B8",
-                                        fontWeight: 900,
-                                        marginBottom: "8px",
-                                        fontFamily: "Georgia, serif",
-                                        opacity: 0.85,
-                                    }}
-                                    aria-hidden="true"
-                                >
-                                    "
-                                </div>
-
-                                {/* Quote text */}
-                                <p
-                                    style={{
-                                        fontSize: "15px",
-                                        color: "#CBD5E1",
-                                        lineHeight: 1.72,
-                                        fontStyle: "italic",
-                                        flex: 1,
-                                        marginBottom: "24px",
-                                    }}
-                                >
-                                    "{t.quote}"
-                                </p>
-
-                                {/* Divider */}
-                                <div
-                                    style={{
-                                        height: "1px",
-                                        background: "rgba(255,255,255,0.06)",
-                                        marginBottom: "20px",
-                                    }}
-                                />
-
-                                {/* Author */}
-                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                    {/* Avatar */}
-                                    <div
-                                        style={{
-                                            width: "42px",
-                                            height: "42px",
-                                            borderRadius: "50%",
-                                            background: t.avatar.color,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            fontSize: "16px",
-                                            fontWeight: 800,
-                                            color: "#fff",
-                                            flexShrink: 0,
-                                            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                                        }}
-                                        aria-hidden="true"
+                    {/* ── Cards: a moving row once there are 3+ stories ── */}
+                    {testimonials.length === 0 ? (
+                        <div className="ts-f2" style={{ textAlign: "center", padding: "8px 0 4px" }}>
+                            <p style={{ fontSize: "15px", color: "#94A3B8", marginBottom: "20px" }}>
+                                Stories from our learners will appear here as they share their results.
+                            </p>
+                            <Link to="/courses" className="ts-read-btn">
+                                Start your success story <ArrowRight size={15} aria-hidden="true" />
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className={moving ? "ts-marquee ts-f2" : "ts-grid ts-f2"}>
+                            <div
+                                className={moving ? "ts-track" : undefined}
+                                style={moving ? { "--ts-duration": duration } : { display: "contents" }}
+                            >
+                                {rows.map((t, i) => (
+                                    <article
+                                        key={`${t.id}-${i}`}
+                                        className="ts-card"
+                                        aria-hidden={moving && i >= testimonials.length ? true : undefined}
                                     >
-                                        {t.avatar.initial}
-                                    </div>
+                                        {/* Stars */}
+                                        <div style={{ display: "flex", gap: "3px", marginBottom: "16px" }}>
+                                            {[...Array(t.rating)].map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    size={16}
+                                                    fill="#F59E0B"
+                                                    color="#F59E0B"
+                                                    aria-hidden="true"
+                                                />
+                                            ))}
+                                        </div>
 
-                                    {/* Name + role */}
-                                    <div>
+                                        {/* Quote mark */}
                                         <div
                                             style={{
-                                                fontSize: "14px",
-                                                fontWeight: 700,
-                                                color: "#F1F5F9",
-                                                lineHeight: 1.3,
+                                                fontSize: "52px",
+                                                lineHeight: 1,
+                                                color: "#3282B8",
+                                                fontWeight: 900,
+                                                marginBottom: "8px",
+                                                fontFamily: "Georgia, serif",
+                                                opacity: 0.85,
+                                            }}
+                                            aria-hidden="true"
+                                        >
+                                            "
+                                        </div>
+
+                                        {/* Quote text */}
+                                        <p
+                                            style={{
+                                                fontSize: "15px",
+                                                color: "#CBD5E1",
+                                                lineHeight: 1.72,
+                                                fontStyle: "italic",
+                                                flex: 1,
+                                                marginBottom: "24px",
                                             }}
                                         >
-                                            {t.name}
+                                            "{t.quote}"
+                                        </p>
+
+                                        {/* Divider */}
+                                        <div
+                                            style={{
+                                                height: "1px",
+                                                background: "rgba(255,255,255,0.06)",
+                                                marginBottom: "20px",
+                                            }}
+                                        />
+
+                                        {/* Author */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                            {/* Avatar */}
+                                            <div
+                                                style={{
+                                                    width: "42px",
+                                                    height: "42px",
+                                                    borderRadius: "50%",
+                                                    background: t.avatar.color,
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    fontSize: "16px",
+                                                    fontWeight: 800,
+                                                    color: "#fff",
+                                                    flexShrink: 0,
+                                                    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                                                }}
+                                                aria-hidden="true"
+                                            >
+                                                {t.avatar.initial}
+                                            </div>
+
+                                            {/* Name + role */}
+                                            <div>
+                                                <div
+                                                    style={{
+                                                        fontSize: "14px",
+                                                        fontWeight: 700,
+                                                        color: "#F1F5F9",
+                                                        lineHeight: 1.3,
+                                                    }}
+                                                >
+                                                    {t.name}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        fontSize: "12px",
+                                                        color: "#64748B",
+                                                        fontWeight: 500,
+                                                    }}
+                                                >
+                                                    {t.role}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div style={{ fontSize: "12px", color: "#64748B", fontWeight: 500 }}>
-                                            {t.role} <span style={{ color: "#3282B8" }}>{t.company}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* ── Read More button (disabled until a stories page exists) ── */}
                     {SHOW_MORE_STORIES && (

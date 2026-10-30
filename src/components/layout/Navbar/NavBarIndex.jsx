@@ -7,6 +7,7 @@ import { selectIsLoggedIn, selectUser } from "@/features/auth/authSlice";
 import Searchbar from "./Searchbar";
 import NavLinks from "./NavLinks";
 import MegaMenu from "./MegaMenu";
+import CategoryTabs from "./CategoryTabs";
 import NotificationBell from "./NotificationBell";
 import AvatarMenu from "./AvatarMenu";
 import MobileMenu from "./MobileMenu";
@@ -98,6 +99,11 @@ function NavBarIndex() {
                     >
                         {mobileOpen ? <X size={18} /> : <Menu size={18} />}
                     </button>
+                </div>
+
+                {/* Category tabs with hover course menus — desktop */}
+                <div className="hidden md:block">
+                    <CategoryTabs />
                 </div>
 
                 {/* Mobile menu */}
