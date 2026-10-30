@@ -31,6 +31,24 @@ export const SUPPORT_PHONES = [
     { region: "US", label: "US (toll-free)", number: "+1 (866) 558-9561" },
 ].map((p) => ({ ...p, href: telHref(p.number) }));
 
+/** WhatsApp chat (24 × 7) on the same India and US numbers. */
+export const WHATSAPP_LINES = SUPPORT_PHONES.map((p) => ({
+    ...p,
+    href: `https://wa.me/${p.number.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Certezy, I have a question.")}`,
+}));
+
+/** Registered office — shown on the Contact page. */
+export const COMPANY = {
+    legalName: "Certezy E-Learning Pvt. Ltd.",
+    // One line per row
+    addressLines: [
+        "3rd Floor, Streamline J-1 Tower",
+        "PU-4, Scheme No. 54",
+        "Indore, Madhya Pradesh 452010",
+        "India",
+    ],
+};
+
 /** Primary number (US toll-free) for places with room for only one. */
 const PRIMARY_PHONE = SUPPORT_PHONES.find((p) => p.region === "US");
 export const SUPPORT_PHONE = PRIMARY_PHONE.number;

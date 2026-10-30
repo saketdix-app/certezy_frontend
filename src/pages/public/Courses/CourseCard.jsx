@@ -10,7 +10,8 @@ import { COURSE_INSTRUCTOR } from "@/config/app";
 
 /**
  * CourseCard — used on the catalogue, home page and anywhere a course grid
- * appears. Thumbnails are always 16:9 and cropped to fit, so mixed uploads
+ * appears. Hovered / focused card is highlighted; inside a `group/grid`
+ * container the other cards dim so the one under the pointer stands out. Thumbnails are always 16:9 and cropped to fit, so mixed uploads
  * line up; rating shows half stars; price shows Free / discounted / paid.
  */
 
@@ -57,7 +58,7 @@ export default function CourseCard({ course }) {
     return (
         <Link
             to={`/courses/${slug || id}`}
-            className="group bg-white rounded-2xl overflow-hidden flex flex-col border border-[#EEF2F7] shadow-[0_2px_8px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-[3px] hover:border-blue-100 hover:shadow-[0_12px_32px_rgba(15,23,42,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="group bg-white rounded-2xl overflow-hidden flex flex-col border border-[#EEF2F7] shadow-[0_2px_8px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-1 hover:border-primary hover:ring-2 hover:ring-primary/30 hover:shadow-[0_16px_36px_rgba(50,130,184,0.22)] focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40 group-hover/grid:opacity-60 group-hover/grid:hover:opacity-100 group-focus-within/grid:opacity-60 group-focus-within/grid:focus-visible:opacity-100"
         >
             {/* ── Thumbnail (16:9, cropped to fit) ─────────────── */}
             <CourseThumbnail src={thumbnail} title={title} categorySlug={category_slug} zoomOnHover>
@@ -101,7 +102,7 @@ export default function CourseCard({ course }) {
                     />
                     {highlight && (
                         <span className="text-[11.5px] text-slate-500">
-                            Learned by {highlight.learners} users
+                            Taken by {highlight.learners} learners
                         </span>
                     )}
                 </div>

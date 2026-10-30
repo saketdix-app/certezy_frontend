@@ -102,7 +102,7 @@ export default function MyCoursesPage() {
                     <p style={{ fontSize: "14px", color: "#64748B", marginTop: "4px" }}>
                         {enrollments.length > 0
                             ? `${enrollments.length} course${enrollments.length > 1 ? "s" : ""} enrolled`
-                            : "You haven't enrolled in any course yet"}
+                            : "You haven't enrolled in any courses yet"}
                     </p>
                 </div>
 
@@ -346,7 +346,10 @@ function MetaChip({ icon: Icon, label }) {
 function EmptyState({ tab, search, onBrowse }) {
     const messages = {
         inprogress: { title: "No courses in progress", desc: "Start a course to see it here." },
-        completed: { title: "No completed courses yet", desc: "Keep learning to earn completions!" },
+        completed: {
+            title: "No completed courses yet",
+            desc: "Keep going — finished courses will appear here.",
+        },
         all: {
             title: "No courses found",
             desc: search ? "Try a different search term." : "Browse and enroll in a course to get started.",

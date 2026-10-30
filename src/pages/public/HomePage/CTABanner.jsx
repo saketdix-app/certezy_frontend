@@ -261,8 +261,8 @@ export default function CTABanner() {
                                         maxWidth: "500px",
                                     }}
                                 >
-                                    Join 10,000+ professionals already learning with Certezy. Get certified,
-                                    get hired with the world's most comprehensive enterprise LMS.
+                                    Join 10,000+ professionals already learning with Certezy. Get certified
+                                    and get hired with flexible, expert-led training.
                                 </p>
 
                                 {/* Trust pills */}
@@ -315,7 +315,7 @@ export default function CTABanner() {
                                         fontWeight: 500,
                                     }}
                                 >
-                                    · No credit card required &nbsp;·&nbsp; Cancel anytime
+                                    · Free to sign up &nbsp;·&nbsp; No credit card required
                                 </p>
                             </div>
                         </div>

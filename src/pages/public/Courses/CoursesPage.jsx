@@ -389,7 +389,7 @@ export default function CoursesPage() {
                         )}
 
                         {/* Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5">
+                        <div className="group/grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5">
                             {loading
                                 ? Array(pagination.limit || 12)
                                       .fill(0)
@@ -413,7 +413,7 @@ export default function CoursesPage() {
                                     No courses found
                                 </p>
                                 <p className="text-[12px] sm:text-[13px] text-text-muted mb-4">
-                                    Try adjusting your filters or search query
+                                    Try different filters or another search term.
                                 </p>
                                 <button
                                     onClick={() => dispatch(setFilter({ key: "search", value: null }))}

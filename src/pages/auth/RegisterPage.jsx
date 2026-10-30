@@ -199,13 +199,13 @@ export default function RegisterPage() {
                             {[
                                 {
                                     icon: "🎓",
-                                    title: "500+ Certification Courses",
+                                    title: "Certification Courses",
                                     desc: "AWS, Azure, Security+, PMP and more",
                                 },
                                 {
                                     icon: "📜",
                                     title: "Industry Certificates",
-                                    desc: "Recognized by top employers globally",
+                                    desc: "Valued by employers worldwide",
                                 },
                                 {
                                     icon: "⚡",

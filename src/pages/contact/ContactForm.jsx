@@ -1,11 +1,11 @@
 // src/pages/contact/ContactForm.jsx
 
 import { useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, MapPin, MessageCircle } from "lucide-react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import contactService from "@/services/contactService";
-import { SUPPORT_PHONES } from "@/config/app";
+import { SUPPORT_PHONES, WHATSAPP_LINES, COMPANY } from "@/config/app";
 
 const SUBJECTS = [
     "General Inquiry",
@@ -14,11 +14,6 @@ const SUBJECTS = [
     "Partnership",
     "Billing",
     "Other",
-];
-
-const officeHours = [
-    { day: "Monday – Sunday", time: "24 × 7" },
-    { day: "Public holidays", time: "24 × 7" },
 ];
 
 function FieldError({ message }) {
@@ -128,7 +123,7 @@ export default function ContactForm() {
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} noValidate>
-                            <h2 className="text-xl font-bold text-slate-100 mb-7">Send a Message</h2>
+                            <h2 className="text-xl font-bold text-slate-100 mb-7">Contact Us</h2>
 
                             {/* Autofill badge */}
                             {isLoggedIn && (
@@ -269,17 +264,9 @@ export default function ContactForm() {
                     )}
                 </div>
 
-                {/* ── RIGHT: Map + Hours ─────────────────────────────── */}
+                {/* ── RIGHT: Office address + WhatsApp ───────────────── */}
                 <div className="flex flex-col gap-5">
-                    <iframe
-                        src="https://www.google.com/maps?q=CERTEZY%20E-LEARNING%20PRIVATE%20LIMITED%20Indore&output=embed"
-                        width="100%"
-                        height="220"
-                        style={{ border: 0, borderRadius: "16px" }}
-                        loading="lazy"
-                    />
-
-                    {/* Office Hours */}
+                    {/* Office */}
                     <div
                         className="rounded-2xl p-7"
                         style={{
@@ -287,60 +274,78 @@ export default function ContactForm() {
                             border: "1px solid rgba(255,255,255,0.08)",
                         }}
                     >
-                        {/* Header */}
-                        <div className="flex items-center gap-2.5 mb-5">
+                        <div className="flex items-center gap-2.5 mb-4">
                             <span
-                                className="w-2.5 h-2.5 rounded-full bg-white animate-pulse"
-                                style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.2)" }}
-                            />
-                            <h3 className="text-base font-bold text-slate-100">Support Hours</h3>
-                        </div>
-
-                        {/* 24/7 highlight */}
-                        <div
-                            className="flex items-center justify-center rounded-xl py-4 mb-5 gap-3"
-                            style={{
-                                background: "rgba(50,130,184,0.1)",
-                                border: "1px solid rgba(50,130,184,0.2)",
-                            }}
-                        >
-                            <span className="text-3xl font-extrabold tracking-tight text-white">24×7</span>
-                            <span className="text-sm text-white font-medium leading-snug">
-                                All 7 days
-                                <br />a week
-                            </span>
-                        </div>
-
-                        {/* Days */}
-                        {officeHours.map((h) => (
-                            <div
-                                key={h.day}
-                                className="flex justify-between items-center py-2.5 border-b border-white/5 last:border-0 text-sm"
+                                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                                style={{
+                                    background: "rgba(50,130,184,0.15)",
+                                    border: "1px solid rgba(50,130,184,0.25)",
+                                }}
                             >
-                                <span className="text-slate-400">{h.day}</span>
-                                <span className="font-semibold text-white">{h.time}</span>
-                            </div>
-                        ))}
+                                <MapPin size={17} color="#fff" />
+                            </span>
+                            <h3 className="text-base font-bold text-slate-100">Our Office</h3>
+                        </div>
+                        <address className="not-italic text-sm leading-relaxed">
+                            <span className="block font-semibold text-white">{COMPANY.legalName}</span>
+                            {COMPANY.addressLines.map((line) => (
+                                <span key={line} className="block text-slate-400">
+                                    {line}
+                                </span>
+                            ))}
+                        </address>
+                    </div>
 
-                        {/* Note */}
-                        <div
-                            className="mt-4 rounded-xl px-4 py-3 text-xs text-slate-400 leading-relaxed"
-                            style={{
-                                background: "rgba(50,130,184,0.08)",
-                                border: "1px solid rgba(50,130,184,0.2)",
-                            }}
-                        >
-                            <strong style={{ color: "#3282B8" }}>Call us anytime:</strong>{" "}
+                    {/* WhatsApp 24 × 7 */}
+                    <div
+                        className="rounded-2xl p-7"
+                        style={{
+                            background: "rgba(37,211,102,0.06)",
+                            border: "1px solid rgba(37,211,102,0.25)",
+                        }}
+                    >
+                        <div className="flex items-center gap-2.5 mb-2">
+                            <span
+                                className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-pulse"
+                                style={{ boxShadow: "0 0 0 3px rgba(37,211,102,0.25)" }}
+                            />
+                            <h3 className="text-base font-bold text-slate-100">WhatsApp Chat · 24 × 7</h3>
+                        </div>
+                        <p className="text-sm text-slate-400 leading-relaxed mb-5">
+                            Prefer chatting? Message us on WhatsApp any time — every day of the year.
+                        </p>
+                        <div className="flex flex-col gap-2.5">
+                            {WHATSAPP_LINES.map((p) => (
+                                <a
+                                    key={p.region}
+                                    href={p.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 bg-[#25D366] text-[#053B1E] font-bold text-sm no-underline transition hover:brightness-105 hover:-translate-y-0.5"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <MessageCircle size={17} />
+                                        Chat on WhatsApp · {p.region === "IN" ? "India" : "US"}
+                                    </span>
+                                    <span className="font-semibold opacity-80">{p.number}</span>
+                                </a>
+                            ))}
+                        </div>
+                        <p className="mt-4 text-xs text-slate-500 leading-relaxed">
+                            Or call us:{" "}
                             {SUPPORT_PHONES.map((p, i) => (
                                 <span key={p.region}>
                                     {i > 0 && " · "}
                                     {p.region === "IN" ? "India" : "US"}{" "}
-                                    <a href={p.href} className="text-white font-semibold hover:opacity-80">
+                                    <a
+                                        href={p.href}
+                                        className="text-slate-300 font-semibold hover:text-white"
+                                    >
                                         {p.number}
                                     </a>
                                 </span>
                             ))}
-                        </div>
+                        </p>
                     </div>
                 </div>
             </div>

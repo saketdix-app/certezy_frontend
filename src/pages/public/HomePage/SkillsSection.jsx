@@ -44,8 +44,8 @@ export default function SkillsSection() {
                         </h2>
 
                         <p className="text-gray-400 mb-8 max-w-xl">
-                            Our platform is designed for those who refuse to settle for mediocre. We bridge
-                            the gap between academic theory and high-level enterprise execution.
+                            Our platform is built for people who refuse to settle for mediocrity. We bridge
+                            the gap between academic theory and real-world enterprise practice.
                         </p>
 
                         <div className="space-y-4 mb-10">

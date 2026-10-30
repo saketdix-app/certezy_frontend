@@ -104,7 +104,7 @@ const FEATURES = [
     {
         icon: GraduationCap,
         title: "Best Industry Instructors",
-        desc: "Learn from certified professionals at top global tech companies.",
+        desc: "Learn from certified professionals with years of real-world experience.",
     },
     {
         icon: Video,

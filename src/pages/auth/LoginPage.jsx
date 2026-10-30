@@ -39,7 +39,7 @@ export default function LoginPage() {
     // OAuth error from URL param
     useEffect(() => {
         if (params.get("error") === "oauth_failed") {
-            toast.error("OAuth login failed. Please try again.");
+            toast.error("Social sign-in failed. Please try again.");
         }
     }, []);
 
@@ -147,7 +147,7 @@ export default function LoginPage() {
                             Welcome back to your learning journey.
                         </h2>
                         <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.50)", lineHeight: 1.65 }}>
-                            Continue from where you left off. Your certifications are waiting.
+                            Pick up where you left off — your certifications are waiting.
                         </p>
                     </div>
 
