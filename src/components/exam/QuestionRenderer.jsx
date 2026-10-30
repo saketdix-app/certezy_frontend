@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Info, CheckCircle2, AlertCircle } from "lucide-react";
 
+// Only "multiple" questions take several answers; "single" and "true_false" take one
+const isSingleChoice = (question) => question.type !== "multiple";
+
 export function QuestionRenderer({
     question,
     answer,
@@ -15,7 +18,7 @@ export function QuestionRenderer({
     const handleOptionChange = (optionId, isSelected) => {
         let newSelected;
 
-        if (question.type === "single") {
+        if (isSingleChoice(question)) {
             newSelected = isSelected ? [optionId] : [];
         } else {
             newSelected = isSelected
@@ -24,7 +27,7 @@ export function QuestionRenderer({
         }
 
         setSelectedOptions(newSelected);
-        onAnswerChange(question.id, question.type === "single" ? newSelected[0] : newSelected);
+        onAnswerChange(question.id, isSingleChoice(question) ? newSelected[0] : newSelected);
     };
 
     const renderOptions = () => {
@@ -51,7 +54,7 @@ export function QuestionRenderer({
                     }`}
                 >
                     <input
-                        type={question.type === "single" ? "radio" : "checkbox"}
+                        type={isSingleChoice(question) ? "radio" : "checkbox"}
                         name={`question-${question.id}`}
                         value={option.id}
                         checked={isSelected}
@@ -89,7 +92,11 @@ export function QuestionRenderer({
                         </h3>
                         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                             <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md font-medium">
-                                {question.type === "single" ? "Single Choice" : "Multiple Choice"}
+                                {question.type === "true_false"
+                                    ? "True / False"
+                                    : isSingleChoice(question)
+                                      ? "Single Choice"
+                                      : "Multiple Choice"}
                             </span>
                             {question.difficulty && (
                                 <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md">
@@ -130,10 +137,14 @@ export function QuestionRenderer({
 }
 
 export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
-    const score = results.score || 0;
-    const totalQuestions = questions.length;
-    const percentage = Math.round((score / totalQuestions) * 100);
-    const passed = percentage >= (results.passing_percentage || 70);
+    // The API scores every question in the test: score is a percentage,
+    // obtained_marks / total_marks the counts, pass mark is the test's own.
+    const percentage = Math.round(Number(results.score) || 0);
+    const totalQuestions = results.total_marks ?? questions.length;
+    const correctCount = results.obtained_marks ?? 0;
+    const passMark = results.pass_percentage ?? 70;
+    const passed = results.is_passed ?? percentage >= passMark;
+    const reviewByQuestion = new Map((results.review ?? []).map((r) => [r.question_id, r]));
 
     const getGradeColor = (percentage) => {
         if (percentage >= 90) return "text-green-600";
@@ -175,7 +186,8 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                         {passed ? "Congratulations!" : "Exam Failed"}
                     </h2>
                     <p className={`text-lg mb-6 ${passed ? "text-green-700" : "text-red-700"}`}>
-                        {passed ? "You have passed the exam!" : "You did not meet the passing criteria."}
+                        {passed ? "You have passed the exam!" : "You did not meet the passing criteria."}{" "}
+                        <span className="whitespace-nowrap">(Pass mark: {passMark}%)</span>
                     </p>
 
                     {/* Score Display */}
@@ -188,7 +200,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-gray-900">
-                                {score}/{totalQuestions}
+                                {correctCount}/{totalQuestions}
                             </div>
                             <div className="text-sm text-gray-600 mt-1">Correct</div>
                         </div>
@@ -209,8 +221,11 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                 </div>
                 <div className="divide-y divide-gray-200">
                     {questions.map((question, index) => {
-                        const userAnswer = results.answers?.[question.id];
-                        const isCorrect = results.correct_answers?.includes(question.id);
+                        const review = reviewByQuestion.get(question.id);
+                        const userAnswer = review?.selected_opts ?? [];
+                        const correctOptions = review?.correct_opts ?? [];
+                        const isCorrect = !!review?.is_correct;
+                        const skipped = userAnswer.length === 0;
 
                         return (
                             <div key={question.id} className="p-6">
@@ -236,7 +251,11 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                                         : "bg-red-100 text-red-700"
                                                 }`}
                                             >
-                                                {isCorrect ? "Correct" : "Incorrect"}
+                                                {isCorrect
+                                                    ? "Correct"
+                                                    : skipped
+                                                      ? "Not answered"
+                                                      : "Incorrect"}
                                             </span>
                                         </div>
                                         <p className="text-gray-800 mb-3">{question.question}</p>
@@ -244,8 +263,8 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                         {/* Options */}
                                         <div className="space-y-2">
                                             {question.options?.map((option) => {
-                                                const isSelected = userAnswer?.includes(option.id);
-                                                const isCorrectOption = option.is_correct;
+                                                const isSelected = userAnswer.includes(option.id);
+                                                const isCorrectOption = correctOptions.includes(option.id);
 
                                                 return (
                                                     <div
@@ -265,10 +284,15 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                                             .
                                                         </span>
                                                         <span className="text-sm">{option.option_text}</span>
+                                                        {isSelected && (
+                                                            <span className="ml-auto text-xs font-medium text-gray-500">
+                                                                Your answer
+                                                            </span>
+                                                        )}
                                                         {isCorrectOption && (
                                                             <CheckCircle2
                                                                 size={14}
-                                                                className="text-green-600 ml-auto"
+                                                                className={`text-green-600 ${isSelected ? "" : "ml-auto"}`}
                                                             />
                                                         )}
                                                     </div>

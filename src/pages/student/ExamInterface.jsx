@@ -168,7 +168,7 @@ export default function ExamInterface() {
                 <ExamResults
                     results={results}
                     questions={questions}
-                    onRetry={!results.passed ? handleRetry : null}
+                    onRetry={!results.is_passed ? handleRetry : null}
                     onBackToCourse={handleBackToCourse}
                 />
             </div>
