@@ -116,7 +116,10 @@ export function useCheckout(courseId) {
     // ── Fetch course ─────────────────────────
     useEffect(() => {
         if (!courseId) return navigate("/courses");
-        if (!user) return navigate("/login");
+        if (!user) {
+            const back = window.location.pathname + window.location.search;
+            return navigate(`/login?redirect=${encodeURIComponent(back)}`);
+        }
 
         const discountToken = searchParams.get("discount");
 
@@ -143,13 +146,20 @@ export function useCheckout(courseId) {
                         );
                         const discount = discountRes.data.data;
 
-                        if (discount && discount.discount_price) {
-                            courseData.discount_price = discount.discount_price;
-                            courseData.discount_link_id = discount.id;
+                        if (discount && discount.discount_price != null) {
+                            courseData = {
+                                ...courseData,
+                                discount_price: discount.discount_price,
+                                // the API returns discount_link_id (was read as `id`, so it never applied)
+                                discount_link_id: discount.discount_link_id ?? discount.id,
+                            };
                             setDiscountInfo(discount);
                         }
                     } catch (discountErr) {
-                        console.warn("Invalid discount token:", discountErr);
+                        // e.g. expired, already used, or sent to another email
+                        toast.error(
+                            discountErr.response?.data?.message || "This discount link can't be used"
+                        );
                     }
                 }
 

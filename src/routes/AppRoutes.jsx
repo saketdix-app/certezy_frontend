@@ -13,6 +13,7 @@ const About = lazy(() => import("@/pages/public/AboutCompany/About"));
 const CoursesPage = lazy(() => import("@/pages/public/Courses/CoursesPage"));
 const CourseDetailPage = lazy(() => import("@/pages/public/CourseDetail/CourseDetailIndex"));
 const VerifyCertificatePage = lazy(() => import("@/pages/public/VerifyCertificate/VerifyCertificatePage"));
+const OfferPage = lazy(() => import("@/pages/public/Offer/OfferPage"));
 const ContactPagePublic = lazy(() => import("@/pages/contact/ContactPagePublic"));
 const PrivacyPolicyPage = lazy(() => import("@/pages/legal/PrivacyPolicyPage"));
 const TermsOfServicePage = lazy(() => import("@/pages/legal/TermsOfServicePage"));
@@ -108,6 +109,7 @@ export default function AppRoutes() {
                     <Route path={ROUTES.COURSES} element={<CoursesPage />} />
                     <Route path="/courses/:slug" element={<CourseDetailPage />} />
                     <Route path="/verify" element={<VerifyCertificatePage />} />
+                    <Route path="/offer/:token" element={<OfferPage />} />
                     <Route path="/verify/:certificateNo" element={<VerifyCertificatePage />} />
                     <Route path={ROUTES.CONTACT} element={<ContactPagePublic />} />
                     <Route path={ROUTES.PRIVACY} element={<PrivacyPolicyPage />} />

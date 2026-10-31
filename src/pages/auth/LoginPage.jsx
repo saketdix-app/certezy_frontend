@@ -22,7 +22,8 @@ export default function LoginPage() {
     const loading = useSelector(selectAuthLoading);
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const user = useSelector(selectUser);
-    const [form, setForm] = useState({ email: "", password: "" });
+    // ?email= pre-fills (e.g. from a discount offer link)
+    const [form, setForm] = useState({ email: params.get("email") || "", password: "" });
     const [showPassword, setShowPass] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
 
@@ -301,7 +302,7 @@ export default function LoginPage() {
                         >
                             Don't have an account?{" "}
                             <Link
-                                to="/register"
+                                to={`/register${params.toString() ? `?${params.toString()}` : ""}`}
                                 style={{ fontWeight: 700, color: "#3282B8", textDecoration: "none" }}
                             >
                                 Sign up free
