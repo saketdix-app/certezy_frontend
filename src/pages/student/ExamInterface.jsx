@@ -14,8 +14,15 @@ import toast from "react-hot-toast";
 
 import testService from "@/services/testService";
 import { showCertificateEarned } from "@/components/shared/CertificateEarnedToast";
-import { QuestionRenderer, ExamResults } from "@/components/exam/QuestionRenderer";
-import { ExamTimer, QuestionNavigator, SubmitExamModal } from "@/components/exam/ExamComponents";
+import { ExamResults } from "@/components/exam/QuestionRenderer";
+import { SubmitExamModal } from "@/components/exam/ExamComponents";
+import {
+    ExamTopBar,
+    ExamBottomBar,
+    SimulationQuestion,
+    ReviewScreen,
+} from "@/components/exam/ExamSimulation";
+import { useExamClock, isAnswered } from "@/lib/exam";
 
 export default function ExamInterface() {
     const { courseId, testId } = useParams();
@@ -81,22 +88,6 @@ export default function ExamInterface() {
         setFlaggedQuestions((prev) =>
             prev.includes(questionId) ? prev.filter((id) => id !== questionId) : [...prev, questionId]
         );
-    };
-
-    const handleQuestionSelect = (index) => {
-        setCurrentQuestionIndex(index);
-    };
-
-    const handleNext = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(currentQuestionIndex - 1);
-        }
     };
 
     const handleSubmitExam = async () => {
@@ -177,134 +168,107 @@ export default function ExamInterface() {
         );
     }
 
+    return (
+        <ExamScreen
+            key={attemptId}
+            exam={exam}
+            questions={questions}
+            answers={answers}
+            flaggedQuestions={flaggedQuestions}
+            currentQuestionIndex={currentQuestionIndex}
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            onAnswerChange={handleAnswerChange}
+            onToggleFlag={handleToggleFlag}
+            onTimeUp={handleTimeUp}
+            showSubmitModal={showSubmitModal}
+            setShowSubmitModal={setShowSubmitModal}
+            onSubmit={handleSubmitExam}
+            submitting={submitting}
+        />
+    );
+}
+
+// ─── Exam screen (Pearson VUE-style) ──────────────────────────────────────────
+function ExamScreen({
+    exam,
+    questions,
+    answers,
+    flaggedQuestions,
+    currentQuestionIndex,
+    setCurrentQuestionIndex,
+    onAnswerChange,
+    onToggleFlag,
+    onTimeUp,
+    showSubmitModal,
+    setShowSubmitModal,
+    onSubmit,
+    submitting,
+}) {
+    const [reviewing, setReviewing] = useState(false);
+    const minutes = Number(exam.duration ?? exam.duration_minutes) || 0;
+    const secondsLeft = useExamClock(minutes, onTimeUp);
+
     const currentQuestion = questions[currentQuestionIndex];
-    const unansweredCount = questions.length - Object.keys(answers).length;
-    const answeredCount = Object.keys(answers).length;
+    const unansweredCount = questions.filter((q) => !isAnswered(answers[q.id])).length;
+    const isLast = currentQuestionIndex === questions.length - 1;
+
+    if (!currentQuestion) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#F4F4F4] text-[15px] text-[#444]">
+                This exam has no questions yet.
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            {/* Header */}
-            <div className="bg-white border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={handleBackToCourse}
-                                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                            >
-                                <ChevronLeft size={20} />
-                                <span>Back to Course</span>
-                            </button>
-                            <div className="h-6 w-px bg-gray-300"></div>
-                            <div>
-                                <h1 className="text-lg font-semibold text-gray-900">{exam.title}</h1>
-                                <p className="text-sm text-gray-600">{exam.description}</p>
-                            </div>
-                        </div>
+        <div className="h-screen flex flex-col bg-white">
+            <ExamTopBar
+                title={exam.title}
+                secondsLeft={secondsLeft}
+                hasTimer={minutes > 0}
+                current={currentQuestionIndex + 1}
+                total={questions.length}
+            />
 
-                        <ExamTimer duration={exam.duration_minutes} onTimeUp={handleTimeUp} isActive={true} />
-                    </div>
+            <main className="flex-1 overflow-y-auto bg-[#F4F4F4]">
+                <div className="min-h-full bg-white mx-0 sm:mx-3 px-5 sm:px-10 py-7 sm:py-9 shadow-[0_0_0_1px_#E3E3E3]">
+                    <SimulationQuestion
+                        key={currentQuestion.id}
+                        question={currentQuestion}
+                        answer={answers[currentQuestion.id]}
+                        onAnswerChange={onAnswerChange}
+                    />
                 </div>
-            </div>
+            </main>
 
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div className="flex gap-6">
-                    {/* Question Content */}
-                    <div className="flex-1">
-                        {/* Question Header */}
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <span className="text-sm font-medium text-gray-500">
-                                        Question {currentQuestionIndex + 1} of {questions.length}
-                                    </span>
-                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                        <Clock size={16} />
-                                        <span>{exam.duration_minutes} minutes</span>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => handleToggleFlag(currentQuestion.id)}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                                        flaggedQuestions.includes(currentQuestion.id)
-                                            ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
-                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                    }`}
-                                >
-                                    <Flag size={16} />
-                                    <span className="text-sm font-medium">
-                                        {flaggedQuestions.includes(currentQuestion.id) ? "Flagged" : "Flag"}
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
+            <ExamBottomBar
+                flagged={flaggedQuestions.includes(currentQuestion.id)}
+                onToggleFlag={() => onToggleFlag(currentQuestion.id)}
+                isFirst={currentQuestionIndex === 0}
+                isLast={isLast}
+                onPrevious={() => setCurrentQuestionIndex((i) => Math.max(0, i - 1))}
+                onNext={() => (isLast ? setReviewing(true) : setCurrentQuestionIndex((i) => i + 1))}
+                onNavigator={() => setReviewing(true)}
+            />
 
-                        {/* Question */}
-                        <QuestionRenderer
-                            question={currentQuestion}
-                            answer={answers[currentQuestion.id]}
-                            onAnswerChange={handleAnswerChange}
-                        />
+            {reviewing && (
+                <ReviewScreen
+                    questions={questions}
+                    answers={answers}
+                    flagged={flaggedQuestions}
+                    onJump={(i) => {
+                        setCurrentQuestionIndex(i);
+                        setReviewing(false);
+                    }}
+                    onClose={() => setReviewing(false)}
+                    onEndExam={() => setShowSubmitModal(true)}
+                />
+            )}
 
-                        {/* Navigation */}
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-4">
-                            <div className="flex items-center justify-between">
-                                <button
-                                    onClick={handlePrevious}
-                                    disabled={currentQuestionIndex === 0}
-                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    <ChevronLeft size={20} />
-                                    Previous
-                                </button>
-
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-600">
-                                        {answeredCount} of {questions.length} answered
-                                    </span>
-                                </div>
-
-                                {currentQuestionIndex === questions.length - 1 ? (
-                                    <button
-                                        onClick={() => setShowSubmitModal(true)}
-                                        className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                    >
-                                        <Send size={16} />
-                                        Submit Exam
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleNext}
-                                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                    >
-                                        Next
-                                        <ChevronRight size={20} />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Question Navigator */}
-                    <div className="flex-shrink-0">
-                        <QuestionNavigator
-                            questions={questions}
-                            currentQuestionIndex={currentQuestionIndex}
-                            answers={answers}
-                            flaggedQuestions={flaggedQuestions}
-                            onQuestionSelect={handleQuestionSelect}
-                            onToggleFlag={handleToggleFlag}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Submit Modal */}
             <SubmitExamModal
                 isOpen={showSubmitModal}
                 onClose={() => setShowSubmitModal(false)}
-                onSubmit={handleSubmitExam}
+                onSubmit={onSubmit}
                 unansweredCount={unansweredCount}
                 flaggedCount={flaggedQuestions.length}
                 isSubmitting={submitting}
