@@ -186,7 +186,11 @@ export default function TestsPage() {
                     Courses
                 </span>
                 <ChevronRight size={11} />
-                <span className="hover:text-slate-600 cursor-pointer text-slate-500 truncate max-w-[100px]">
+                <span
+                    className="hover:text-slate-600 cursor-pointer text-slate-500 truncate max-w-[160px]"
+                    onClick={() => navigate(`/admin/courses/${courseId}/curriculum`)}
+                    title="Open this course's curriculum"
+                >
                     {course?.title ?? "..."}
                 </span>
                 <ChevronRight size={11} />

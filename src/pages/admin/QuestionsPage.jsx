@@ -289,7 +289,12 @@ export default function QuestionsPage() {
                     Courses
                 </span>
                 <ChevronRight size={11} />
-                <span className="hover:text-slate-600 cursor-pointer" onClick={() => navigate(-1)}>
+                <span
+                    className="hover:text-slate-600 cursor-pointer"
+                    onClick={() =>
+                        test?.course_id ? navigate(`/admin/courses/${test.course_id}/tests`) : navigate(-1)
+                    }
+                >
                     Tests
                 </span>
                 <ChevronRight size={11} />

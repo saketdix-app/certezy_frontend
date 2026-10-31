@@ -266,8 +266,9 @@ export default function CoursesPage() {
                 language: form.language?.trim() || "English",
                 status: form.status || "draft",
                 is_featured: Boolean(form.is_featured),
-                requirements: form.requirements?.trim() || undefined,
-                what_you_learn: form.what_you_learn?.trim() || undefined,
+                // "" clears these (undefined would keep the old text)
+                requirements: form.requirements?.trim() ?? "",
+                what_you_learn: form.what_you_learn?.trim() ?? "",
                 certificate_eligible: Number(form.certificate_eligible) || 0,
             };
 
