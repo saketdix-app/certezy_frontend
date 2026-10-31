@@ -21,10 +21,17 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency })
         }).format(amount);
     };
 
+    // With a discount link: list price, the discount, and the discounted total
+    const hasDiscount =
+        course?.discount_price != null && Number(course.discount_price) < Number(course.price);
+    const listPrice = course?.price != null ? formatPrice(Number(course.price), "USD") : "—";
+    const saving = hasDiscount
+        ? formatPrice(Number(course.price) - Number(course.discount_price), "USD")
+        : null;
     const displayPrice = paymentAmount
         ? formatPrice(paymentAmount, paymentCurrency)
-        : course?.price
-          ? `$${course.price}`
+        : course?.price != null
+          ? formatPrice(Number(hasDiscount ? course.discount_price : course.price), "USD")
           : "—";
 
     const meta = [
@@ -68,8 +75,20 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency })
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
                         <span className="text-[13px] text-slate-500">Course price</span>
-                        <span className="text-[13px] font-semibold text-slate-900">{displayPrice}</span>
+                        <span
+                            className={`text-[13px] font-semibold ${hasDiscount ? "text-slate-400 line-through" : "text-slate-900"}`}
+                        >
+                            {hasDiscount ? listPrice : displayPrice}
+                        </span>
                     </div>
+                    {hasDiscount && (
+                        <div className="flex items-center justify-between">
+                            <span className="text-[13px] font-semibold text-emerald-700">
+                                Your special offer
+                            </span>
+                            <span className="text-[13px] font-bold text-emerald-700">−{saving}</span>
+                        </div>
+                    )}
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                         <span className="text-[14px] font-bold text-slate-900">Total</span>
                         <span className="text-[18px] font-extrabold text-slate-900">{displayPrice}</span>

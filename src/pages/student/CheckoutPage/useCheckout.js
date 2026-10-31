@@ -108,7 +108,8 @@ export function useCheckout(courseId) {
     // Set initial price when course loads
     useEffect(() => {
         if (course) {
-            setPaymentAmount(course.price);
+            // a discount link's price wins; the server charges the same amount
+            setPaymentAmount(course.discount_price ?? course.price);
             setPaymentCurrency("USD");
         }
     }, [course]);
@@ -129,12 +130,17 @@ export function useCheckout(courseId) {
 
                 let courseData = null;
                 const cached = sessionStorage.getItem(`course_${courseId}`);
+                const parsed = cached ? JSON.parse(cached) : null;
 
-                if (cached) {
-                    courseData = JSON.parse(cached);
+                // Only trust a cached copy that is an actual course (older code cached
+                // the API wrapper `{ course: … }`, which rendered an empty checkout)
+                if (parsed?.id && parsed?.title) {
+                    courseData = parsed;
                 } else {
                     const res = await retryWithBackoff(() => courseService.getBySlug(courseId));
-                    courseData = res.data.data;
+                    // GET /courses/:slugOrId returns { course: {...} }
+                    courseData = res.data?.data?.course ?? res.data?.data;
+                    if (!courseData?.id) throw new Error("Course not found");
                     sessionStorage.setItem(`course_${courseId}`, JSON.stringify(courseData));
                 }
 
