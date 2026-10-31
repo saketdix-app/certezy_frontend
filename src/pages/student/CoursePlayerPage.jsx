@@ -392,7 +392,7 @@ export default function CoursePlayerPage() {
             {/* ── Body ────────────────────────────────────────────────────── */}
             <div className="flex flex-1 overflow-hidden">
                 {/* ── Video + controls ────────────────────────────────────── */}
-                <main className="flex-1 flex flex-col overflow-y-auto bg-[#0F172A]">
+                <main className="flex-1 flex flex-col overflow-y-auto bg-[#F1F5F9]">
                     {currentLesson ? (
                         <>
                             {/* Lesson area — 16:9 frame for video; everything else sizes to its content */}
@@ -400,7 +400,9 @@ export default function CoursePlayerPage() {
                                 className={
                                     currentLesson.type === "video"
                                         ? "w-full shrink-0 bg-black"
-                                        : "w-full shrink-0 bg-[#0a1628]"
+                                        : ["text", "article"].includes(currentLesson.type)
+                                          ? "w-full shrink-0 bg-[#F1F5F9]"
+                                          : "w-full shrink-0 bg-[#0a1628]"
                                 }
                                 style={
                                     currentLesson.type === "video"
@@ -434,7 +436,7 @@ export default function CoursePlayerPage() {
                                     />
                                 ) : (
                                     // Text / article lesson content area
-                                    <div className="w-full h-full bg-[#0a1628] overflow-y-auto">
+                                    <div className="w-full h-full bg-[#F1F5F9] overflow-y-auto">
                                         {currentLesson.content ? (
                                             <div className="p-4 sm:p-6">
                                                 {/* Complete + Next live in the lesson panel below */}
@@ -458,142 +460,144 @@ export default function CoursePlayerPage() {
                             </div>
 
                             {/* Lesson info + nav */}
-                            <div className="px-5 py-5 max-w-4xl w-full mx-auto">
-                                {/* Title row */}
-                                <div className="flex items-start justify-between gap-4 mb-4">
-                                    <div>
-                                        <p
-                                            style={{
-                                                fontSize: "11px",
-                                                fontWeight: 700,
-                                                color: "#3282B8",
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.08em",
-                                                marginBottom: "6px",
-                                            }}
-                                        >
-                                            Lesson {currentIdx + 1} of {totalLessons}
-                                        </p>
-                                        <h1
-                                            style={{
-                                                fontSize: "20px",
-                                                fontWeight: 800,
-                                                color: "#fff",
-                                                lineHeight: 1.3,
-                                            }}
-                                        >
-                                            {currentLesson.title}
-                                        </h1>
+                            <div className="bg-white border-t border-[#E2E8F0] flex-1">
+                                <div className="px-5 py-5 max-w-4xl w-full mx-auto">
+                                    {/* Title row */}
+                                    <div className="flex items-start justify-between gap-4 mb-4">
+                                        <div>
+                                            <p
+                                                style={{
+                                                    fontSize: "11px",
+                                                    fontWeight: 700,
+                                                    color: "#2563EB",
+                                                    textTransform: "uppercase",
+                                                    letterSpacing: "0.08em",
+                                                    marginBottom: "6px",
+                                                }}
+                                            >
+                                                Lesson {currentIdx + 1} of {totalLessons}
+                                            </p>
+                                            <h1
+                                                style={{
+                                                    fontSize: "20px",
+                                                    fontWeight: 800,
+                                                    color: "#0F172A",
+                                                    lineHeight: 1.3,
+                                                }}
+                                            >
+                                                {currentLesson.title}
+                                            </h1>
+                                        </div>
+
+                                        {/* Mark complete */}
+                                        {!progressMap[currentLesson.id]?.is_completed ? (
+                                            <button
+                                                onClick={markLessonComplete}
+                                                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl transition-colors"
+                                                style={{
+                                                    background: "#2563EB",
+                                                    color: "#fff",
+                                                    fontSize: "13px",
+                                                    fontWeight: 700,
+                                                    boxShadow: "0 6px 16px rgba(37,99,235,0.25)",
+                                                }}
+                                            >
+                                                <CheckCircle2 size={15} />
+                                                Mark Complete
+                                            </button>
+                                        ) : (
+                                            <div
+                                                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl"
+                                                style={{
+                                                    background: "#EFF6FF",
+                                                    border: "1px solid #BFDBFE",
+                                                    color: "#1D4ED8",
+                                                    fontSize: "13px",
+                                                    fontWeight: 700,
+                                                }}
+                                            >
+                                                <CheckCircle2 size={15} />
+                                                Completed
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Mark complete */}
-                                    {!progressMap[currentLesson.id]?.is_completed ? (
-                                        <button
-                                            onClick={markLessonComplete}
-                                            className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl transition-colors"
-                                            style={{
-                                                background: "#3282B8",
-                                                color: "#fff",
-                                                fontSize: "13px",
-                                                fontWeight: 700,
-                                            }}
-                                        >
-                                            <CheckCircle2 size={15} />
-                                            Mark Complete
-                                        </button>
-                                    ) : (
-                                        <div
-                                            className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl"
-                                            style={{
-                                                background: "rgba(16,185,129,0.15)",
-                                                color: "#10B981",
-                                                fontSize: "13px",
-                                                fontWeight: 700,
-                                            }}
-                                        >
-                                            <CheckCircle2 size={15} />
-                                            Completed
+                                    {/* Duration */}
+                                    {currentLesson.duration > 0 && (
+                                        <div className="flex items-center gap-1.5 mb-5">
+                                            <Clock size={13} style={{ color: "#64748B" }} />
+                                            <span style={{ fontSize: "12.5px", color: "#64748B" }}>
+                                                {fmtDuration(currentLesson.duration)}
+                                            </span>
                                         </div>
                                     )}
-                                </div>
 
-                                {/* Duration */}
-                                {currentLesson.duration > 0 && (
-                                    <div className="flex items-center gap-1.5 mb-5">
-                                        <Clock size={13} style={{ color: "#64748B" }} />
-                                        <span style={{ fontSize: "12.5px", color: "#64748B" }}>
-                                            {fmtDuration(currentLesson.duration)}
-                                        </span>
+                                    {/* Up next — names the next lesson, and its section when a new one starts */}
+                                    {nextLesson && (
+                                        <p
+                                            className="pt-4 mb-3 truncate"
+                                            style={{
+                                                borderTop: "1px solid #E2E8F0",
+                                                fontSize: "12.5px",
+                                                color: "#64748B",
+                                            }}
+                                        >
+                                            <span style={{ color: "#2563EB", fontWeight: 700 }}>
+                                                {nextSection ? "Next section" : "Up next"}:
+                                            </span>{" "}
+                                            {nextSection && (
+                                                <span style={{ color: "#0F172A", fontWeight: 600 }}>
+                                                    Section {nextSection.index + 1}: {nextSection.title}{" "}
+                                                    ·{" "}
+                                                </span>
+                                            )}
+                                            {nextLesson.title}
+                                        </p>
+                                    )}
+
+                                    {/* Prev / Next buttons — every lesson type */}
+                                    <div
+                                        className={`flex items-center justify-between ${nextLesson ? "" : "pt-4"}`}
+                                        style={nextLesson ? undefined : { borderTop: "1px solid #E2E8F0" }}
+                                    >
+                                        <button
+                                            onClick={goToPrevLesson}
+                                            disabled={currentIdx === 0}
+                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
+                                            style={{
+                                                background: "#fff",
+                                                border: "1px solid #CBD5E1",
+                                                color: "#334155",
+                                                fontSize: "13px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            <ChevronLeft size={16} />
+                                            Previous
+                                        </button>
+
+                                        <button
+                                            onClick={goToNextLesson}
+                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
+                                            style={{
+                                                background: isLastLesson ? "#1D4ED8" : "#2563EB",
+                                                color: "#fff",
+                                                fontSize: "13px",
+                                                fontWeight: 700,
+                                            }}
+                                        >
+                                            {isLastLesson
+                                                ? "Finish Course"
+                                                : nextSection
+                                                  ? currentDone || currentLesson.type === "quiz"
+                                                      ? "Next Section"
+                                                      : "Complete & Next Section"
+                                                  : currentDone || currentLesson.type === "quiz"
+                                                    ? "Next Lesson"
+                                                    : "Complete & Next"}
+                                            {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
+                                        </button>
                                     </div>
-                                )}
-
-                                {/* Up next — names the next lesson, and its section when a new one starts */}
-                                {nextLesson && (
-                                    <p
-                                        className="pt-4 mb-3 truncate"
-                                        style={{
-                                            borderTop: "1px solid rgba(255,255,255,0.08)",
-                                            fontSize: "12.5px",
-                                            color: "rgba(255,255,255,0.5)",
-                                        }}
-                                    >
-                                        <span style={{ color: "#60A5FA", fontWeight: 700 }}>
-                                            {nextSection ? "Next section" : "Up next"}:
-                                        </span>{" "}
-                                        {nextSection && (
-                                            <span style={{ color: "#fff", fontWeight: 600 }}>
-                                                Section {nextSection.index + 1}: {nextSection.title} ·{" "}
-                                            </span>
-                                        )}
-                                        {nextLesson.title}
-                                    </p>
-                                )}
-
-                                {/* Prev / Next buttons — every lesson type */}
-                                <div
-                                    className={`flex items-center justify-between ${nextLesson ? "" : "pt-4"}`}
-                                    style={
-                                        nextLesson
-                                            ? undefined
-                                            : { borderTop: "1px solid rgba(255,255,255,0.08)" }
-                                    }
-                                >
-                                    <button
-                                        onClick={goToPrevLesson}
-                                        disabled={currentIdx === 0}
-                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                        style={{
-                                            background: "rgba(255,255,255,0.06)",
-                                            color: "#fff",
-                                            fontSize: "13px",
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        <ChevronLeft size={16} />
-                                        Previous
-                                    </button>
-
-                                    <button
-                                        onClick={goToNextLesson}
-                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                        style={{
-                                            background: isLastLesson ? "#10B981" : "#3282B8",
-                                            color: "#fff",
-                                            fontSize: "13px",
-                                            fontWeight: 700,
-                                        }}
-                                    >
-                                        {isLastLesson
-                                            ? "Finish Course"
-                                            : nextSection
-                                              ? currentDone || currentLesson.type === "quiz"
-                                                  ? "Next Section"
-                                                  : "Complete & Next Section"
-                                              : currentDone || currentLesson.type === "quiz"
-                                                ? "Next Lesson"
-                                                : "Complete & Next"}
-                                        {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
-                                    </button>
                                 </div>
                             </div>
                         </>
@@ -744,158 +748,166 @@ function CourseSidebar({
     courseId,
     navigate,
 }) {
+    const totalLessons = sections.reduce((a, s) => a + s.lessons.length, 0);
+    const totalDone = sections.reduce(
+        (a, s) => a + s.lessons.filter((l) => progressMap[l.id]?.is_completed).length,
+        0
+    );
+    const pct = totalLessons ? Math.round((totalDone / totalLessons) * 100) : 0;
+
     return (
-        <aside
-            className="fixed inset-y-0 right-0 z-40 w-[86vw] max-w-[340px] lg:static lg:z-auto lg:w-[300px] lg:max-w-none xl:w-[320px] shrink-0 flex flex-col overflow-hidden"
-            style={{
-                background: "#0a1628",
-                borderLeft: "1px solid rgba(255,255,255,0.08)",
-            }}
-        >
-            {/* Header */}
-            <div className="px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                <p style={{ fontSize: "13px", fontWeight: 700, color: "#fff" }}>Course Content</p>
-                <p style={{ fontSize: "11.5px", color: "rgba(255,255,255,0.4)", marginTop: "2px" }}>
-                    {sections.length} sections • {sections.reduce((a, s) => a + s.lessons.length, 0)} lessons
+        <aside className="fixed inset-y-0 right-0 z-40 w-[86vw] max-w-[360px] lg:static lg:z-auto lg:w-[320px] lg:max-w-none xl:w-[350px] shrink-0 flex flex-col overflow-hidden bg-white border-l border-[#E2E8F0] shadow-[-8px_0_24px_rgba(15,23,42,0.06)] lg:shadow-none">
+            {/* Header + overall progress */}
+            <div className="px-5 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
+                <p className="text-[15px] font-extrabold text-slate-900">Course Content</p>
+                <p className="mt-0.5 text-[12px] text-slate-500">
+                    {sections.length} sections · {totalLessons} lessons · {totalDone} completed
                 </p>
+                <div className="mt-3 flex items-center gap-3">
+                    <div className="h-2 flex-1 rounded-full bg-[#DBEAFE] overflow-hidden">
+                        <div
+                            className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
+                            style={{ width: `${pct}%` }}
+                        />
+                    </div>
+                    <span className="text-[12px] font-bold text-[#2563EB] tabular-nums">{pct}%</span>
+                </div>
             </div>
 
             {/* Sections list */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto bg-[#F8FAFC]">
                 {sections.map((section, sIdx) => {
                     const isExpanded = !!expandedSections[section.id];
                     const secCompleted = section.lessons.filter(
                         (l) => progressMap[l.id]?.is_completed
                     ).length;
+                    const hasActive = section.lessons.some((l) => l.id === currentLesson?.id);
+                    const secDone = section.lessons.length > 0 && secCompleted === section.lessons.length;
 
                     return (
-                        <div key={section.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div key={section.id} className="border-b border-[#E2E8F0] bg-white">
                             {/* Section header */}
                             <button
                                 onClick={() => onToggleSection(section.id)}
-                                className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-white/5 transition-colors"
+                                aria-expanded={isExpanded}
+                                className={cn(
+                                    "w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors",
+                                    isExpanded ? "bg-[#EFF6FF]" : "hover:bg-[#F8FAFF]"
+                                )}
                             >
+                                <span
+                                    className={cn(
+                                        "w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-[12px] font-extrabold",
+                                        secDone
+                                            ? "bg-[#2563EB] text-white"
+                                            : hasActive || isExpanded
+                                              ? "bg-white text-[#2563EB] ring-1 ring-[#BFDBFE]"
+                                              : "bg-[#F1F5F9] text-slate-500"
+                                    )}
+                                >
+                                    {secDone ? <CheckCircle2 size={15} /> : String(sIdx + 1).padStart(2, "0")}
+                                </span>
                                 <div className="flex-1 min-w-0">
-                                    <p
-                                        style={{
-                                            fontSize: "12px",
-                                            fontWeight: 700,
-                                            color: "#fff",
-                                            lineHeight: 1.4,
-                                        }}
-                                        className="truncate"
-                                    >
-                                        Section {sIdx + 1}: {section.title}
+                                    <p className="truncate text-[13px] font-bold leading-snug text-slate-900">
+                                        {section.title}
                                     </p>
-                                    <p
-                                        style={{
-                                            fontSize: "11px",
-                                            color: "rgba(255,255,255,0.35)",
-                                            marginTop: "2px",
-                                        }}
-                                    >
+                                    <p className="mt-0.5 text-[11.5px] text-slate-500">
                                         {secCompleted}/{section.lessons.length} completed
                                     </p>
                                 </div>
                                 <ChevronDown
-                                    size={15}
-                                    style={{
-                                        color: "rgba(255,255,255,0.4)",
-                                        transform: isExpanded ? "rotate(180deg)" : "none",
-                                        transition: "transform 0.2s",
-                                        flexShrink: 0,
-                                        marginLeft: "8px",
-                                    }}
+                                    size={16}
+                                    className={cn(
+                                        "shrink-0 transition-transform duration-200",
+                                        isExpanded ? "rotate-180 text-[#2563EB]" : "text-slate-400"
+                                    )}
                                 />
                             </button>
 
                             {/* Lessons */}
                             {isExpanded && (
-                                <div>
-                                    {section.lessons.map((lesson) => {
+                                <div className="py-1.5">
+                                    {section.lessons.map((lesson, lIdx) => {
                                         const isActive = currentLesson?.id === lesson.id;
                                         const isCompleted = !!progressMap[lesson.id]?.is_completed;
+                                        const TypeIcon = LESSON_ICONS[lesson.type] || FileText;
 
                                         return (
                                             <button
                                                 key={lesson.id}
                                                 onClick={() => onSelectLesson(lesson)}
+                                                aria-current={isActive ? "true" : undefined}
                                                 className={cn(
-                                                    "w-full flex items-center gap-3 px-5 py-3 text-left transition-colors",
-                                                    isActive ? "bg-[#3282B8]/20" : "hover:bg-white/5"
+                                                    "group w-[calc(100%-16px)] mx-2 my-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all",
+                                                    isActive
+                                                        ? "bg-[#2563EB] shadow-[0_6px_16px_rgba(37,99,235,0.28)]"
+                                                        : "hover:bg-[#EFF6FF]"
                                                 )}
                                             >
-                                                {/* Status icon */}
-                                                <div className="shrink-0 w-5 h-5 flex items-center justify-center">
+                                                {/* Status */}
+                                                <span className="shrink-0 w-6 h-6 flex items-center justify-center">
                                                     {isCompleted ? (
                                                         <CheckCircle2
-                                                            size={16}
-                                                            style={{ color: "#10B981" }}
+                                                            size={18}
+                                                            className={
+                                                                isActive ? "text-white" : "text-[#2563EB]"
+                                                            }
                                                         />
                                                     ) : isActive ? (
-                                                        <PlayCircle size={16} style={{ color: "#3282B8" }} />
+                                                        <PlayCircle size={18} className="text-white" />
                                                     ) : (
-                                                        <div
-                                                            className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                                                            style={{ borderColor: "rgba(255,255,255,0.2)" }}
-                                                        />
+                                                        <span className="w-[18px] h-[18px] rounded-full border-2 border-[#CBD5E1] group-hover:border-[#93C5FD] flex items-center justify-center text-[9px] font-bold text-slate-400">
+                                                            {lIdx + 1}
+                                                        </span>
                                                     )}
-                                                </div>
+                                                </span>
 
-                                                {/* Title + duration */}
-                                                <div className="flex-1 min-w-0">
-                                                    <p
-                                                        className="truncate"
-                                                        style={{
-                                                            fontSize: "12.5px",
-                                                            fontWeight: isActive ? 700 : 500,
-                                                            color: isActive
-                                                                ? "#fff"
+                                                {/* Title + meta */}
+                                                <span className="flex-1 min-w-0">
+                                                    <span
+                                                        className={cn(
+                                                            "block truncate text-[13px] leading-snug",
+                                                            isActive
+                                                                ? "font-bold text-white"
                                                                 : isCompleted
-                                                                  ? "rgba(255,255,255,0.5)"
-                                                                  : "rgba(255,255,255,0.7)",
-                                                            lineHeight: 1.4,
-                                                        }}
+                                                                  ? "font-medium text-slate-500"
+                                                                  : "font-medium text-slate-800"
+                                                        )}
                                                     >
                                                         {lesson.title}
-                                                    </p>
-                                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                                        {(() => {
-                                                            const TypeIcon =
-                                                                LESSON_ICONS[lesson.type] || FileText;
-                                                            return (
-                                                                <TypeIcon
-                                                                    size={10}
-                                                                    style={{ color: "rgba(255,255,255,0.3)" }}
-                                                                />
-                                                            );
-                                                        })()}
+                                                    </span>
+                                                    <span
+                                                        className={cn(
+                                                            "mt-0.5 flex items-center gap-1.5 text-[11px]",
+                                                            isActive ? "text-blue-100" : "text-slate-400"
+                                                        )}
+                                                    >
+                                                        <TypeIcon size={11} />
+                                                        <span className="capitalize">
+                                                            {lesson.type === "text" ||
+                                                            lesson.type === "article"
+                                                                ? "Reading"
+                                                                : lesson.type === "pdf"
+                                                                  ? "PDF"
+                                                                  : lesson.type}
+                                                        </span>
                                                         {lesson.duration > 0 && (
-                                                            <span
-                                                                style={{
-                                                                    fontSize: "11px",
-                                                                    color: "rgba(255,255,255,0.3)",
-                                                                }}
-                                                            >
-                                                                {fmtDuration(lesson.duration)}
-                                                            </span>
+                                                            <span>· {fmtDuration(lesson.duration)}</span>
                                                         )}
                                                         {lesson.is_free === 1 && (
                                                             <span
-                                                                style={{
-                                                                    fontSize: "9px",
-                                                                    fontWeight: 700,
-                                                                    color: "#10B981",
-                                                                    background: "rgba(16,185,129,0.15)",
-                                                                    padding: "1px 5px",
-                                                                    borderRadius: "4px",
-                                                                }}
+                                                                className={cn(
+                                                                    "rounded px-1.5 py-px text-[9px] font-bold",
+                                                                    isActive
+                                                                        ? "bg-white/20 text-white"
+                                                                        : "bg-[#DBEAFE] text-[#1D4ED8]"
+                                                                )}
                                                             >
                                                                 FREE
                                                             </span>
                                                         )}
-                                                    </div>
-                                                </div>
+                                                    </span>
+                                                </span>
                                             </button>
                                         );
                                     })}
@@ -906,46 +918,35 @@ function CourseSidebar({
                 })}
             </div>
 
-            {/* Exams Section */}
+            {/* Exams */}
             {courseExams.length > 0 && (
-                <div className="border-t border-gray-200">
-                    <div className="px-5 py-4">
-                        <p style={{ fontSize: "13px", fontWeight: 700, color: "#fff" }}>Course Exams</p>
-                        <p style={{ fontSize: "11.5px", color: "rgba(255,255,255,0.4)", marginTop: "2px" }}>
+                <div className="shrink-0 border-t border-[#E2E8F0] bg-white">
+                    <div className="px-5 pt-4 pb-2">
+                        <p className="text-[13.5px] font-extrabold text-slate-900">Course Exams</p>
+                        <p className="mt-0.5 text-[11.5px] text-slate-500">
                             {courseExams.length} exam{courseExams.length > 1 ? "s" : ""} available
                         </p>
                     </div>
-                    <div className="px-2 pb-4">
+                    <div className="px-3 pb-4 space-y-1.5">
                         {courseExams.map((exam) => (
                             <button
                                 key={exam.id}
                                 onClick={() => navigate(`/student/course/${courseId}/exam/${exam.id}`)}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-white/5"
+                                className="w-full flex items-center gap-3 rounded-xl border border-[#DBEAFE] bg-[#F5F9FF] px-3 py-2.5 text-left transition-colors hover:border-[#93C5FD] hover:bg-[#EFF6FF]"
                             >
-                                <div className="shrink-0 w-5 h-5 flex items-center justify-center">
-                                    <Award size={16} style={{ color: "#3282B8" }} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p
-                                        className="truncate"
-                                        style={{
-                                            fontSize: "12px",
-                                            fontWeight: 500,
-                                            color: "rgba(255,255,255,0.8)",
-                                            lineHeight: 1.4,
-                                        }}
-                                    >
+                                <span className="w-8 h-8 shrink-0 rounded-lg bg-[#2563EB] flex items-center justify-center">
+                                    <Award size={16} className="text-white" />
+                                </span>
+                                <span className="flex-1 min-w-0">
+                                    <span className="block truncate text-[13px] font-semibold text-slate-900">
                                         {exam.title}
-                                    </p>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
-                                            {exam.duration ?? exam.duration_minutes} min
-                                        </span>
-                                        <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
-                                            {exam.total_questions ?? exam.questions_count ?? 0} questions
-                                        </span>
-                                    </div>
-                                </div>
+                                    </span>
+                                    <span className="mt-0.5 block text-[11px] text-slate-500">
+                                        {exam.duration ?? exam.duration_minutes} min ·{" "}
+                                        {exam.total_questions ?? exam.questions_count ?? 0} questions
+                                    </span>
+                                </span>
+                                <ChevronRight size={15} className="shrink-0 text-[#2563EB]" />
                             </button>
                         ))}
                     </div>
