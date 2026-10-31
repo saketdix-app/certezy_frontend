@@ -44,8 +44,6 @@ import Logo from "@/components/shared/Logo";
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PROGRESS_SYNC_INTERVAL = 15; // seconds — har 15s mein progress save
 const AUTO_COMPLETE_THRESHOLD = 0.9; // 90% dekha toh complete
-// Text lessons render their own prev/next + complete controls
-const TEXT_TYPES = ["text", "article"];
 
 const LESSON_ICONS = {
     video: PlayCircle,
@@ -281,6 +279,14 @@ export default function CoursePlayerPage() {
     const currentIdx = allLessons.findIndex((l) => l.id === currentLesson?.id);
 
     const isLastLesson = currentIdx === allLessons.length - 1;
+    const nextLesson = isLastLesson ? null : allLessons[currentIdx + 1];
+    // Set when the next lesson starts a new section
+    const nextSectionIndex =
+        nextLesson && nextLesson.section_id !== currentLesson?.section_id
+            ? sections.findIndex((s) => s.id === nextLesson.section_id)
+            : -1;
+    const nextSection =
+        nextSectionIndex >= 0 ? { ...sections[nextSectionIndex], index: nextSectionIndex } : null;
     const currentDone = !!progressMap[currentLesson?.id]?.is_completed;
 
     // "Next" finishes the current lesson first (quizzes complete by passing their test),
@@ -399,9 +405,7 @@ export default function CoursePlayerPage() {
                                 style={
                                     currentLesson.type === "video"
                                         ? { aspectRatio: "16/9", maxHeight: "calc(100vh - 200px)" }
-                                        : TEXT_TYPES.includes(currentLesson.type)
-                                          ? { minHeight: "60vh" }
-                                          : undefined
+                                        : undefined
                                 }
                             >
                                 {currentLesson.type === "pdf" ? (
@@ -433,17 +437,8 @@ export default function CoursePlayerPage() {
                                     <div className="w-full h-full bg-[#0a1628] overflow-y-auto">
                                         {currentLesson.content ? (
                                             <div className="p-4 sm:p-6">
-                                                <EnhancedTextLesson
-                                                    lesson={currentLesson}
-                                                    onMarkComplete={markLessonComplete}
-                                                    isCompleted={
-                                                        !!progressMap[currentLesson.id]?.is_completed
-                                                    }
-                                                    onPrevious={goToPrevLesson}
-                                                    onNext={goToNextLesson}
-                                                    hasNext
-                                                    hasPrevious={currentIdx > 0}
-                                                />
+                                                {/* Complete + Next live in the lesson panel below */}
+                                                <EnhancedTextLesson lesson={currentLesson} />
                                             </div>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center py-20">
@@ -532,46 +527,74 @@ export default function CoursePlayerPage() {
                                     </div>
                                 )}
 
-                                {/* Prev / Next buttons — video and PDF (text lessons have their own) */}
-                                {!TEXT_TYPES.includes(currentLesson.type) && (
-                                    <div
-                                        className="flex items-center justify-between pt-4"
-                                        style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+                                {/* Up next — names the next lesson, and its section when a new one starts */}
+                                {nextLesson && (
+                                    <p
+                                        className="pt-4 mb-3 truncate"
+                                        style={{
+                                            borderTop: "1px solid rgba(255,255,255,0.08)",
+                                            fontSize: "12.5px",
+                                            color: "rgba(255,255,255,0.5)",
+                                        }}
                                     >
-                                        <button
-                                            onClick={goToPrevLesson}
-                                            disabled={currentIdx === 0}
-                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                            style={{
-                                                background: "rgba(255,255,255,0.06)",
-                                                color: "#fff",
-                                                fontSize: "13px",
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            <ChevronLeft size={16} />
-                                            Previous
-                                        </button>
-
-                                        <button
-                                            onClick={goToNextLesson}
-                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                            style={{
-                                                background: isLastLesson ? "#10B981" : "#3282B8",
-                                                color: "#fff",
-                                                fontSize: "13px",
-                                                fontWeight: 700,
-                                            }}
-                                        >
-                                            {isLastLesson
-                                                ? "Finish Course"
-                                                : currentDone || currentLesson.type === "quiz"
-                                                  ? "Next Lesson"
-                                                  : "Complete & Next"}
-                                            {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
-                                        </button>
-                                    </div>
+                                        <span style={{ color: "#60A5FA", fontWeight: 700 }}>
+                                            {nextSection ? "Next section" : "Up next"}:
+                                        </span>{" "}
+                                        {nextSection && (
+                                            <span style={{ color: "#fff", fontWeight: 600 }}>
+                                                Section {nextSection.index + 1}: {nextSection.title} ·{" "}
+                                            </span>
+                                        )}
+                                        {nextLesson.title}
+                                    </p>
                                 )}
+
+                                {/* Prev / Next buttons — every lesson type */}
+                                <div
+                                    className={`flex items-center justify-between ${nextLesson ? "" : "pt-4"}`}
+                                    style={
+                                        nextLesson
+                                            ? undefined
+                                            : { borderTop: "1px solid rgba(255,255,255,0.08)" }
+                                    }
+                                >
+                                    <button
+                                        onClick={goToPrevLesson}
+                                        disabled={currentIdx === 0}
+                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
+                                        style={{
+                                            background: "rgba(255,255,255,0.06)",
+                                            color: "#fff",
+                                            fontSize: "13px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        <ChevronLeft size={16} />
+                                        Previous
+                                    </button>
+
+                                    <button
+                                        onClick={goToNextLesson}
+                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
+                                        style={{
+                                            background: isLastLesson ? "#10B981" : "#3282B8",
+                                            color: "#fff",
+                                            fontSize: "13px",
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {isLastLesson
+                                            ? "Finish Course"
+                                            : nextSection
+                                              ? currentDone || currentLesson.type === "quiz"
+                                                  ? "Next Section"
+                                                  : "Complete & Next Section"
+                                              : currentDone || currentLesson.type === "quiz"
+                                                ? "Next Lesson"
+                                                : "Complete & Next"}
+                                        {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
+                                    </button>
+                                </div>
                             </div>
                         </>
                     ) : (
