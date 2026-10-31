@@ -3,7 +3,13 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Eye, EyeOff, Mail, Lock, User, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { selectAuthLoading, selectIsLoggedIn, selectUser, clearError } from "@/features/auth/authSlice";
+import {
+    selectAuthLoading,
+    selectIsLoggedIn,
+    selectUser,
+    clearError,
+    loginUser,
+} from "@/features/auth/authSlice";
 import authService from "@/services/authService";
 import SocialButtons from "@/components/auth/SocialButtons";
 import { homeForRole, safeRedirect, ROUTES } from "@/config/app";
@@ -101,10 +107,19 @@ export default function RegisterPage() {
                 password: form.password,
             });
 
-            // Step 2 — Redirect strictly to Login page
-            toast.success("Account created successfully! Please sign in.");
-            const next = new URLSearchParams({ email: form.email.trim(), ...(redirect && { redirect }) });
-            navigate(`/login?${next.toString()}`, { replace: true });
+            // Step 2 — Sign in straight away, then continue (e.g. to a discount checkout)
+            try {
+                const result = await dispatch(
+                    loginUser({ email: form.email.trim(), password: form.password })
+                ).unwrap();
+                toast.success(`Welcome to Certezy, ${result.user?.name?.split(" ")[0] || "learner"}!`);
+                navigate(redirect || homeForRole(result.user?.role), { replace: true });
+            } catch {
+                // e.g. the account needs verifying first — fall back to the login page
+                toast.success("Account created! Please sign in.");
+                const next = new URLSearchParams({ email: form.email.trim(), ...(redirect && { redirect }) });
+                navigate(`/login?${next.toString()}`, { replace: true });
+            }
         } catch (err) {
             const apiErrors = err.response?.data?.errors;
             const errorMsg =

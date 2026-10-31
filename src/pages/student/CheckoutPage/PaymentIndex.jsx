@@ -57,10 +57,12 @@ export default function CheckoutPage() {
         }).format(amount);
     };
 
+    // A discount link sets course.discount_price (the server charges that amount)
+    const listedPrice = course?.discount_price ?? course?.price;
     const priceLabel = paymentAmount
         ? formatPrice(paymentAmount, paymentCurrency)
-        : course?.price
-          ? `$${course.price}`
+        : listedPrice != null
+          ? formatPrice(Number(listedPrice), "USD")
           : "...";
 
     return (
