@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Eye, EyeOff, Mail, Lock, User, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { selectAuthLoading, selectIsLoggedIn, selectUser, clearError } from "@/features/auth/authSlice";
 import authService from "@/services/authService";
 import SocialButtons from "@/components/auth/SocialButtons";
-import { homeForRole, ROUTES } from "@/config/app";
+import { homeForRole, safeRedirect, ROUTES } from "@/config/app";
 import BrandLogo from "@/components/shared/Logo";
 
 export default function RegisterPage() {
@@ -17,15 +17,23 @@ export default function RegisterPage() {
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const user = useSelector(selectUser);
 
-    const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
+    // ?email= pre-fills and ?redirect= is kept through sign-in (e.g. discount offer links)
+    const [params] = useSearchParams();
+    const redirect = safeRedirect(params.get("redirect"));
+    const [form, setForm] = useState({
+        name: "",
+        email: params.get("email") || "",
+        password: "",
+        confirmPassword: "",
+    });
     const [showPass, setShowPass] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        if (isLoggedIn) navigate(homeForRole(user?.role), { replace: true });
-    }, [isLoggedIn, user, navigate]);
+        if (isLoggedIn) navigate(redirect || homeForRole(user?.role), { replace: true });
+    }, [isLoggedIn, user, navigate, redirect]);
 
     useEffect(() => {
         return () => dispatch(clearError());
@@ -95,7 +103,8 @@ export default function RegisterPage() {
 
             // Step 2 — Redirect strictly to Login page
             toast.success("Account created successfully! Please sign in.");
-            navigate("/login", { replace: true });
+            const next = new URLSearchParams({ email: form.email.trim(), ...(redirect && { redirect }) });
+            navigate(`/login?${next.toString()}`, { replace: true });
         } catch (err) {
             const apiErrors = err.response?.data?.errors;
             const errorMsg =
@@ -450,7 +459,7 @@ export default function RegisterPage() {
                         >
                             Already have an account?{" "}
                             <Link
-                                to="/login"
+                                to={`/login${params.toString() ? `?${params.toString()}` : ""}`}
                                 style={{ fontWeight: 700, color: "#3282B8", textDecoration: "none" }}
                             >
                                 Sign in

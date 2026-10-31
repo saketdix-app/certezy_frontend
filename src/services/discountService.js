@@ -21,6 +21,8 @@ const discountService = {
     getAll: () => api.get("/discounts"),
     getByCode: (code) => api.get(`/discounts/${code}`),
     verifyToken: (token) => api.get(`/discounts/verify/${token}`),
+    // Public offer landing page (no login)
+    getOffer: (token) => api.get(`/discounts/offer/${encodeURIComponent(token)}`),
 
     // Admin only
     create: (data) => api.post("/discounts", data),

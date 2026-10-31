@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CourseThumbnail from "@/components/shared/CourseThumbnail";
-import { Search, X, Send, Clock, CheckCircle, Copy, Users, BookOpen, IndianRupee } from "lucide-react";
+import { Search, Send, CheckCircle, Copy, Users, IndianRupee, Mail } from "lucide-react";
 import toast from "react-hot-toast";
 import courseService from "@/services/courseService";
 import authService from "@/services/authService";
@@ -12,6 +12,10 @@ export default function DiscountsPage() {
     const [students, setStudents] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [selectedStudent, setSelectedStudent] = useState(null);
+    // "student" = pick a registered student, "email" = anyone, by email address
+    const [recipientMode, setRecipientMode] = useState("student");
+    const [recipientEmail, setRecipientEmail] = useState("");
+    const [sentInfo, setSentInfo] = useState(null); // { email, isRegistered }
     const [discountPrice, setDiscountPrice] = useState("");
     const [expiryHours, setExpiryHours] = useState(24);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -52,8 +56,13 @@ export default function DiscountsPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedCourse || !selectedStudent || !discountPrice) {
+        const email = recipientEmail.trim();
+        if (!selectedCourse || !discountPrice || (recipientMode === "student" ? !selectedStudent : !email)) {
             toast.error("Please fill all required fields");
+            return;
+        }
+        if (recipientMode === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            toast.error("Please enter a valid email address");
             return;
         }
 
@@ -68,19 +77,22 @@ export default function DiscountsPage() {
         setLoading(true);
         try {
             const response = await discountService.createDiscountLink({
-                user_id: selectedStudent.id,
+                ...(recipientMode === "student" ? { user_id: selectedStudent.id } : { email }),
                 course_id: selectedCourse.id,
                 discount_price: discountAmount,
                 expiry_hours: expiryHours,
             });
+            const result = response.data?.data ?? {};
 
             setShowSuccess(true);
-            setSentLink(response.data?.discountLink || "");
+            setSentLink(result.offer_url || "");
+            setSentInfo({ email: result.student_email, isRegistered: result.is_registered });
             toast.success("Discount link sent successfully!");
 
             // Reset form
             setSelectedCourse(null);
             setSelectedStudent(null);
+            setRecipientEmail("");
             setDiscountPrice("");
             setExpiryHours(24);
         } catch (error) {
@@ -120,7 +132,11 @@ export default function DiscountsPage() {
                                     Discount Link Sent!
                                 </h3>
                                 <p className="text-slate-600 text-sm mb-4">
-                                    The discount link has been sent to the student's email
+                                    Emailed to <strong>{sentInfo?.email}</strong>.{" "}
+                                    {sentInfo?.isRegistered === false
+                                        ? "They don't have an account yet — the link lets them sign up with this email and pay the discounted price."
+                                        : "They can open the link, sign in and pay the discounted price."}{" "}
+                                    You can also copy the link and share it yourself.
                                 </p>
 
                                 {sentLink && (
@@ -209,47 +225,91 @@ export default function DiscountsPage() {
                             )}
                         </div>
 
-                        {/* Student Selection */}
+                        {/* Recipient */}
                         <div>
                             <label className="block text-[13px] font-semibold text-slate-700 mb-2">
-                                Select Student
+                                Send To
                             </label>
-                            <div className="relative">
-                                <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                                <select
-                                    value={selectedStudent?.id || ""}
-                                    onChange={(e) =>
-                                        setSelectedStudent(
-                                            students.find((s) => s.id === parseInt(e.target.value))
-                                        )
-                                    }
-                                    className={`${inputCls} pl-10 appearance-none cursor-pointer`}
-                                    required
-                                >
-                                    <option value="">Search student by name or email...</option>
-                                    {students.map((student) => (
-                                        <option key={student.id} value={student.id}>
-                                            {student.name} ({student.email})
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className="mb-3 inline-flex rounded-xl bg-slate-100 p-1 text-[12.5px] font-semibold">
+                                {[
+                                    ["student", "Registered student", Users],
+                                    ["email", "Any email address", Mail],
+                                ].map(([mode, label, Icon]) => (
+                                    <button
+                                        key={mode}
+                                        type="button"
+                                        onClick={() => setRecipientMode(mode)}
+                                        className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition-colors ${
+                                            recipientMode === mode
+                                                ? "bg-white text-[#3282B8] shadow-sm"
+                                                : "text-slate-500 hover:text-slate-700"
+                                        }`}
+                                    >
+                                        <Icon className="w-3.5 h-3.5" /> {label}
+                                    </button>
+                                ))}
                             </div>
 
-                            {/* Student Info Card */}
-                            {selectedStudent && (
-                                <div className="mt-3 p-4 bg-white rounded-xl border border-slate-200">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3282B8] to-[#0a1628] flex items-center justify-center">
-                                            <Users className="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-slate-900 text-sm">
-                                                {selectedStudent.name}
-                                            </h4>
-                                            <p className="text-slate-500 text-xs">{selectedStudent.email}</p>
-                                        </div>
+                            {recipientMode === "email" ? (
+                                <div>
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+                                        <input
+                                            type="email"
+                                            value={recipientEmail}
+                                            onChange={(e) => setRecipientEmail(e.target.value)}
+                                            placeholder="person@example.com"
+                                            className={`${inputCls} pl-10`}
+                                            required
+                                        />
                                     </div>
+                                    <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+                                        Works for people without an account. We email them a link; they sign
+                                        up (or sign in) with this email and pay the discounted price. Only
+                                        this email address can use the offer.
+                                    </p>
                                 </div>
+                            ) : (
+                                <>
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+                                        <select
+                                            value={selectedStudent?.id || ""}
+                                            onChange={(e) =>
+                                                setSelectedStudent(
+                                                    students.find((st) => st.id === parseInt(e.target.value))
+                                                )
+                                            }
+                                            className={`${inputCls} pl-10 appearance-none cursor-pointer`}
+                                            required
+                                        >
+                                            <option value="">Search student by name or email...</option>
+                                            {students.map((student) => (
+                                                <option key={student.id} value={student.id}>
+                                                    {student.name} ({student.email})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {selectedStudent && (
+                                        <div className="mt-3 p-4 bg-white rounded-xl border border-slate-200">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3282B8] to-[#0a1628] flex items-center justify-center">
+                                                    <Users className="w-5 h-5 text-white" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-slate-900 text-sm">
+                                                        {selectedStudent.name}
+                                                    </h4>
+                                                    <p className="text-slate-500 text-xs">
+                                                        {selectedStudent.email}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>
@@ -350,6 +410,7 @@ export default function DiscountsPage() {
                                 onClick={() => {
                                     setSelectedCourse(null);
                                     setSelectedStudent(null);
+                                    setRecipientEmail("");
                                     setDiscountPrice("");
                                     setExpiryHours(24);
                                 }}
