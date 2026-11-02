@@ -322,10 +322,17 @@ export default function HeroSection() {
                                         fontWeight: 700,
                                         color: "#93C5FD",
                                         letterSpacing: "0.02em",
+                                        lineHeight: 1.45,
+                                        maxWidth: "100%",
                                     }}
                                 >
-                                    <ShieldCheck size={14} color="#3282B8" aria-hidden="true" />
-                                    Expert-led PMP® exam preparation
+                                    <ShieldCheck
+                                        size={14}
+                                        color="#3282B8"
+                                        aria-hidden="true"
+                                        style={{ flexShrink: 0 }}
+                                    />
+                                    Prepare with Confidence. Pass the PMP® Exam on Your First Attempt!
                                 </span>
                             </div>
 
