@@ -450,8 +450,8 @@ function PasswordModal({ user, onClose }) {
                 <div className="mb-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5">
                     <Shield size={15} className="text-amber-600 shrink-0 mt-0.5" />
                     <p className="text-[12px] text-amber-800 leading-relaxed">
-                        You signed in with Google or GitHub, so your password is managed there, not on
-                        Certezy.
+                        You sign in with Google or GitHub. To also sign in with your email and a password, use
+                        &ldquo;Forgot password?&rdquo; on the sign-in page to set one.
                     </p>
                 </div>
             )}
@@ -532,8 +532,8 @@ function PasswordModal({ user, onClose }) {
                         i
                     </div>
                     <p className="text-[12px] text-slate-500 leading-relaxed">
-                        You signed in with Google or GitHub, so your password is managed there, not on
-                        Certezy.
+                        You sign in with Google or GitHub. To also sign in with your email and a password, use
+                        &ldquo;Forgot password?&rdquo; on the sign-in page to set one.
                     </p>
                 </div>
 
