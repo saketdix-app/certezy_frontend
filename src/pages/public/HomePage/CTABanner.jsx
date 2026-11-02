@@ -108,7 +108,7 @@ const CSS = `
 `;
 
 const TRUST_PILLS = [
-    { icon: BadgeCheck, label: "✓ 100% PMP® Pass Guarantee" },
+    { icon: BadgeCheck, label: "✓ 35 PMP® Contact Hours" },
     { icon: BadgeCheck, label: "✓ Industry-Recognized Certifications" },
     { icon: Clock, label: "✓ Learn at Your Own Pace" },
 ];
@@ -169,7 +169,7 @@ export default function CTABanner() {
                             }}
                         />
 
-                        {/* PMP pass-guarantee badge — top right */}
+                        {/* PMP badge — top right */}
                         <div
                             className="cta-badge"
                             style={{
@@ -210,10 +210,10 @@ export default function CTABanner() {
                                         textTransform: "uppercase",
                                     }}
                                 >
-                                    Clear PMP® with Confidence
+                                    PMP® exam preparation
                                 </div>
                                 <div style={{ fontSize: "13px", fontWeight: 800, color: "#F1F5F9" }}>
-                                    100% Pass Guarantee
+                                    35 Contact Hours
                                 </div>
                             </div>
                         </div>
