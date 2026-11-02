@@ -34,6 +34,7 @@ const ProfilePage = lazy(() => import("@/pages/student/ProfilePage"));
 const CoursePlayerPage = lazy(() => import("@/pages/student/CoursePlayerPage"));
 const ExamInterface = lazy(() => import("@/pages/student/ExamInterface"));
 const CheckoutPage = lazy(() => import("@/pages/student/CheckoutPage/PaymentIndex"));
+const PaypalReturnPage = lazy(() => import("@/pages/student/CheckoutPage/PaypalReturnPage"));
 
 // Admin
 const AdminLayout = lazy(() => import("@/components/layout/AdminLayout"));
@@ -149,6 +150,8 @@ export default function AppRoutes() {
 
                     {/* ── CHECKOUT ── */}
                     <Route path={ROUTES.CHECKOUT} element={studentOnly(<CheckoutPage />)} />
+                    {/* PayPal return_url / cancel_url (checkout popup or mobile tab) */}
+                    <Route path="/payment/paypal/:outcome" element={<PaypalReturnPage />} />
                 </Route>
 
                 {/* ── COURSE PLAYER (full screen, no sidebar/footer) ── */}
