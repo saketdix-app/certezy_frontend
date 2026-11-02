@@ -13,6 +13,8 @@ import {
     Archive,
     Reply,
     Calendar,
+    Send,
+    Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -42,6 +44,9 @@ const contactService = {
 
     getMessageById: (id) => api.get(`/contact/${id}`),
 
+    // Emails the reply to the sender and keeps it on the message
+    reply: (id, data) => api.post(`/contact/${id}/reply`, data),
+
     updateStatus: (id, status) => api.put(`/contact/${id}/status`, { status }),
 };
 
@@ -61,6 +66,11 @@ export default function ContactPage() {
     // Modal states
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [showMessageModal, setShowMessageModal] = useState(false);
+    // Reply box in the message popup
+    const [replyOpen, setReplyOpen] = useState(false);
+    const [replyText, setReplyText] = useState("");
+    const [replyResolve, setReplyResolve] = useState(true);
+    const [sendingReply, setSendingReply] = useState(false);
     const [updatingStatus, setUpdatingStatus] = useState(false);
 
     // ── Load messages ─────────────────────────────────────────────────────────
@@ -118,6 +128,9 @@ export default function ContactPage() {
     // The list only carries a 100-character preview — open right away with it,
     // then load the full message
     const handleMessageClick = async (message) => {
+        setReplyOpen(false);
+        setReplyText("");
+        setReplyResolve(true);
         setSelectedMessage({
             ...message,
             message: message.message ?? message.message_preview,
@@ -136,6 +149,32 @@ export default function ContactPage() {
                 current?.id === message.id ? { ...current, loadingFull: false } : current
             );
             toast.error("Could not load the full message");
+        }
+    };
+
+    const handleSendReply = async () => {
+        const text = replyText.trim();
+        if (text.length < 2) return toast.error("Write a reply first");
+        setSendingReply(true);
+        try {
+            const { data } = await contactService.reply(selectedMessage.id, {
+                message: text,
+                resolve: replyResolve,
+            });
+            const updated = data?.data?.contact;
+            toast.success(data?.message || "Reply sent");
+            if (updated) {
+                setSelectedMessage((current) => ({ ...current, ...updated, loadingFull: false }));
+                setMessages((prev) =>
+                    prev.map((m) => (m.id === updated.id ? { ...m, status: updated.status } : m))
+                );
+            }
+            setReplyText("");
+            setReplyOpen(false);
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not send the reply");
+        } finally {
+            setSendingReply(false);
         }
     };
 
@@ -517,6 +556,56 @@ export default function ContactPage() {
                                         (selectedMessage.loadingFull ? "Loading message…" : "No message")}
                                 </p>
                             </div>
+
+                            {/* Replies already sent */}
+                            {selectedMessage.replies?.length > 0 && (
+                                <div className="mt-4 space-y-3">
+                                    {selectedMessage.replies.map((r) => (
+                                        <div
+                                            key={r.id}
+                                            className="ml-6 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] p-4"
+                                        >
+                                            <p className="text-[11.5px] font-semibold text-[#3282B8] mb-1">
+                                                Reply by {r.admin_name || "Certezy team"} ·{" "}
+                                                {formatDate(r.created_at)}
+                                            </p>
+                                            <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                                {r.message}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Write a reply */}
+                            {replyOpen && (
+                                <div className="mt-4">
+                                    <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                                        Reply to {selectedMessage.email}
+                                    </label>
+                                    <textarea
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                        rows={6}
+                                        maxLength={5000}
+                                        autoFocus
+                                        placeholder={`Hi ${selectedMessage.name?.split(" ")[0] || "there"},`}
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] resize-y"
+                                    />
+                                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[12px] text-slate-500">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={replyResolve}
+                                                onChange={(e) => setReplyResolve(e.target.checked)}
+                                                className="w-4 h-4 accent-[#3282B8]"
+                                            />
+                                            Mark as resolved after sending
+                                        </label>
+                                        <span>Sent by email; their answer comes to the support inbox.</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Modal Footer */}
@@ -556,10 +645,37 @@ export default function ContactPage() {
                                             Mark as Resolved
                                         </button>
                                     )}
-                                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-semibold hover:bg-[#2563EB] transition-colors">
-                                        <Reply size={16} />
-                                        Reply
-                                    </button>
+                                    {replyOpen ? (
+                                        <>
+                                            <button
+                                                onClick={() => setReplyOpen(false)}
+                                                disabled={sendingReply}
+                                                className="px-4 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleSendReply}
+                                                disabled={sendingReply || replyText.trim().length < 2}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-semibold hover:bg-[#2A6FA0] transition-colors disabled:opacity-50"
+                                            >
+                                                {sendingReply ? (
+                                                    <Loader2 size={16} className="animate-spin" />
+                                                ) : (
+                                                    <Send size={16} />
+                                                )}
+                                                Send reply
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button
+                                            onClick={() => setReplyOpen(true)}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-semibold hover:bg-[#2A6FA0] transition-colors"
+                                        >
+                                            <Reply size={16} />
+                                            Reply
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
