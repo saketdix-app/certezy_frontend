@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { getPricing, formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 /**
  * PriceTag — Free / $149 / $149 ~~$199~~ 25% off, in three sizes.
@@ -14,7 +15,8 @@ const SIZES = {
 };
 
 export default function PriceTag({ course, size = "md", className }) {
-    const p = getPricing(course);
+    const currency = useCurrency(); // ₹ in India, $ elsewhere (switchable)
+    const p = getPricing(course, currency);
     const s = SIZES[size] || SIZES.md;
 
     if (p.isFree) {
@@ -34,12 +36,12 @@ export default function PriceTag({ course, size = "md", className }) {
                     s.price
                 )}
             >
-                {formatMoney(p.price)}
+                {formatMoney(p.price, p.currency)}
             </span>
             {p.isDiscounted && (
                 <>
                     <span className={cn("text-slate-400 line-through leading-none", s.original)}>
-                        {formatMoney(p.originalPrice)}
+                        {formatMoney(p.originalPrice, p.currency)}
                     </span>
                     <span
                         className={cn("font-bold rounded-full bg-rose-50 text-rose-600 self-center", s.badge)}

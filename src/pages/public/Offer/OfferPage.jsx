@@ -5,6 +5,8 @@ import { Tag, Clock, Loader2, ShieldCheck, AlertCircle, Mail } from "lucide-reac
 import discountService from "@/services/discountService";
 import { selectIsLoggedIn, selectUser } from "@/features/auth/authSlice";
 import CourseThumbnail from "@/components/shared/CourseThumbnail";
+import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 /**
  * /offer/:token — landing page for discount links sent by email.
@@ -12,13 +14,12 @@ import CourseThumbnail from "@/components/shared/CourseThumbnail";
  * email the offer was sent to and continues to checkout with the discount.
  */
 
-const money = (v) => `$${Number(v).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
-
 export default function OfferPage() {
     const { token } = useParams();
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const user = useSelector(selectUser);
     const [state, setState] = useState({ token: null, offer: null, error: null });
+    const currency = useCurrency(); // ₹ in India, $ elsewhere
 
     useEffect(() => {
         let alive = true;
@@ -69,7 +70,13 @@ export default function OfferPage() {
 
     const checkoutUrl = `/checkout?course=${offer.course.id}&discount=${token}`;
     const authQuery = (extra = {}) => new URLSearchParams({ redirect: checkoutUrl, ...extra }).toString();
-    const savings = Number(offer.original_price) - Number(offer.discount_price);
+    // Show the offer in rupees for India (same share off the India price)
+    const inr = currency === "INR" && Number(offer.discount_price_inr) > 0;
+    const cur = inr ? "INR" : "USD";
+    const offerPrice = inr ? offer.discount_price_inr : offer.discount_price;
+    const listPrice = inr ? offer.original_price_inr : offer.original_price;
+    const money = (v) => formatMoney(Number(v), cur);
+    const savings = Number(listPrice) - Number(offerPrice);
     const inactive = offer.status !== "active";
 
     return (
@@ -96,10 +103,10 @@ export default function OfferPage() {
 
                         <div className="mt-4 flex flex-wrap items-baseline gap-3">
                             <span className="text-[32px] font-extrabold text-[#2563EB]">
-                                {money(offer.discount_price)}
+                                {money(offerPrice)}
                             </span>
                             <span className="text-[18px] text-slate-400 line-through">
-                                {money(offer.original_price)}
+                                {money(listPrice)}
                             </span>
                             {offer.discount_pct && (
                                 <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[13px] font-bold text-emerald-700">

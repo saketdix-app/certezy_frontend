@@ -58,6 +58,8 @@ const EMPTY_FORM = {
     pricing_type: "paid",
     price: "",
     original_price: "",
+    price_inr: "",
+    original_price_inr: "",
     level: "beginner",
     language: "English",
     status: "draft",
@@ -210,6 +212,9 @@ export default function CoursesPage() {
             pricing_type: course.pricing_type ?? (Number(course.price) > 0 ? "paid" : "free"),
             price: course.price ?? "",
             original_price: course.original_price ?? "",
+            // The API fills price_inr with the converted USD price when none is set
+            price_inr: course.inr_price_set ? (course.price_inr ?? "") : "",
+            original_price_inr: course.inr_price_set ? (course.original_price_inr ?? "") : "",
             level: course.level ?? "beginner",
             language: course.language ?? "English",
             status: course.status ?? "draft",
@@ -243,6 +248,15 @@ export default function CoursesPage() {
             toast.error("Enter a price for a paid course (or choose Free)");
             return;
         }
+        if (
+            isPaid &&
+            form.price_inr !== "" &&
+            form.original_price_inr !== "" &&
+            Number(form.original_price_inr) <= Number(form.price_inr)
+        ) {
+            toast.error("India original price (₹) must be higher than the India price");
+            return;
+        }
         if (isPaid && form.original_price !== "" && Number(form.original_price) <= Number(form.price)) {
             toast.error("Original price must be higher than the selling price");
             return;
@@ -262,6 +276,12 @@ export default function CoursesPage() {
                 pricing_type: isPaid ? "paid" : "free",
                 price: isPaid ? Number(form.price) : 0,
                 original_price: isPaid && form.original_price !== "" ? Number(form.original_price) : null,
+                // India (₹) prices — empty means "convert from USD"
+                price_inr: isPaid && form.price_inr !== "" ? Number(form.price_inr) : null,
+                original_price_inr:
+                    isPaid && form.price_inr !== "" && form.original_price_inr !== ""
+                        ? Number(form.original_price_inr)
+                        : null,
                 level: form.level || "beginner",
                 language: form.language?.trim() || "English",
                 status: form.status || "draft",
@@ -968,9 +988,56 @@ export default function CoursesPage() {
                                     </>
                                 )}
                             </div>
+                            {/* India prices (₹) — shown to visitors in India, charged via Razorpay */}
+                            {form.pricing_type === "paid" && (
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div className="hidden sm:block self-center text-[12px] text-slate-500 leading-snug">
+                                        India prices. Leave empty to convert the USD price at today's rate.
+                                    </div>
+                                    <Field label="INDIA PRICE (₹)">
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            step="1"
+                                            value={form.price_inr}
+                                            onChange={(e) => setF("price_inr", e.target.value)}
+                                            className={inputCls}
+                                            placeholder="e.g. 4999"
+                                        />
+                                    </Field>
+                                    <Field label="INDIA ORIGINAL PRICE (₹) — OPTIONAL">
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            step="1"
+                                            value={form.original_price_inr}
+                                            onChange={(e) => setF("original_price_inr", e.target.value)}
+                                            className={inputCls}
+                                            placeholder="Shown struck-through"
+                                            disabled={form.price_inr === ""}
+                                        />
+                                    </Field>
+                                </div>
+                            )}
                             {form.pricing_type === "paid" && Number(form.price) > 0 && (
-                                <p className="-mt-2 text-[12px] text-slate-500 flex items-center gap-2">
-                                    Students will see: <PriceTag course={form} size="sm" />
+                                <p className="-mt-2 text-[12px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
+                                    <span className="flex items-center gap-2">
+                                        Outside India:{" "}
+                                        <PriceTag course={{ ...form, price_inr: null }} size="sm" />
+                                    </span>
+                                    {form.price_inr !== "" && (
+                                        <span className="flex items-center gap-2">
+                                            India:{" "}
+                                            <span className="font-bold text-primary">
+                                                ₹{Number(form.price_inr).toLocaleString("en-IN")}
+                                            </span>
+                                            {form.original_price_inr !== "" && (
+                                                <span className="line-through text-slate-400">
+                                                    ₹{Number(form.original_price_inr).toLocaleString("en-IN")}
+                                                </span>
+                                            )}
+                                        </span>
+                                    )}
                                 </p>
                             )}
 

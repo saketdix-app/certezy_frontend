@@ -2,12 +2,18 @@
  * format.js — display helpers shared across public, student and admin pages.
  */
 
-const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+import { getCurrency } from "./currency";
 
-/** $49 / $49.99 — whole numbers drop the cents. */
-export const formatMoney = (amount) => {
+const FORMATS = {
+    USD: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }),
+    INR: new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }),
+};
+
+/** $49 / $49.99 / ₹4,999 — whole numbers drop the cents. */
+export const formatMoney = (amount, currency = "USD") => {
     const n = Number(amount || 0);
-    return Number.isInteger(n) ? usd.format(n).replace(/\.00$/, "") : usd.format(n);
+    const f = FORMATS[currency] || FORMATS.USD;
+    return Number.isInteger(n) ? f.format(n).replace(/\.00$/, "") : f.format(n);
 };
 
 /**
@@ -15,18 +21,23 @@ export const formatMoney = (amount) => {
  * The API already sends pricing_type / is_discounted / discount_pct; the
  * fallbacks keep older payloads (enrollments, discount pages) working.
  */
-export const getPricing = (course = {}) => {
-    const price = Number(course.price || 0);
-    const isFree = course.pricing_type === "free" || price <= 0;
-    const original = Number(course.original_price || 0);
+export const getPricing = (course = {}, currency = getCurrency()) => {
+    const usdPrice = Number(course.price || 0);
+    const isFree = course.pricing_type === "free" || usdPrice <= 0;
+    // India prices come from the API (price_inr); older payloads without them show USD
+    const inr = currency === "INR" && Number(course.price_inr) > 0;
+    const cur = inr ? "INR" : "USD";
+    const price = inr ? Number(course.price_inr) : usdPrice;
+    const original = Number((inr ? course.original_price_inr : course.original_price) || 0);
     const isDiscounted = !isFree && original > price;
     return {
         isFree,
+        currency: cur,
         price: isFree ? 0 : price,
         originalPrice: isDiscounted ? original : null,
         isDiscounted,
         discountPct: isDiscounted ? Math.round(((original - price) / original) * 100) : 0,
-        label: isFree ? "Free" : formatMoney(price),
+        label: isFree ? "Free" : formatMoney(price, cur),
     };
 };
 

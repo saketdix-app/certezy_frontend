@@ -1,6 +1,6 @@
 // src/pages/student/ProfilePage.jsx
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     User,
@@ -21,6 +21,10 @@ import toast from "react-hot-toast";
 
 import { selectUser, fetchMe } from "@/features/auth/authSlice";
 import authService from "@/services/authService";
+import uploadService, { validateUpload } from "@/services/uploadService";
+import { resizeImage } from "@/lib/image";
+import { isValidPhone } from "@/lib/currency";
+import PhoneInput from "@/components/shared/PhoneInput";
 import enrollmentService from "@/services/enrollmentService";
 import certificateService from "@/services/certificateService";
 
@@ -261,11 +265,36 @@ function EditModal({ user, onClose, onSaved }) {
         name: user?.name ?? "",
         mobile: user?.mobile ?? "",
         gender: user?.gender ?? "",
+        avatar: user?.avatar ?? null,
     });
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const fileRef = useRef(null);
+
+    // Square, light photo (400×400) straight to S3, then saved with the form
+    const handlePhoto = async (picked) => {
+        if (!picked) return;
+        const problem = validateUpload(picked, "avatar");
+        if (problem) return toast.error(problem);
+        setUploading(true);
+        try {
+            const file = await resizeImage(picked, { width: 400, height: 400, fit: "cover" });
+            const url = await uploadService.uploadFile(file, { kind: "avatar" });
+            setForm((f) => ({ ...f, avatar: url }));
+            toast.success("Photo uploaded — click Save Changes to keep it");
+        } catch (err) {
+            toast.error(err.response?.data?.message || err.message || "Photo upload failed");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!isValidPhone(form.mobile)) {
+            toast.error("Enter a valid mobile number (country code + number)");
+            return;
+        }
         setLoading(true);
         try {
             await authService.updateProfile(form);
@@ -287,18 +316,43 @@ function EditModal({ user, onClose, onSaved }) {
                         className="w-[76px] h-[76px] rounded-2xl flex items-center justify-center text-white text-[26px] font-extrabold overflow-hidden"
                         style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
                     >
-                        {user?.avatar ? (
-                            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        {form.avatar ? (
+                            <img src={form.avatar} alt={user?.name} className="w-full h-full object-cover" />
                         ) : (
                             user?.name?.charAt(0).toUpperCase()
                         )}
                     </div>
-                    <button
-                        type="button"
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
-                    >
-                        <Camera size={12} /> Upload Photo
-                    </button>
+                    <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={(e) => {
+                            handlePhoto(e.target.files?.[0]);
+                            e.target.value = "";
+                        }}
+                    />
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => fileRef.current?.click()}
+                            disabled={uploading}
+                            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                        >
+                            <Camera size={12} />{" "}
+                            {uploading ? "Uploading…" : form.avatar ? "Change Photo" : "Upload Photo"}
+                        </button>
+                        {form.avatar && !uploading && (
+                            <button
+                                type="button"
+                                onClick={() => setForm((f) => ({ ...f, avatar: null }))}
+                                className="px-3 py-1.5 rounded-lg text-[12px] font-semibold text-red-500 hover:bg-red-50"
+                            >
+                                Remove
+                            </button>
+                        )}
+                    </div>
+                    <p className="text-[11px] text-slate-400">JPG, PNG or WebP · up to 3 MB</p>
                 </div>
 
                 {/* FULL NAME */}
@@ -315,12 +369,10 @@ function EditModal({ user, onClose, onSaved }) {
 
                 {/* MOBILE NUMBER */}
                 <FieldGroup label="MOBILE NUMBER">
-                    <input
-                        type="tel"
+                    <PhoneInput
                         value={form.mobile}
-                        onChange={(e) => setForm({ ...form, mobile: e.target.value })}
-                        className={inputCls}
-                        placeholder="+91 XXXXX XXXXX"
+                        onChange={(mobile) => setForm((f) => ({ ...f, mobile }))}
+                        inputClassName={inputCls}
                     />
                 </FieldGroup>
 
