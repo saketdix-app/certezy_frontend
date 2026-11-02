@@ -21,6 +21,12 @@ const TermsOfServicePage = lazy(() => import("@/pages/legal/TermsOfServicePage")
 // Auth
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/auth/RegisterPage"));
+const ForgotPasswordPage = lazy(() =>
+    import("@/pages/auth/PasswordResetPages").then((m) => ({ default: m.ForgotPasswordPage }))
+);
+const ResetPasswordPage = lazy(() =>
+    import("@/pages/auth/PasswordResetPages").then((m) => ({ default: m.ResetPasswordPage }))
+);
 const OAuthCallback = lazy(() => import("@/pages/auth/OAuthCallback"));
 const ChangePasswordPage = lazy(() => import("@/pages/auth/ChangePasswordPage"));
 
@@ -146,6 +152,8 @@ export default function AppRoutes() {
                     {/* ── AUTH ── */}
                     <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                     <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
                     <Route path={ROUTES.OAUTH_CALLBACK} element={<OAuthCallback />} />
                     <Route
                         path="/change-password"
