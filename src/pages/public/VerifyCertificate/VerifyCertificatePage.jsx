@@ -11,6 +11,14 @@ import certificateService from "@/services/certificateService";
 
 const fmtDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "—";
+// Training dates are calendar days (stored at UTC midnight)
+const fmtDay = (d) =>
+    new Date(d).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+    });
 
 function Row({ label, value }) {
     return (
@@ -153,6 +161,12 @@ export default function VerifyCertificatePage() {
                                 />
                             )}
                             <Row label="Issued on" value={fmtDate(cert.issued_at)} />
+                            {cert.training_start && cert.training_end && (
+                                <Row
+                                    label="Training period"
+                                    value={`${fmtDay(cert.training_start)} – ${fmtDay(cert.training_end)}`}
+                                />
+                            )}
                             {cert.valid_until && (
                                 <Row label="Valid until" value={fmtDate(cert.valid_until)} />
                             )}

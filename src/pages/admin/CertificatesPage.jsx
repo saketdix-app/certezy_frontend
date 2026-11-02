@@ -15,6 +15,7 @@ import {
     BookOpen,
     CheckCircle2,
     AlertTriangle,
+    RotateCw,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -35,6 +36,75 @@ const fmtDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
+// Date columns come back as ISO strings at UTC midnight → 'YYYY-MM-DD'
+const dayIso = (d) => (d ? new Date(d).toISOString().slice(0, 10) : "");
+const fmtDay = (d) =>
+    d
+        ? new Date(d).toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              timeZone: "UTC",
+          })
+        : "—";
+
+/** Same checks as the server: start ≤ end ≤ issue date ≤ today. */
+const datesError = ({ trainingStart, trainingEnd, issueDate }) => {
+    const today = todayIso();
+    if (!trainingStart || !trainingEnd) return "Enter the training start and end dates";
+    if (trainingStart > trainingEnd) return "Training start must be on or before the end date";
+    if (trainingEnd > today) return "Training end date can't be in the future";
+    if (issueDate && issueDate > today) return "Issue date can't be in the future";
+    if (issueDate && issueDate < trainingEnd) return "Issue date can't be before the training ended";
+    return null;
+};
+
+/** Training start / end + issue date, shared by Issue and Regenerate. */
+function CertificateDates({ value, onChange }) {
+    const set = (k) => (e) => onChange({ ...value, [k]: e.target.value });
+    const today = todayIso();
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <label className="block">
+                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">
+                    Training start
+                </span>
+                <input
+                    type="date"
+                    value={value.trainingStart}
+                    max={value.trainingEnd || today}
+                    onChange={set("trainingStart")}
+                    className={inputCls}
+                />
+            </label>
+            <label className="block">
+                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Training end</span>
+                <input
+                    type="date"
+                    value={value.trainingEnd}
+                    min={value.trainingStart || undefined}
+                    max={today}
+                    onChange={set("trainingEnd")}
+                    className={inputCls}
+                />
+            </label>
+            <label className="block">
+                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Issue date</span>
+                <input
+                    type="date"
+                    value={value.issueDate}
+                    min={value.trainingEnd || undefined}
+                    max={today}
+                    onChange={set("issueDate")}
+                    className={inputCls}
+                />
+            </label>
+            <p className="sm:col-span-3 -mt-1 text-[11.5px] text-slate-500">
+                Printed on the certificate as “Training period: start – end”.
+            </p>
+        </div>
+    );
+}
 
 const copy = async (text) => {
     try {
@@ -53,6 +123,7 @@ export default function CertificatesPage() {
     const [page, setPage] = useState(1);
     const [issueOpen, setIssueOpen] = useState(false);
     const [revokeTarget, setRevokeTarget] = useState(null);
+    const [regenTarget, setRegenTarget] = useState(null);
     const [revoking, setRevoking] = useState(false);
     const search = useDebounce(searchInput.trim(), 300);
 
@@ -143,10 +214,17 @@ export default function CertificatesPage() {
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[820px]">
+                        <table className="w-full min-w-[1000px]">
                             <thead className="bg-slate-50 border-b border-slate-100">
                                 <tr>
-                                    {["Student", "Course", "Certificate no.", "Issued", ""].map((h) => (
+                                    {[
+                                        "Student",
+                                        "Course",
+                                        "Certificate no.",
+                                        "Training period",
+                                        "Issued",
+                                        "",
+                                    ].map((h) => (
                                         <th
                                             key={h}
                                             className="text-left px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-600"
@@ -170,6 +248,11 @@ export default function CertificatesPage() {
                                         </td>
                                         <td className="px-4 py-3 font-mono text-[12.5px] text-slate-700 whitespace-nowrap">
                                             {c.certificate_no}
+                                        </td>
+                                        <td className="px-4 py-3 text-[12.5px] text-slate-600 whitespace-nowrap">
+                                            {c.training_start
+                                                ? `${fmtDay(c.training_start)} – ${fmtDay(c.training_end)}`
+                                                : "—"}
                                         </td>
                                         <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
                                             {fmtDate(c.issued_at)}
@@ -204,6 +287,14 @@ export default function CertificatesPage() {
                                                         <FileDown size={14} />
                                                     </a>
                                                 )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRegenTarget(c)}
+                                                    title="Regenerate with corrected dates"
+                                                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-[12px] font-semibold text-[#3282B8] hover:bg-[#EBF4FF]"
+                                                >
+                                                    <RotateCw size={13} /> Regenerate
+                                                </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => setRevokeTarget(c)}
@@ -262,6 +353,17 @@ export default function CertificatesPage() {
                 />
             )}
 
+            {regenTarget && (
+                <RegenerateModal
+                    cert={regenTarget}
+                    onClose={() => setRegenTarget(null)}
+                    onDone={() => {
+                        setRegenTarget(null);
+                        load();
+                    }}
+                />
+            )}
+
             {revokeTarget && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center">
@@ -303,9 +405,12 @@ export default function CertificatesPage() {
 function IssueCertificateModal({ onClose, onIssued }) {
     const [student, setStudent] = useState(null);
     const [course, setCourse] = useState(null);
-    const [issueDate, setIssueDate] = useState(todayIso());
+    const [dates, setDates] = useState({ trainingStart: "", trainingEnd: todayIso(), issueDate: todayIso() });
     const [enrollments, setEnrollments] = useState(null); // the student's courses
     const [busy, setBusy] = useState(false);
+    // Set after the server says this student already has one for the course
+    const [exists, setExists] = useState(null);
+    const [replace, setReplace] = useState(false);
 
     const loadStudents = useCallback(async (search) => {
         const { data } = await authService.getAllUsers({
@@ -333,20 +438,44 @@ function IssueCertificateModal({ onClose, onIssued }) {
     };
 
     const enrollment = course && enrollments ? enrollments.find((e) => e.course_id === course.id) : null;
+    const startFromEnrollment = enrollment?.enrolled_at ? dayIso(enrollment.enrolled_at) : "";
+
+    // Default the training start to the day they enrolled (still editable)
+    useEffect(() => {
+        if (startFromEnrollment)
+            setDates((d) => (d.trainingStart ? d : { ...d, trainingStart: startFromEnrollment }));
+    }, [startFromEnrollment]);
+
+    const resetExists = () => {
+        setExists(null);
+        setReplace(false);
+    };
 
     const submit = async () => {
         if (!student || !course) return toast.error("Choose a student and a course");
+        const problem = datesError(dates);
+        if (problem) return toast.error(problem);
         setBusy(true);
         try {
-            await certificateService.issue({
+            const { data } = await certificateService.issue({
                 user_id: student.id,
                 course_id: course.id,
-                issue_date: issueDate,
+                issue_date: dates.issueDate,
+                training_start: dates.trainingStart,
+                training_end: dates.trainingEnd,
+                replace: replace || undefined,
             });
-            toast.success(`Certificate issued to ${student.name}`);
+            const no = data?.data?.certificate?.certificate_no;
+            toast.success(
+                replace
+                    ? `Certificate ${no ?? ""} replaced for ${student.name}`
+                    : `Certificate issued to ${student.name}`
+            );
             onIssued();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Could not issue the certificate");
+            const message = err.response?.data?.message || "Could not issue the certificate";
+            if (err.response?.status === 409) setExists(message);
+            else toast.error(message);
         } finally {
             setBusy(false);
         }
@@ -378,6 +507,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                                 onClear={() => {
                                     setStudent(null);
                                     setEnrollments(null);
+                                    resetExists();
                                 }}
                             />
                         ) : (
@@ -405,7 +535,10 @@ function IssueCertificateModal({ onClose, onIssued }) {
                             <Chosen
                                 title={course.title}
                                 subtitle={`Course ID ${course.id}`}
-                                onClear={() => setCourse(null)}
+                                onClear={() => {
+                                    setCourse(null);
+                                    resetExists();
+                                }}
                             />
                         ) : (
                             <SearchPicker
@@ -443,19 +576,24 @@ function IssueCertificateModal({ onClose, onIssued }) {
                         )}
                     </div>
 
-                    <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">
-                            Issue date{" "}
-                            <span className="font-normal text-slate-400">(printed on the certificate)</span>
-                        </label>
-                        <input
-                            type="date"
-                            value={issueDate}
-                            max={todayIso()}
-                            onChange={(e) => setIssueDate(e.target.value || todayIso())}
-                            className={cn(inputCls, "w-48")}
-                        />
-                    </div>
+                    <CertificateDates value={dates} onChange={setDates} />
+
+                    {exists && (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-[12.5px] text-amber-900 space-y-2">
+                            <p className="flex items-start gap-2">
+                                <AlertTriangle size={15} className="shrink-0 mt-0.5" /> {exists}
+                            </p>
+                            <label className="flex items-center gap-2 font-semibold cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={replace}
+                                    onChange={(e) => setReplace(e.target.checked)}
+                                    className="w-4 h-4 accent-[#3282B8]"
+                                />
+                                Replace existing certificate (same number, new dates and PDF)
+                            </label>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
@@ -467,11 +605,88 @@ function IssueCertificateModal({ onClose, onIssued }) {
                     </button>
                     <button
                         onClick={submit}
-                        disabled={busy || !student || !course}
+                        disabled={busy || !student || !course || (exists && !replace)}
                         className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-50"
                     >
                         {busy ? <Loader2 size={15} className="animate-spin" /> : <Award size={15} />}
-                        Issue certificate
+                        {replace ? "Replace certificate" : "Issue certificate"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ─── Regenerate: correct the dates, overwrite the PDF (number unchanged) ──────
+
+function RegenerateModal({ cert, onClose, onDone }) {
+    const [dates, setDates] = useState({
+        trainingStart: dayIso(cert.training_start),
+        trainingEnd: dayIso(cert.training_end) || todayIso(),
+        issueDate: dayIso(cert.issued_at) || todayIso(),
+    });
+    const [busy, setBusy] = useState(false);
+
+    const save = async () => {
+        const problem = datesError(dates);
+        if (problem) return toast.error(problem);
+        setBusy(true);
+        try {
+            const { data } = await certificateService.regenerate(cert.id, {
+                training_start: dates.trainingStart,
+                training_end: dates.trainingEnd,
+                issue_date: dates.issueDate,
+            });
+            toast.success(data?.message || "Certificate regenerated");
+            onDone();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not regenerate the certificate");
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                    <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
+                        <RotateCw size={17} className="text-[#3282B8]" /> Regenerate certificate
+                    </h3>
+                    <button
+                        onClick={onClose}
+                        aria-label="Close"
+                        className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+                <div className="px-6 py-5 space-y-4">
+                    <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 text-[13px]">
+                        <p className="font-semibold text-slate-900">{cert.student_name}</p>
+                        <p className="text-slate-600">{cert.course_title}</p>
+                        <p className="text-slate-500 font-mono text-[12px] mt-1">{cert.certificate_no}</p>
+                    </div>
+                    <CertificateDates value={dates} onChange={setDates} />
+                    <p className="text-[12px] text-slate-500">
+                        The old PDF is replaced. The certificate number and verification link stay the same,
+                        so links already shared keep working.
+                    </p>
+                </div>
+                <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={save}
+                        disabled={busy}
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-50"
+                    >
+                        {busy ? <Loader2 size={15} className="animate-spin" /> : <RotateCw size={15} />}
+                        Regenerate
                     </button>
                 </div>
             </div>

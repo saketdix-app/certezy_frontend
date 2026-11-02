@@ -18,6 +18,7 @@ import api from "./api";
  * ADMIN ONLY:
  *   POST /api/v1/certificates/issue    → issue certificate
  *   GET  /api/v1/certificates/admin/all → all certificates (admin view)
+ *   PUT    /api/v1/certificates/:id     → regenerate with new dates (same number)
  *   DELETE /api/v1/certificates/:id     → revoke certificate
  */
 
@@ -31,11 +32,14 @@ const certificateService = {
     download: (id) => api.get(`/certificates/${id}`, { responseType: "blob" }),
 
     // Admin only
-    // { user_id, course_id, issue_date?: "YYYY-MM-DD" }
+    // { user_id, course_id, issue_date, training_start, training_end, replace? }
     issue: (data) => api.post("/certificates/issue", data),
     // ?search (student, email, course, certificate no.) &page &limit
     getAllAdmin: (params = {}) => api.get("/certificates/admin/all", { params }),
     revoke: (id) => api.delete(`/certificates/${id}`),
+    // New training / issue dates; overwrites the PDF, keeps the number
+    // { training_start, training_end, issue_date } (YYYY-MM-DD)
+    regenerate: (id, data) => api.put(`/certificates/${id}`, data),
 };
 
 export default certificateService;
