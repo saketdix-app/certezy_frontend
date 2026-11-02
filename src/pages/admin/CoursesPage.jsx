@@ -58,6 +58,8 @@ const EMPTY_FORM = {
     pricing_type: "paid",
     price: "",
     original_price: "",
+    // Off by default: everyone pays the USD price with PayPal
+    inr_enabled: false,
     price_inr: "",
     original_price_inr: "",
     level: "beginner",
@@ -212,9 +214,10 @@ export default function CoursesPage() {
             pricing_type: course.pricing_type ?? (Number(course.price) > 0 ? "paid" : "free"),
             price: course.price ?? "",
             original_price: course.original_price ?? "",
-            // The API fills price_inr with the converted USD price when none is set
-            price_inr: course.inr_price_set ? (course.price_inr ?? "") : "",
-            original_price_inr: course.inr_price_set ? (course.original_price_inr ?? "") : "",
+            inr_enabled: Boolean(course.inr_enabled),
+            // The admin's own rupee prices (kept even while rupees are off)
+            price_inr: course.saved_price_inr ?? "",
+            original_price_inr: course.saved_original_price_inr ?? "",
             level: course.level ?? "beginner",
             language: course.language ?? "English",
             status: course.status ?? "draft",
@@ -276,7 +279,8 @@ export default function CoursesPage() {
                 pricing_type: isPaid ? "paid" : "free",
                 price: isPaid ? Number(form.price) : 0,
                 original_price: isPaid && form.original_price !== "" ? Number(form.original_price) : null,
-                // India (₹) prices — empty means "convert from USD"
+                // India (₹) prices — used only when inr_enabled; empty means "convert from USD"
+                inr_enabled: isPaid && Boolean(form.inr_enabled),
                 price_inr: isPaid && form.price_inr !== "" ? Number(form.price_inr) : null,
                 original_price_inr:
                     isPaid && form.price_inr !== "" && form.original_price_inr !== ""
@@ -988,8 +992,28 @@ export default function CoursesPage() {
                                     </>
                                 )}
                             </div>
-                            {/* India prices (₹) — shown to visitors in India, charged via Razorpay */}
+                            {/* Rupees for India — off by default (everyone pays USD with PayPal) */}
                             {form.pricing_type === "paid" && (
+                                <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={form.inr_enabled}
+                                        onChange={(e) => setF("inr_enabled", e.target.checked)}
+                                        className="mt-0.5 w-4 h-4 accent-[#3282B8]"
+                                    />
+                                    <span className="text-[13px] leading-snug">
+                                        <span className="font-semibold text-slate-800">
+                                            Sell in Indian rupees (₹) to visitors from India
+                                        </span>
+                                        <span className="block text-[12px] text-slate-500">
+                                            Off: everyone, including India, sees and pays the US$ price with
+                                            PayPal. On: visitors from India see the ₹ price and pay with
+                                            Razorpay.
+                                        </span>
+                                    </span>
+                                </label>
+                            )}
+                            {form.pricing_type === "paid" && form.inr_enabled && (
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div className="hidden sm:block self-center text-[12px] text-slate-500 leading-snug">
                                         India prices. Leave empty to convert the USD price at today's rate.
@@ -1022,10 +1046,10 @@ export default function CoursesPage() {
                             {form.pricing_type === "paid" && Number(form.price) > 0 && (
                                 <p className="-mt-2 text-[12px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
                                     <span className="flex items-center gap-2">
-                                        Outside India:{" "}
+                                        {form.inr_enabled ? "Outside India:" : "Everyone:"}{" "}
                                         <PriceTag course={{ ...form, price_inr: null }} size="sm" />
                                     </span>
-                                    {form.price_inr !== "" && (
+                                    {form.inr_enabled && form.price_inr !== "" && (
                                         <span className="flex items-center gap-2">
                                             India:{" "}
                                             <span className="font-bold text-primary">

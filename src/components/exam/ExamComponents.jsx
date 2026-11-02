@@ -38,7 +38,7 @@ export function ExamTimer({ duration, onTimeUp, isActive }) {
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
                 isWarning
                     ? "bg-red-50 text-red-600 border border-red-200"
-                    : "bg-blue-50 text-blue-600 border border-blue-200"
+                    : "bg-[#EBF4FB] text-[#3282B8] border border-[#BFDBFE]"
             }`}
         >
             <Clock size={16} />
@@ -58,7 +58,7 @@ export function QuestionNavigator({
     return (
         <div className="w-80 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
+            <div className="bg-gradient-to-r from-[#0F2545] to-[#1E3A5F] text-white p-4">
                 <h3 className="font-semibold text-lg">Question Navigator</h3>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                     <div className="flex items-center gap-1">
@@ -90,7 +90,7 @@ export function QuestionNavigator({
                                 onClick={() => onQuestionSelect(index)}
                                 className={`relative w-12 h-12 rounded-lg font-semibold text-sm transition-all ${
                                     isCurrent
-                                        ? "bg-blue-600 text-white ring-2 ring-blue-300"
+                                        ? "bg-[#3282B8] text-white ring-2 ring-[#3282B8]/30"
                                         : isAnswered
                                           ? "bg-green-100 text-green-700 hover:bg-green-200"
                                           : isFlagged
@@ -117,7 +117,7 @@ export function QuestionNavigator({
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-[#3282B8] h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
                         />
                     </div>
@@ -173,7 +173,7 @@ export function SubmitExamModal({ isOpen, onClose, onSubmit, unansweredCount, fl
                     <button
                         onClick={onSubmit}
                         disabled={isSubmitting}
-                        className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-1 px-4 py-3 bg-[#3282B8] text-white rounded-lg hover:bg-[#2A6FA0] transition-colors font-medium disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                         {isSubmitting ? (
                             <>

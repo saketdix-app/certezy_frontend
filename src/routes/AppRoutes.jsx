@@ -164,7 +164,6 @@ export default function AppRoutes() {
                         <Route path="certificates" element={<CertificatesPage />} />
                         <Route path="payments" element={<PaymentHistoryPage />} />
                         <Route path="profile" element={<ProfilePage />} />
-                        <Route path="course/:courseId/exam/:testId" element={<ExamInterface />} />
                     </Route>
 
                     {/* ── CHECKOUT ── */}
@@ -175,6 +174,11 @@ export default function AppRoutes() {
 
                 {/* ── COURSE PLAYER (full screen, no sidebar/footer) ── */}
                 <Route path="/student/course/:courseId/learn" element={studentOnly(<CoursePlayerPage />)} />
+                {/* Exams: full screen like the real test, no sidebar */}
+                <Route
+                    path="/student/course/:courseId/exam/:testId"
+                    element={studentOnly(<ExamInterface />)}
+                />
 
                 {/* ── ADMIN ── */}
                 <Route
