@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ChevronDown, Loader2, BookOpen, LayoutGrid } from "lucide-react";
+import { ChevronDown, Loader2, BookOpen, LayoutGrid, ShieldCheck } from "lucide-react";
 import { logoutUser } from "@/features/auth/authSlice";
 import categoryService from "@/services/categoryService";
 import Searchbar from "./Searchbar";
-import { MORE_ITEMS, STUDENT_MENU_ITEMS } from "./navbar.data";
+import { ADMIN_PANEL_ITEM, MORE_ITEMS, STUDENT_MENU_ITEMS } from "./navbar.data";
+import { isAdminRole } from "@/config/app";
 import { cn } from "@/lib/utils";
 
 /**
@@ -183,7 +184,10 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                         </div>
 
                         <div className="space-y-0.5">
-                            {STUDENT_MENU_ITEMS.map((item, i) =>
+                            {(isAdminRole(user.role)
+                                ? [ADMIN_PANEL_ITEM, { divider: true }, ...STUDENT_MENU_ITEMS]
+                                : STUDENT_MENU_ITEMS
+                            ).map((item, i) =>
                                 item.divider ? (
                                     <div key={i} className="h-px bg-border !my-2" />
                                 ) : item.danger ? (
@@ -204,9 +208,13 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                         onClick={onClose}
                                         className={cn(
                                             "block px-2 py-2.5 rounded text-[14px] font-medium",
-                                            "transition-colors duration-150 text-text-secondary hover:bg-primary-light hover:text-primary"
+                                            "transition-colors duration-150 hover:bg-primary-light hover:text-primary",
+                                            item.admin
+                                                ? "text-primary font-semibold flex items-center gap-2"
+                                                : "text-text-secondary"
                                         )}
                                     >
+                                        {item.admin && <ShieldCheck size={16} />}
                                         {item.label}
                                     </Link>
                                 )

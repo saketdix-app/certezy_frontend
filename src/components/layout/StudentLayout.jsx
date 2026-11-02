@@ -12,6 +12,7 @@ import {
     Menu,
     X,
     ChevronRight,
+    ShieldCheck,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -19,6 +20,7 @@ import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import ProfilePage from "@/pages/student/ProfilePage";
 import Logo from "@/components/shared/Logo";
+import { isAdminRole } from "@/config/app";
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/student/dashboard" },
@@ -118,6 +120,17 @@ export default function StudentLayout() {
                             );
                         })}
                     </div>
+
+                    {/* Admins using the learner side can jump back */}
+                    {isAdminRole(user?.role) && (
+                        <Link
+                            to="/admin/dashboard"
+                            className="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] text-[#3282B8] no-underline hover:bg-[#DBEAFE] transition-colors"
+                        >
+                            <ShieldCheck size={17} className="shrink-0" />
+                            <span style={{ fontSize: "13.5px", fontWeight: 700 }}>Admin Panel</span>
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Bottom — user + logout */}
