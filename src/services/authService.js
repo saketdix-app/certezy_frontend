@@ -26,6 +26,9 @@ const authService = {
     getAllUsers: (params = {}) => api.get("/auth/users/all", { params }),
     getUserById: (id) => api.get(`/auth/users/${id}`),
     updateUserStatus: (id, data) => api.put(`/auth/users/${id}/status`, data),
+    // Delete (restorable for 30 days) / restore — admins only
+    deleteUser: (id) => api.delete(`/auth/users/${id}`),
+    restoreUser: (id) => api.post(`/auth/users/${id}/restore`),
 };
 
 export default authService;

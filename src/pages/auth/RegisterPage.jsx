@@ -193,7 +193,7 @@ export default function RegisterPage() {
                     />
 
                     <div style={{ position: "relative", zIndex: 1 }}>
-                        <Logo size="lg" style={{ marginBottom: "48px" }} />
+                        <Logo to="/" size="lg" style={{ marginBottom: "48px" }} />
 
                         <h2
                             style={{
@@ -303,7 +303,7 @@ export default function RegisterPage() {
                 >
                     <div style={{ width: "100%", maxWidth: "380px" }}>
                         <div className="flex md:hidden items-center gap-2 mb-8">
-                            <Logo size="sm" dark />
+                            <Logo to="/" size="sm" dark />
                         </div>
 
                         <h1

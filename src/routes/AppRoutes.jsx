@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { Routes, Route, Outlet, Link, Navigate } from "react-router-dom";
+import { lazy, Suspense, useEffect, useRef } from "react";
+import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router-dom";
 
 import NavBarIndex from "@/components/layout/Navbar/NavBarIndex";
 import Footer from "@/components/layout/Footer";
@@ -100,7 +100,25 @@ function NotFound() {
 
 const studentOnly = (element) => <ProtectedRoute allowedRoles={["student"]}>{element}</ProtectedRoute>;
 
+/**
+ * Browser tab title while moving around the app. The first page load keeps the
+ * page's own title from the server (what Google and AI crawlers read); later
+ * in-app navigation shows "CERTEZY". Pages can still set a more specific title.
+ */
+function useTabTitle() {
+    const { pathname } = useLocation();
+    const first = useRef(true);
+    useEffect(() => {
+        if (first.current) {
+            first.current = false;
+            return;
+        }
+        document.title = "CERTEZY";
+    }, [pathname]);
+}
+
 export default function AppRoutes() {
+    useTabTitle();
     return (
         <Suspense fallback={<PageLoader />}>
             <Routes>

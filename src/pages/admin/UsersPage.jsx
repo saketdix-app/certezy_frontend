@@ -25,6 +25,8 @@ import {
     Edit2,
     Trash2,
     AlertCircle,
+    RotateCcw,
+    Archive,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -107,7 +109,7 @@ const fmtDate = (d) =>
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function UsersPage() {
-    const [tab, setTab] = useState("students"); // "students" | "subadmins"
+    const [tab, setTab] = useState("students"); // "students" | "subadmins" | "deleted"
 
     // Students state
     const [students, setStudents] = useState([]);
@@ -115,7 +117,16 @@ export default function UsersPage() {
     const [stuSearch, setStuSearch] = useState("");
     const [stuStatus, setStuStatus] = useState("");
     const [stuPage, setStuPage] = useState(1);
-    const [, setStuTotal] = useState(0);
+    const [stuTotal, setStuTotal] = useState(0);
+    const [counts, setCounts] = useState({ active: 0, blocked: 0 });
+
+    // Deleted users (recoverable for 30 days)
+    const [deletedUsers, setDeletedUsers] = useState([]);
+    const [delLoading, setDelLoading] = useState(false);
+    const [delSearch, setDelSearch] = useState("");
+    const [deleteTarget, setDeleteTarget] = useState(null); // user
+    const [deleteConfirm, setDeleteConfirm] = useState("");
+    const [restoringId, setRestoringId] = useState(null);
 
     // Sub-admins state
     const [subAdmins, setSubAdmins] = useState([]);
@@ -143,21 +154,93 @@ export default function UsersPage() {
                 page: stuPage,
                 limit: PER_PAGE,
                 ...(stuSearch && { search: stuSearch }),
+                ...(stuStatus && { status: stuStatus }),
             };
             const { data } = await authService.getAllUsers(params);
-            const list = data?.data ?? [];
-
-            // Filter by role since backend not filtering properly
-            const studentsOnly = Array.isArray(list) ? list.filter((user) => user.role === "student") : [];
-
-            setStudents(studentsOnly);
-            setStuTotal(studentsOnly.length); // Use filtered count instead of pagination
-        } catch (err) {
+            setStudents(data?.data ?? []);
+            setStuTotal(data?.pagination?.total ?? 0);
+        } catch {
             toast.error("Failed to load students");
         } finally {
             setStuLoading(false);
         }
-    }, [stuPage, stuSearch]);
+    }, [stuPage, stuSearch, stuStatus]);
+
+    // Active / blocked totals for the stat cards
+    const loadCounts = useCallback(async () => {
+        try {
+            const [a, b] = await Promise.all(
+                ["active", "blocked"].map((status) =>
+                    authService.getAllUsers({ role: "student", status, limit: 1 })
+                )
+            );
+            setCounts({
+                active: a.data?.pagination?.total ?? 0,
+                blocked: b.data?.pagination?.total ?? 0,
+            });
+        } catch {
+            /* cards show 0 */
+        }
+    }, []);
+
+    useEffect(() => {
+        loadCounts();
+    }, [loadCounts]);
+
+    // ── Deleted users ──────────────────────────────────────────────────────────
+    const loadDeleted = useCallback(async () => {
+        setDelLoading(true);
+        try {
+            const { data } = await authService.getAllUsers({
+                deleted: 1,
+                limit: 100,
+                ...(delSearch && { search: delSearch }),
+            });
+            setDeletedUsers(data?.data ?? []);
+        } catch {
+            toast.error("Failed to load deleted users");
+        } finally {
+            setDelLoading(false);
+        }
+    }, [delSearch]);
+
+    useEffect(() => {
+        if (tab === "deleted") loadDeleted();
+    }, [tab, loadDeleted]);
+
+    const handleDeleteConfirm = async () => {
+        if (!deleteTarget) return;
+        setBlockLoading(true);
+        try {
+            const { data } = await authService.deleteUser(deleteTarget.id);
+            toast.success(data?.message || "User deleted");
+            setDeleteTarget(null);
+            setDeleteConfirm("");
+            loadStudents();
+            loadCounts();
+            loadSubAdmins();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not delete user");
+        } finally {
+            setBlockLoading(false);
+        }
+    };
+
+    const handleRestore = async (user) => {
+        setRestoringId(user.id);
+        try {
+            const { data } = await authService.restoreUser(user.id);
+            toast.success(data?.message || "User restored");
+            setDeletedUsers((list) => list.filter((u) => u.id !== user.id));
+            loadStudents();
+            loadCounts();
+            loadSubAdmins();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not restore user");
+        } finally {
+            setRestoringId(null);
+        }
+    };
 
     useEffect(() => {
         loadStudents();
@@ -190,18 +273,12 @@ export default function UsersPage() {
     }, [loadSubAdmins]);
 
     // ── Derived stats ──────────────────────────────────────────────────────────
-    const activeStudents = students.filter((u) => u.is_active === 1).length;
-    const blockedStudents = students.filter((u) => u.is_active !== 1).length;
+    const activeStudents = counts.active;
+    const blockedStudents = counts.blocked;
 
-    // ── Filter students ────────────────────────────────────────────────────────
-    const filteredStudents = students.filter((u) => {
-        const q = stuSearch.toLowerCase();
-        const matchSearch = !q || u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
-        const matchStatus = !stuStatus || (stuStatus === "active" ? u.is_active === 1 : u.is_active !== 1);
-        return matchSearch && matchStatus;
-    });
-    const totalPages = Math.ceil(filteredStudents.length / PER_PAGE);
-    const paginated = filteredStudents.slice((stuPage - 1) * PER_PAGE, stuPage * PER_PAGE);
+    // Students come from the server one page at a time (search + status applied there)
+    const totalPages = Math.ceil(stuTotal / PER_PAGE);
+    const paginated = students;
 
     // ── Block / Unblock ────────────────────────────────────────────────────────
     const handleBlockConfirm = async () => {
@@ -213,6 +290,7 @@ export default function UsersPage() {
             toast.success(`User ${blockTarget.action === "block" ? "blocked" : "unblocked"}!`);
             setBlockTarget(null);
             loadStudents();
+            loadCounts();
         } catch (err) {
             toast.error(err.response?.data?.message || "Failed to update status");
         } finally {
@@ -341,7 +419,7 @@ export default function UsersPage() {
                 {[
                     {
                         label: "Total Users",
-                        value: students.length + subAdmins.length,
+                        value: activeStudents + blockedStudents + subAdmins.length,
                         icon: Users,
                         ibg: "#EBF4FF",
                         ic: "#3282B8",
@@ -398,6 +476,7 @@ export default function UsersPage() {
                 {[
                     { key: "students", label: "Students List" },
                     { key: "subadmins", label: "Sub-Admins" },
+                    { key: "deleted", label: "Deleted (30-day recovery)" },
                 ].map(({ key, label }) => (
                     <button
                         key={key}
@@ -453,8 +532,8 @@ export default function UsersPage() {
                         <div
                             className="grid px-5 py-3 bg-slate-50 border-b border-slate-100"
                             style={{
-                                gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 210px",
-                                minWidth: 800,
+                                gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 250px",
+                                minWidth: 840,
                             }}
                         >
                             {["User", "Mobile", "Joined", "Status", "Action"].map((h) => (
@@ -479,8 +558,8 @@ export default function UsersPage() {
                                         key={user.id}
                                         className="grid px-5 py-3.5 border-b border-slate-50 hover:bg-slate-50/60 transition-colors items-center"
                                         style={{
-                                            gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 210px",
-                                            minWidth: 800,
+                                            gridTemplateColumns: "minmax(220px, 1fr) 120px 130px 110px 250px",
+                                            minWidth: 840,
                                         }}
                                     >
                                         {/* User */}
@@ -551,6 +630,14 @@ export default function UsersPage() {
                                                     <UserCheck size={13} /> Unblock
                                                 </button>
                                             )}
+                                            <button
+                                                onClick={() => setDeleteTarget(user)}
+                                                title="Delete user (can be restored for 30 days)"
+                                                aria-label={`Delete ${user.name}`}
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
                                         </div>
                                     </div>
                                 );
@@ -560,9 +647,7 @@ export default function UsersPage() {
                         {/* Pagination */}
                         {!stuLoading && totalPages > 1 && (
                             <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
-                                <p className="text-[12.5px] text-slate-500">
-                                    {filteredStudents.length} students
-                                </p>
+                                <p className="text-[12.5px] text-slate-500">{stuTotal} students</p>
                                 <div className="flex items-center gap-1.5">
                                     <button
                                         onClick={() => setStuPage((p) => Math.max(1, p - 1))}
@@ -640,6 +725,152 @@ export default function UsersPage() {
                         ))}
                     </div>
                 ))}
+
+            {/* ── TAB 3: Deleted users ── */}
+            {tab === "deleted" && (
+                <>
+                    <div
+                        className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3"
+                        style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
+                    >
+                        <p className="text-[12.5px] text-slate-500 flex items-start gap-2">
+                            <Archive size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                            Deleted users can&apos;t sign in. Restore them within 30 days to bring back their
+                            account, courses, progress and certificates. After 30 days their data is erased
+                            permanently (payment records are kept for accounting).
+                        </p>
+                        <div className="relative">
+                            <Search
+                                size={15}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            />
+                            <input
+                                value={delSearch}
+                                onChange={(e) => setDelSearch(e.target.value)}
+                                placeholder="Search deleted users by name or email..."
+                                className={cn(inputCls, "pl-10")}
+                            />
+                        </div>
+                    </div>
+                    <div
+                        className="bg-white rounded-2xl border border-slate-100 overflow-x-auto"
+                        style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
+                    >
+                        {delLoading ? (
+                            <TableSkeleton rows={4} />
+                        ) : deletedUsers.length === 0 ? (
+                            <EmptyRow message="No deleted users" />
+                        ) : (
+                            deletedUsers.map((user) => {
+                                const daysLeft = Math.max(
+                                    0,
+                                    Math.ceil((new Date(user.restore_until) - Date.now()) / 86400000)
+                                );
+                                return (
+                                    <div
+                                        key={user.id}
+                                        className="flex items-center gap-4 px-5 py-3.5 border-b border-slate-50"
+                                        style={{ minWidth: 640 }}
+                                    >
+                                        <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-[13px] font-extrabold shrink-0">
+                                            {user.name?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-[13px] font-bold text-slate-900 truncate">
+                                                {user.name}{" "}
+                                                <span className="text-[11px] font-semibold text-slate-400">
+                                                    {user.role === "sub_admin" ? "· Sub-admin" : "· Student"}
+                                                </span>
+                                            </p>
+                                            <p className="text-[11.5px] text-slate-400 truncate">
+                                                {user.email}
+                                            </p>
+                                        </div>
+                                        <div className="text-[12px] text-slate-500 w-40 shrink-0">
+                                            Deleted {fmtDate(user.deleted_at)}
+                                            <p
+                                                className={cn(
+                                                    "font-semibold",
+                                                    daysLeft <= 5 ? "text-red-600" : "text-amber-600"
+                                                )}
+                                            >
+                                                {daysLeft} day{daysLeft === 1 ? "" : "s"} left to restore
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleRestore(user)}
+                                            disabled={restoringId === user.id}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 text-[12px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-60 shrink-0"
+                                        >
+                                            {restoringId === user.id ? (
+                                                <Loader2 size={13} className="animate-spin" />
+                                            ) : (
+                                                <RotateCcw size={13} />
+                                            )}
+                                            Restore
+                                        </button>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* ── Delete Modal ── */}
+            {deleteTarget && (
+                <Overlay
+                    onClose={() => {
+                        setDeleteTarget(null);
+                        setDeleteConfirm("");
+                    }}
+                >
+                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
+                        <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                            <Trash2 size={26} className="text-red-500" />
+                        </div>
+                        <h3 className="text-[17px] font-extrabold text-slate-900 mb-2">
+                            Delete {deleteTarget.name}?
+                        </h3>
+                        <p className="text-[13px] text-slate-500 leading-relaxed mb-4">
+                            They are signed out and can&apos;t sign in. You can restore them from the{" "}
+                            <b>Deleted</b> tab for 30 days. After that their courses, progress, test results,
+                            certificates and reviews are erased permanently.
+                        </p>
+                        <label className="block text-left text-[12px] font-semibold text-slate-600 mb-1.5">
+                            Type <span className="font-mono text-red-600">DELETE</span> to confirm
+                        </label>
+                        <input
+                            value={deleteConfirm}
+                            onChange={(e) => setDeleteConfirm(e.target.value)}
+                            className={cn(inputCls, "mb-4")}
+                            autoFocus
+                        />
+                        <div className="space-y-2.5">
+                            <button
+                                onClick={handleDeleteConfirm}
+                                disabled={blockLoading || deleteConfirm.trim().toUpperCase() !== "DELETE"}
+                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13.5px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors disabled:opacity-50"
+                            >
+                                {blockLoading ? (
+                                    <Loader2 size={15} className="animate-spin" />
+                                ) : (
+                                    "Delete user"
+                                )}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setDeleteTarget(null);
+                                    setDeleteConfirm("");
+                                }}
+                                className="w-full py-3 rounded-xl text-[13.5px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </Overlay>
+            )}
 
             {/* ── Block / Unblock Modal ── */}
             {blockTarget && (
