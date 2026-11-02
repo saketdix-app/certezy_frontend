@@ -113,6 +113,8 @@ function SendDiscountForm({ onSent }) {
 
     const usdBase = Number(selectedCourse?.price || 0);
     const inrBase = Number(selectedCourse?.price_inr || 0);
+    // Rupee price only for courses that sell in rupees (Admin → Courses)
+    const sellsInr = Boolean(selectedCourse?.inr_enabled) && inrBase > 0;
 
     const onUsdChange = (value) => {
         setPriceUsd(value);
@@ -143,7 +145,7 @@ function SendDiscountForm({ onSent }) {
         if (recipientMode === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
             return toast.error("Please enter a valid email address");
         const usd = Number(priceUsd);
-        const inr = priceInr === "" ? null : Number(priceInr);
+        const inr = !sellsInr || priceInr === "" ? null : Number(priceInr);
         if (!(usd >= 0) || priceUsd === "" || usd >= usdBase)
             return toast.error(`US price must be lower than ${formatMoney(usdBase, "USD")}`);
         if (inr != null && inrBase > 0 && !(inr >= 1 && inr < inrBase))
@@ -368,9 +370,9 @@ function SendDiscountForm({ onSent }) {
                         <label className="block text-[13px] font-semibold text-slate-700 mb-2">
                             Discounted price
                         </label>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className={cn("grid grid-cols-1 gap-3", sellsInr && "sm:grid-cols-2")}>
                             <PriceField
-                                label="Outside India (US$)"
+                                label={sellsInr ? "Outside India (US$)" : "Price (US$)"}
                                 symbol="$"
                                 base={usdBase}
                                 currency="USD"
@@ -378,27 +380,30 @@ function SendDiscountForm({ onSent }) {
                                 onChange={onUsdChange}
                                 disabled={!selectedCourse}
                             />
-                            <PriceField
-                                label="India (₹)"
-                                symbol="₹"
-                                base={inrBase}
-                                currency="INR"
-                                value={priceInr}
-                                onChange={(v) => {
-                                    setInrEdited(true);
-                                    setPriceInr(v);
-                                }}
-                                disabled={!selectedCourse}
-                                hint={
-                                    selectedCourse && !inrEdited && priceInr
-                                        ? "Same % off as the US price — edit to set your own"
-                                        : null
-                                }
-                            />
+                            {sellsInr && (
+                                <PriceField
+                                    label="India (₹)"
+                                    symbol="₹"
+                                    base={inrBase}
+                                    currency="INR"
+                                    value={priceInr}
+                                    onChange={(v) => {
+                                        setInrEdited(true);
+                                        setPriceInr(v);
+                                    }}
+                                    disabled={!selectedCourse}
+                                    hint={
+                                        selectedCourse && !inrEdited && priceInr
+                                            ? "Same % off as the US price — edit to set your own"
+                                            : null
+                                    }
+                                />
+                            )}
                         </div>
                         <p className="mt-2 text-[11.5px] text-slate-500">
-                            Visitors from India see and pay the ₹ price (Razorpay); everyone else pays the US$
-                            price (PayPal).
+                            {sellsInr
+                                ? "Visitors from India see and pay the ₹ price (Razorpay); everyone else pays the US$ price (PayPal)."
+                                : "This course is sold in US$ to everyone (PayPal)."}
                         </p>
                     </div>
 

@@ -143,9 +143,9 @@ export default function ExamInterface() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-12 h-12 border-4 border-[#3282B8] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading exam...</p>
                 </div>
             </div>
@@ -155,7 +155,7 @@ export default function ExamInterface() {
     if (showResults && results) {
         return (
             <div
-                className="min-h-screen bg-gray-50"
+                className="min-h-screen bg-[#F1F5F9]"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
                 <ExamResults
@@ -214,7 +214,7 @@ function ExamScreen({
 
     if (!currentQuestion) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#F4F4F4] text-[15px] text-[#444]">
+            <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9] text-[15px] text-[#475569]">
                 This exam has no questions yet.
             </div>
         );
@@ -230,10 +230,11 @@ function ExamScreen({
                 total={questions.length}
             />
 
-            <main className="flex-1 overflow-y-auto bg-[#F4F4F4]">
-                <div className="min-h-full bg-white mx-0 sm:mx-3 px-5 sm:px-10 py-7 sm:py-9 shadow-[0_0_0_1px_#E3E3E3]">
+            <main className="flex-1 overflow-y-auto bg-[#F1F5F9] px-3 sm:px-6 py-5 sm:py-8">
+                <div className="max-w-[920px] mx-auto bg-white rounded-2xl border border-[#E2E8F0] px-5 sm:px-10 py-7 sm:py-9 shadow-[0_1px_8px_rgba(15,23,42,0.05)]">
                     <SimulationQuestion
                         key={currentQuestion.id}
+                        number={currentQuestionIndex + 1}
                         question={currentQuestion}
                         answer={answers[currentQuestion.id]}
                         onAnswerChange={onAnswerChange}

@@ -49,7 +49,7 @@ export function QuestionRenderer({
                                   ? "bg-red-50 border-red-300"
                                   : "bg-gray-50 border-gray-200"
                             : isSelected
-                              ? "bg-blue-50 border-blue-300"
+                              ? "bg-[#EBF4FB] border-blue-300"
                               : "bg-white border-gray-200 hover:bg-gray-50"
                     }`}
                 >
@@ -91,7 +91,7 @@ export function QuestionRenderer({
                             {question.question}
                         </h3>
                         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md font-medium">
+                            <span className="px-2 py-1 bg-[#DBEAFE] text-[#2A6FA0] rounded-md font-medium">
                                 {question.type === "true_false"
                                     ? "True / False"
                                     : isSingleChoice(question)
@@ -119,12 +119,12 @@ export function QuestionRenderer({
             {/* Explanation */}
             {showExplanation && question.explanation && (
                 <div className="px-6 pb-6">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="bg-[#EBF4FB] border border-[#BFDBFE] rounded-lg p-4">
                         <div className="flex items-start gap-2">
-                            <Info size={16} className="text-blue-600 mt-0.5" />
+                            <Info size={16} className="text-[#3282B8] mt-0.5" />
                             <div>
                                 <h4 className="font-semibold text-blue-900 mb-1">Explanation</h4>
-                                <p className="text-blue-800 text-sm leading-relaxed">
+                                <p className="text-[#1E5F8C] text-sm leading-relaxed">
                                     {question.explanation}
                                 </p>
                             </div>
@@ -148,7 +148,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
 
     const getGradeColor = (percentage) => {
         if (percentage >= 90) return "text-green-600";
-        if (percentage >= 70) return "text-blue-600";
+        if (percentage >= 70) return "text-[#3282B8]";
         if (percentage >= 50) return "text-yellow-600";
         return "text-red-600";
     };
@@ -301,14 +301,14 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                         </div>
 
                                         {question.explanation && (
-                                            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                                            <div className="mt-3 p-3 bg-[#EBF4FB] border border-[#BFDBFE] rounded">
                                                 <div className="flex items-start gap-2">
-                                                    <Info size={14} className="text-blue-600 mt-0.5" />
+                                                    <Info size={14} className="text-[#3282B8] mt-0.5" />
                                                     <div>
                                                         <span className="font-medium text-blue-900 text-sm">
                                                             Explanation:{" "}
                                                         </span>
-                                                        <span className="text-blue-800 text-sm">
+                                                        <span className="text-[#1E5F8C] text-sm">
                                                             {question.explanation}
                                                         </span>
                                                     </div>
@@ -328,7 +328,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                 {onRetry && (
                     <button
                         onClick={onRetry}
-                        className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        className="flex-1 px-6 py-3 bg-[#3282B8] text-white rounded-lg hover:bg-[#2A6FA0] transition-colors font-medium"
                     >
                         {passed ? "Retake Exam" : "Retry Exam"}
                     </button>
@@ -337,7 +337,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                     onClick={onBackToCourse}
                     className={`px-6 py-3 rounded-lg transition-colors font-medium ${
                         passed && !onRetry
-                            ? "bg-blue-600 text-white hover:bg-blue-700"
+                            ? "bg-[#3282B8] text-white hover:bg-[#2A6FA0]"
                             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     }`}
                 >

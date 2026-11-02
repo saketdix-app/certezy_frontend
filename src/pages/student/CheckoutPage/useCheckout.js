@@ -90,9 +90,10 @@ export function useCheckout(courseId) {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // India (by IP) pays in ₹ with Razorpay, everyone else in $ with PayPal —
-    // decided and enforced by the server, not selectable here
-    const currency = useCurrency();
+    // India (by IP) pays in ₹ with Razorpay — only on courses that sell in
+    // rupees; everyone else pays $ with PayPal. Enforced by the server too.
+    const regionCurrency = useCurrency();
+    const currency = regionCurrency === "INR" && course?.inr_enabled ? "INR" : "USD";
     const method = currency === "INR" ? "razorpay" : "paypal";
     const setMethod = useCallback(() => {}, []);
     const [paying, setPaying] = useState(false);
