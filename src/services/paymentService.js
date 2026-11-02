@@ -27,6 +27,9 @@ const paymentService = {
     paypalCreateOrder: (data) => api.post("/payments/paypal/create-order", data),
     paypalCapture: (data) => api.post("/payments/paypal/capture", data),
 
+    // Admin: check Razorpay / PayPal keys (no money moves)
+    checkGateways: () => api.get("/payments/admin/gateways"),
+
     // Admin endpoints
     getAllPayments: (params = {}) => {
         const queryParams = new URLSearchParams();

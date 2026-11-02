@@ -14,7 +14,7 @@ const retryWithBackoff = async (fn, maxRetries = 3, delay = 1000) => {
         try {
             return await fn();
         } catch (err) {
-            if (i === maxRetries - 1) throw err;
+            if (err?.response || i === maxRetries - 1) throw err;
             await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)));
         }
     }
@@ -30,9 +30,13 @@ const getErrorMessage = (error) => {
     if (error.message === "cancelled") {
         return "Payment cancelled";
     }
+    // Server / gateway reason (e.g. "Razorpay could not start the payment: …")
+    const serverMessage = error.response?.data?.message;
+    if (serverMessage) return serverMessage;
     if (error.message === "Verification failed") {
         return "Payment verification failed. Contact support if amount was deducted";
     }
+    if (error.detail) return error.detail;
     if (error.code === "NETWORK_ERROR" || error.message.includes("network")) {
         return "Check your internet connection";
     }
@@ -246,8 +250,8 @@ export function useCheckout(courseId) {
                         );
 
                         if (isMounted.current) resolve({ status: "success" });
-                    } catch {
-                        reject(new Error("Verification failed"));
+                    } catch (err) {
+                        reject(err?.response ? err : new Error("Verification failed"));
                     }
                 },
 
@@ -256,61 +260,112 @@ export function useCheckout(courseId) {
                 },
             });
 
+            // Card declined, bank error, etc. — Razorpay's own description
+            rzp.on("payment.failed", (resp) => {
+                const e = new Error("gateway");
+                e.detail = resp?.error?.description || "Payment failed at the bank / gateway";
+                reject(e);
+            });
+
             rzp.open();
         });
     }, [course, user, createOrder]);
 
     // ── PayPal Payment ─────────────────────────
     const payPaypal = useCallback(async () => {
-        const order = await createOrder("paypal");
+        // Open the window first (in the click) so popup blockers allow it. If it's
+        // blocked (many phones / strict browsers) the whole tab goes to PayPal and
+        // /payment/paypal/return finishes the payment.
+        if (paypalPoll.current) clearInterval(paypalPoll.current);
+        paypalWindow.current = window.open("", "PayPal", "width=600,height=760");
+        const sameTab = !paypalWindow.current;
 
-        const baseUrl =
+        let order;
+        try {
+            order = await createOrder("paypal");
+        } catch (err) {
+            paypalWindow.current?.close();
+            throw err;
+        }
+
+        // PayPal's own approval link always matches the server's sandbox / live mode
+        const fallbackBase =
             import.meta.env.VITE_PAYPAL_MODE === "live"
                 ? "https://www.paypal.com/checkoutnow"
                 : "https://www.sandbox.paypal.com/checkoutnow";
+        const approveUrl = order.approve_url || `${fallbackBase}?token=${order.paypal_order_id}`;
 
-        // Prevent duplicate polling instances
-        if (paypalPoll.current) {
-            clearInterval(paypalPoll.current);
+        // Lets /payment/paypal/return finish the payment if this tab is gone (mobile)
+        try {
+            localStorage.setItem(
+                "certezy_paypal_pending",
+                JSON.stringify({
+                    payment_id: order.payment_id,
+                    paypal_order_id: order.paypal_order_id,
+                    course_id: course.id,
+                })
+            );
+        } catch {
+            /* storage unavailable — the popup flow still works */
         }
-
-        paypalWindow.current = window.open(
-            `${baseUrl}?token=${order.paypal_order_id}`,
-            "PayPal",
-            "width=600,height=700"
-        );
-
-        if (!paypalWindow.current) throw new Error("Popup blocked");
+        if (sameTab) {
+            window.location.assign(approveUrl);
+            return new Promise(() => {}); // leaving the page
+        }
+        paypalWindow.current.location.href = approveUrl;
 
         return new Promise((resolve, reject) => {
-            // Set timeout for polling
-            paypalTimeout.current = setTimeout(() => {
-                clearInterval(paypalPoll.current);
-                paypalWindow.current?.close();
-                reject(new Error("Payment timeout"));
-            }, 30000);
-
-            paypalPoll.current = setInterval(async () => {
-                if (!paypalWindow.current?.closed) return;
-
+            let settled = false;
+            const finish = (fn) => {
+                if (settled) return;
+                settled = true;
                 clearInterval(paypalPoll.current);
                 clearTimeout(paypalTimeout.current);
-
+                window.removeEventListener("message", onMessage);
+                fn();
+            };
+            const capture = async () => {
                 try {
-                    await retryWithBackoff(() =>
-                        paymentService.paypalCapture({
-                            payment_id: order.payment_id,
-                            paypal_order_id: order.paypal_order_id,
-                        })
-                    );
+                    await paymentService.paypalCapture({
+                        payment_id: order.payment_id,
+                        paypal_order_id: order.paypal_order_id,
+                    });
+                    try {
+                        localStorage.removeItem("certezy_paypal_pending");
+                    } catch {
+                        /* ignore */
+                    }
+                    finish(() => isMounted.current && resolve({ status: "success" }));
+                } catch (err) {
+                    const notApproved = /not approved|not completed/i.test(err.response?.data?.message || "");
+                    finish(() => reject(notApproved ? new Error("cancelled") : err));
+                }
+            };
 
-                    if (isMounted.current) resolve({ status: "success" });
-                } catch {
-                    reject(new Error("Verification failed"));
+            // The return / cancel page posts its result, then closes itself
+            const onMessage = (event) => {
+                if (event.origin !== window.location.origin || event.data?.source !== "certezy-paypal")
+                    return;
+                if (event.data.status === "approved") capture();
+                else finish(() => reject(new Error("cancelled")));
+            };
+            window.addEventListener("message", onMessage);
+
+            // Window closed by hand: try to capture (succeeds only if approved)
+            paypalPoll.current = setInterval(() => {
+                if (paypalWindow.current?.closed && !settled) {
+                    clearInterval(paypalPoll.current);
+                    setTimeout(() => !settled && capture(), 800);
                 }
             }, 1000);
+
+            // Generous limit — logging in to PayPal and paying takes minutes
+            paypalTimeout.current = setTimeout(
+                () => finish(() => reject(new Error("Payment timeout"))),
+                15 * 60 * 1000
+            );
         });
-    }, [createOrder]);
+    }, [createOrder, course]);
 
     // ── Main Payment Handler ─────────────────────────
     const handlePay = useCallback(async () => {

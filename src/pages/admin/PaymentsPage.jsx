@@ -18,6 +18,7 @@ import {
 import toast from "react-hot-toast";
 
 import paymentService from "@/services/paymentService";
+import GatewayStatus from "@/components/admin/GatewayStatus";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -179,6 +180,9 @@ export default function PaymentsPage() {
                     Export
                 </button>
             </div>
+
+            {/* Razorpay / PayPal key check */}
+            <GatewayStatus />
 
             {/* Stats Cards */}
             {stats && (
