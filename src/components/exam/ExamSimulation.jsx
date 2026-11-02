@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { formatClock, isAnswered } from "@/lib/exam";
-import { Clock, ListOrdered, Flag, ChevronLeft, ChevronRight, LayoutGrid, X, Check } from "lucide-react";
+import {
+    Clock,
+    ListOrdered,
+    Flag,
+    ChevronLeft,
+    ChevronRight,
+    LayoutGrid,
+    X,
+    Check,
+    LogOut,
+} from "lucide-react";
 import Logo from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +26,7 @@ const FONT = "'Plus Jakarta Sans', system-ui, sans-serif";
 const NAVY = "#0F2545";
 const BLUE = "#3282B8";
 
-export function ExamTopBar({ title, secondsLeft, current, total, hasTimer }) {
+export function ExamTopBar({ title, secondsLeft, current, total, hasTimer, onExit }) {
     const warning = hasTimer && secondsLeft <= 300;
     return (
         <header className="shrink-0 text-white" style={{ background: NAVY, fontFamily: FONT }}>
@@ -44,6 +54,16 @@ export function ExamTopBar({ title, secondsLeft, current, total, hasTimer }) {
                         <ListOrdered size={15} aria-hidden="true" />
                         {current} of {total}
                     </span>
+                    {onExit && (
+                        <button
+                            type="button"
+                            onClick={onExit}
+                            className="flex items-center gap-1.5 rounded-lg border border-white/20 px-2.5 py-1.5 font-semibold hover:bg-white/10 transition-colors"
+                        >
+                            <LogOut size={15} aria-hidden="true" />
+                            <span className="hidden sm:inline">Exit</span>
+                        </button>
+                    )}
                 </div>
             </div>
             {/* Progress through the questions */}
