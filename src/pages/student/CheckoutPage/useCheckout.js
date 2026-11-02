@@ -7,7 +7,7 @@ import courseService from "@/services/courseService";
 import discountService from "@/services/discountService";
 import { fetchMe, selectUser } from "@/features/auth/authSlice";
 import { useSearchParams } from "react-router-dom";
-import { useCurrency, setCurrency } from "@/lib/currency";
+import { useCurrency } from "@/lib/currency";
 
 // ── Utility Functions ─────────────────────────
 const retryWithBackoff = async (fn, maxRetries = 3, delay = 1000) => {
@@ -90,11 +90,11 @@ export function useCheckout(courseId) {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // India (INR) pays with Razorpay, everyone else (USD) with PayPal.
-    // Picking the other method switches the currency.
+    // India (by IP) pays in ₹ with Razorpay, everyone else in $ with PayPal —
+    // decided and enforced by the server, not selectable here
     const currency = useCurrency();
     const method = currency === "INR" ? "razorpay" : "paypal";
-    const setMethod = useCallback((m) => setCurrency(m === "razorpay" ? "INR" : "USD"), []);
+    const setMethod = useCallback(() => {}, []);
     const [paying, setPaying] = useState(false);
     const [scriptLoading, setScriptLoading] = useState(false);
 
