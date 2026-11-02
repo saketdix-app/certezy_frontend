@@ -1,3 +1,4 @@
+import { useCurrency } from "@/lib/currency";
 import { Link } from "react-router-dom";
 import { Clock, Users, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -49,7 +50,8 @@ export default function CourseCard({ course }) {
         certificate_eligible,
     } = course;
 
-    const pricing = getPricing(course);
+    const currency = useCurrency(); // ₹ in India, $ elsewhere
+    const pricing = getPricing(course, currency);
     const duration = formatDuration(total_duration);
     const highlight = getCourseHighlight(course);
     const badge = getCourseBadge(course, pricing, highlight);

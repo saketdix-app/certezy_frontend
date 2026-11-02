@@ -1,3 +1,4 @@
+import { useCurrency } from "@/lib/currency";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Clock, BarChart2, BookOpen, Award, Globe, PlayCircle, CheckCircle, Loader2 } from "lucide-react";
@@ -65,9 +66,10 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
 
 export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll, enrolling = false }) {
     const isLoggedIn = useSelector(selectIsLoggedIn);
+    const currency = useCurrency(); // ₹ in India, $ elsewhere
     if (!course) return null;
 
-    const pricing = getPricing(course);
+    const pricing = getPricing(course, currency);
     const { thumbnail, level, language, total_duration, total_lessons, certificate_eligible, preview_video } =
         course;
 

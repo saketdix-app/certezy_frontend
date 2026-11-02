@@ -6,7 +6,7 @@ import { SectionTitle } from "./PaymentMethod";
 // total_duration is in seconds
 const fmtDuration = (seconds) => formatDuration(seconds) || "Self-paced";
 
-export default function OrderSummary({ course, paymentAmount, paymentCurrency }) {
+export default function OrderSummary({ course, paymentAmount, paymentCurrency, currency = "USD" }) {
     // Format price using backend values
     const formatPrice = (amount, currency) => {
         if (amount == null || !currency) {
@@ -22,16 +22,17 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency })
     };
 
     // With a discount link: list price, the discount, and the discounted total
-    const hasDiscount =
-        course?.discount_price != null && Number(course.discount_price) < Number(course.price);
-    const listPrice = course?.price != null ? formatPrice(Number(course.price), "USD") : "—";
-    const saving = hasDiscount
-        ? formatPrice(Number(course.price) - Number(course.discount_price), "USD")
-        : null;
+    const inr = currency === "INR" && Number(course?.price_inr) > 0;
+    const cur = inr ? "INR" : "USD";
+    const base = inr ? course?.price_inr : course?.price;
+    const offer = inr ? course?.discount_price_inr : course?.discount_price;
+    const hasDiscount = offer != null && Number(offer) < Number(base);
+    const listPrice = base != null ? formatPrice(Number(base), cur) : "—";
+    const saving = hasDiscount ? formatPrice(Number(base) - Number(offer), cur) : null;
     const displayPrice = paymentAmount
         ? formatPrice(paymentAmount, paymentCurrency)
-        : course?.price != null
-          ? formatPrice(Number(hasDiscount ? course.discount_price : course.price), "USD")
+        : base != null
+          ? formatPrice(Number(hasDiscount ? offer : base), cur)
           : "—";
 
     const meta = [

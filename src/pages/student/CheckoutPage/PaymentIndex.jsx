@@ -23,6 +23,7 @@ export default function CheckoutPage() {
         handlePay,
         paymentAmount,
         paymentCurrency,
+        currency,
     } = useCheckout(courseId);
 
     if (loading) return <CheckoutSkeleton />;
@@ -133,6 +134,7 @@ export default function CheckoutPage() {
                         course={course}
                         paymentAmount={paymentAmount}
                         paymentCurrency={paymentCurrency}
+                        currency={currency}
                     />
                 </div>
             </div>

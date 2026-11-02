@@ -7,6 +7,7 @@ import courseService from "@/services/courseService";
 import discountService from "@/services/discountService";
 import { fetchMe, selectUser } from "@/features/auth/authSlice";
 import { useSearchParams } from "react-router-dom";
+import { useCurrency, setCurrency } from "@/lib/currency";
 
 // ── Utility Functions ─────────────────────────
 const retryWithBackoff = async (fn, maxRetries = 3, delay = 1000) => {
@@ -89,7 +90,11 @@ export function useCheckout(courseId) {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [method, setMethod] = useState("razorpay");
+    // India (INR) pays with Razorpay, everyone else (USD) with PayPal.
+    // Picking the other method switches the currency.
+    const currency = useCurrency();
+    const method = currency === "INR" ? "razorpay" : "paypal";
+    const setMethod = useCallback((m) => setCurrency(m === "razorpay" ? "INR" : "USD"), []);
     const [paying, setPaying] = useState(false);
     const [scriptLoading, setScriptLoading] = useState(false);
 
@@ -112,11 +117,17 @@ export function useCheckout(courseId) {
     // Set initial price when course loads
     useEffect(() => {
         if (course) {
-            // a discount link's price wins; the server charges the same amount
-            setPaymentAmount(course.discount_price ?? course.price);
-            setPaymentCurrency("USD");
+            // Same amounts the server will charge: rupee price for Razorpay,
+            // dollar price for PayPal (a discount link's price wins)
+            const inr = currency === "INR" && Number(course.price_inr) > 0;
+            setPaymentAmount(
+                inr
+                    ? (course.discount_price_inr ?? course.price_inr)
+                    : (course.discount_price ?? course.price)
+            );
+            setPaymentCurrency(inr ? "INR" : "USD");
         }
-    }, [course]);
+    }, [course, currency]);
 
     // ── Fetch course ─────────────────────────
     useEffect(() => {
@@ -160,6 +171,7 @@ export function useCheckout(courseId) {
                             courseData = {
                                 ...courseData,
                                 discount_price: discount.discount_price,
+                                discount_price_inr: discount.discount_price_inr ?? null,
                                 // the API returns discount_link_id (was read as `id`, so it never applied)
                                 discount_link_id: discount.discount_link_id ?? discount.id,
                             };
@@ -416,6 +428,7 @@ export function useCheckout(courseId) {
         error,
         method,
         setMethod,
+        currency,
         paying,
         scriptLoading,
         handlePay,

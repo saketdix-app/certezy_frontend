@@ -27,6 +27,13 @@ export const UPLOAD_KINDS = {
         maxSize: 50 * 1024 * 1024,
         label: "PDF, ZIP or TXT · up to 50 MB",
     },
+    // Profile photo — any signed-in user (POST /upload/avatar-url)
+    avatar: {
+        accept: "image/jpeg,image/png,image/webp",
+        maxSize: 3 * 1024 * 1024,
+        label: "JPG, PNG or WebP · up to 3 MB",
+        noun: "photo",
+    },
     // PDF-only picker (e.g. PDF lessons); stored with the backend's document rules
     pdf: {
         accept: "application/pdf",
@@ -59,12 +66,17 @@ const uploadService = {
      * @param {{ kind: "image"|"video"|"document"|"pdf", onProgress?: (pct:number)=>void, signal?: AbortSignal }} options
      */
     async uploadFile(file, { kind, onProgress, signal } = {}) {
-        const { data } = await uploadService.getPresignedUrl({
+        const request = {
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
             kind: UPLOAD_KINDS[kind]?.apiKind || kind,
-        });
+        };
+        // Students may only upload their own profile photo
+        const { data } =
+            kind === "avatar"
+                ? await api.post("/upload/avatar-url", request)
+                : await uploadService.getPresignedUrl(request);
         const { uploadUrl, signedUrl, fileUrl, headers } = data.data;
 
         try {
