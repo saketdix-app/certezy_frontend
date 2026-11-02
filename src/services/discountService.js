@@ -11,7 +11,8 @@ import api from "./api";
  *
  * ADMIN ONLY:
  *   POST /api/v1/discounts/             → create discount
- *   GET  /api/v1/discounts/admin/all    → all discounts (admin view)
+ *   GET  /api/v1/discounts              → sent links + status counts (admin)
+ *   POST /api/v1/discounts/:id/resend   → email the same link again
  *   PUT  /api/v1/discounts/:id          → update discount
  *   DELETE /api/v1/discounts/:id        → delete discount
  */
@@ -27,7 +28,10 @@ const discountService = {
     // Admin only
     create: (data) => api.post("/discounts", data),
     createDiscountLink: (data) => api.post("/discounts", data),
-    getAllAdmin: () => api.get("/discounts"),
+    // Sent links: ?search &status (active | used | expired) &course_id &page &limit
+    getAllAdmin: (params = {}) => api.get("/discounts", { params }),
+    // Email the same link again; { extend_hours } gives it a new expiry
+    resend: (id, data = {}) => api.post(`/discounts/${id}/resend`, data),
     update: (id, data) => api.put(`/discounts/${id}`, data),
     delete: (id) => api.delete(`/discounts/${id}`),
 };
