@@ -170,6 +170,7 @@ export default function ExamInterface() {
 
     return (
         <ExamScreen
+            onExit={handleBackToCourse}
             key={attemptId}
             exam={exam}
             questions={questions}
@@ -190,6 +191,7 @@ export default function ExamInterface() {
 
 // ─── Exam screen (Pearson VUE-style) ──────────────────────────────────────────
 function ExamScreen({
+    onExit,
     exam,
     questions,
     answers,
@@ -205,6 +207,7 @@ function ExamScreen({
     submitting,
 }) {
     const [reviewing, setReviewing] = useState(false);
+    const [confirmExit, setConfirmExit] = useState(false);
     const minutes = Number(exam.duration ?? exam.duration_minutes) || 0;
     const secondsLeft = useExamClock(minutes, onTimeUp);
 
@@ -228,6 +231,7 @@ function ExamScreen({
                 hasTimer={minutes > 0}
                 current={currentQuestionIndex + 1}
                 total={questions.length}
+                onExit={() => setConfirmExit(true)}
             />
 
             <main className="flex-1 overflow-y-auto bg-[#F1F5F9] px-3 sm:px-6 py-5 sm:py-8">
@@ -264,6 +268,43 @@ function ExamScreen({
                     onClose={() => setReviewing(false)}
                     onEndExam={() => setShowSubmitModal(true)}
                 />
+            )}
+
+            {confirmExit && (
+                <div
+                    className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4"
+                    style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="exit-exam-title"
+                >
+                    <div className="bg-white rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl">
+                        <h3 id="exit-exam-title" className="text-[17px] font-extrabold text-[#0F172A]">
+                            Exit the exam?
+                        </h3>
+                        <p className="mt-2 text-[13.5px] text-[#475569]">
+                            Your answers won&apos;t be submitted or scored. You can start the exam again from
+                            the course at any time.
+                        </p>
+                        <div className="mt-5 flex gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setConfirmExit(false)}
+                                autoFocus
+                                className="flex-1 py-2.5 rounded-xl bg-[#3282B8] text-white text-[13.5px] font-bold hover:bg-[#2A6FA0]"
+                            >
+                                Keep going
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onExit}
+                                className="flex-1 py-2.5 rounded-xl border border-[#E2E8F0] text-[13.5px] font-semibold text-[#B91C1C] hover:bg-red-50"
+                            >
+                                Exit exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
             <SubmitExamModal

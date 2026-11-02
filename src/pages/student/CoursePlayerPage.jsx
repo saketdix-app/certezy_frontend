@@ -438,7 +438,8 @@ export default function CoursePlayerPage() {
                                     // Text / article lesson content area
                                     <div className="w-full h-full bg-[#F1F5F9] overflow-y-auto">
                                         {currentLesson.content ? (
-                                            <div className="p-4 sm:p-6">
+                                            // Same column as the lesson panel below, so the edges line up
+                                            <div className="max-w-4xl w-full mx-auto px-5 py-5 sm:py-6">
                                                 {/* Complete + Next live in the lesson panel below */}
                                                 <EnhancedTextLesson lesson={currentLesson} />
                                             </div>
