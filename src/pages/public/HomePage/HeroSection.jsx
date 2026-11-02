@@ -307,7 +307,7 @@ export default function HeroSection() {
                     <div className="hero-wrap">
                         {/* ════ LEFT ═══════════════════════════════════════════════ */}
                         <div className="hero-left">
-                            {/* PMP pass-guarantee badge — SEO: meaningful text, not just decorative */}
+                            {/* PMP badge — SEO: meaningful text, not just decorative */}
                             <div className="afu1" style={{ marginBottom: "24px" }}>
                                 <span
                                     style={{
@@ -325,7 +325,7 @@ export default function HeroSection() {
                                     }}
                                 >
                                     <ShieldCheck size={14} color="#3282B8" aria-hidden="true" />
-                                    Clear PMP® on Your First Try — 100% Pass Guarantee
+                                    Expert-led PMP® exam preparation
                                 </span>
                             </div>
 
@@ -367,7 +367,8 @@ export default function HeroSection() {
                                 }}
                             >
                                 Expert-led PMP® and IT certification training with real-world skills for
-                                modern careers — and a 100% pass guarantee on our PMP® program.
+                                modern careers — including 35 contact hours and full-length PMP® practice
+                                exams.
                             </p>
 
                             {/* Trust proof row */}

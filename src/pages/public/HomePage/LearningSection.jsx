@@ -94,7 +94,7 @@ const CSS = `
 `;
 
 const STATS = [
-    { icon: ShieldCheck, label: "PMP®", sub: "100% Pass Guarantee", color: true },
+    { icon: ShieldCheck, label: "PMP®", sub: "35 Contact Hours", color: true },
     { num: "10K+", label: "Active", sub: "Learners", color: false },
     { num: "50+", label: "Programs", sub: "Certifications", color: false },
     { num: "98%", label: "Success", sub: "Rate", color: false },

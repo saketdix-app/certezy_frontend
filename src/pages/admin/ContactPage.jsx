@@ -115,13 +115,27 @@ export default function ContactPage() {
         setCurrentPage(1);
     };
 
+    // The list only carries a 100-character preview — open right away with it,
+    // then load the full message
     const handleMessageClick = async (message) => {
+        setSelectedMessage({
+            ...message,
+            message: message.message ?? message.message_preview,
+            loadingFull: true,
+        });
+        setShowMessageModal(true);
         try {
-            // Use message from list directly instead of separate API call
-            setSelectedMessage(message);
-            setShowMessageModal(true);
-        } catch (err) {
-            toast.error("Failed to load message details");
+            const { data } = await contactService.getMessageById(message.id);
+            const full = data?.data?.contact;
+            if (full)
+                setSelectedMessage((current) =>
+                    current?.id === message.id ? { ...current, ...full, loadingFull: false } : current
+                );
+        } catch {
+            setSelectedMessage((current) =>
+                current?.id === message.id ? { ...current, loadingFull: false } : current
+            );
+            toast.error("Could not load the full message");
         }
     };
 
@@ -351,7 +365,9 @@ export default function ContactPage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <p className="text-sm text-slate-600 line-clamp-2">
-                                                        {truncateMessage(message.message)}
+                                                        {truncateMessage(
+                                                            message.message ?? message.message_preview
+                                                        )}
                                                     </p>
                                                 </td>
                                                 <td className="px-6 py-4">
@@ -497,7 +513,8 @@ export default function ContactPage() {
                         <div className="px-6 py-4 overflow-y-auto max-h-96">
                             <div className="bg-slate-50 rounded-xl p-4">
                                 <p className="text-sm text-slate-700 whitespace-pre-wrap">
-                                    {selectedMessage.message}
+                                    {selectedMessage.message ||
+                                        (selectedMessage.loadingFull ? "Loading message…" : "No message")}
                                 </p>
                             </div>
                         </div>
