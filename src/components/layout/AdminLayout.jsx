@@ -79,7 +79,7 @@ export default function AdminLayout() {
                 {/* Logo */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                     <div className="flex items-center gap-2">
-                        <Logo to="/admin/dashboard" height={28} />
+                        <Logo to="/" height={28} />
                         <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary-light px-1.5 py-0.5 rounded">
                             Admin
                         </span>

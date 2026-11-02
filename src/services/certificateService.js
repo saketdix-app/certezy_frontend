@@ -18,7 +18,7 @@ import api from "./api";
  * ADMIN ONLY:
  *   POST /api/v1/certificates/issue    → issue certificate
  *   GET  /api/v1/certificates/admin/all → all certificates (admin view)
- *   PUT  /api/v1/certificates/:id/revoke → revoke certificate
+ *   DELETE /api/v1/certificates/:id     → revoke certificate
  */
 
 const certificateService = {
@@ -31,9 +31,11 @@ const certificateService = {
     download: (id) => api.get(`/certificates/${id}`, { responseType: "blob" }),
 
     // Admin only
+    // { user_id, course_id, issue_date?: "YYYY-MM-DD" }
     issue: (data) => api.post("/certificates/issue", data),
-    getAllAdmin: () => api.get("/certificates/admin/all"),
-    revoke: (id) => api.put(`/certificates/${id}/revoke`),
+    // ?search (student, email, course, certificate no.) &page &limit
+    getAllAdmin: (params = {}) => api.get("/certificates/admin/all", { params }),
+    revoke: (id) => api.delete(`/certificates/${id}`),
 };
 
 export default certificateService;

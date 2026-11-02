@@ -191,7 +191,7 @@ function SocialBtn({ icon, href = "#", label }) {
 function CertezyLogo() {
     return (
         <div className="flex items-center gap-2.5 mb-3.5">
-            <Logo variant="light" height={36} />
+            <Logo to="/" variant="light" height={36} />
         </div>
     );
 }

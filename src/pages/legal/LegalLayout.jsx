@@ -52,7 +52,7 @@ export function ContactBlock() {
  */
 export default function LegalLayout({ title, intro, sections, children }) {
     useEffect(() => {
-        document.title = `${title} — ${APP_NAME}`;
+        document.title = `CERTEZY | ${title}`;
         window.scrollTo(0, 0);
     }, [title]);
 

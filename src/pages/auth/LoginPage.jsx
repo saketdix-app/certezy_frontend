@@ -41,6 +41,8 @@ export default function LoginPage() {
     useEffect(() => {
         if (params.get("error") === "oauth_failed") {
             toast.error("Social sign-in failed. Please try again.");
+        } else if (params.get("error") === "account_deleted") {
+            toast.error("This account has been deleted. Contact support to restore it.");
         }
     }, []);
 
@@ -133,7 +135,7 @@ export default function LoginPage() {
                     />
 
                     <div style={{ position: "relative", zIndex: 1 }}>
-                        <Logo size="lg" style={{ marginBottom: "48px" }} />
+                        <Logo to="/" size="lg" style={{ marginBottom: "48px" }} />
 
                         <h2
                             style={{
@@ -201,7 +203,7 @@ export default function LoginPage() {
                 >
                     <div style={{ width: "100%", maxWidth: "380px" }}>
                         <div className="flex md:hidden items-center gap-2 mb-8">
-                            <Logo size="sm" />
+                            <Logo to="/" size="sm" />
                         </div>
 
                         <h1

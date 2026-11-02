@@ -1,622 +1,499 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
-    Award,
     Search,
-    Filter,
-    Download,
-    Eye,
-    Edit,
-    Trash2,
     Plus,
+    Award,
+    X,
+    Loader2,
+    ExternalLink,
+    FileDown,
+    Copy,
+    Trash2,
     ChevronLeft,
     ChevronRight,
-    Calendar,
-    User,
+    Users,
     BookOpen,
-    FileText,
-    AlertCircle,
+    CheckCircle2,
+    AlertTriangle,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
+
 import certificateService from "@/services/certificateService";
+import courseService from "@/services/courseService";
+import authService from "@/services/authService";
+import enrollmentService from "@/services/enrollmentService";
+import SearchPicker from "@/components/admin/SearchPicker";
+import { useDebounce } from "@/hooks/useDebounce";
+import { cn } from "@/lib/utils";
 
-// Certificate Details Modal Component
-function CertificateDetailsModal({ certificate, isOpen, onClose }) {
-    if (!certificate) return null;
+const PER_PAGE = 10;
 
-    return (
-        <div className={cn("fixed inset-0 z-50 overflow-hidden", isOpen ? "block" : "hidden")}>
-            <div className="absolute inset-0 overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                    onClick={onClose}
-                />
-                <section className="absolute inset-y-0 right-0 max-w-full flex">
-                    <div className="relative w-screen max-w-md">
-                        <div className="h-full flex flex-col bg-white shadow-xl">
-                            {/* Header */}
-                            <div className="px-6 py-4 border-b border-gray-200">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-gray-900">
-                                        Certificate Details
-                                    </h2>
-                                    <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100">
-                                        ×
-                                    </button>
-                                </div>
-                            </div>
+const inputCls =
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
 
-                            {/* Content */}
-                            <div className="flex-1 overflow-y-auto p-6">
-                                <div className="space-y-6">
-                                    {/* Certificate Info */}
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
-                                            Certificate Information
-                                        </h4>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Certificate ID</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.id}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Issue Date</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.issueDate}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Status</span>
-                                                <span
-                                                    className={cn(
-                                                        "px-2 py-1 text-xs font-medium rounded-full",
-                                                        certificate.status === "active"
-                                                            ? "bg-green-100 text-green-800"
-                                                            : "bg-gray-100 text-gray-800"
-                                                    )}
-                                                >
-                                                    {certificate.status}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+const fmtDate = (d) =>
+    d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
-                                    {/* Student Info */}
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
-                                            Student Information
-                                        </h4>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Name</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.studentName}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Email</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.studentEmail}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+const todayIso = () => new Date().toISOString().slice(0, 10);
 
-                                    {/* Course Info */}
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
-                                            Course Information
-                                        </h4>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Course</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.courseName}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Completion Date</span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {certificate.completionDate}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    );
-}
+const copy = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        toast.success("Link copied");
+    } catch {
+        toast.error("Could not copy the link");
+    }
+};
 
-// Issue Certificate Modal Component
-function IssueCertificateModal({ isOpen, onClose, onIssue }) {
-    const [formData, setFormData] = useState({
-        studentId: "",
-        courseId: "",
-        issueDate: new Date().toISOString().split("T")[0],
-    });
-    const [loading, setLoading] = useState(false);
+export default function CertificatesPage() {
+    const [rows, setRows] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [searchInput, setSearchInput] = useState("");
+    const [page, setPage] = useState(1);
+    const [issueOpen, setIssueOpen] = useState(false);
+    const [revokeTarget, setRevokeTarget] = useState(null);
+    const [revoking, setRevoking] = useState(false);
+    const search = useDebounce(searchInput.trim(), 300);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const load = useCallback(async () => {
         setLoading(true);
-
         try {
-            await certificateService.issue(formData);
-            onIssue();
-            onClose();
-        } catch (error) {
-            console.error("Error issuing certificate:", error);
+            const { data } = await certificateService.getAllAdmin({
+                page,
+                limit: PER_PAGE,
+                search: search || undefined,
+            });
+            setRows(data?.data ?? []);
+            setTotal(data?.pagination?.total ?? 0);
+        } catch {
+            toast.error("Could not load certificates");
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, search]);
 
-    return (
-        <div className={cn("fixed inset-0 z-50 overflow-hidden", isOpen ? "block" : "hidden")}>
-            <div className="absolute inset-0 overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                    onClick={onClose}
-                />
-                <section className="absolute inset-y-0 right-0 max-w-full flex">
-                    <div className="relative w-screen max-w-md">
-                        <div className="h-full flex flex-col bg-white shadow-xl">
-                            {/* Header */}
-                            <div className="px-6 py-4 border-b border-gray-200">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-gray-900">Issue Certificate</h2>
-                                    <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100">
-                                        ×
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 overflow-y-auto p-6">
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Student ID
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={formData.studentId}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, studentId: e.target.value })
-                                            }
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Course ID
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={formData.courseId}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, courseId: e.target.value })
-                                            }
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Issue Date
-                                        </label>
-                                        <input
-                                            type="date"
-                                            value={formData.issueDate}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, issueDate: e.target.value })
-                                            }
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="flex gap-3 pt-4">
-                                        <button
-                                            type="submit"
-                                            disabled={loading}
-                                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-                                        >
-                                            {loading ? "Issuing..." : "Issue Certificate"}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={onClose}
-                                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    );
-}
-
-// Certificates Table Component
-function CertificatesTable({ certificates, onViewDetails, onRevoke }) {
-    return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px]">
-                    <thead>
-                        <tr className="border-b border-gray-200 bg-gray-50">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">
-                                Certificate ID
-                            </th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Student</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Course</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">
-                                Issue Date
-                            </th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Status</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {certificates.map((certificate) => (
-                            <tr key={certificate.id} className="hover:bg-gray-50">
-                                <td className="py-3 px-4 text-sm text-gray-900">#{certificate.id}</td>
-                                <td className="py-3 px-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                            <User size={14} className="text-blue-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">
-                                                {certificate.studentName}
-                                            </p>
-                                            <p className="text-sm text-gray-600">
-                                                {certificate.studentEmail}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="py-3 px-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                                            <BookOpen size={14} className="text-gray-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">
-                                                {certificate.courseName}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="py-3 px-4 text-sm text-gray-600">{certificate.issueDate}</td>
-                                <td className="py-3 px-4">
-                                    <span
-                                        className={cn(
-                                            "px-2 py-1 text-xs font-medium rounded-full",
-                                            certificate.status === "active"
-                                                ? "bg-green-100 text-green-800"
-                                                : "bg-gray-100 text-gray-800"
-                                        )}
-                                    >
-                                        {certificate.status}
-                                    </span>
-                                </td>
-                                <td className="py-3 px-4">
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => onViewDetails(certificate)}
-                                            className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                                            title="View Details"
-                                        >
-                                            <Eye size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => onRevoke(certificate)}
-                                            className="p-1 text-red-600 hover:bg-red-50 rounded"
-                                            title="Revoke Certificate"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
-
-// Pagination Component
-function Pagination({ currentPage, totalPages, onPageChange }) {
-    return (
-        <div className="flex items-center justify-between bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-            <div className="flex-1 flex justify-between sm:hidden">
-                <button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                >
-                    Previous
-                </button>
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                >
-                    Next
-                </button>
-            </div>
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <p className="text-sm text-gray-700">
-                        Showing page <span className="font-medium">{currentPage}</span> of{" "}
-                        <span className="font-medium">{totalPages}</span>
-                    </p>
-                </div>
-                <div>
-                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                        <button
-                            onClick={() => onPageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                            <ChevronLeft size={16} />
-                        </button>
-                        <button
-                            onClick={() => onPageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                            <ChevronRight size={16} />
-                        </button>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default function CertificatesPage() {
-    const [certificates, setCertificates] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedStatus, setSelectedStatus] = useState("all");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedCertificate, setSelectedCertificate] = useState(null);
-    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-    const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
-
-    const certificatesPerPage = 10;
-    const totalPages = Math.ceil(certificates.length / certificatesPerPage);
-
-    // Load certificates
     useEffect(() => {
-        const loadCertificates = async () => {
-            try {
-                setLoading(true);
-                setError(null);
+        load();
+    }, [load]);
 
-                const response = await certificateService.getAllAdmin();
-                const certificatesData = response.data?.data?.certificates || [];
-
-                setCertificates(
-                    certificatesData.map((cert) => ({
-                        id: cert.id,
-                        studentName: cert.student?.name || "Unknown Student",
-                        studentEmail: cert.student?.email || "unknown@example.com",
-                        courseName: cert.course?.title || "Unknown Course",
-                        issueDate: new Date(cert.issueDate).toLocaleDateString(),
-                        status: cert.status || "active",
-                    }))
-                );
-            } catch (err) {
-                console.error("Error loading certificates:", err);
-                if (err.response?.status === 404) {
-                    setError(
-                        "Certificates API endpoint not available. Please make sure the backend is configured."
-                    );
-                } else {
-                    setError("Failed to load certificates");
-                }
-                setCertificates([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadCertificates();
-    }, []);
-
-    // Filter certificates
-    const filteredCertificates = certificates.filter((certificate) => {
-        const matchesSearch =
-            certificate.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            certificate.studentEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            certificate.courseName.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesStatus = selectedStatus === "all" || certificate.status === selectedStatus;
-
-        return matchesSearch && matchesStatus;
-    });
-
-    // Get paginated certificates
-    const paginatedCertificates = filteredCertificates.slice(
-        (currentPage - 1) * certificatesPerPage,
-        currentPage * certificatesPerPage
-    );
-
-    const handleViewDetails = (certificate) => {
-        setSelectedCertificate(certificate);
-        setIsDetailsModalOpen(true);
-    };
-
-    const handleRevoke = async (certificate) => {
-        if (
-            window.confirm(
-                `Are you sure you want to revoke the certificate for "${certificate.studentName}"?`
-            )
-        ) {
-            try {
-                await certificateService.revoke(certificate.id);
-                setCertificates(certificates.filter((c) => c.id !== certificate.id));
-            } catch (error) {
-                console.error("Error revoking certificate:", error);
-            }
+    const handleRevoke = async () => {
+        setRevoking(true);
+        try {
+            const { data } = await certificateService.revoke(revokeTarget.id);
+            toast.success(data?.message || "Certificate revoked");
+            setRevokeTarget(null);
+            load();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not revoke the certificate");
+        } finally {
+            setRevoking(false);
         }
     };
 
-    const handleIssue = () => {
-        // Reload certificates after issuing
-        certificateService.getAllAdmin().then((response) => {
-            const certificatesData = response.data?.data?.certificates || [];
-            setCertificates(
-                certificatesData.map((cert) => ({
-                    id: cert.id,
-                    studentName: cert.student?.name || "Unknown Student",
-                    studentEmail: cert.student?.email || "unknown@example.com",
-                    courseName: cert.course?.title || "Unknown Course",
-                    issueDate: new Date(cert.issueDate).toLocaleDateString(),
-                    status: cert.status || "active",
-                }))
-            );
-        });
-    };
-
-    if (loading) {
-        return (
-            <div className="space-y-6">
-                <div className="animate-pulse">
-                    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
-                    <div className="h-64 bg-gray-200 rounded"></div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="space-y-6">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center gap-3">
-                        <AlertCircle size={20} className="text-red-600" />
-                        <div>
-                            <h3 className="text-lg font-medium text-red-900">Error Loading Certificates</h3>
-                            <p className="text-red-700">{error}</p>
-                        </div>
-                    </div>
-                </div>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                >
-                    Retry
-                </button>
-            </div>
-        );
-    }
+    const totalPages = Math.ceil(total / PER_PAGE);
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Certificates</h1>
-                    <p className="text-gray-600 mt-1">Manage student certificates and awards</p>
+                    <h1 className="text-[24px] font-extrabold text-slate-900 tracking-tight">Certificates</h1>
+                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                        Certificates are issued automatically when a student completes a course. You can also
+                        issue one yourself.
+                    </p>
                 </div>
-                <div className="mt-4 sm:mt-0 flex gap-3">
-                    <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
-                        <Download size={16} />
-                        Export
-                    </button>
-                    <button
-                        onClick={() => setIsIssueModalOpen(true)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                    >
-                        <Plus size={16} />
-                        Issue Certificate
-                    </button>
-                </div>
+                <button
+                    onClick={() => setIssueOpen(true)}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] shrink-0"
+                >
+                    <Plus size={15} /> Issue certificate
+                </button>
             </div>
 
-            {/* Search and Filters */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-                <div className="flex flex-col lg:flex-row gap-4">
-                    {/* Search */}
-                    <div className="flex-1">
-                        <div className="relative">
-                            <Search
-                                size={18}
-                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Search by student name, email, or course..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
+            <div className="relative">
+                <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                    type="search"
+                    value={searchInput}
+                    onChange={(e) => {
+                        setSearchInput(e.target.value);
+                        setPage(1);
+                    }}
+                    placeholder="Search by student, email, course or certificate number…"
+                    className={cn(inputCls, "pl-10 bg-white")}
+                />
+            </div>
+
+            <div
+                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
+            >
+                {loading && rows.length === 0 ? (
+                    <div className="flex justify-center py-16">
+                        <Loader2 className="w-6 h-6 animate-spin text-[#3282B8]" />
+                    </div>
+                ) : rows.length === 0 ? (
+                    <div className="text-center py-16">
+                        <Award className="mx-auto text-slate-300 mb-3" size={40} />
+                        <p className="text-[15px] font-semibold text-slate-800">No certificates found</p>
+                        <p className="text-[13px] text-slate-500 mt-1">
+                            {search ? "Try a different search." : "Issued certificates will appear here."}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[820px]">
+                            <thead className="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    {["Student", "Course", "Certificate no.", "Issued", ""].map((h) => (
+                                        <th
+                                            key={h}
+                                            className="text-left px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-600"
+                                        >
+                                            {h}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {rows.map((c) => (
+                                    <tr key={c.id} className="hover:bg-slate-50">
+                                        <td className="px-4 py-3">
+                                            <p className="text-sm font-semibold text-slate-900">
+                                                {c.student_name}
+                                            </p>
+                                            <p className="text-xs text-slate-500">{c.student_email}</p>
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-slate-800 max-w-[260px]">
+                                            <p className="truncate">{c.course_title}</p>
+                                        </td>
+                                        <td className="px-4 py-3 font-mono text-[12.5px] text-slate-700 whitespace-nowrap">
+                                            {c.certificate_no}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                            {fmtDate(c.issued_at)}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex items-center justify-end gap-1.5">
+                                                <a
+                                                    href={`/verify/${encodeURIComponent(c.certificate_no)}`}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    title="Open verification page"
+                                                    className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                                                >
+                                                    <ExternalLink size={14} />
+                                                </a>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => copy(c.verify_url)}
+                                                    title="Copy verification link"
+                                                    className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                                                >
+                                                    <Copy size={14} />
+                                                </button>
+                                                {c.pdf_url && (
+                                                    <a
+                                                        href={c.pdf_url}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        title="Download PDF"
+                                                        className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                                                    >
+                                                        <FileDown size={14} />
+                                                    </a>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRevokeTarget(c)}
+                                                    title="Revoke certificate"
+                                                    className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+                        <p className="text-sm text-slate-600">
+                            {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, total)} of {total}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage(page - 1)}
+                                disabled={page === 1}
+                                aria-label="Previous page"
+                                className="p-2 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50"
+                            >
+                                <ChevronLeft size={16} />
+                            </button>
+                            <span className="text-sm text-slate-600">
+                                Page {page} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() => setPage(page + 1)}
+                                disabled={page === totalPages}
+                                aria-label="Next page"
+                                className="p-2 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50"
+                            >
+                                <ChevronRight size={16} />
+                            </button>
                         </div>
                     </div>
-
-                    {/* Filters */}
-                    <div className="flex gap-3">
-                        <select
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="revoked">Revoked</option>
-                        </select>
-
-                        <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
-                            <Filter size={16} />
-                            Filters
-                        </button>
-                    </div>
-                </div>
+                )}
             </div>
 
-            {/* Certificates Table */}
-            <CertificatesTable
-                certificates={paginatedCertificates}
-                onViewDetails={handleViewDetails}
-                onRevoke={handleRevoke}
-            />
+            {issueOpen && (
+                <IssueCertificateModal
+                    onClose={() => setIssueOpen(false)}
+                    onIssued={() => {
+                        setIssueOpen(false);
+                        setPage(1);
+                        load();
+                    }}
+                />
+            )}
 
-            {/* Pagination */}
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            {revokeTarget && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center">
+                        <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                            <Trash2 size={24} className="text-red-500" />
+                        </div>
+                        <h3 className="text-[17px] font-extrabold text-slate-900 mb-2">
+                            Revoke this certificate?
+                        </h3>
+                        <p className="text-[13px] text-slate-500 mb-5">
+                            {revokeTarget.student_name} · {revokeTarget.course_title}. Number{" "}
+                            <span className="font-mono">{revokeTarget.certificate_no}</span> will no longer
+                            verify. This can&apos;t be undone (you can issue a new one later).
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setRevokeTarget(null)}
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleRevoke}
+                                disabled={revoking}
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-60"
+                            >
+                                {revoking ? <Loader2 size={15} className="animate-spin" /> : "Revoke"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 
-            {/* Certificate Details Modal */}
-            <CertificateDetailsModal
-                certificate={selectedCertificate}
-                isOpen={isDetailsModalOpen}
-                onClose={() => setIsDetailsModalOpen(false)}
-            />
+// ─── Issue: search a student and a course ─────────────────────────────────────
 
-            {/* Issue Certificate Modal */}
-            <IssueCertificateModal
-                isOpen={isIssueModalOpen}
-                onClose={() => setIsIssueModalOpen(false)}
-                onIssue={handleIssue}
-            />
+function IssueCertificateModal({ onClose, onIssued }) {
+    const [student, setStudent] = useState(null);
+    const [course, setCourse] = useState(null);
+    const [issueDate, setIssueDate] = useState(todayIso());
+    const [enrollments, setEnrollments] = useState(null); // the student's courses
+    const [busy, setBusy] = useState(false);
+
+    const loadStudents = useCallback(async (search) => {
+        const { data } = await authService.getAllUsers({
+            role: "student",
+            search: search || undefined,
+            limit: 30,
+        });
+        return data?.data ?? [];
+    }, []);
+
+    const loadCourses = useCallback(async (search) => {
+        const { data } = await courseService.getAll({ search: search || undefined, limit: 30 });
+        return (data?.data ?? []).filter(
+            (c) => c.certificate_eligible !== 0 && c.certificate_eligible !== false
+        );
+    }, []);
+
+    const chooseStudent = (s) => {
+        setStudent(s);
+        setEnrollments(null);
+        enrollmentService
+            .getUserEnrollments(s.id)
+            .then(({ data }) => setEnrollments(data?.data?.enrollments ?? []))
+            .catch(() => setEnrollments([]));
+    };
+
+    const enrollment = course && enrollments ? enrollments.find((e) => e.course_id === course.id) : null;
+
+    const submit = async () => {
+        if (!student || !course) return toast.error("Choose a student and a course");
+        setBusy(true);
+        try {
+            await certificateService.issue({
+                user_id: student.id,
+                course_id: course.id,
+                issue_date: issueDate,
+            });
+            toast.success(`Certificate issued to ${student.name}`);
+            onIssued();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not issue the certificate");
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                    <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
+                        <Award size={18} className="text-[#3282B8]" /> Issue certificate
+                    </h3>
+                    <button
+                        onClick={onClose}
+                        aria-label="Close"
+                        className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+
+                <div className="px-6 py-5 space-y-5">
+                    <div>
+                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Student</label>
+                        {student ? (
+                            <Chosen
+                                title={student.name}
+                                subtitle={student.email}
+                                onClear={() => {
+                                    setStudent(null);
+                                    setEnrollments(null);
+                                }}
+                            />
+                        ) : (
+                            <SearchPicker
+                                placeholder="Search student by name or email…"
+                                icon={Users}
+                                load={loadStudents}
+                                onSelect={chooseStudent}
+                                emptyText="No students match"
+                                renderItem={(s) => (
+                                    <div className="min-w-0">
+                                        <p className="text-[13px] font-medium text-slate-800 truncate">
+                                            {s.name}
+                                        </p>
+                                        <p className="text-[12px] text-slate-500 truncate">{s.email}</p>
+                                    </div>
+                                )}
+                            />
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Course</label>
+                        {course ? (
+                            <Chosen
+                                title={course.title}
+                                subtitle={`Course ID ${course.id}`}
+                                onClear={() => setCourse(null)}
+                            />
+                        ) : (
+                            <SearchPicker
+                                placeholder="Search courses by title…"
+                                icon={BookOpen}
+                                load={loadCourses}
+                                onSelect={setCourse}
+                                emptyText="No courses with a certificate match"
+                                renderItem={(c) => (
+                                    <p className="text-[13px] font-medium text-slate-800 truncate">
+                                        {c.title}
+                                    </p>
+                                )}
+                            />
+                        )}
+                        {student && course && enrollments && (
+                            <p
+                                className={cn(
+                                    "mt-2 text-[12px] flex items-center gap-1.5",
+                                    enrollment ? "text-green-700" : "text-amber-700"
+                                )}
+                            >
+                                {enrollment ? (
+                                    <>
+                                        <CheckCircle2 size={13} /> Enrolled · {enrollment.progress ?? 0}%
+                                        complete
+                                    </>
+                                ) : (
+                                    <>
+                                        <AlertTriangle size={13} /> Not enrolled in this course — the
+                                        certificate will still be issued
+                                    </>
+                                )}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">
+                            Issue date{" "}
+                            <span className="font-normal text-slate-400">(printed on the certificate)</span>
+                        </label>
+                        <input
+                            type="date"
+                            value={issueDate}
+                            max={todayIso()}
+                            onChange={(e) => setIssueDate(e.target.value || todayIso())}
+                            className={cn(inputCls, "w-48")}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={submit}
+                        disabled={busy || !student || !course}
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-50"
+                    >
+                        {busy ? <Loader2 size={15} className="animate-spin" /> : <Award size={15} />}
+                        Issue certificate
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function Chosen({ title, subtitle, onClear }) {
+    return (
+        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+                <p className="font-semibold text-slate-900 text-sm truncate">{title}</p>
+                <p className="text-slate-500 text-xs truncate">{subtitle}</p>
+            </div>
+            <button
+                type="button"
+                onClick={onClear}
+                aria-label="Change"
+                className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+            >
+                <X size={16} />
+            </button>
         </div>
     );
 }
