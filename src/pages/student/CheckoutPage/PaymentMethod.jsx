@@ -14,9 +14,8 @@ const METHODS = [
 ];
 
 export default function PaymentMethod({ selected, onChange }) {
-    // Only the method for the visitor's currency; the other is one click away
+    // Only the method for the visitor's region (India → Razorpay ₹, elsewhere → PayPal $)
     const shown = METHODS.filter((m) => m.id === selected);
-    const other = METHODS.find((m) => m.id !== selected);
     return (
         <div className="bg-white rounded-2xl p-6 border border-[#EEF2F7]">
             <SectionTitle title="Payment Method" />
@@ -54,17 +53,11 @@ export default function PaymentMethod({ selected, onChange }) {
                 })}
             </div>
 
-            {other && (
-                <button
-                    type="button"
-                    onClick={() => onChange(other.id)}
-                    className="mt-3 text-[12.5px] font-semibold text-[#3282B8] hover:underline"
-                >
-                    {other.id === "razorpay"
-                        ? "Paying from India? Pay in ₹ with Razorpay (UPI, cards, net banking)"
-                        : "Not in India? Pay in US$ with PayPal"}
-                </button>
-            )}
+            <p className="mt-3 text-[12px] text-slate-500">
+                {selected === "razorpay"
+                    ? "Prices in Indian rupees for customers in India."
+                    : "Prices in US dollars for customers outside India."}
+            </p>
         </div>
     );
 }

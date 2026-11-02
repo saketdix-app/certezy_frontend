@@ -5,7 +5,6 @@ import { ChevronDown, Loader2, BookOpen, LayoutGrid } from "lucide-react";
 import { logoutUser } from "@/features/auth/authSlice";
 import categoryService from "@/services/categoryService";
 import Searchbar from "./Searchbar";
-import CurrencySwitch from "./CurrencySwitch";
 import { MORE_ITEMS, STUDENT_MENU_ITEMS } from "./navbar.data";
 import { cn } from "@/lib/utils";
 
@@ -54,12 +53,6 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                 {/* Search */}
                 <div className="pb-3">
                     <Searchbar className="max-w-full" />
-                </div>
-
-                {/* Prices in ₹ or $ */}
-                <div className="flex items-center justify-between px-2 py-2">
-                    <span className="text-[13px] font-medium text-text-secondary">Currency</span>
-                    <CurrencySwitch />
                 </div>
 
                 {/* ── All Courses — direct link ── */}

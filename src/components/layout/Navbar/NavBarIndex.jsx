@@ -8,7 +8,6 @@ import Searchbar from "./Searchbar";
 import NavLinks from "./NavLinks";
 import MegaMenu from "./MegaMenu";
 import CategoryTabs from "./CategoryTabs";
-import CurrencySwitch from "./CurrencySwitch";
 import NotificationBell from "./NotificationBell";
 import AvatarMenu from "./AvatarMenu";
 import MobileMenu from "./MobileMenu";
@@ -63,8 +62,6 @@ function NavBarIndex() {
 
                     {/* ── Right group ── */}
                     <div className="hidden md:flex items-center gap-3 ml-auto">
-                        <CurrencySwitch className="hidden lg:flex" />
-
                         {/* Search — grows with screen */}
                         <div className="w-[160px] lg:w-[200px] xl:w-[260px] 2xl:w-[300px]">
                             <Searchbar />
