@@ -69,7 +69,7 @@ export default function RegisterPage() {
     const validate = () => {
         const errs = {};
         if (!form.name.trim()) errs.name = "Full name is required";
-        else if (form.name.trim().length < 2) errs.name = "Name too short";
+        else if (form.name.trim().length < 2) errs.name = "Name is too short";
         if (!form.email.trim()) errs.email = "Email is required";
         else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = "Enter a valid email";
         if (!form.password) {

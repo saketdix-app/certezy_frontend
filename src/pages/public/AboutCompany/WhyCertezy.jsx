@@ -63,7 +63,7 @@ const FEATURES = [
         iconBg: "bg-blue-50",
         iconColor: "#3282B8",
         title: "Industry Certifications",
-        desc: "Direct preparation for the most in-demand exams in Tech, Cloud, and Management.",
+        desc: "Direct preparation for the most in-demand exams in tech, cloud and project management.",
         cls: "wc-f0",
     },
     {

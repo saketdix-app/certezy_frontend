@@ -58,7 +58,7 @@ export default function DiscountsPage() {
 
         const email = recipientEmail.trim();
         if (!selectedCourse || !discountPrice || (recipientMode === "student" ? !selectedStudent : !email)) {
-            toast.error("Please fill all required fields");
+            toast.error("Please fill in all required fields");
             return;
         }
         if (recipientMode === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -70,7 +70,7 @@ export default function DiscountsPage() {
         const discountAmount = parseFloat(discountPrice);
 
         if (discountAmount >= originalPrice) {
-            toast.error("Discount price must be less than original price");
+            toast.error("Discount price must be lower than the original price");
             return;
         }
 

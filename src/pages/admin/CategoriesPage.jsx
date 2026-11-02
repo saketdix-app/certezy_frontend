@@ -120,7 +120,9 @@ export default function CategoriesPage() {
             setDeleteTarget(null);
             load();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Cannot delete — has courses or active children");
+            toast.error(
+                err.response?.data?.message || "Cannot delete — this category has courses or sub-categories"
+            );
         }
     };
 
@@ -143,8 +145,7 @@ export default function CategoriesPage() {
                 <div>
                     <h1 className="text-[28px] font-extrabold text-slate-900 tracking-tight">Categories</h1>
                     <p className="text-[13.5px] text-slate-500 mt-1 max-w-md">
-                        Manage your curriculum hierarchy, organize course collections, and control global
-                        taxonomy visibility.
+                        Organize your courses into categories and sub-categories.
                     </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">

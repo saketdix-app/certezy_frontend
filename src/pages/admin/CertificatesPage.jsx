@@ -430,7 +430,7 @@ export default function CertificatesPage() {
                 console.error("Error loading certificates:", err);
                 if (err.response?.status === 404) {
                     setError(
-                        "Certificates API endpoint not available. Please ensure backend is properly configured."
+                        "Certificates API endpoint not available. Please make sure the backend is configured."
                     );
                 } else {
                     setError("Failed to load certificates");
@@ -467,7 +467,11 @@ export default function CertificatesPage() {
     };
 
     const handleRevoke = async (certificate) => {
-        if (window.confirm(`Are you sure you want to revoke certificate for "${certificate.studentName}"?`)) {
+        if (
+            window.confirm(
+                `Are you sure you want to revoke the certificate for "${certificate.studentName}"?`
+            )
+        ) {
             try {
                 await certificateService.revoke(certificate.id);
                 setCertificates(certificates.filter((c) => c.id !== certificate.id));
