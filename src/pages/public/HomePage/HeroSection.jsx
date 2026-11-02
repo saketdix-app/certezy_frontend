@@ -382,7 +382,7 @@ export default function HeroSection() {
                             >
                                 {[
                                     "Learning made easier and more convenient for you",
-                                    "Expert-led courses: AWS, Azure, DevOps, Cyber Security",
+                                    "Expert-led courses: AWS, Azure, DevOps, Cybersecurity",
                                 ].map((t) => (
                                     <div
                                         key={t}

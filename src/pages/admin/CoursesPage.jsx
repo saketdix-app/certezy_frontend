@@ -303,7 +303,7 @@ export default function CoursesPage() {
             loadCourses();
         } catch (err) {
             const st = err.response?.status;
-            if (st === 409) toast.error("Slug/title already exists.");
+            if (st === 409) toast.error("A course with this title or slug already exists.");
             else if (st === 400) toast.error(err.response?.data?.message || "Invalid data.");
             else if (st === 401 || st === 403) toast.error("Not authorized.");
             else toast.error(err.response?.data?.message || "Save failed.");
@@ -328,7 +328,7 @@ export default function CoursesPage() {
     const handleToggleFeatured = async (course) => {
         try {
             await courseService.update(course.id, { is_featured: !course.is_featured });
-            toast.success(`Course ${!course.is_featured ? "featured" : "unfeatured"}!`);
+            toast.success(`Course ${!course.is_featured ? "added to featured" : "removed from featured"}`);
             loadCourses();
         } catch {
             toast.error("Failed to update");

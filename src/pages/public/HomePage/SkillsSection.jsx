@@ -51,7 +51,7 @@ export default function SkillsSection() {
                         <div className="space-y-4 mb-10">
                             <div className="flex gap-3">
                                 <CheckCircle className="text-blue-500 mt-1" size={20} />
-                                <p>Access to exclusive alumni network and job boards.</p>
+                                <p>Access to an exclusive alumni network and job boards.</p>
                             </div>
 
                             <div className="flex gap-3">

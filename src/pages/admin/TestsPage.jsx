@@ -204,7 +204,7 @@ export default function TestsPage() {
                         {course?.title ?? "Loading..."}
                     </h1>
                     <p className="text-[13.5px] text-slate-500 mt-0.5">
-                        Manage assessments and examination standards for this certification.
+                        Manage the tests and quizzes for this course.
                     </p>
                 </div>
                 <button

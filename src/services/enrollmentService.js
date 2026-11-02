@@ -12,6 +12,8 @@ import api from "./api";
  *
  * ADMIN:
  *   GET    /api/v1/enrollments/admin/all          → all enrollments with filters
+ *   GET    /api/v1/enrollments/admin/stats        → status / country / course totals
+ *   GET    /api/v1/enrollments/admin/export       → CSV of the filtered enrollments
  *
  * FREE COURSE ASSIGNMENT (admin, sub-admin with "manage students"):
  *   GET    /api/v1/enrollments/admin/courses      → courses that can be assigned (?search)
@@ -30,21 +32,13 @@ const enrollmentService = {
     // POST /enrollments/free/:courseId — instant enrolment for free courses
     enrollFree: (courseId) => api.post(`/enrollments/free/${courseId}`),
 
-    // Admin endpoints as specified
-    getAllEnrollments: (params = {}) => {
-        // Support ?course_id=123 filter
-        const queryParams = new URLSearchParams();
-        if (params.course_id) queryParams.append("course_id", params.course_id);
-        if (params.search) queryParams.append("search", params.search);
-        if (params.page) queryParams.append("page", params.page);
-        if (params.limit) queryParams.append("limit", params.limit);
-
-        const url = `/enrollments/admin/all${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
-        return api.get(url);
-    },
-
-    // Not implemented on the backend yet; EnrollmentsPage handles the failure
-    getEnrollmentStats: () => api.get("/enrollments/admin/stats"),
+    // Admin: list / stats / CSV export — all take the same filters:
+    // search, course_id, country (e.g. "IN", "unknown"), status
+    // (completed | in_progress | not_started | inactive), source, from, to (YYYY-MM-DD)
+    getAllEnrollments: (params = {}) => api.get("/enrollments/admin/all", { params }),
+    getEnrollmentStats: (params = {}) => api.get("/enrollments/admin/stats", { params }),
+    exportEnrollments: (params = {}) =>
+        api.get("/enrollments/admin/export", { params, responseType: "blob" }),
 
     // Free course assignment
     getAssignableCourses: (search) =>

@@ -6,7 +6,7 @@ import { LEGAL } from "./legal.config";
 const SECTIONS = [
     "Acceptance of these terms",
     "Eligibility and accounts",
-    "Courses and your licence",
+    "Courses and your license",
     "Purchases and payment",
     "Refund policy",
     "Certificates and exam preparation",
@@ -61,10 +61,10 @@ export default function TermsOfServicePage() {
                 </ul>
             </Section>
 
-            <Section title="Courses and your licence">
+            <Section title="Courses and your license">
                 <p>
                     When you enroll in a course, we grant you a limited, personal, non-exclusive,
-                    non-transferable, revocable licence to access and view the course content through the
+                    non-transferable, revocable license to access and view the course content through the
                     Service for your own non-commercial learning, for as long as the course remains available
                     on the Service or for the access period stated on the course page.
                 </p>
@@ -149,7 +149,7 @@ export default function TermsOfServicePage() {
             <Section title="Reviews and user content">
                 <p>
                     You may post reviews, ratings and other content. You keep ownership of your content, and
-                    you grant {brand} a worldwide, royalty-free, non-exclusive licence to host, display,
+                    you grant {brand} a worldwide, royalty-free, non-exclusive license to host, display,
                     reproduce and use it in connection with operating and promoting the Service. Reviews must
                     reflect your genuine experience. We may moderate, decline or remove content that breaches
                     these Terms.
@@ -160,7 +160,7 @@ export default function TermsOfServicePage() {
                 <p>
                     The Service, including courses, videos, text, practice questions, graphics, logos and
                     software, is owned by {brand} or its licensors and is protected by copyright, trademark
-                    and other laws. Except for the licence granted in these Terms, no rights are transferred
+                    and other laws. Except for the license granted in these Terms, no rights are transferred
                     to you.
                 </p>
                 <p>

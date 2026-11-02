@@ -26,7 +26,7 @@ const getErrorMessage = (error) => {
         return "Please allow popups for PayPal";
     }
     if (error.message === "Payment timeout") {
-        return "Payment timed out, please try again";
+        return "Payment timed out. Please try again.";
     }
     if (error.message === "cancelled") {
         return "Payment cancelled";
@@ -35,13 +35,13 @@ const getErrorMessage = (error) => {
     const serverMessage = error.response?.data?.message;
     if (serverMessage) return serverMessage;
     if (error.message === "Verification failed") {
-        return "Payment verification failed. Contact support if amount was deducted";
+        return "Payment verification failed. Contact support if money was deducted.";
     }
     if (error.detail) return error.detail;
     if (error.code === "NETWORK_ERROR" || error.message.includes("network")) {
         return "Check your internet connection";
     }
-    return "Payment failed. Please try again";
+    return "Payment failed. Please try again.";
 };
 
 // ── Razorpay Loader (with retry and timeout) ─────────────────────────
@@ -231,9 +231,9 @@ export function useCheckout(courseId) {
         try {
             setScriptLoading(true);
             const loaded = await loadRazorpayScript();
-            if (!loaded) throw new Error("Unable to load payment gateway. Try again.");
+            if (!loaded) throw new Error("Could not load the payment gateway. Please try again.");
         } catch (err) {
-            throw new Error("Unable to load payment gateway. Try again.");
+            throw new Error("Could not load the payment gateway. Please try again.");
         } finally {
             setScriptLoading(false);
         }

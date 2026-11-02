@@ -653,7 +653,7 @@ export default function UsersPage() {
                         </h3>
                         <p className="text-[13px] text-slate-500 leading-relaxed mb-6 max-w-[260px] mx-auto">
                             {blockTarget.action === "block"
-                                ? "The user will lose access to all courses and their subscription will be paused. You can unblock them at any time."
+                                ? "The user will lose access to all their courses until you unblock them."
                                 : "The user will regain access to all their enrolled courses."}
                         </p>
                         <div className="space-y-2.5">
@@ -890,7 +890,7 @@ export default function UsersPage() {
                             <p className="text-[12px] text-slate-400 mt-0.5">{showRevoke.email}</p>
                         </div>
                         <p className="text-[12.5px] text-slate-400 mb-5">
-                            All admin permissions will be removed. They will be downgraded to a regular user.
+                            All admin permissions will be removed. They will become a regular user.
                         </p>
                         <div className="flex gap-3">
                             <button

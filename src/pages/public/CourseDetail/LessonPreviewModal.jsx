@@ -158,7 +158,7 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                 )}
 
                 <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-5 py-3 border-t border-white/10">
-                    <p className="text-[12.5px] text-white/50">Enjoying it? Enrol to unlock every lesson.</p>
+                    <p className="text-[12.5px] text-white/50">Enjoying it? Enroll to unlock every lesson.</p>
                     <button
                         type="button"
                         onClick={() => {

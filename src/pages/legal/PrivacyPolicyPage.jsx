@@ -57,7 +57,7 @@ export default function PrivacyPolicyPage() {
                         processors; we do not receive or store full card numbers.
                     </li>
                     <li>
-                        <strong>Enquiries and support:</strong> your name, email, phone number and message
+                        <strong>Inquiries and support:</strong> your name, email, phone number and message
                         when you contact us or fill in a form.
                     </li>
                     <li>
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
                         To deliver courses, track your progress, score practice tests and issue certificates.
                     </li>
                     <li>To process payments, prevent fraud and send receipts and invoices.</li>
-                    <li>To respond to enquiries and provide customer support.</li>
+                    <li>To respond to inquiries and provide customer support.</li>
                     <li>
                         To send service messages (for example, account, purchase and security notices) and,
                         where permitted, marketing about new courses and offers.

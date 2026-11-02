@@ -337,7 +337,7 @@ export default function AdminDashboard() {
                     Object.keys(dashboardStats).length === 0
                 ) {
                     setError(
-                        "Dashboard API endpoints not available. Please ensure backend is properly configured."
+                        "Dashboard API endpoints not available. Please make sure the backend is configured."
                     );
                 }
 
@@ -442,7 +442,7 @@ export default function AdminDashboard() {
                 console.error("Error loading dashboard data:", err);
                 if (err.response?.status === 404) {
                     setError(
-                        "Dashboard API endpoints not available. Please ensure backend is properly configured."
+                        "Dashboard API endpoints not available. Please make sure the backend is configured."
                     );
                 } else {
                     setError("Failed to load dashboard data");

@@ -437,7 +437,7 @@ export default function SectionsPage() {
                 console.error("Error loading sections:", err);
                 if (err.response?.status === 404) {
                     setError(
-                        "Sections API endpoint not available. Please ensure backend is properly configured."
+                        "Sections API endpoint not available. Please make sure the backend is configured."
                     );
                 } else {
                     setError("Failed to load sections");

@@ -109,7 +109,7 @@ const CSS = `
 
 const TRUST_PILLS = [
     { icon: BadgeCheck, label: "✓ 100% PMP® Pass Guarantee" },
-    { icon: BadgeCheck, label: "✓ Industry Recognized Certs" },
+    { icon: BadgeCheck, label: "✓ Industry-Recognized Certifications" },
     { icon: Clock, label: "✓ Learn at Your Own Pace" },
 ];
 
