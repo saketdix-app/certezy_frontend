@@ -4,6 +4,15 @@ import toast from "react-hot-toast";
 
 import certificateService from "@/services/certificateService";
 
+// Training dates are calendar days (stored at UTC midnight)
+const fmtDay = (d) =>
+    new Date(d).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+    });
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(dateStr) {
@@ -210,6 +219,13 @@ function CertCard({ cert, onPdfReady }) {
                 {/* Meta */}
                 <div className="space-y-2">
                     <MetaRow icon={Calendar} label="Issued on" value={fmtDate(cert.issued_at)} />
+                    {cert.training_start && cert.training_end && (
+                        <MetaRow
+                            icon={Calendar}
+                            label="Training period"
+                            value={`${fmtDay(cert.training_start)} – ${fmtDay(cert.training_end)}`}
+                        />
+                    )}
                     {cert.valid_until && (
                         <MetaRow icon={Calendar} label="Valid until" value={fmtDate(cert.valid_until)} />
                     )}
