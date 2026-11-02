@@ -15,6 +15,7 @@ import {
     Award,
     MessageSquare,
     LogOut,
+    GraduationCap,
     Menu,
     X,
     ChevronRight,
@@ -133,6 +134,14 @@ export default function AdminLayout() {
                             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                         </div>
                     </div>
+                    <Link
+                        to="/student/dashboard"
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-[#3282B8] rounded-lg hover:bg-blue-50 transition-colors"
+                        title="Use the site as a learner: enroll, learn, take tests"
+                    >
+                        <GraduationCap size={18} />
+                        <span>Learner view</span>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors"

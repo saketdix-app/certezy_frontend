@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ShieldCheck } from "lucide-react";
 import { useDispatch } from "react-redux";
 
 import {
@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { logoutUser } from "@/features/auth/authSlice";
-import { STUDENT_MENU_ITEMS } from "./navbar.data";
+import { ADMIN_PANEL_ITEM, STUDENT_MENU_ITEMS } from "./navbar.data";
+import { isAdminRole } from "@/config/app";
 import { cn } from "@/lib/utils";
 
 /**
@@ -36,6 +37,9 @@ export default function AvatarMenu({ user }) {
         .join("")
         .slice(0, 2)
         .toUpperCase();
+
+    const isAdmin = isAdminRole(user.role);
+    const items = isAdmin ? [ADMIN_PANEL_ITEM, { divider: true }, ...STUDENT_MENU_ITEMS] : STUDENT_MENU_ITEMS;
 
     const handleLogout = async () => {
         try {
@@ -81,12 +85,19 @@ export default function AvatarMenu({ user }) {
             >
                 {/* User info */}
                 <div className="px-3 py-2.5 border-b border-border mb-1">
-                    <p className="text-[13.5px] font-semibold text-text-primary truncate">{user.name}</p>
+                    <p className="text-[13.5px] font-semibold text-text-primary truncate flex items-center gap-1.5">
+                        <span className="truncate">{user.name}</span>
+                        {isAdmin && (
+                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-primary rounded px-1.5 py-0.5">
+                                {user.role === "sub_admin" ? "Sub-admin" : "Admin"}
+                            </span>
+                        )}
+                    </p>
                     <p className="text-[12px] text-text-muted truncate">{user.email}</p>
                 </div>
 
                 {/* Menu items */}
-                {STUDENT_MENU_ITEMS.map((item, i) =>
+                {items.map((item, i) =>
                     item.divider ? (
                         <DropdownMenuSeparator key={i} className="bg-border my-1" />
                     ) : item.danger ? (
@@ -102,8 +113,14 @@ export default function AvatarMenu({ user }) {
                         <DropdownMenuItem key={i} asChild>
                             <Link
                                 to={item.to}
-                                className="text-[13.5px] font-medium text-text-primary cursor-pointer w-full rounded"
+                                className={cn(
+                                    "text-[13.5px] font-medium cursor-pointer w-full rounded",
+                                    item.admin
+                                        ? "text-primary font-semibold flex items-center gap-2"
+                                        : "text-text-primary"
+                                )}
                             >
+                                {item.admin && <ShieldCheck size={15} />}
                                 {item.label}
                             </Link>
                         </DropdownMenuItem>

@@ -66,7 +66,8 @@ function StudentList({ selectedId, onSelect }) {
     useEffect(() => {
         let cancelled = false;
         authService
-            .getAllUsers({ role: "student", page, limit: PER_PAGE, ...(debounced && { search: debounced }) })
+            // Everyone (students, and admins who want to try a course as a learner)
+            .getAllUsers({ page, limit: PER_PAGE, ...(debounced && { search: debounced }) })
             .then(({ data }) => {
                 if (cancelled) return;
                 setResult({
@@ -519,8 +520,9 @@ export default function AssignCoursesPage() {
                                 <p className="text-[12px] text-slate-400 truncate">{user.email}</p>
                             </div>
                             {user.role !== "student" && (
-                                <span className="ml-auto text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded">
-                                    Not a student account
+                                <span className="ml-auto text-[11px] font-bold text-[#3282B8] bg-[#EBF4FF] px-2 py-1 rounded">
+                                    {user.role === "sub_admin" ? "Sub-admin" : "Admin"} · learner access for
+                                    testing
                                 </span>
                             )}
                         </Card>

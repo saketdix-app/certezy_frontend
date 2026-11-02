@@ -19,6 +19,9 @@ export const MORE_ITEMS = [
 ];
 
 // ── Student avatar dropdown ────────────────────────────────
+// Admins see the same menu plus "Admin Panel" at the top
+export const ADMIN_PANEL_ITEM = { label: "Admin Panel", to: "/admin/dashboard", admin: true };
+
 export const STUDENT_MENU_ITEMS = [
     { label: "My Profile", to: "/student/profile" },
     { label: "My Learning", to: "/student/my-courses" },

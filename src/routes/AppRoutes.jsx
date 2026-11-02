@@ -4,7 +4,7 @@ import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router
 import NavBarIndex from "@/components/layout/Navbar/NavBarIndex";
 import Footer from "@/components/layout/Footer";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
-import { ADMIN_ROLES, ROUTES } from "@/config/app";
+import { ADMIN_ROLES, LEARNER_ROLES, ROUTES } from "@/config/app";
 
 // ── Pages (code-split per route) ─────────────────────────
 // Public
@@ -98,7 +98,8 @@ function NotFound() {
     );
 }
 
-const studentOnly = (element) => <ProtectedRoute allowedRoles={["student"]}>{element}</ProtectedRoute>;
+// Learner pages: students, and admins trying the site as a learner
+const studentOnly = (element) => <ProtectedRoute allowedRoles={LEARNER_ROLES}>{element}</ProtectedRoute>;
 
 /**
  * Browser tab title while moving around the app. The first page load keeps the

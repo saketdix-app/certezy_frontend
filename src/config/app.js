@@ -82,6 +82,12 @@ export const PROTECTED_PREFIXES = ["/student", "/admin", ROUTES.CHECKOUT];
 
 export const ADMIN_ROLES = ["admin", "sub_admin"];
 
+/** Roles that can use learner pages (My Learning, checkout, course player…).
+ *  Admins and sub-admins too, so they can try everything a student sees. */
+export const LEARNER_ROLES = ["student", ...ADMIN_ROLES];
+
+export const isAdminRole = (role) => ADMIN_ROLES.includes(role);
+
 /** Default landing page for a signed-in user, by role. */
 export const homeForRole = (role) =>
     ADMIN_ROLES.includes(role) ? ROUTES.ADMIN_DASHBOARD : ROUTES.STUDENT_DASHBOARD;
