@@ -1,6 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ShieldCheck, Star, CheckCircle2, ClipboardCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+
+import { PmpCourseCard, TopicCards } from "./HeroCards";
+import { useHeroCatalog } from "./useHeroCatalog";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Only animations + a few layout helpers that Tailwind can't express.
@@ -20,14 +22,6 @@ const STYLES = `
     from { opacity:0; transform:translateY(18px); }
     to   { opacity:1; transform:translateY(0);    }
   }
-  @keyframes cardLift {
-    0%,100% { transform: translateY(0px);   }
-    50%      { transform: translateY(-8px);  }
-  }
-  @keyframes progFill {
-    from { width:0% }
-    to   { width:75% }
-  }
   @keyframes glowPulse {
     0%,100% { opacity:.35; }
     50%      { opacity:.6;  }
@@ -40,16 +34,6 @@ const STYLES = `
   .afu5 { animation: heroFadeUp .55s .32s ease both; }
   .afu6 { animation: heroFadeUp .55s .40s ease both; }
 
-  .card-hover {
-    will-change: transform;
-    animation: cardLift 4.5s ease-in-out infinite;
-  }
-
-  .prog-anim {
-    animation: progFill 1.8s .9s ease both;
-    width: 0%;
-  }
-
   .glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
 
   /* ── RESPONSIVE ─────────────────────────────────────────────────── */
@@ -58,58 +42,26 @@ const STYLES = `
     align-items: center;
     gap: 48px;
     padding: 72px 0 0;
-    min-height: calc(100svh - 68px);
+    min-height: calc(100svh - 260px);
   }
   .hero-left  { flex: 1.05; min-width: 0; }
   .hero-right { flex: .95;  min-width: 0; display:flex; justify-content:center; }
-
-  /* bottom cards strip */
-  .bottom-cards {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0 24px;
-    margin-top: -60px;
-    position: relative;
-    z-index: 10;
-    overflow: visible;
-  }
-  .bcard {
-    flex-shrink: 0;
-    width: 220px;
-    background: #fff;
-    border-radius: 20px;
-    padding: 22px 20px 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    position: relative;
-    transition: transform .25s ease, box-shadow .25s ease;
-  }
-  .bcard:hover { transform: translateY(-6px) !important; box-shadow: 0 28px 72px rgba(0,0,0,0.45) !important; }
-
-  /* staggered overlap */
-  .bcard:nth-child(1) { transform: rotate(-4deg) translateY(10px);  z-index:1; }
-  .bcard:nth-child(2) { transform: rotate(-1.5deg) translateY(-4px); z-index:2; margin-left:-28px; }
-  .bcard:nth-child(3) { transform: rotate(2deg) translateY(6px);    z-index:3; margin-left:-28px; }
-  .bcard:nth-child(4) { transform: rotate(5deg) translateY(14px);   z-index:2; margin-left:-28px; }
 
   /* large screens */
   @media (min-width: 1400px) {
     .hero-container { max-width: 1320px !important; }
     .hero-title     { font-size: 68px !important; }
-    .bcard          { width: 240px; }
   }
 
   /* 1024 – 1280 */
   @media (max-width: 1280px) {
     .hero-title { font-size: 52px !important; }
-    .bcard      { width: 200px; }
   }
 
   /* tablet landscape 900 – 1024 */
   @media (max-width: 1024px) {
     .hero-title { font-size: 46px !important; }
     .hero-wrap  { gap: 32px; }
-    .bcard      { width: 182px; padding: 18px 16px; }
   }
 
   /* tablet portrait 768 – 900 */
@@ -119,9 +71,6 @@ const STYLES = `
     .hero-right  { width: 100%; justify-content: center; }
     .hero-title  { font-size: 44px !important; }
     .stat-sep    { display: none; }
-    .bottom-cards{ padding: 0 16px; justify-content: center; margin-top: -40px; }
-    .bcard       { width: 165px; }
-    .bcard:nth-child(4){ display:none; }
   }
 
   /* mobile 640 – 768 */
@@ -129,16 +78,12 @@ const STYLES = `
     .hero-title  { font-size: 38px !important; line-height:1.12 !important; }
     .hero-desc   { font-size: 15px !important; }
     .btn-row     { flex-wrap: wrap; }
-    .bcard       { width: 150px; padding:16px 14px; }
-    .bcard:nth-child(3){ display:none; }
   }
 
   /* mobile 480 – 640 */
   @media (max-width: 640px) {
     .hero-title  { font-size: 32px !important; }
     .hero-wrap   { padding: 40px 0 0; }
-    .bottom-cards{ margin-top: -24px; }
-    .bcard       { width: 145px; }
   }
 
   /* small mobile < 480 */
@@ -146,129 +91,14 @@ const STYLES = `
     .hero-title   { font-size: 28px !important; }
     .btn-row      { flex-direction: column; }
     .btn-row a    { text-align:center; justify-content:center; width:100%; }
-    .bcard        { width: 135px; padding:14px 12px; }
-    .bcard:nth-child(2){ display:none; }
   }
 `;
-
-/* ── Course icon colours ─────────────────────────────────────────────────── */
-const ICON_COLORS = {
-    react: { bg: "#EFF6FF", color: "#3B82F6" },
-    aws: { bg: "#FFF7ED", color: "#F97316" },
-    cyber: { bg: "#FEF2F2", color: "#EF4444" },
-    devops: { bg: "#F0FDF4", color: "#22C55E" },
-};
-
-/* ── SVG icons (inline so zero extra requests) ──────────────────────────── */
-function IconReact() {
-    return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path
-                d="M9 3L5 7m0 0L9 11M5 7h8m2 10 4-4m0 0-4-4m4 4H7"
-                stroke="#3282B8"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
-function IconAWS() {
-    return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="7" width="18" height="12" rx="3" stroke="#F97316" strokeWidth="2" />
-            <path
-                d="M3 11h18M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"
-                stroke="#F97316"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-function IconCyber() {
-    return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path
-                d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11 4.5-.85 8-5.75 8-11V6l-8-4Z"
-                stroke="#EF4444"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
-function IconDevOps() {
-    return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path
-                d="M12 3v4M12 17v4M4.22 6.22l2.83 2.83M16.95 16.95l2.83 2.83M3 12h4M17 12h4M4.22 17.78l2.83-2.83M16.95 7.05l2.83-2.83"
-                stroke="#22C55E"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
-/* ── Bottom course cards data ────────────────────────────────────────────── */
-const BOTTOM_COURSES = [
-    {
-        icon: <IconReact />,
-        iconBg: ICON_COLORS.react,
-        title: "React Development",
-        lessons: 24,
-        hours: "12.5",
-    },
-    { icon: <IconAWS />, iconBg: ICON_COLORS.aws, title: "AWS Certification", lessons: 42, hours: "30" },
-    { icon: <IconCyber />, iconBg: ICON_COLORS.cyber, title: "Cyber Security", lessons: 18, hours: "15" },
-    {
-        icon: <IconDevOps />,
-        iconBg: ICON_COLORS.devops,
-        title: "DevOps Engineering",
-        lessons: 36,
-        hours: "24",
-    },
-];
 
 /* ═══════════════════════════════════════════════════════════════════════════
    HERO SECTION
 ═══════════════════════════════════════════════════════════════════════════ */
-/* PMP logo with a neutral fallback while the image file is missing */
-const PMP_LOGO_SRC = "/brand/pmp-logo.png";
-
-function PmpBadge() {
-    const [failed, setFailed] = useState(false);
-    return (
-        <div
-            style={{
-                height: "56px",
-                minWidth: "56px",
-                padding: failed ? 0 : "6px 10px",
-                borderRadius: "16px",
-                background: "#EFF6FF",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: "20px",
-            }}
-        >
-            {failed ? (
-                <ClipboardCheck size={28} color="#3282B8" aria-label="PMP" />
-            ) : (
-                <img
-                    src={PMP_LOGO_SRC}
-                    alt="PMP® certification"
-                    style={{ height: "44px", width: "auto", display: "block" }}
-                    onError={() => setFailed(true)}
-                />
-            )}
-        </div>
-    );
-}
-
 export default function HeroSection() {
+    const catalog = useHeroCatalog();
     return (
         <>
             <style>{STYLES}</style>
@@ -511,234 +341,14 @@ export default function HeroSection() {
 
                         {/* ════ RIGHT ══════════════════════════════════════════════ */}
                         <div className="hero-right afu6">
-                            <div style={{ position: "relative", width: "100%", maxWidth: "460px" }}>
-                                {/* Main course card — taller height */}
-                                <div
-                                    className="card-hover"
-                                    style={{
-                                        background: "#fff",
-                                        borderRadius: "24px",
-                                        overflow: "hidden",
-                                        boxShadow:
-                                            "0 32px 80px rgba(0,0,0,0.55), 0 8px 24px rgba(59,130,246,0.18)",
-                                    }}
-                                >
-                                    {/* Card top */}
-                                    <div style={{ padding: "28px 28px 0" }}>
-                                        {/* PMP logo — drop the official file at public/brand/pmp-logo.png */}
-                                        <PmpBadge />
-
-                                        {/* Rating */}
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "flex-end",
-                                                marginBottom: "6px",
-                                            }}
-                                        >
-                                            <Star
-                                                size={14}
-                                                fill="#F59E0B"
-                                                color="#F59E0B"
-                                                aria-hidden="true"
-                                            />
-                                            <span
-                                                style={{
-                                                    fontSize: "14px",
-                                                    fontWeight: 800,
-                                                    color: "#0F172A",
-                                                    marginLeft: "5px",
-                                                }}
-                                            >
-                                                4.9
-                                            </span>
-                                        </div>
-
-                                        {/* Title */}
-                                        <h2
-                                            style={{
-                                                fontSize: "20px",
-                                                fontWeight: 800,
-                                                color: "#0F172A",
-                                                lineHeight: 1.3,
-                                                marginBottom: "12px",
-                                            }}
-                                        >
-                                            Project Management Professional (PMP)
-                                        </h2>
-
-                                        {/* Description */}
-                                        <p
-                                            style={{
-                                                fontSize: "13.5px",
-                                                color: "#64748B",
-                                                lineHeight: 1.65,
-                                                marginBottom: "20px",
-                                            }}
-                                        >
-                                            Master predictive, agile and hybrid project management and prepare
-                                            for the globally recognized PMP® certification exam.
-                                        </p>
-
-                                        {/* Instructors */}
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "space-between",
-                                                marginBottom: "24px",
-                                            }}
-                                        >
-                                            <div style={{ display: "flex" }}>
-                                                {["#3282B8", "#6C3BD5"].map((c, i) => (
-                                                    <div
-                                                        key={i}
-                                                        aria-hidden="true"
-                                                        style={{
-                                                            width: "38px",
-                                                            height: "38px",
-                                                            borderRadius: "50%",
-                                                            background: `linear-gradient(135deg, ${c}, ${c}aa)`,
-                                                            border: "2.5px solid #fff",
-                                                            marginLeft: i ? "-10px" : 0,
-                                                            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                                                            flexShrink: 0,
-                                                        }}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <span
-                                                style={{
-                                                    fontSize: "13px",
-                                                    fontWeight: 700,
-                                                    color: "#0F172A",
-                                                }}
-                                            >
-                                                12+ Instructors
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Divider */}
-                                    <div style={{ height: "1px", background: "#F1F5F9", margin: "0 28px" }} />
-
-                                    {/* Card bottom — progress section */}
-                                    <div style={{ padding: "20px 28px 26px" }}>
-                                        {/* Labels */}
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                                marginBottom: "10px",
-                                            }}
-                                        >
-                                            <span
-                                                style={{
-                                                    fontSize: "11px",
-                                                    fontWeight: 800,
-                                                    color: "#3282B8",
-                                                    letterSpacing: "0.07em",
-                                                }}
-                                            >
-                                                POPULAR CHOICE
-                                            </span>
-                                            <span
-                                                style={{
-                                                    fontSize: "11px",
-                                                    fontWeight: 800,
-                                                    color: "#6366F1",
-                                                    letterSpacing: "0.07em",
-                                                }}
-                                            >
-                                                75% ENROLLMENT
-                                            </span>
-                                        </div>
-                                        {/* Progress bar */}
-                                        <div
-                                            style={{
-                                                height: "8px",
-                                                background: "#EEF2FF",
-                                                borderRadius: "99px",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <div
-                                                className="prog-anim"
-                                                style={{
-                                                    height: "100%",
-                                                    borderRadius: "99px",
-                                                    background:
-                                                        "linear-gradient(90deg, #3282B8 0%, #6C3BD5 100%)",
-                                                }}
-                                                role="progressbar"
-                                                aria-valuenow={75}
-                                                aria-valuemin={0}
-                                                aria-valuemax={100}
-                                                aria-label="Course enrollment 75%"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <PmpCourseCard pmp={catalog.pmp} />
                         </div>
                         {/* ════ END RIGHT ══════════════════════════════════════════ */}
                     </div>
                 </div>
 
-                {/* ══ BOTTOM FLOATING CARDS ════════════════════════════════════════ */}
-                <div
-                    className="bottom-cards"
-                    aria-label="Featured course categories"
-                    style={{ maxWidth: "900px", paddingBottom: "48px" }}
-                >
-                    {BOTTOM_COURSES.map(({ icon, iconBg, title, lessons, hours }, i) => (
-                        <article
-                            key={title}
-                            className="bcard"
-                            style={{
-                                /* stagger animation delay per card */
-                                animationDelay: `${i * 0.08}s`,
-                            }}
-                        >
-                            {/* Icon */}
-                            <div
-                                aria-hidden="true"
-                                style={{
-                                    width: "46px",
-                                    height: "46px",
-                                    borderRadius: "13px",
-                                    background: iconBg.bg,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginBottom: "14px",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {icon}
-                            </div>
-
-                            {/* Title */}
-                            <h3
-                                style={{
-                                    fontSize: "14.5px",
-                                    fontWeight: 800,
-                                    color: "#0F172A",
-                                    lineHeight: 1.3,
-                                    marginBottom: "8px",
-                                }}
-                            >
-                                {title}
-                            </h3>
-
-                            {/* Meta */}
-                            <p style={{ fontSize: "12px", color: "#94A3B8", fontWeight: 500 }}>
-                                {lessons} Lessons &bull; {hours} Hours
-                            </p>
-                        </article>
-                    ))}
-                </div>
+                {/* ══ TOPIC CARDS ══ */}
+                <TopicCards topics={catalog.topics} />
             </section>
         </>
     );
