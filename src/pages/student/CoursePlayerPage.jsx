@@ -280,6 +280,28 @@ export default function CoursePlayerPage() {
     const allLessons = sections.flatMap((s) => s.lessons);
     const currentIdx = allLessons.findIndex((l) => l.id === currentLesson?.id);
 
+    // ── Total + completed count ────────────────────────────────────────────────
+    const totalLessons = allLessons.length;
+    const completedLessons = Object.values(progressMap).filter((p) => p.is_completed).length;
+    const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+    // Certificate: all lessons done AND every course exam passed (server decides)
+    const [certStatus, setCertStatus] = useState(null);
+    const lessonsDone = progressPct >= 100;
+    useEffect(() => {
+        let cancelled = false;
+        certificateService
+            .status(courseId)
+            .then(({ data }) => !cancelled && setCertStatus(data?.data ?? null))
+            .catch(() => !cancelled && setCertStatus(null));
+        return () => {
+            cancelled = true;
+        };
+        // re-check when the last lesson gets completed
+    }, [courseId, lessonsDone]);
+    const canGetCertificate = Boolean(certStatus?.complete || certStatus?.has_certificate);
+    const passedExamIds = new Set((certStatus?.exams ?? []).filter((e) => e.passed).map((e) => e.id));
+
     const isLastLesson = currentIdx === allLessons.length - 1;
     const nextLesson = isLastLesson ? null : allLessons[currentIdx + 1];
     // Set when the next lesson starts a new section
@@ -305,13 +327,25 @@ export default function CoursePlayerPage() {
         }
         const remaining = allLessons.filter((l) => !completedRef.current[l.id]?.is_completed);
         if (remaining.length === 0) {
-            toast.success("Course complete — well done! 🎉");
+            toast.success(
+                courseExams.length && !canGetCertificate
+                    ? "All lessons done! Pass every course exam to get your certificate."
+                    : "Course complete — well done! 🎉"
+            );
         } else {
             toast(`${remaining.length} lesson${remaining.length > 1 ? "s" : ""} left to complete the course`);
             await openLesson(remaining[0]);
             setExpandedSections((prev) => ({ ...prev, [remaining[0].section_id]: true }));
         }
-    }, [currentLesson, currentIdx, allLessons, openLesson, syncProgress]);
+    }, [
+        currentLesson,
+        currentIdx,
+        allLessons,
+        openLesson,
+        syncProgress,
+        courseExams.length,
+        canGetCertificate,
+    ]);
 
     const handleVideoEnded = useCallback(() => {
         // Marks the lesson complete and moves on
@@ -358,11 +392,6 @@ export default function CoursePlayerPage() {
             </div>
         );
 
-    // ── Total + completed count ────────────────────────────────────────────────
-    const totalLessons = allLessons.length;
-    const completedLessons = Object.values(progressMap).filter((p) => p.is_completed).length;
-    const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
     const getCertificate = async () => {
         try {
             const res = await certificateService.claim(courseId);
@@ -386,7 +415,7 @@ export default function CoursePlayerPage() {
                 progressPct={progressPct}
                 completedLessons={completedLessons}
                 totalLessons={totalLessons}
-                onGetCertificate={progressPct >= 100 ? getCertificate : null}
+                onGetCertificate={canGetCertificate ? getCertificate : null}
                 sidebarOpen={sidebarOpen}
                 onToggleSidebar={() => setSidebarOpen((p) => !p)}
             />
@@ -642,6 +671,9 @@ export default function CoursePlayerPage() {
                             if (!window.matchMedia("(min-width: 1024px)").matches) setSidebarOpen(false);
                         }}
                         courseExams={courseExams}
+                        passedExamIds={passedExamIds}
+                        lessonsDone={progressPct >= 100}
+                        canGetCertificate={canGetCertificate}
                         courseId={courseId}
                         navigate={navigate}
                     />
@@ -748,10 +780,14 @@ function CourseSidebar({
     onToggleSection,
     onSelectLesson,
     courseExams,
+    passedExamIds = new Set(),
+    lessonsDone = false,
+    canGetCertificate = false,
     courseId,
     navigate,
 }) {
     const totalLessons = sections.reduce((a, s) => a + s.lessons.length, 0);
+    const examsPassed = courseExams.filter((e) => passedExamIds.has(e.id)).length;
     const totalDone = sections.reduce(
         (a, s) => a + s.lessons.filter((l) => progressMap[l.id]?.is_completed).length,
         0
@@ -927,8 +963,15 @@ function CourseSidebar({
                     <div className="px-5 pt-4 pb-2">
                         <p className="text-[13.5px] font-extrabold text-slate-900">Course Exams</p>
                         <p className="mt-0.5 text-[11.5px] text-slate-500">
-                            {courseExams.length} exam{courseExams.length > 1 ? "s" : ""} available
+                            {examsPassed} of {courseExams.length} passed
                         </p>
+                        {!canGetCertificate && (
+                            <p className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1.5 text-[11.5px] text-amber-900">
+                                {lessonsDone
+                                    ? "Pass every exam to get your certificate."
+                                    : "Complete all lessons and pass every exam to get your certificate."}
+                            </p>
+                        )}
                     </div>
                     <div className="px-3 pb-4 space-y-1.5">
                         {courseExams.map((exam) => (
@@ -937,14 +980,25 @@ function CourseSidebar({
                                 onClick={() => navigate(`/student/course/${courseId}/exam/${exam.id}`)}
                                 className="w-full flex items-center gap-3 rounded-xl border border-[#DBEAFE] bg-[#F5F9FF] px-3 py-2.5 text-left transition-colors hover:border-[#93C5FD] hover:bg-[#EFF6FF]"
                             >
-                                <span className="w-8 h-8 shrink-0 rounded-lg bg-[#2563EB] flex items-center justify-center">
-                                    <Award size={16} className="text-white" />
+                                <span
+                                    className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center ${
+                                        passedExamIds.has(exam.id) ? "bg-green-600" : "bg-[#2563EB]"
+                                    }`}
+                                >
+                                    {passedExamIds.has(exam.id) ? (
+                                        <CheckCircle2 size={16} className="text-white" />
+                                    ) : (
+                                        <Award size={16} className="text-white" />
+                                    )}
                                 </span>
                                 <span className="flex-1 min-w-0">
                                     <span className="block truncate text-[13px] font-semibold text-slate-900">
                                         {exam.title}
                                     </span>
                                     <span className="mt-0.5 block text-[11px] text-slate-500">
+                                        {passedExamIds.has(exam.id) ? (
+                                            <span className="font-semibold text-green-700">Passed · </span>
+                                        ) : null}
                                         {exam.duration ?? exam.duration_minutes} min ·{" "}
                                         {exam.total_questions ?? exam.questions_count ?? 0} questions
                                     </span>

@@ -26,6 +26,8 @@ const certificateService = {
     // GET /certificates — student ke saare certificates
     getMyCertificates: () => api.get("/certificates"),
     claim: (courseId) => api.post(`/certificates/claim/${courseId}`),
+    // { complete, reason, exams: [{ id, title, passed }], has_certificate }
+    status: (courseId) => api.get(`/certificates/status/${courseId}`),
     verify: (certificateNo) => api.get(`/certificates/verify/${encodeURIComponent(certificateNo)}`),
 
     // Public
