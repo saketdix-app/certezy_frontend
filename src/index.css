@@ -104,3 +104,13 @@ body {
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+/* Admin on touch screens (iPad): icon-only buttons are ~26px, too small to tap
+   reliably (Delete sits next to Edit). Give them a bigger target there only. */
+@media (pointer: coarse) {
+    .admin-main button:has(> svg:only-child),
+    .admin-main a:has(> svg:only-child) {
+        min-width: 36px;
+        min-height: 36px;
+    }
+}

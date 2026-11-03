@@ -146,7 +146,7 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
         <div className={cn("fixed inset-0 z-50 overflow-hidden", isOpen ? "block" : "hidden")}>
             <div className="absolute inset-0 overflow-hidden">
                 <div
-                    className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                    className="absolute inset-0 bg-gray-500/75 transition-opacity"
                     onClick={onClose}
                 />
                 <section className="absolute inset-y-0 right-0 max-w-full flex">

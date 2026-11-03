@@ -65,7 +65,7 @@ export default function AdminLayout() {
             {/* ── Mobile overlay ── */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
@@ -173,7 +173,7 @@ export default function AdminLayout() {
                 </header>
 
                 {/* Page content */}
-                <main className="flex-1 p-4 lg:p-6">
+                <main className="admin-main flex-1 p-4 lg:p-6">
                     <Outlet />
                 </main>
             </div>
