@@ -128,7 +128,9 @@ export default function CoursePlayerPage() {
 
                 // 5. Fetch progress
                 const progRes = await progressService.getCourseProgress(courseId);
-                const progList = progRes.data?.data?.progress ?? [];
+                // The API sends the per-lesson rows as `lessons` (reading `progress`
+                // left every visit looking like a fresh start)
+                const progList = progRes.data?.data?.lessons ?? progRes.data?.data?.progress ?? [];
                 const map = {};
                 progList.forEach((p) => {
                     map[p.lesson_id] = p;

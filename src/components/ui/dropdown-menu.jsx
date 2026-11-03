@@ -2,7 +2,11 @@ import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+// Non-modal: a modal Radix menu blocks the page (pointer-events: none on
+// <body>) while open. When a menu item navigates to another layout the menu
+// can unmount before that is undone, leaving the whole page unclickable until
+// a refresh. Navbar menus don't need to block the page.
+const DropdownMenu = (props) => <DropdownMenuPrimitive.Root modal={false} {...props} />;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;

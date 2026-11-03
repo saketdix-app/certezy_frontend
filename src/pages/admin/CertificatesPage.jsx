@@ -48,9 +48,11 @@ const fmtDay = (d) =>
           })
         : "—";
 
-/** Same checks as the server: start ≤ end ≤ issue date ≤ today. */
-const datesError = ({ trainingStart, trainingEnd, issueDate }) => {
+/** Same checks as the server: start ≤ end ≤ issue date ≤ today (training: PMP only). */
+const datesError = ({ trainingStart, trainingEnd, issueDate }, withTraining = true) => {
     const today = todayIso();
+    if (!withTraining)
+        return issueDate && issueDate > today ? "Completion date can't be in the future" : null;
     if (!trainingStart || !trainingEnd) return "Enter the training start and end dates";
     if (trainingStart > trainingEnd) return "Training start must be on or before the end date";
     if (trainingEnd > today) return "Training end date can't be in the future";
@@ -59,10 +61,32 @@ const datesError = ({ trainingStart, trainingEnd, issueDate }) => {
     return null;
 };
 
-/** Training start / end + issue date, shared by Issue and Regenerate. */
-function CertificateDates({ value, onChange }) {
+/**
+ * Dates shared by Issue and Regenerate. Contact-hour (PMP) certificates print a
+ * training period; the others only a completion date.
+ */
+function CertificateDates({ value, onChange, withTraining = true }) {
     const set = (k) => (e) => onChange({ ...value, [k]: e.target.value });
     const today = todayIso();
+    if (!withTraining) {
+        return (
+            <label className="block">
+                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">
+                    Completion date
+                </span>
+                <input
+                    type="date"
+                    value={value.issueDate}
+                    max={today}
+                    onChange={set("issueDate")}
+                    className={cn(inputCls, "w-48")}
+                />
+                <span className="block mt-1.5 text-[11.5px] text-slate-500">
+                    Printed on the certificate as the date of completion.
+                </span>
+            </label>
+        );
+    }
     return (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <label className="block">
@@ -250,7 +274,7 @@ export default function CertificatesPage() {
                                             {c.certificate_no}
                                         </td>
                                         <td className="px-4 py-3 text-[12.5px] text-slate-600 whitespace-nowrap">
-                                            {c.training_start
+                                            {c.has_training_period && c.training_start
                                                 ? `${fmtDay(c.training_start)} – ${fmtDay(c.training_end)}`
                                                 : "—"}
                                         </td>
@@ -439,6 +463,8 @@ function IssueCertificateModal({ onClose, onIssued }) {
 
     const enrollment = course && enrollments ? enrollments.find((e) => e.course_id === course.id) : null;
     const startFromEnrollment = enrollment?.enrolled_at ? dayIso(enrollment.enrolled_at) : "";
+    // Training period only for contact-hour (PMP) courses
+    const withTraining = Boolean(course?.contact_hours);
 
     // Default the training start to the day they enrolled (still editable)
     useEffect(() => {
@@ -453,7 +479,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
 
     const submit = async () => {
         if (!student || !course) return toast.error("Choose a student and a course");
-        const problem = datesError(dates);
+        const problem = datesError(dates, withTraining);
         if (problem) return toast.error(problem);
         setBusy(true);
         try {
@@ -461,8 +487,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                 user_id: student.id,
                 course_id: course.id,
                 issue_date: dates.issueDate,
-                training_start: dates.trainingStart,
-                training_end: dates.trainingEnd,
+                ...(withTraining && { training_start: dates.trainingStart, training_end: dates.trainingEnd }),
                 replace: replace || undefined,
             });
             const no = data?.data?.certificate?.certificate_no;
@@ -576,7 +601,9 @@ function IssueCertificateModal({ onClose, onIssued }) {
                         )}
                     </div>
 
-                    <CertificateDates value={dates} onChange={setDates} />
+                    {course && (
+                        <CertificateDates value={dates} onChange={setDates} withTraining={withTraining} />
+                    )}
 
                     {exists && (
                         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-[12.5px] text-amber-900 space-y-2">
@@ -627,15 +654,16 @@ function RegenerateModal({ cert, onClose, onDone }) {
     });
     const [busy, setBusy] = useState(false);
 
+    const withTraining = Boolean(cert.has_training_period);
+
     const save = async () => {
-        const problem = datesError(dates);
+        const problem = datesError(dates, withTraining);
         if (problem) return toast.error(problem);
         setBusy(true);
         try {
             const { data } = await certificateService.regenerate(cert.id, {
-                training_start: dates.trainingStart,
-                training_end: dates.trainingEnd,
                 issue_date: dates.issueDate,
+                ...(withTraining && { training_start: dates.trainingStart, training_end: dates.trainingEnd }),
             });
             toast.success(data?.message || "Certificate regenerated");
             onDone();
@@ -667,7 +695,7 @@ function RegenerateModal({ cert, onClose, onDone }) {
                         <p className="text-slate-600">{cert.course_title}</p>
                         <p className="text-slate-500 font-mono text-[12px] mt-1">{cert.certificate_no}</p>
                     </div>
-                    <CertificateDates value={dates} onChange={setDates} />
+                    <CertificateDates value={dates} onChange={setDates} withTraining={withTraining} />
                     <p className="text-[12px] text-slate-500">
                         The old PDF is replaced. The certificate number and verification link stay the same,
                         so links already shared keep working.

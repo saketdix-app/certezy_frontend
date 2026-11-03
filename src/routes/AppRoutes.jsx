@@ -122,6 +122,12 @@ function useTabTitle() {
         }
         document.title = "CERTEZY";
     }, [pathname]);
+
+    // Safety net: a menu or dialog closed by navigation must never leave the
+    // page unclickable
+    useEffect(() => {
+        if (document.body.style.pointerEvents === "none") document.body.style.pointerEvents = "";
+    }, [pathname]);
 }
 
 export default function AppRoutes() {
