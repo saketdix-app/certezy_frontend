@@ -224,7 +224,7 @@ function ExamScreen({
     }
 
     return (
-        <div className="h-screen flex flex-col bg-white">
+        <div className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col bg-white">
             <ExamTopBar
                 title={exam.title}
                 secondsLeft={secondsLeft}

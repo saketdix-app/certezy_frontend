@@ -897,7 +897,7 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
             )}
 
             {/* Actions */}
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity shrink-0">
                 <button
                     onClick={onEdit}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
