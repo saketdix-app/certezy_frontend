@@ -510,7 +510,7 @@ export default function ContactPage() {
 
             {/* Message Detail Modal */}
             {showMessageModal && selectedMessage && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <div
                         className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
                         style={{ boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}
