@@ -403,9 +403,11 @@ export default function CoursePlayerPage() {
         }
     };
 
+    // dvh = the visible screen height. Plain 100vh is taller than the screen on
+    // iPad/iPhone Safari, which hid the bottom bar under the browser toolbar.
     return (
         <div
-            className="h-screen flex flex-col overflow-hidden"
+            className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col overflow-hidden"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: "#0F172A" }}
         >
             {/* ── Top Bar ─────────────────────────────────────────────────── */}
@@ -437,7 +439,7 @@ export default function CoursePlayerPage() {
                                 }
                                 style={
                                     currentLesson.type === "video"
-                                        ? { aspectRatio: "16/9", maxHeight: "calc(100vh - 200px)" }
+                                        ? { aspectRatio: "16/9", maxHeight: "calc(100dvh - 200px)" }
                                         : undefined
                                 }
                             >
@@ -1049,7 +1051,7 @@ function NotEnrolledState({ navigate }) {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 function PlayerSkeleton() {
     return (
-        <div className="h-screen flex flex-col bg-[#0F172A] animate-pulse">
+        <div className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col bg-[#0F172A] animate-pulse">
             <div
                 className="h-[60px] bg-[#0a1628]"
                 style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
