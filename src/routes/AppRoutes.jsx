@@ -17,6 +17,7 @@ const OfferPage = lazy(() => import("@/pages/public/Offer/OfferPage"));
 const ContactPagePublic = lazy(() => import("@/pages/contact/ContactPagePublic"));
 const PrivacyPolicyPage = lazy(() => import("@/pages/legal/PrivacyPolicyPage"));
 const TermsOfServicePage = lazy(() => import("@/pages/legal/TermsOfServicePage"));
+const ComplaintsPolicyPage = lazy(() => import("@/pages/legal/ComplaintsPolicyPage"));
 
 // Auth
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
@@ -146,6 +147,7 @@ export default function AppRoutes() {
                     <Route path={ROUTES.CONTACT} element={<ContactPagePublic />} />
                     <Route path={ROUTES.PRIVACY} element={<PrivacyPolicyPage />} />
                     <Route path={ROUTES.TERMS} element={<TermsOfServicePage />} />
+                    <Route path={ROUTES.COMPLAINTS} element={<ComplaintsPolicyPage />} />
                     {/* Short / legacy URLs */}
                     <Route path="/privacy" element={<Navigate to={ROUTES.PRIVACY} replace />} />
                     <Route path="/terms" element={<Navigate to={ROUTES.TERMS} replace />} />

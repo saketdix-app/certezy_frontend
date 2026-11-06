@@ -109,6 +109,7 @@ const QUICK_LINKS = [
     { label: "Contact", to: ROUTES.CONTACT },
     { label: "Privacy Policy", to: ROUTES.PRIVACY },
     { label: "Terms of Service", to: ROUTES.TERMS },
+    { label: "Complaints Policy", to: ROUTES.COMPLAINTS },
 ];
 
 const SOCIALS = [
@@ -378,6 +379,12 @@ export default function Footer() {
                                 className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Terms of Service
+                            </Link>
+                            <Link
+                                to={ROUTES.COMPLAINTS}
+                                className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
+                            >
+                                Complaints Policy
                             </Link>
                             <BackToTop />
                         </div>
