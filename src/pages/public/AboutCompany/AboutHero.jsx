@@ -21,28 +21,28 @@ export default function AboutHero() {
 
                     {/* Subtext */}
                     <p className="mt-6 text-gray-400 text-lg md:text-xl max-w-[700px] mx-auto leading-relaxed">
-                        We help professionals worldwide earn industry-recognized certifications and advance
-                        their careers with confidence through curated digital education.
+                        We help professionals worldwide prepare for industry-recognized certifications and
+                        advance their careers with confidence through curated digital education.
                     </p>
 
                     {/* Stats */}
                     <div className="flex flex-wrap justify-center gap-5 mt-12">
                         <div className="flex items-center gap-3 px-6 py-4 bg-white/5 border border-white/10 rounded-full hover:border-[#3282B8] hover:bg-white/10 transition">
-                            <span className="text-2xl font-bold">500+</span>
+                            <span className="text-2xl font-bold">20+</span>
 
-                            <span className="text-gray-400 text-sm">Premium Courses</span>
+                            <span className="text-gray-400 text-sm">Self-Paced Courses</span>
                         </div>
 
                         <div className="flex items-center gap-3 px-6 py-4 bg-white/5 border border-white/10 rounded-full hover:border-[#3282B8] hover:bg-white/10 transition">
-                            <span className="text-2xl font-bold">50k+</span>
+                            <span className="text-2xl font-bold">35</span>
 
-                            <span className="text-gray-400 text-sm">Global Students</span>
+                            <span className="text-gray-400 text-sm">PMP® Contact Hours</span>
                         </div>
 
                         <div className="flex items-center gap-3 px-6 py-4 bg-white/5 border border-white/10 rounded-full hover:border-[#3282B8] hover:bg-white/10 transition">
-                            <span className="text-2xl font-bold">98%</span>
+                            <span className="text-2xl font-bold">24×7</span>
 
-                            <span className="text-gray-400 text-sm">Pass Rate</span>
+                            <span className="text-gray-400 text-sm">WhatsApp Support</span>
                         </div>
                     </div>
                 </div>

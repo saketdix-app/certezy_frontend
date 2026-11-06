@@ -36,7 +36,7 @@ const CERTS = [
     "CompTIA",
     "Google Cloud",
     "CISCO",
-    "PMP",
+    "PMP®",
     "ITIL",
     "Azure DevOps",
     "Kubernetes",

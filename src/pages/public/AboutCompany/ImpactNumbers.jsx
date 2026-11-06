@@ -1,9 +1,9 @@
 // ImpactNumbers.jsx
 const STATS = [
-    { value: "50k+", label: "STUDENTS" },
-    { value: "500+", label: "COURSES" },
-    { value: "120+", label: "COUNTRIES" },
-    { value: "95%", label: "SATISFACTION" },
+    { value: "20+", label: "COURSES" },
+    { value: "35", label: "PMP® CONTACT HOURS" },
+    { value: "3", label: "PMP® PRACTICE EXAMS" },
+    { value: "24×7", label: "WHATSAPP SUPPORT" },
 ];
 
 export default function ImpactNumbers() {
@@ -16,7 +16,7 @@ export default function ImpactNumbers() {
             <div className="max-w-[1200px] mx-auto px-6">
                 {/* Heading */}
                 <h2 className="text-center text-white font-black text-4xl lg:text-5xl tracking-tight mb-16">
-                    Our Impact in Numbers
+                    Certezy at a Glance
                 </h2>
 
                 {/* Stats grid */}

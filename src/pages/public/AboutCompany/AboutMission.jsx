@@ -28,14 +28,14 @@ export default function AboutMission() {
                             <div className="flex gap-3 items-start">
                                 <CheckCircle size={20} className="text-[#3282B8] mt-1" />
                                 <p className="text-gray-700">
-                                    Curriculum aligned with official vendor blueprints.
+                                    Curriculum organized around published exam outlines.
                                 </p>
                             </div>
 
                             <div className="flex gap-3 items-start">
                                 <CheckCircle size={20} className="text-[#3282B8] mt-1" />
                                 <p className="text-gray-700">
-                                    Hands-on virtual labs for real-world application.
+                                    Quizzes and timed practice exams to test your knowledge.
                                 </p>
                             </div>
 
