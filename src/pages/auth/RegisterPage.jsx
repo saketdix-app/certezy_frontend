@@ -224,7 +224,7 @@ export default function RegisterPage() {
                                 {
                                     icon: "🎓",
                                     title: "Certification Courses",
-                                    desc: "AWS, Azure, Security+, PMP and more",
+                                    desc: "AWS, Azure, Security+, PMP® and more",
                                 },
                                 {
                                     icon: "📜",

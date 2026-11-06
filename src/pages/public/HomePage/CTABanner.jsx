@@ -109,7 +109,7 @@ const CSS = `
 
 const TRUST_PILLS = [
     { icon: BadgeCheck, label: "✓ 35 PMP® Contact Hours" },
-    { icon: BadgeCheck, label: "✓ Industry-Recognized Certifications" },
+    { icon: BadgeCheck, label: "✓ Verifiable Certificates" },
     { icon: Clock, label: "✓ Learn at Your Own Pace" },
 ];
 
@@ -261,8 +261,8 @@ export default function CTABanner() {
                                         maxWidth: "500px",
                                     }}
                                 >
-                                    Join 10,000+ professionals already learning with Certezy. Get certified
-                                    and get hired with flexible, expert-led training.
+                                    Start preparing for your next certification with self-paced, expert-built
+                                    courses, practice exams and a certificate you can verify online.
                                 </p>
 
                                 {/* Trust pills */}

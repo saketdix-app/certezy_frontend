@@ -11,7 +11,7 @@ const TRENDING = [
     { label: "CompTIA Security+", icon: "🔐" },
     { label: "Docker & Kubernetes", icon: "⚙️" },
     { label: "Python for Data Science", icon: "📊" },
-    { label: "PMP Certification", icon: "📋" },
+    { label: "PMP® Certification", query: "PMP", icon: "📋" },
 ];
 
 export default function SearchBar({ className }) {
@@ -181,7 +181,7 @@ export default function SearchBar({ className }) {
                                         key={t.label}
                                         onMouseDown={(e) => {
                                             e.preventDefault();
-                                            handleTrendingClick(t.label);
+                                            handleTrendingClick(t.query ?? t.label);
                                         }}
                                         className={cn(
                                             "flex items-center gap-1.5 px-3 py-1.5 rounded-full",

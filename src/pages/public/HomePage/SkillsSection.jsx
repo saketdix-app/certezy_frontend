@@ -14,11 +14,11 @@ export default function SkillsSection() {
 
                                 <p className="text-green-400 ml-4">learn("AWS", "Docker", "Kubernetes")</p>
 
-                                <p className="text-yellow-400 ml-4">buildRealWorldProjects()</p>
+                                <p className="text-yellow-400 ml-4">takePracticeTests()</p>
 
-                                <p className="text-purple-400 ml-4">getCertified("CompTIA")</p>
+                                <p className="text-purple-400 ml-4">prepareForExam("CompTIA")</p>
 
-                                <p className="text-pink-400 ml-4">landDreamJob()</p>
+                                <p className="text-pink-400 ml-4">advanceYourCareer()</p>
 
                                 <p className="text-blue-400">{"}"}</p>
                             </div>
@@ -31,8 +31,8 @@ export default function SkillsSection() {
                             </div>
 
                             <div>
-                                <p className="font-semibold text-lg">12,000+</p>
-                                <p className="text-gray-400 text-sm">Certified Learners</p>
+                                <p className="font-semibold text-lg">20+ Courses</p>
+                                <p className="text-gray-400 text-sm">Cloud, DevOps, Security, PM</p>
                             </div>
                         </div>
                     </div>
@@ -51,17 +51,17 @@ export default function SkillsSection() {
                         <div className="space-y-4 mb-10">
                             <div className="flex gap-3">
                                 <CheckCircle className="text-blue-500 mt-1" size={20} />
-                                <p>Access to an exclusive alumni network and job boards.</p>
+                                <p>Quizzes and timed practice exams with answer explanations.</p>
                             </div>
 
                             <div className="flex gap-3">
                                 <CheckCircle className="text-blue-500 mt-1" size={20} />
-                                <p>Direct mentorship from Silicon Valley veterans.</p>
+                                <p>Courses built by experienced professionals around current exam outlines.</p>
                             </div>
 
                             <div className="flex gap-3">
                                 <CheckCircle className="text-blue-500 mt-1" size={20} />
-                                <p>Hands-on lab environments for every technology stack.</p>
+                                <p>Certificates of completion that anyone can verify online.</p>
                             </div>
                         </div>
 

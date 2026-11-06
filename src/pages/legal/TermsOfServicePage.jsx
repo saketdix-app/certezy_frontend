@@ -122,7 +122,8 @@ export default function TermsOfServicePage() {
                     success in, third-party certification exams.
                 </p>
                 <p>
-                    PMP® and PMI® are registered marks of the Project Management Institute, Inc. AWS®,
+                    &ldquo;PMI,&rdquo; &ldquo;PMP,&rdquo; &ldquo;CAPM&rdquo; and &ldquo;PMBOK&rdquo; are marks of Project
+                    Management Institute, Inc. AWS®,
                     Microsoft Azure®, CompTIA® and other certification names are trademarks of their
                     respective owners. Their use on the Service identifies the exams our courses relate to and
                     does not imply endorsement, except where an official partnership is expressly stated.

@@ -124,9 +124,9 @@ const CSS = `
 `;
 
 const STATS = [
-    { value: "96%", label: "Completion Rate" },
-    { value: "4.9★", label: "Average Rating" },
-    { value: "10K+", label: "Certified" },
+    { value: "35", label: "PMP® Contact Hours" },
+    { value: "3", label: "Full Practice Exams" },
+    { value: "24×7", label: "WhatsApp Support" },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -254,7 +254,7 @@ export default function Testimonials() {
                                 marginBottom: "0",
                             }}
                         >
-                            Trusted by{" "}
+                            Hear from{" "}
                             <span
                                 style={{
                                     background: "linear-gradient(90deg, #3282B8 0%, #6C3BD5 100%)",
@@ -263,9 +263,9 @@ export default function Testimonials() {
                                     backgroundClip: "text",
                                 }}
                             >
-                                10,000+
+                                Our
                             </span>{" "}
-                            Learners Worldwide
+                            Learners
                         </h2>
                     </div>
 

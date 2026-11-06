@@ -95,31 +95,31 @@ const CSS = `
 
 const STATS = [
     { icon: ShieldCheck, label: "PMP®", sub: "35 Contact Hours", color: true },
-    { num: "10K+", label: "Active", sub: "Learners", color: false },
-    { num: "50+", label: "Programs", sub: "Certifications", color: false },
-    { num: "98%", label: "Success", sub: "Rate", color: false },
+    { num: "20+", label: "Courses", sub: "Self-paced", color: false },
+    { num: "3", label: "Practice", sub: "Exams (PMP®)", color: false },
+    { num: "24×7", label: "WhatsApp", sub: "Support", color: false },
 ];
 
 const FEATURES = [
     {
         icon: GraduationCap,
-        title: "Best Industry Instructors",
-        desc: "Learn from certified professionals with years of real-world experience.",
+        title: "Expert-Built Courses",
+        desc: "Structured lessons created by experienced professionals and organized around current exam outlines.",
     },
     {
         icon: Video,
-        title: "Live Interactive Classes",
-        desc: "Real-time classes with live Q&A and hands-on labs.",
+        title: "Self-Paced Video Lessons",
+        desc: "Learn on your schedule, pick up where you left off, and revisit any lesson whenever you need.",
     },
     {
         icon: Headphones,
-        title: "1-to-1 Student Support",
-        desc: "Personalized mentoring and career guidance at every step.",
+        title: "Student Support",
+        desc: "Questions about a course, your account or a payment? Reach us by email or WhatsApp.",
     },
     {
         icon: Globe,
-        title: "Global Certifications",
-        desc: "Credentials recognized by leading IT organizations worldwide.",
+        title: "Prepare for Global Certifications",
+        desc: "Courses that prepare you for widely recognized exams such as PMP®, AWS, Microsoft Azure and CompTIA.",
     },
 ];
 

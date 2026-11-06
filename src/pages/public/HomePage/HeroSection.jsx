@@ -162,7 +162,7 @@ export default function HeroSection() {
                                         aria-hidden="true"
                                         style={{ flexShrink: 0 }}
                                     />
-                                    Prepare with Confidence. Pass the PMP® Exam on Your First Attempt!
+                                    Prepare with Confidence for the PMP® Certification Exam
                                 </span>
                             </div>
 
@@ -293,8 +293,8 @@ export default function HeroSection() {
                                 }}
                             >
                                 {[
-                                    { val: "10,000+", label: "LEARNERS ACTIVE" },
-                                    { val: "Industry ✔", label: "RECOGNIZED CERTS", blue: true },
+                                    { val: "35", label: "PMP® CONTACT HOURS" },
+                                    { val: "Verified", label: "ONLINE CERTIFICATES", blue: true },
                                 ].map(({ val, label, blue }, i) => (
                                     <div
                                         key={label}

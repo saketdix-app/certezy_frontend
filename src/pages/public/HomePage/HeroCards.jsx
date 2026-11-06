@@ -37,7 +37,7 @@ export function PmpCourseCard({ pmp }) {
             </div>
 
             <h2 id="hero-pmp-title" className="mt-3 text-[20px] font-extrabold leading-snug text-slate-900">
-                Project Management Professional (PMP)
+                Project Management Professional (PMP)®
             </h2>
             <p className="mt-2 text-[13.5px] leading-relaxed text-slate-600">
                 Predictive, agile and hybrid project management, built for the PMP® certification exam.

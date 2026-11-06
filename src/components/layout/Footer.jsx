@@ -363,6 +363,12 @@ export default function Footer() {
 
                 {/* ── BOTTOM BAR ── */}
                 <div className="border-t border-white/[0.07] mt-10">
+                    {/* PMI trademark attribution (PMI Trademark Usage Guidelines, rule 11) */}
+                    <p className="pt-5 text-[11px] leading-relaxed text-slate-500">
+                        PMI, PMP, CAPM and PMBOK are marks of Project Management Institute, Inc. {APP_NAME} is an
+                        independent training provider and is not affiliated with, or endorsed by, Project
+                        Management Institute, Inc.
+                    </p>
                     <div className="flex items-center justify-between flex-wrap gap-3 py-5">
                         <span className="text-xs text-slate-600">
                             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
