@@ -50,7 +50,7 @@ export function ContactBlock() {
  * Shared layout for legal pages.
  * `sections` is a list of titles used for the table of contents.
  */
-export default function LegalLayout({ title, intro, sections, children }) {
+export default function LegalLayout({ title, intro, sections, effectiveDate = LEGAL.effectiveDate, meta, children }) {
     useEffect(() => {
         document.title = `CERTEZY | ${title}`;
         window.scrollTo(0, 0);
@@ -66,6 +66,9 @@ export default function LegalLayout({ title, intro, sections, children }) {
                 .legal-body h3 { color: #0F172A; font-size: 16px; font-weight: 700; margin: 18px 0 8px; }
                 .legal-body strong { color: #0F172A; }
                 .legal-body a { color: #3282B8; }
+                .legal-body table { width: 100%; border-collapse: collapse; font-size: 14px; }
+                .legal-body th, .legal-body td { border: 1px solid #E2E8F0; padding: 10px 12px; text-align: left; vertical-align: top; color: #475569; line-height: 1.6; }
+                .legal-body th { background: #F8FAFC; color: #0F172A; font-weight: 700; }
             `}</style>
 
             {/* Header */}
@@ -78,7 +81,11 @@ export default function LegalLayout({ title, intro, sections, children }) {
                     <h1 className="text-[34px] md:text-[42px] font-extrabold text-white tracking-tight mb-3">
                         {title}
                     </h1>
-                    <p className="text-sm text-slate-400">Effective date: {LEGAL.effectiveDate}</p>
+                    <p className="text-sm text-slate-400">
+                        Effective date: {effectiveDate}
+                        {meta && <span className="mx-2">|</span>}
+                        {meta}
+                    </p>
                     {intro && (
                         <p className="text-[15px] text-slate-300 leading-relaxed mt-5 max-w-3xl">{intro}</p>
                     )}

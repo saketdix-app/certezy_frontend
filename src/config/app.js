@@ -75,6 +75,7 @@ export const ROUTES = {
     ADMIN_DASHBOARD: "/admin/dashboard",
     PRIVACY: "/privacy-policy",
     TERMS: "/terms-of-service",
+    COMPLAINTS: "/complaints-policy",
 };
 
 export const AUTH_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.OAUTH_CALLBACK];
