@@ -162,7 +162,7 @@ export default function HeroSection() {
                                         aria-hidden="true"
                                         style={{ flexShrink: 0 }}
                                     />
-                                    Prepare with Confidence for the PMP® Certification Exam
+                                    PMI® Authorized Training Partner · Prepare for the PMP® Exam with Confidence
                                 </span>
                             </div>
 
