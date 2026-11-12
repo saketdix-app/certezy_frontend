@@ -122,7 +122,9 @@ export default function TermsOfServicePage() {
                     success in, third-party certification exams.
                 </p>
                 <p>
-                    &ldquo;PMI,&rdquo; &ldquo;PMP,&rdquo; &ldquo;CAPM&rdquo; and &ldquo;PMBOK&rdquo; are marks of Project
+                    {brand} is a PMI® Authorized Training Partner. The PMI Authorized Training Partner logo
+                    is a registered mark of Project Management Institute, Inc. &ldquo;PMI,&rdquo;
+                    &ldquo;PMP,&rdquo; &ldquo;CAPM&rdquo; and &ldquo;PMBOK&rdquo; are registered marks of Project
                     Management Institute, Inc. AWS®,
                     Microsoft Azure®, CompTIA® and other certification names are trademarks of their
                     respective owners. Their use on the Service identifies the exams our courses relate to and

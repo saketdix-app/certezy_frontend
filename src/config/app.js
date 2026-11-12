@@ -14,6 +14,16 @@ export const API_BASE_URL = trimSlash(import.meta.env.VITE_API_BASE_URL || "http
 export const SUPPORT_EMAIL = "contact@certezy.com";
 
 /**
+ * PMI Authorized Training Partner badge — PMI-supplied artwork, shown unaltered
+ * (no recolouring, cropping or stretching) with the trademark notice below it.
+ */
+export const PMI_ATP = {
+    badge: "/brand/pmi-atp-badge.png",
+    alt: "PMI Authorized Training Partner",
+    notice: "The PMI Authorized Training Partner logo is a registered mark of Project Management Institute, Inc. PMI, PMP, CAPM and PMBOK are registered marks of Project Management Institute, Inc.",
+};
+
+/**
  * Every course is presented as taught by the company, whichever admin account
  * created it. Public pages show this instead of the creator's user name; the
  * admin course list still shows the real creator.
