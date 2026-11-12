@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
 
+import { PMI_ATP } from "@/config/app";
 import { formatMoney, getPricing } from "@/lib/format";
 import { PMP_FALLBACK, PMP_PRACTICE_EXAMS, PMP_SLUG, TOPICS } from "./useHeroCatalog";
 
@@ -29,11 +30,15 @@ export function PmpCourseCard({ pmp }) {
             className="w-full max-w-[440px] rounded-lg border-t-4 border-[#3282B8] bg-white px-6 pb-6 pt-5 sm:px-7"
             style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.45)" }}
         >
-            <div className="flex items-center justify-between gap-3">
-                <span className="text-[11px] font-bold tracking-[0.09em] text-[#1A5F8A]">PMP® EXAM PREP</span>
-                <span className="rounded bg-[#E6F1FB] px-2 py-0.5 text-[11px] font-semibold text-[#0C447C]">
-                    Self-paced
-                </span>
+            <div className="flex items-start justify-between gap-3">
+                <div>
+                    <span className="text-[11px] font-bold tracking-[0.09em] text-[#1A5F8A]">PMP® EXAM PREP</span>
+                    <span className="ml-2 rounded bg-[#E6F1FB] px-2 py-0.5 text-[11px] font-semibold text-[#0C447C]">
+                        Self-paced
+                    </span>
+                    <p className="mt-1 text-[11.5px] font-semibold text-slate-500">PMI® Authorized Training Partner</p>
+                </div>
+                <img src={PMI_ATP.badge} alt={PMI_ATP.alt} width={56} height={56} className="h-14 w-14 shrink-0" />
             </div>
 
             <h2 id="hero-pmp-title" className="mt-3 text-[20px] font-extrabold leading-snug text-slate-900">

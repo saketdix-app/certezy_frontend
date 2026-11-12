@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/shared/Logo";
-import { APP_NAME, ROUTES, SOCIAL_LINKS, SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
+import { APP_NAME, PMI_ATP, ROUTES, SOCIAL_LINKS, SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
 
 // ─── ICONS ────────────────────────────────────────────────────
 const IconLinkedIn = () => (
@@ -363,12 +363,23 @@ export default function Footer() {
 
                 {/* ── BOTTOM BAR ── */}
                 <div className="border-t border-white/[0.07] mt-10">
-                    {/* PMI trademark attribution (PMI Trademark Usage Guidelines, rule 11) */}
-                    <p className="pt-5 text-[11px] leading-relaxed text-slate-500">
-                        PMI, PMP, CAPM and PMBOK are marks of Project Management Institute, Inc. {APP_NAME} is an
-                        independent training provider and is not affiliated with, or endorsed by, Project
-                        Management Institute, Inc.
-                    </p>
+                    {/* PMI Authorized Training Partner badge + trademark notice */}
+                    <div className="flex items-center gap-4 pt-6">
+                        <img
+                            src={PMI_ATP.badge}
+                            alt={PMI_ATP.alt}
+                            width={72}
+                            height={72}
+                            loading="lazy"
+                            className="h-[72px] w-[72px] shrink-0"
+                        />
+                        <div>
+                            <p className="text-[13px] font-semibold text-slate-300">
+                                {APP_NAME} is a PMI<sup>®</sup> Authorized Training Partner
+                            </p>
+                            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">{PMI_ATP.notice}</p>
+                        </div>
+                    </div>
                     <div className="flex items-center justify-between flex-wrap gap-3 py-5">
                         <span className="text-xs text-slate-600">
                             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
