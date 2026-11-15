@@ -1,0 +1,792 @@
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import {
+    AlertTriangle,
+    CheckCircle2,
+    History,
+    KeyRound,
+    Loader2,
+    Mail,
+    Search,
+    ShieldCheck,
+    ShieldOff,
+    UserPlus,
+    X,
+} from "lucide-react";
+
+import teamService from "@/services/teamService";
+import { selectUser } from "@/features/auth/authSlice";
+import { ROLE_LABELS } from "@/config/app";
+import { cn } from "@/lib/utils";
+
+/**
+ * Admin → Team (2.0 phase 1). Staff accounts, the delegated
+ * "May create Super Admin accounts" privilege, and the audit log.
+ * The server enforces every rule; this page only shows what's allowed.
+ */
+
+const ROLE_FILTERS = [
+    ["", "All"],
+    ["super_admin", "Super Admins"],
+    ["admin", "Admins"],
+    ["sub_admin", "Sub-Admins"],
+    ["consultant", "Consultants"],
+];
+
+const ROLE_BADGE = {
+    super_admin: "bg-violet-50 text-violet-700 border-violet-200",
+    admin: "bg-blue-50 text-blue-700 border-blue-200",
+    sub_admin: "bg-sky-50 text-sky-700 border-sky-200",
+    consultant: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    student: "bg-slate-50 text-slate-600 border-slate-200",
+};
+
+const ACTION_LABELS = {
+    "user.create": "Created account",
+    "super_admin.create": "Created Super Admin",
+    "super_admin.promote": "Made Super Admin",
+    "user.role_change": "Changed role",
+    "user.activate": "Activated account",
+    "user.deactivate": "Deactivated account",
+    "user.invite_resend": "Resent invitation",
+    "privilege.grant": "Granted Super Admin creation",
+    "privilege.revoke": "Revoked Super Admin creation",
+};
+
+const apiMessage = (err, fallback) => err.response?.data?.message || fallback;
+const fmt = (d) =>
+    d
+        ? new Date(d).toLocaleString("en-US", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+          })
+        : "—";
+
+const inputCls =
+    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-[#3282B8]";
+
+function RoleBadge({ role }) {
+    return (
+        <span
+            className={cn(
+                "inline-flex rounded-md border px-2 py-0.5 text-[11.5px] font-semibold",
+                ROLE_BADGE[role] ?? ROLE_BADGE.student
+            )}
+        >
+            {ROLE_LABELS[role] ?? role}
+        </span>
+    );
+}
+
+function Modal({ title, onClose, children, wide }) {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label={title}
+                className={cn(
+                    "max-h-[90dvh] w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl",
+                    wide ? "max-w-2xl" : "max-w-md"
+                )}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="mb-4 flex items-start justify-between gap-3">
+                    <h2 className="text-[17px] font-bold text-slate-900">{title}</h2>
+                    <button type="button" onClick={onClose} aria-label="Close" className="text-slate-400 hover:text-slate-600">
+                        <X size={18} />
+                    </button>
+                </div>
+                {children}
+            </div>
+        </div>
+    );
+}
+
+function PasswordField({ value, onChange }) {
+    return (
+        <label className="mt-4 block">
+            <span className="mb-1 block text-[13px] font-semibold text-slate-700">Confirm with your password</span>
+            <input
+                type="password"
+                autoComplete="current-password"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                className={inputCls}
+            />
+            <span className="mt-1 block text-[12px] text-slate-500">
+                Sensitive changes need your password again, so nobody can make them from an unattended session.
+            </span>
+        </label>
+    );
+}
+
+/** Confirm a sensitive action, optionally asking for the password again. */
+function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onConfirm, onClose }) {
+    const [password, setPassword] = useState("");
+    const [busy, setBusy] = useState(false);
+    const submit = async (e) => {
+        e.preventDefault();
+        if (needsPassword && !password) return toast.error("Enter your password");
+        setBusy(true);
+        try {
+            await onConfirm(password);
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "That didn't work. Please try again."));
+        } finally {
+            setBusy(false);
+        }
+    };
+    return (
+        <Modal title={title} onClose={onClose}>
+            <form onSubmit={submit}>
+                <div
+                    className={cn(
+                        "flex gap-2.5 rounded-xl border p-3 text-[13.5px] leading-relaxed",
+                        danger ? "border-red-200 bg-red-50 text-red-900" : "border-amber-200 bg-amber-50 text-amber-900"
+                    )}
+                >
+                    <AlertTriangle size={17} className="mt-0.5 shrink-0" aria-hidden="true" />
+                    <div>{warning}</div>
+                </div>
+                {needsPassword && <PasswordField value={password} onChange={setPassword} />}
+                <div className="mt-5 flex justify-end gap-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={busy}
+                        className={cn(
+                            "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60",
+                            danger ? "bg-red-600 hover:bg-red-700" : "bg-[#3282B8] hover:bg-[#2A6FA0]"
+                        )}
+                    >
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        {confirmLabel}
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function CreateMemberModal({ roles, onClose, onCreated }) {
+    const [form, setForm] = useState({ name: "", email: "", mobile: "", role: roles[roles.length - 1] ?? "" });
+    const [password, setPassword] = useState("");
+    const [busy, setBusy] = useState(false);
+    const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+    const isSuper = form.role === "super_admin";
+
+    const submit = async (e) => {
+        e.preventDefault();
+        if (form.name.trim().length < 2) return toast.error("Enter the person's name");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return toast.error("Enter a valid email");
+        if (isSuper && !password) return toast.error("Enter your password to create a Super Admin");
+        setBusy(true);
+        try {
+            const { data } = await teamService.create({ ...form, ...(isSuper && { password }) });
+            toast.success(data?.message || "Invitation sent");
+            onCreated();
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not create the account"));
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <Modal title="Add team member" onClose={onClose}>
+            <form onSubmit={submit} className="space-y-3">
+                <label className="block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Full name</span>
+                    <input value={form.name} onChange={set("name")} className={inputCls} autoFocus />
+                </label>
+                <label className="block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Email</span>
+                    <input type="email" value={form.email} onChange={set("email")} className={inputCls} />
+                </label>
+                <label className="block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Phone (optional)</span>
+                    <input value={form.mobile} onChange={set("mobile")} placeholder="+91 98765 43210" className={inputCls} />
+                </label>
+                <label className="block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Role</span>
+                    <select value={form.role} onChange={set("role")} className={inputCls}>
+                        {roles.map((r) => (
+                            <option key={r} value={r}>
+                                {ROLE_LABELS[r]}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+                {isSuper && (
+                    <>
+                        <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900">
+                            <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+                            Super Admins can do everything, including managing other Super Admins. All Super
+                            Admins are notified by email.
+                        </div>
+                        <PasswordField value={password} onChange={setPassword} />
+                    </>
+                )}
+                <p className="text-[12.5px] text-slate-500">
+                    They'll get an email invitation to set their own password (valid 72 hours). No password is
+                    sent by email.
+                </p>
+                <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={busy}
+                        className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60"
+                    >
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        Send invitation
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function ChangeRoleModal({ member, roles, onClose, onDone }) {
+    // Only Super Admins (who can create Admins) may remove staff access entirely
+    const options = [...roles, ...(roles.includes("admin") ? ["student"] : [])].filter((r) => r !== member.role);
+    const [role, setRole] = useState(options[0] ?? "");
+    const [password, setPassword] = useState("");
+    const [busy, setBusy] = useState(false);
+    const sensitive = ["super_admin", "admin"].includes(role) || ["super_admin", "admin"].includes(member.role);
+
+    const submit = async (e) => {
+        e.preventDefault();
+        if (sensitive && !password) return toast.error("Enter your password");
+        setBusy(true);
+        try {
+            await teamService.changeRole(member.id, { role, ...(sensitive && { password }) });
+            toast.success(`${member.name} is now ${ROLE_LABELS[role]}`);
+            onDone();
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not change the role"));
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <Modal title={`Change role — ${member.name}`} onClose={onClose}>
+            <form onSubmit={submit}>
+                <p className="text-[13.5px] text-slate-600">
+                    Current role: <RoleBadge role={member.role} />
+                </p>
+                <label className="mt-4 block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">New role</span>
+                    <select value={role} onChange={(e) => setRole(e.target.value)} className={inputCls}>
+                        {options.map((r) => (
+                            <option key={r} value={r}>
+                                {r === "student" ? "Student (remove staff access)" : ROLE_LABELS[r]}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+                {member.role === "admin" && member.super_admin_grant && (
+                    <p className="mt-2 text-[12.5px] text-amber-700">
+                        Their "May create Super Admin accounts" privilege will be revoked.
+                    </p>
+                )}
+                {sensitive && <PasswordField value={password} onChange={setPassword} />}
+                <div className="mt-5 flex justify-end gap-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={busy || !role}
+                        className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60"
+                    >
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        Change role
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function HistoryModal({ member, onClose }) {
+    const [detail, setDetail] = useState(null);
+    const [logs, setLogs] = useState(null);
+    useEffect(() => {
+        teamService.get(member.id).then(({ data }) => setDetail(data.data)).catch(() => setDetail({ grants: [] }));
+        teamService
+            .audit({ target_id: member.id, limit: 50 })
+            .then(({ data }) => setLogs(data.data.logs))
+            .catch(() => setLogs([]));
+    }, [member.id]);
+
+    return (
+        <Modal title={`${member.name} — history`} onClose={onClose} wide>
+            <div className="grid gap-x-6 gap-y-2 text-[13.5px] sm:grid-cols-2">
+                <p><span className="text-slate-500">Email:</span> {member.email}</p>
+                <p><span className="text-slate-500">Role:</span> <RoleBadge role={member.role} /></p>
+                <p><span className="text-slate-500">Status:</span> {member.is_active ? "Active" : "Inactive"}</p>
+                <p><span className="text-slate-500">Last active:</span> {fmt(member.last_active_at)}</p>
+                <p><span className="text-slate-500">Added:</span> {fmt(member.created_at)}</p>
+            </div>
+
+            <h3 className="mt-5 mb-2 text-[14px] font-bold text-slate-900">Delegated privileges</h3>
+            {!detail ? (
+                <Loader2 size={16} className="animate-spin text-slate-400" />
+            ) : detail.grants?.length ? (
+                <ul className="space-y-1.5 text-[13px]">
+                    {detail.grants.map((g) => (
+                        <li key={g.id} className="rounded-lg border border-slate-200 px-3 py-2">
+                            <b>May create Super Admin accounts</b> — granted by {g.granted_by ?? "—"} on {fmt(g.granted_at)}
+                            {g.revoked_at ? `; revoked by ${g.revoked_by ?? "—"} on ${fmt(g.revoked_at)}` : " (active)"}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-[13px] text-slate-500">None.</p>
+            )}
+
+            <h3 className="mt-5 mb-2 text-[14px] font-bold text-slate-900">Account activity</h3>
+            <AuditTable logs={logs} compact />
+        </Modal>
+    );
+}
+
+function AuditTable({ logs, compact }) {
+    if (!logs) return <Loader2 size={16} className="animate-spin text-slate-400" />;
+    if (!logs.length) return <p className="text-[13px] text-slate-500">No recorded actions yet.</p>;
+    return (
+        <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full min-w-[640px] text-left text-[13px]">
+                <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                    <tr>
+                        <th className="px-3 py-2">When</th>
+                        <th className="px-3 py-2">Who</th>
+                        <th className="px-3 py-2">Action</th>
+                        {!compact && <th className="px-3 py-2">Account</th>}
+                        <th className="px-3 py-2">Result</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                    {logs.map((l) => (
+                        <tr key={l.id}>
+                            <td className="whitespace-nowrap px-3 py-2 text-slate-500">{fmt(l.created_at)}</td>
+                            <td className="px-3 py-2">
+                                {l.actor_name ?? "System"}
+                                {l.actor_role && <span className="text-slate-400"> · {ROLE_LABELS[l.actor_role] ?? l.actor_role}</span>}
+                            </td>
+                            <td className="px-3 py-2">
+                                {ACTION_LABELS[l.action] ?? l.action}
+                                {l.details?.from && l.details?.to && (
+                                    <span className="text-slate-500">
+                                        {" "}({ROLE_LABELS[l.details.from] ?? l.details.from} → {ROLE_LABELS[l.details.to] ?? l.details.to})
+                                    </span>
+                                )}
+                                {l.result !== "success" && l.details?.reason && (
+                                    <span className="block text-[12px] text-slate-500">{l.details.reason}</span>
+                                )}
+                            </td>
+                            {!compact && <td className="px-3 py-2">{l.target_name ?? l.details?.email ?? "—"}</td>}
+                            <td className="px-3 py-2">
+                                <span
+                                    className={cn(
+                                        "rounded-md px-2 py-0.5 text-[11.5px] font-semibold",
+                                        l.result === "success" && "bg-emerald-50 text-emerald-700",
+                                        l.result === "denied" && "bg-red-50 text-red-700",
+                                        l.result === "failed" && "bg-amber-50 text-amber-700"
+                                    )}
+                                >
+                                    {l.result === "success" ? "Done" : l.result === "denied" ? "Refused" : "Failed"}
+                                </span>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
+
+function AuditLogTab() {
+    const [action, setAction] = useState("");
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState(null);
+    useEffect(() => {
+        teamService
+            .audit({ action: action || undefined, page, limit: 50 })
+            .then(({ data }) => setData(data.data))
+            .catch((err) => {
+                toast.error(apiMessage(err, "Could not load the audit log"));
+                setData({ logs: [], pagination: { totalPages: 1 } });
+            });
+    }, [action, page]);
+
+    return (
+        <div>
+            <div className="mb-3 flex flex-wrap items-center gap-3">
+                <select
+                    value={action}
+                    onChange={(e) => {
+                        setAction(e.target.value);
+                        setPage(1);
+                    }}
+                    className={cn(inputCls, "w-auto")}
+                    aria-label="Filter by action"
+                >
+                    <option value="">All actions</option>
+                    {Object.entries(ACTION_LABELS).map(([k, v]) => (
+                        <option key={k} value={k}>
+                            {v}
+                        </option>
+                    ))}
+                </select>
+                <p className="text-[12.5px] text-slate-500">
+                    Entries can't be edited or deleted. Refused attempts are recorded too.
+                </p>
+            </div>
+            <AuditTable logs={data?.logs} />
+            {data?.pagination?.totalPages > 1 && (
+                <div className="mt-3 flex items-center justify-end gap-2 text-[13px]">
+                    <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border px-3 py-1.5 disabled:opacity-40">
+                        Previous
+                    </button>
+                    <span>
+                        Page {page} of {data.pagination.totalPages}
+                    </span>
+                    <button
+                        disabled={page >= data.pagination.totalPages}
+                        onClick={() => setPage((p) => p + 1)}
+                        className="rounded-lg border px-3 py-1.5 disabled:opacity-40"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default function TeamPage() {
+    const me = useSelector(selectUser);
+    const [tab, setTab] = useState("members");
+    const [role, setRole] = useState("");
+    const [status, setStatus] = useState("");
+    const [search, setSearch] = useState("");
+    const [members, setMembers] = useState(null);
+    const [caps, setCaps] = useState(null);
+    const [modal, setModal] = useState(null); // { type, member }
+
+    const load = useCallback(async () => {
+        try {
+            const { data } = await teamService.list({
+                role: role || undefined,
+                status: status || undefined,
+                search: search.trim() || undefined,
+            });
+            setMembers(data.data.members);
+            setCaps(data.data.me);
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not load the team"));
+            setMembers([]);
+        }
+    }, [role, status, search]);
+
+    useEffect(() => {
+        const t = setTimeout(load, search ? 300 : 0);
+        return () => clearTimeout(t);
+    }, [load, search]);
+
+    const isSuper = caps?.role === "super_admin";
+    const canCreate = caps?.can_create_roles?.length > 0;
+    const close = () => setModal(null);
+
+    const canManage = (m) =>
+        m.id !== me?.id && (isSuper || ["sub_admin", "consultant"].includes(m.role));
+
+    return (
+        <div className="mx-auto max-w-[1300px]">
+            <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Team</h1>
+                    <p className="mt-1 text-[13px] text-slate-500">
+                        Super Admins, Admins, Sub-Admins and Consultants. Every change is recorded in the audit log.
+                    </p>
+                </div>
+                {canCreate && (
+                    <button
+                        type="button"
+                        onClick={() => setModal({ type: "create" })}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#3282B8] px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0]"
+                    >
+                        <UserPlus size={16} aria-hidden="true" /> Add team member
+                    </button>
+                )}
+            </div>
+
+            {caps?.role === "admin" && caps?.can_create_roles?.includes("super_admin") && (
+                <p className="mb-4 flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-[13px] text-violet-800">
+                    <KeyRound size={15} aria-hidden="true" /> A Super Admin has allowed you to create Super Admin accounts.
+                </p>
+            )}
+
+            <div className="mb-4 flex gap-1 border-b border-slate-200" role="tablist">
+                {[
+                    ["members", "Members"],
+                    ...(caps?.can_view_audit ? [["audit", "Audit log"]] : []),
+                ].map(([key, label]) => (
+                    <button
+                        key={key}
+                        role="tab"
+                        aria-selected={tab === key}
+                        onClick={() => setTab(key)}
+                        className={cn(
+                            "-mb-px border-b-2 px-4 py-2 text-[13.5px] font-semibold",
+                            tab === key ? "border-[#3282B8] text-[#3282B8]" : "border-transparent text-slate-500 hover:text-slate-800"
+                        )}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
+            {tab === "audit" ? (
+                <AuditLogTab />
+            ) : (
+                <>
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                        {ROLE_FILTERS.map(([value, label]) => (
+                            <button
+                                key={value || "all"}
+                                onClick={() => setRole(value)}
+                                className={cn(
+                                    "rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
+                                    role === value ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 bg-white text-slate-600"
+                                )}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                        <select
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12.5px]"
+                            aria-label="Filter by status"
+                        >
+                            <option value="">Any status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <div className="relative ml-auto w-full sm:w-64">
+                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                            <input
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search name or email"
+                                aria-label="Search team"
+                                className={cn(inputCls, "pl-9")}
+                            />
+                        </div>
+                    </div>
+
+                    {!members ? (
+                        <div className="flex justify-center py-16">
+                            <Loader2 className="animate-spin text-slate-400" />
+                        </div>
+                    ) : !members.length ? (
+                        <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
+                            No team members match these filters.
+                        </p>
+                    ) : (
+                        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                            <table className="w-full min-w-[860px] text-left text-[13.5px]">
+                                <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                                    <tr>
+                                        <th className="px-4 py-3">Member</th>
+                                        <th className="px-4 py-3">Role</th>
+                                        <th className="px-4 py-3">Status</th>
+                                        <th className="px-4 py-3">Super Admin creation</th>
+                                        <th className="px-4 py-3">Last active</th>
+                                        <th className="px-4 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {members.map((m) => (
+                                        <tr key={m.id} className={cn(!m.is_active && "bg-slate-50/60")}>
+                                            <td className="px-4 py-3">
+                                                <p className="font-semibold text-slate-900">
+                                                    {m.name}
+                                                    {m.id === me?.id && <span className="ml-1.5 text-[11.5px] font-normal text-slate-400">(you)</span>}
+                                                </p>
+                                                <p className="text-[12.5px] text-slate-500">{m.email}</p>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <RoleBadge role={m.role} />
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {m.invite_pending ? (
+                                                    <span className="text-[12.5px] font-semibold text-amber-700">Invitation sent</span>
+                                                ) : m.is_active ? (
+                                                    <span className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-emerald-700">
+                                                        <CheckCircle2 size={13} aria-hidden="true" /> Active
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[12.5px] font-semibold text-slate-500">Inactive</span>
+                                                )}
+                                            </td>
+                                            <td className="px-4 py-3 text-[12.5px]">
+                                                {m.role === "super_admin" ? (
+                                                    <span className="text-slate-500">Yes (Super Admin)</span>
+                                                ) : m.super_admin_grant ? (
+                                                    <span className="text-violet-700">
+                                                        <b>Allowed</b> · by {m.super_admin_grant.granted_by} · {fmt(m.super_admin_grant.granted_at)}
+                                                    </span>
+                                                ) : m.role === "admin" ? (
+                                                    <span className="text-slate-400">Not allowed</span>
+                                                ) : (
+                                                    <span className="text-slate-300">—</span>
+                                                )}
+                                            </td>
+                                            <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-500">{fmt(m.last_active_at)}</td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-wrap justify-end gap-1.5">
+                                                    <ActionBtn icon={History} label="History" onClick={() => setModal({ type: "history", member: m })} />
+                                                    {isSuper && m.role === "admin" && m.is_active && (
+                                                        <ActionBtn
+                                                            icon={m.super_admin_grant ? ShieldOff : ShieldCheck}
+                                                            label={m.super_admin_grant ? "Revoke SA creation" : "Allow SA creation"}
+                                                            onClick={() => setModal({ type: m.super_admin_grant ? "revoke" : "grant", member: m })}
+                                                        />
+                                                    )}
+                                                    {canManage(m) && (
+                                                        <>
+                                                            {m.invite_pending && (
+                                                                <ActionBtn icon={Mail} label="Resend invite" onClick={() => setModal({ type: "resend", member: m })} />
+                                                            )}
+                                                            <ActionBtn label="Change role" onClick={() => setModal({ type: "role", member: m })} />
+                                                            <ActionBtn
+                                                                label={m.is_active ? "Deactivate" : "Activate"}
+                                                                danger={m.is_active}
+                                                                onClick={() => setModal({ type: "status", member: m })}
+                                                            />
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </>
+            )}
+
+            {modal?.type === "create" && <CreateMemberModal roles={caps.can_create_roles} onClose={close} onCreated={load} />}
+            {modal?.type === "history" && <HistoryModal member={modal.member} onClose={close} />}
+            {modal?.type === "role" && (
+                <ChangeRoleModal member={modal.member} roles={caps.can_create_roles} onClose={close} onDone={load} />
+            )}
+            {modal?.type === "grant" && (
+                <ConfirmModal
+                    title="Allow this Admin to create Super Admins?"
+                    warning={
+                        <>
+                            <b>{modal.member.name}</b> will be able to create new Super Admin accounts, who can do
+                            everything — including managing you. They can't pass this permission on. All Super
+                            Admins are notified, and you can revoke it at any time.
+                        </>
+                    }
+                    confirmLabel="Allow"
+                    needsPassword
+                    onConfirm={async (password) => {
+                        await teamService.grantSuperAdminCreate(modal.member.id, password);
+                        toast.success("Privilege granted");
+                        load();
+                    }}
+                    onClose={close}
+                />
+            )}
+            {modal?.type === "revoke" && (
+                <ConfirmModal
+                    title="Revoke Super Admin creation?"
+                    warning={
+                        <>
+                            <b>{modal.member.name}</b> will no longer be able to create Super Admins, starting
+                            immediately. Super Admins they already created keep their accounts.
+                        </>
+                    }
+                    confirmLabel="Revoke"
+                    danger
+                    needsPassword
+                    onConfirm={async (password) => {
+                        await teamService.revokeSuperAdminCreate(modal.member.id, password);
+                        toast.success("Privilege revoked");
+                        load();
+                    }}
+                    onClose={close}
+                />
+            )}
+            {modal?.type === "status" && (
+                <ConfirmModal
+                    title={modal.member.is_active ? `Deactivate ${modal.member.name}?` : `Activate ${modal.member.name}?`}
+                    warning={
+                        modal.member.is_active
+                            ? "They'll be signed out everywhere and can't sign in until reactivated. Their records stay."
+                            : "They'll be able to sign in again with their existing password."
+                    }
+                    confirmLabel={modal.member.is_active ? "Deactivate" : "Activate"}
+                    danger={modal.member.is_active}
+                    onConfirm={async () => {
+                        await teamService.setStatus(modal.member.id, !modal.member.is_active);
+                        toast.success(modal.member.is_active ? "Account deactivated" : "Account activated");
+                        load();
+                    }}
+                    onClose={close}
+                />
+            )}
+            {modal?.type === "resend" && (
+                <ConfirmModal
+                    title="Resend invitation?"
+                    warning={`A new set-password link (valid 72 hours) goes to ${modal.member.email}. Earlier links stop working.`}
+                    confirmLabel="Send"
+                    onConfirm={async () => {
+                        await teamService.resendInvite(modal.member.id);
+                        toast.success("Invitation sent");
+                    }}
+                    onClose={close}
+                />
+            )}
+        </div>
+    );
+}
+
+function ActionBtn({ icon: Icon, label, onClick, danger }) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            className={cn(
+                "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[12px] font-semibold transition-colors",
+                danger
+                    ? "border-red-200 text-red-600 hover:bg-red-50"
+                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
+            )}
+        >
+            {Icon && <Icon size={13} aria-hidden="true" />}
+            {label}
+        </button>
+    );
+}
