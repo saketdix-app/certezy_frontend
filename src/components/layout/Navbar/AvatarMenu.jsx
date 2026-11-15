@@ -12,7 +12,7 @@ import {
 
 import { logoutUser } from "@/features/auth/authSlice";
 import { ADMIN_PANEL_ITEM, STUDENT_MENU_ITEMS } from "./navbar.data";
-import { isAdminRole } from "@/config/app";
+import { isAdminRole, ROLE_LABELS } from "@/config/app";
 import { cn } from "@/lib/utils";
 
 /**
@@ -89,7 +89,7 @@ export default function AvatarMenu({ user }) {
                         <span className="truncate">{user.name}</span>
                         {isAdmin && (
                             <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-primary rounded px-1.5 py-0.5">
-                                {user.role === "sub_admin" ? "Sub-admin" : "Admin"}
+                                {ROLE_LABELS[user.role] ?? "Admin"}
                             </span>
                         )}
                     </p>

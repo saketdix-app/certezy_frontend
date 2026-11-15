@@ -83,15 +83,28 @@ export const ROUTES = {
     STUDENT_DASHBOARD: "/student/dashboard",
     STUDENT_PROFILE: "/student/profile",
     ADMIN_DASHBOARD: "/admin/dashboard",
+    CONSULTANT_HOME: "/consultant",
     PRIVACY: "/privacy-policy",
     TERMS: "/terms-of-service",
     COMPLAINTS: "/complaints-policy",
 };
 
 export const AUTH_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.OAUTH_CALLBACK];
-export const PROTECTED_PREFIXES = ["/student", "/admin", ROUTES.CHECKOUT];
+export const PROTECTED_PREFIXES = ["/student", "/admin", "/consultant", ROUTES.CHECKOUT];
 
-export const ADMIN_ROLES = ["admin", "sub_admin"];
+export const ADMIN_ROLES = ["super_admin", "admin", "sub_admin"];
+
+/** 2.0 roles, for labels everywhere. */
+export const ROLE_LABELS = {
+    super_admin: "Super Admin",
+    admin: "Admin",
+    sub_admin: "Sub-Admin",
+    consultant: "Consultant",
+    student: "Student",
+};
+
+/** Roles that manage staff accounts (Admin → Team). */
+export const TEAM_MANAGER_ROLES = ["super_admin", "admin"];
 
 /** Roles that can use learner pages (My Learning, checkout, course player…).
  *  Admins and sub-admins too, so they can try everything a student sees. */
@@ -101,7 +114,11 @@ export const isAdminRole = (role) => ADMIN_ROLES.includes(role);
 
 /** Default landing page for a signed-in user, by role. */
 export const homeForRole = (role) =>
-    ADMIN_ROLES.includes(role) ? ROUTES.ADMIN_DASHBOARD : ROUTES.STUDENT_DASHBOARD;
+    ADMIN_ROLES.includes(role)
+        ? ROUTES.ADMIN_DASHBOARD
+        : role === "consultant"
+          ? ROUTES.CONSULTANT_HOME
+          : ROUTES.STUDENT_DASHBOARD;
 
 /** Only allow in-app relative redirects (prevents open-redirect via ?redirect=). */
 export const safeRedirect = (value) => {

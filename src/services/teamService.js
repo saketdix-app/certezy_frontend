@@ -1,0 +1,34 @@
+import api from "./api";
+
+/**
+ * teamService.js — 2.0 staff accounts (Super Admin, Admin, Sub-Admin, Consultant)
+ *
+ * Backend base: /api/v1/admin/team
+ *   GET    /                                   → { members, me }  (?role&status&search)
+ *   GET    /audit                              → { logs, pagination } (?action&target_id&page)
+ *   GET    /:id                                → member + privilege history
+ *   POST   /                                   → create + email invitation
+ *   POST   /:id/resend-invite
+ *   PATCH  /:id/role                           → { role, password? }
+ *   PATCH  /:id/status                         → { is_active }
+ *   POST   /:id/privileges/super-admin-create  → { password }  (grant)
+ *   DELETE /:id/privileges/super-admin-create  → { password }  (revoke)
+ *
+ * `password` is the signed-in person's own password, asked again for
+ * sensitive changes (Super Admin creation/promotion, privilege changes).
+ */
+const teamService = {
+    list: (params) => api.get("/admin/team", { params }),
+    get: (id) => api.get(`/admin/team/${id}`),
+    audit: (params) => api.get("/admin/team/audit", { params }),
+    create: (data) => api.post("/admin/team", data),
+    resendInvite: (id) => api.post(`/admin/team/${id}/resend-invite`),
+    changeRole: (id, data) => api.patch(`/admin/team/${id}/role`, data),
+    setStatus: (id, is_active) => api.patch(`/admin/team/${id}/status`, { is_active }),
+    grantSuperAdminCreate: (id, password) =>
+        api.post(`/admin/team/${id}/privileges/super-admin-create`, { password }),
+    revokeSuperAdminCreate: (id, password) =>
+        api.delete(`/admin/team/${id}/privileges/super-admin-create`, { data: { password } }),
+};
+
+export default teamService;

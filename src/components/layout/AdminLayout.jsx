@@ -21,16 +21,19 @@ import {
     ChevronRight,
     Gift,
     FileUp,
+    UserCog,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
 import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/shared/Logo";
+import { ROLE_LABELS, TEAM_MANAGER_ROLES } from "@/config/app";
 
 const ADMIN_NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/admin/dashboard" },
     { label: "Users", icon: Users, to: "/admin/users" },
+    { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES },
     { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
     { label: "Categories", icon: Tag, to: "/admin/categories" },
     { label: "Courses", icon: BookOpen, to: "/admin/courses" },
@@ -96,7 +99,7 @@ export default function AdminLayout() {
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto p-4">
                     <ul className="space-y-1">
-                        {ADMIN_NAV_ITEMS.map((item) => {
+                        {ADMIN_NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(user?.role)).map((item) => {
                             const isActive = location.pathname === item.to;
                             return (
                                 <li key={item.to}>

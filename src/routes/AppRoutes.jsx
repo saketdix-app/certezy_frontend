@@ -4,7 +4,7 @@ import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router
 import NavBarIndex from "@/components/layout/Navbar/NavBarIndex";
 import Footer from "@/components/layout/Footer";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
-import { ADMIN_ROLES, LEARNER_ROLES, ROUTES } from "@/config/app";
+import { ADMIN_ROLES, LEARNER_ROLES, ROUTES, TEAM_MANAGER_ROLES } from "@/config/app";
 
 // ── Pages (code-split per route) ─────────────────────────
 // Public
@@ -57,6 +57,8 @@ const PaymentsPage = lazy(() => import("@/pages/admin/PaymentsPage"));
 const EnrollmentsPage = lazy(() => import("@/pages/admin/EnrollmentsPage"));
 const DiscountsPage = lazy(() => import("@/pages/admin/DiscountsPage"));
 const AdminCertificatesPage = lazy(() => import("@/pages/admin/CertificatesPage"));
+const TeamPage = lazy(() => import("@/pages/admin/TeamPage"));
+const ConsultantHome = lazy(() => import("@/pages/consultant/ConsultantHome"));
 const ContactPage = lazy(() => import("@/pages/admin/ContactPage"));
 const TestsPage = lazy(() => import("@/pages/admin/TestsPage"));
 const QuestionsPage = lazy(() => import("@/pages/admin/QuestionsPage"));
@@ -196,6 +198,16 @@ export default function AppRoutes() {
                     element={studentOnly(<ExamInterface />)}
                 />
 
+                {/* ── CONSULTANT (2.0: sales workspace arrives in phase 3) ── */}
+                <Route
+                    path={ROUTES.CONSULTANT_HOME}
+                    element={
+                        <ProtectedRoute allowedRoles={["consultant"]}>
+                            <ConsultantHome />
+                        </ProtectedRoute>
+                    }
+                />
+
                 {/* ── ADMIN ── */}
                 <Route
                     path="/admin"
@@ -220,6 +232,14 @@ export default function AppRoutes() {
                     <Route path="enrollments" element={<EnrollmentsPage />} />
                     <Route path="discounts" element={<DiscountsPage />} />
                     <Route path="certificates" element={<AdminCertificatesPage />} />
+                    <Route
+                        path="team"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <TeamPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route path="contact" element={<ContactPage />} />
                 </Route>
             </Routes>
