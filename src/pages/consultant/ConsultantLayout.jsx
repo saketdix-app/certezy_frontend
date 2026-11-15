@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CalendarClock, LayoutDashboard, LogOut, Users } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
+import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import { logoutUser, selectUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +37,7 @@ export default function ConsultantLayout() {
                     <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0C447C]">Sales</span>
                 </div>
                 <div className="flex items-center gap-3">
+                    <NotificationsMenu />
                     <span className="hidden text-[13px] text-slate-600 sm:inline">{user?.name}</span>
                     <button
                         type="button"

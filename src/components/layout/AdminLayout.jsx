@@ -24,12 +24,14 @@ import {
     UserCog,
     Contact,
     CalendarClock,
+    Shuffle,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
 import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/shared/Logo";
+import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import { ROLE_LABELS, TEAM_MANAGER_ROLES } from "@/config/app";
 
 const ADMIN_NAV_ITEMS = [
@@ -37,6 +39,7 @@ const ADMIN_NAV_ITEMS = [
     { label: "Users", icon: Users, to: "/admin/users" },
     { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES },
     { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES },
+    { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES },
     { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES },
     { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
     { label: "Categories", icon: Tag, to: "/admin/categories" },
@@ -174,7 +177,7 @@ export default function AdminLayout() {
                             <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
                         </div>
                         <div className="flex items-center gap-4">
-                            {/* Add notifications, user menu etc here */}
+                            <NotificationsMenu />
                         </div>
                     </div>
                 </header>
