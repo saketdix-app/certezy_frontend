@@ -26,6 +26,7 @@ import {
     CalendarClock,
     Shuffle,
     TrendingUp,
+    BarChart3,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -42,6 +43,7 @@ const ADMIN_NAV_ITEMS = [
     { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES },
     { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES },
     { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES },
+    { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports", roles: TEAM_MANAGER_ROLES },
     { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links", roles: TEAM_MANAGER_ROLES },
     { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES },
     { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
