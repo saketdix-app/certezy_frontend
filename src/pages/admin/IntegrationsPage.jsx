@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { AlertTriangle, CheckCircle2, Copy, Loader2, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
 
 import integrationService from "@/services/integrationService";
+import crmService from "@/services/crmService";
 import courseService from "@/services/courseService";
 import { cn } from "@/lib/utils";
 import { apiMessage, fmtDateTime, inputCls } from "@/lib/crm";
@@ -27,6 +28,12 @@ const INFO = {
         settings: { client_secret: "LINKEDIN_CLIENT_SECRET", access_token: "LINKEDIN_ACCESS_TOKEN", ad_account_id: "LINKEDIN_AD_ACCOUNT_ID" },
         formLabel: "LinkedIn form ID",
     },
+    whatsapp: {
+        title: "WhatsApp",
+        about: "Messages from new numbers become leads; replies happen on each lead's WhatsApp thread.",
+        settings: { token: "WHATSAPP_TOKEN", phone_number_id: "WHATSAPP_PHONE_NUMBER_ID", verify_token: "WHATSAPP_VERIFY_TOKEN", app_secret: "META_APP_SECRET" },
+        formLabel: null,
+    },
     website: {
         title: "Website contact form",
         about: "Messages from the Contact Us page also become leads (source: Website).",
@@ -34,6 +41,13 @@ const INFO = {
         formLabel: null,
     },
 };
+const AUTOMATIONS = [
+    ["auto_stage_on_payment", "Paid → Application", "When a lead's student pays, move the lead to Application (if it's earlier in the pipeline)."],
+    ["auto_course_done", "Completed → Course Done", "When the student completes the course, move the lead to Course Done and tell the consultant."],
+    ["abandoned_checkout_nudge", "Abandoned checkout", "If someone starts checkout but hasn't paid after 1 hour, tell their consultant once."],
+    ["follow_up_reminders", "Follow-up reminders", "Remind the consultant 15 minutes before a follow-up is due."],
+];
+
 const STATUS = {
     created: ["New lead", "bg-emerald-50 text-emerald-700"],
     duplicate: ["Existing lead", "bg-sky-50 text-sky-700"],
@@ -115,6 +129,7 @@ export default function IntegrationsPage() {
     const [data, setData] = useState(null);
     const [courses, setCourses] = useState([]);
     const [busy, setBusy] = useState(null);
+    const [automations, setAutomations] = useState(null);
 
     const load = useCallback(
         () =>
@@ -130,7 +145,24 @@ export default function IntegrationsPage() {
             .getAll({ limit: 100 })
             .then(({ data: res }) => setCourses(res?.data ?? []))
             .catch(() => {});
+        crmService
+            .automations()
+            .then(({ data: res }) => setAutomations(res.data))
+            .catch(() => {});
     }, [load]);
+
+    const toggleAutomation = async (key, value) => {
+        setBusy(key);
+        try {
+            const { data: res } = await crmService.saveAutomations({ [key]: value });
+            setAutomations(res.data);
+            toast.success(value ? "Automation on" : "Automation off");
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not save"));
+        } finally {
+            setBusy(null);
+        }
+    };
 
     const act = async (key, fn, ok) => {
         setBusy(key);
@@ -164,7 +196,7 @@ export default function IntegrationsPage() {
                 </p>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
                 {data.integrations.map((i) => {
                     const info = INFO[i.source];
                     const healthy = i.last_success_at && (!i.last_error_at || new Date(i.last_success_at) > new Date(i.last_error_at));
@@ -257,6 +289,26 @@ export default function IntegrationsPage() {
                     );
                 })}
             </div>
+
+            {automations && (
+                <section className="rounded-xl border border-slate-200 bg-white p-4">
+                    <h2 className="text-[15px] font-bold text-slate-900">Automations</h2>
+                    <p className="mt-0.5 mb-3 text-[12.5px] text-slate-500">
+                        Automatic moves only go forward and show on the lead's timeline as "automatic".
+                    </p>
+                    <ul className="divide-y divide-slate-100">
+                        {AUTOMATIONS.map(([key, title, about]) => (
+                            <li key={key} className="flex items-center justify-between gap-4 py-2.5">
+                                <div>
+                                    <p className="text-[13.5px] font-semibold text-slate-800">{title}</p>
+                                    <p className="text-[12.5px] text-slate-500">{about}</p>
+                                </div>
+                                <Switch checked={Boolean(automations[key])} disabled={busy === key} label={title} onChange={(v) => toggleAutomation(key, v)} />
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
 
             <section className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
                 <h2 className="px-4 pt-3 text-[15px] font-bold text-slate-900">Recent imports</h2>
