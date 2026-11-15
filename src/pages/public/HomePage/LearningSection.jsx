@@ -131,7 +131,7 @@ export default function LearningSection() {
             <style>{CSS}</style>
 
             <section
-                aria-label="Why learn with Certezy"
+                aria-label="Why learn with CERTEZY"
                 className="ls-section relative overflow-hidden text-white"
                 style={{
                     background: "#071B2F",

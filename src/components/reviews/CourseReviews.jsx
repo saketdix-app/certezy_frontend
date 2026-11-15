@@ -385,7 +385,7 @@ function ReviewList({ reviews, loading, filtered }) {
 }
 
 // Shows where a review came from: on-site reviews are "Verified learner";
-// reviews entered by the Certezy team carry their source (classroom batch, …)
+// reviews entered by the CERTEZY team carry their source (classroom batch, …)
 function SourceBadge({ review }) {
     const src = REVIEW_SOURCES[review.source] || REVIEW_SOURCES.platform;
     return (
@@ -396,8 +396,8 @@ function SourceBadge({ review }) {
             )}
             title={
                 review.source && review.source !== "platform"
-                    ? "Collected by the Certezy team outside this website"
-                    : "Written by a learner enrolled on Certezy"
+                    ? "Collected by the CERTEZY team outside this website"
+                    : "Written by a learner enrolled on CERTEZY"
             }
         >
             {describeSource(review)}

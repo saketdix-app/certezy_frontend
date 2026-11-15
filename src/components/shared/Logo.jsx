@@ -9,7 +9,7 @@ const SOURCES = {
 };
 
 /**
- * Certezy logo.
+ * CERTEZY logo.
  *
  * <Logo />                         blue wordmark, 32px tall
  * <Logo variant="light" />         white wordmark for dark backgrounds

@@ -239,7 +239,7 @@ function CourseCard({ enrollment, onOpen }) {
                     </span>
                 )}
 
-                {/* Assigned free by Certezy */}
+                {/* Assigned free by CERTEZY */}
                 {enrollment.source === "admin" && (
                     <span
                         className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg"

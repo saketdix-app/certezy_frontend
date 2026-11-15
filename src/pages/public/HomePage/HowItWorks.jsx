@@ -174,7 +174,7 @@ function SampleCertificateModal({ onClose }) {
                 </button>
                 <img
                     src="/sample-certificate.webp"
-                    alt="Sample Certezy certificate of completion"
+                    alt="Sample CERTEZY certificate of completion"
                     className="w-full h-auto rounded-lg"
                 />
                 <div className="flex flex-wrap items-center justify-between gap-3 px-1 pt-3">
@@ -205,7 +205,7 @@ export default function HowItWorks() {
 
             <section
                 className="hiw-section"
-                aria-label="How Certezy works — 3 simple steps"
+                aria-label="How CERTEZY works — 3 simple steps"
                 style={{
                     background: "#0B1120",
                     borderTop: "1px solid rgba(255,255,255,0.05)",
@@ -382,7 +382,7 @@ export default function HowItWorks() {
                         <Link
                             to="/register"
                             className="hiw-cta"
-                            aria-label="Start your learning journey with Certezy"
+                            aria-label="Start your learning journey with CERTEZY"
                         >
                             Start Your Journey <ArrowRight size={17} aria-hidden="true" />
                         </Link>

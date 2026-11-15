@@ -6,7 +6,7 @@ import certificateService from "@/services/certificateService";
 /**
  * Public certificate verification — /verify and /verify/:certificateNo.
  * The certificate PDF prints this link, so employers can confirm a
- * Certezy E-Learning Pvt. Ltd. certificate is genuine.
+ * CERTEZY E-Learning Pvt. Ltd. certificate is genuine.
  */
 
 const fmtDate = (d) =>
@@ -55,7 +55,7 @@ export default function VerifyCertificatePage() {
                         cert: null,
                         error:
                             err.response?.status === 404
-                                ? "No certificate with this number was issued by Certezy."
+                                ? "No certificate with this number was issued by CERTEZY."
                                 : err.response?.data?.message ||
                                   "Could not verify right now. Please try again.",
                     })
@@ -85,7 +85,7 @@ export default function VerifyCertificatePage() {
                         Verify a certificate
                     </h1>
                     <p className="text-[14px] text-slate-500 mt-1">
-                        Check that a certificate was issued by Certezy E-Learning Pvt. Ltd.
+                        Check that a certificate was issued by CERTEZY E-Learning Pvt. Ltd.
                     </p>
                 </div>
 

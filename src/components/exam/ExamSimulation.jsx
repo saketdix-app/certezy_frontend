@@ -15,7 +15,7 @@ import Logo from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
 
 /**
- * ExamSimulation — full-screen exam pieces in the Certezy theme
+ * ExamSimulation — full-screen exam pieces in the CERTEZY theme
  * (navy bars like the site header, brand blue #3282B8, Plus Jakarta Sans):
  * top bar (logo · title · time remaining · "n of N"), question card with
  * answer cards, bottom bar with Flag for review · Previous · Navigator · Next,

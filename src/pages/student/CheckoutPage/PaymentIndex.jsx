@@ -104,7 +104,7 @@ export default function CheckoutPage() {
                         <div className="flex items-start gap-3 px-4 py-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
                             <ShieldCheck size={16} className="text-emerald-600 mt-0.5 shrink-0" />
                             <p className="text-[12.5px] text-emerald-800 leading-relaxed">
-                                Your payment is processed securely. Certezy never stores your card details.
+                                Your payment is processed securely. CERTEZY never stores your card details.
                                 You'll get instant access after payment.
                             </p>
                         </div>

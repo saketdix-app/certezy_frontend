@@ -247,7 +247,7 @@ export function useCheckout(courseId) {
                 amount: Math.round(order.amount * 100),
                 currency: order.currency,
                 order_id: order.razorpay_order_id,
-                name: "Certezy",
+                name: "CERTEZY",
                 description: course.title,
                 prefill: { name: user.name, email: user.email },
 

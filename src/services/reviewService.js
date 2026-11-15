@@ -15,7 +15,7 @@ import api from "./api";
  *   GET    /reviews/admin/all                 ?page&limit&is_approved&course_id
  *   GET    /reviews/admin/pending             ?limit
  *   PUT    /reviews/:id/approval              { is_approved: 0 | 1 }
- *   GET    /reviews/admin/sources             { platform: "Verified Certezy learner", classroom: … }
+ *   GET    /reviews/admin/sources             { platform: "Verified CERTEZY learner", classroom: … }
  *   POST   /reviews/admin                     add a genuine review collected outside the site
  *                                             { course_id, reviewer_name, rating, comment?, source,
  *                                               source_note?, reviewed_at?, is_approved?, confirm_genuine: true }
