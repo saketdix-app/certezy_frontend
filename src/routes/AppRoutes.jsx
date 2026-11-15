@@ -58,7 +58,13 @@ const EnrollmentsPage = lazy(() => import("@/pages/admin/EnrollmentsPage"));
 const DiscountsPage = lazy(() => import("@/pages/admin/DiscountsPage"));
 const AdminCertificatesPage = lazy(() => import("@/pages/admin/CertificatesPage"));
 const TeamPage = lazy(() => import("@/pages/admin/TeamPage"));
-const ConsultantHome = lazy(() => import("@/pages/consultant/ConsultantHome"));
+const ConsultantLayout = lazy(() => import("@/pages/consultant/ConsultantLayout"));
+const crmPage = (name) => lazy(() => import("@/pages/consultant/ConsultantPages").then((m) => ({ default: m[name] })));
+const ConsultantOverviewPage = crmPage("ConsultantOverviewPage");
+const ConsultantLeadsPage = crmPage("ConsultantLeadsPage");
+const ConsultantFollowUpsPage = crmPage("ConsultantFollowUpsPage");
+const AdminLeadsPage = crmPage("AdminLeadsPage");
+const AdminFollowUpsPage = crmPage("AdminFollowUpsPage");
 const ContactPage = lazy(() => import("@/pages/admin/ContactPage"));
 const TestsPage = lazy(() => import("@/pages/admin/TestsPage"));
 const QuestionsPage = lazy(() => import("@/pages/admin/QuestionsPage"));
@@ -198,15 +204,19 @@ export default function AppRoutes() {
                     element={studentOnly(<ExamInterface />)}
                 />
 
-                {/* ── CONSULTANT (2.0: sales workspace arrives in phase 3) ── */}
+                {/* ── CONSULTANT: sales workspace (2.0 phase 3) ── */}
                 <Route
                     path={ROUTES.CONSULTANT_HOME}
                     element={
                         <ProtectedRoute allowedRoles={["consultant"]}>
-                            <ConsultantHome />
+                            <ConsultantLayout />
                         </ProtectedRoute>
                     }
-                />
+                >
+                    <Route index element={<ConsultantOverviewPage />} />
+                    <Route path="leads" element={<ConsultantLeadsPage />} />
+                    <Route path="follow-ups" element={<ConsultantFollowUpsPage />} />
+                </Route>
 
                 {/* ── ADMIN ── */}
                 <Route
@@ -232,6 +242,22 @@ export default function AppRoutes() {
                     <Route path="enrollments" element={<EnrollmentsPage />} />
                     <Route path="discounts" element={<DiscountsPage />} />
                     <Route path="certificates" element={<AdminCertificatesPage />} />
+                    <Route
+                        path="leads"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <AdminLeadsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="follow-ups"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <AdminFollowUpsPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="team"
                         element={
