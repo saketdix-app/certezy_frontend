@@ -38,7 +38,7 @@ const telHref = (number) => `tel:+${number.replace(/\D/g, "")}`;
 /** Support phone lines, shown in the footer and on the contact page. */
 export const SUPPORT_PHONES = [
     { region: "IN", label: "India", number: "+91 98935 96975" },
-    { region: "US", label: "US (toll-free)", number: "+1 (866) 558-9561" },
+    { region: "US", label: "US", number: "+1 (512) 373-0152" },
 ].map((p) => ({ ...p, href: telHref(p.number) }));
 
 /** WhatsApp chat (24 × 7) on the same India and US numbers. */
@@ -59,7 +59,7 @@ export const COMPANY = {
     ],
 };
 
-/** Primary number (US toll-free) for places with room for only one. */
+/** Primary number (US) for places with room for only one. */
 const PRIMARY_PHONE = SUPPORT_PHONES.find((p) => p.region === "US");
 export const SUPPORT_PHONE = PRIMARY_PHONE.number;
 export const SUPPORT_PHONE_HREF = PRIMARY_PHONE.href;
