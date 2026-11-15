@@ -25,6 +25,7 @@ import {
     Contact,
     CalendarClock,
     Shuffle,
+    TrendingUp,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -40,6 +41,8 @@ const ADMIN_NAV_ITEMS = [
     { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES },
     { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES },
     { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES },
+    { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES },
+    { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links", roles: TEAM_MANAGER_ROLES },
     { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES },
     { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
     { label: "Categories", icon: Tag, to: "/admin/categories" },

@@ -1,26 +1,35 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CalendarClock, LayoutDashboard, LogOut, Users } from "lucide-react";
+import { Award, BookOpenCheck, CalendarClock, LayoutDashboard, LogOut, MoreHorizontal, Percent, TrendingUp, Users } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
 import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import { logoutUser, selectUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 
+// PRD §4.1 left navigation. Phones show the first four as tabs, the rest under "More".
 const NAV = [
     { to: "/consultant", label: "Overview", icon: LayoutDashboard, end: true },
     { to: "/consultant/leads", label: "My Leads", icon: Users },
     { to: "/consultant/follow-ups", label: "Follow-ups", icon: CalendarClock },
+    { to: "/consultant/sales", label: "Sales", icon: TrendingUp },
+    { to: "/consultant/discount-links", label: "Discount Links", icon: Percent },
+    { to: "/consultant/course-assignments", label: "Course Assignments", icon: BookOpenCheck },
+    { to: "/consultant/certificates", label: "Certificates", icon: Award },
 ];
+const TABS = NAV.slice(0, 4);
+const MORE = NAV.slice(4);
 
 /**
- * Consultant sales workspace (2.0 phase 3, PRD §4.1). Left navigation on
- * desktop, a bottom tab bar on phones. Sales, discount links, course
- * assignments and certificates join the menu in phase 5.
+ * Consultant sales workspace (2.0, PRD §4.1). Left navigation on desktop,
+ * bottom tabs plus a "More" menu on phones.
  */
 export default function ConsultantLayout() {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
+    const { pathname } = useLocation();
+    const [moreOpen, setMoreOpen] = useState(false);
     const logout = async () => {
         try {
             await dispatch(logoutUser());
@@ -78,9 +87,28 @@ export default function ConsultantLayout() {
                 </main>
             </div>
 
-            {/* Phone: bottom tabs */}
-            <nav aria-label="Sales workspace" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t border-slate-200 bg-white lg:hidden">
-                {NAV.map(({ to, label, icon: Icon, end }) => (
+            {/* Phone: bottom tabs + More */}
+            {moreOpen && (
+                <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setMoreOpen(false)}>
+                    <ul className="absolute inset-x-3 bottom-[68px] rounded-2xl bg-white p-2 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        {MORE.map(({ to, label, icon: Icon }) => (
+                            <li key={to}>
+                                <NavLink
+                                    to={to}
+                                    onClick={() => setMoreOpen(false)}
+                                    className={({ isActive }) =>
+                                        cn("flex items-center gap-3 rounded-lg px-3 py-3 text-[14px] font-medium", isActive ? "bg-blue-50 text-blue-700" : "text-slate-700")
+                                    }
+                                >
+                                    <Icon size={18} aria-hidden="true" /> {label}
+                                </NavLink>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            <nav aria-label="Sales workspace" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-white lg:hidden">
+                {TABS.map(({ to, label, icon: Icon, end }) => (
                     <NavLink
                         key={to}
                         to={to}
@@ -92,6 +120,17 @@ export default function ConsultantLayout() {
                         <Icon size={20} aria-hidden="true" /> {label}
                     </NavLink>
                 ))}
+                <button
+                    type="button"
+                    onClick={() => setMoreOpen((v) => !v)}
+                    aria-expanded={moreOpen}
+                    className={cn(
+                        "flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold",
+                        MORE.some((m) => pathname.startsWith(m.to)) ? "text-[#3282B8]" : "text-slate-500"
+                    )}
+                >
+                    <MoreHorizontal size={20} aria-hidden="true" /> More
+                </button>
             </nav>
         </div>
     );

@@ -66,6 +66,12 @@ const ConsultantLeadsPage = crmPage("ConsultantLeadsPage");
 const ConsultantFollowUpsPage = crmPage("ConsultantFollowUpsPage");
 const AdminLeadsPage = crmPage("AdminLeadsPage");
 const AdminFollowUpsPage = crmPage("AdminFollowUpsPage");
+const ConsultantSalesPage = crmPage("ConsultantSalesPage");
+const ConsultantDiscountsPage = crmPage("ConsultantDiscountsPage");
+const ConsultantAssignmentsPage = crmPage("ConsultantAssignmentsPage");
+const ConsultantCertificatesPage = crmPage("ConsultantCertificatesPage");
+const AdminSalesPage = crmPage("AdminSalesPage");
+const AdminCrmDiscountsPage = crmPage("AdminCrmDiscountsPage");
 const ContactPage = lazy(() => import("@/pages/admin/ContactPage"));
 const TestsPage = lazy(() => import("@/pages/admin/TestsPage"));
 const QuestionsPage = lazy(() => import("@/pages/admin/QuestionsPage"));
@@ -217,6 +223,10 @@ export default function AppRoutes() {
                     <Route index element={<ConsultantOverviewPage />} />
                     <Route path="leads" element={<ConsultantLeadsPage />} />
                     <Route path="follow-ups" element={<ConsultantFollowUpsPage />} />
+                    <Route path="sales" element={<ConsultantSalesPage />} />
+                    <Route path="discount-links" element={<ConsultantDiscountsPage />} />
+                    <Route path="course-assignments" element={<ConsultantAssignmentsPage />} />
+                    <Route path="certificates" element={<ConsultantCertificatesPage />} />
                 </Route>
 
                 {/* ── ADMIN ── */}
@@ -256,6 +266,22 @@ export default function AppRoutes() {
                         element={
                             <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
                                 <AdminFollowUpsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="sales"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <AdminSalesPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="crm-discount-links"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <AdminCrmDiscountsPage />
                             </ProtectedRoute>
                         }
                     />
