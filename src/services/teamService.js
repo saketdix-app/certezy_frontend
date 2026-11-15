@@ -9,6 +9,8 @@ import api from "./api";
  *   GET    /:id                                → member + privilege history
  *   POST   /                                   → create + email invitation
  *   POST   /:id/resend-invite
+ *   PUT    /:id/permissions                   → Sub-Admin / Consultant permissions
+ *   PUT    /:id/allocation                    → Consultant: receive leads, pause, leave, limits
  *   PATCH  /:id/role                           → { role, password? }
  *   PATCH  /:id/status                         → { is_active }
  *   POST   /:id/privileges/super-admin-create  → { password }  (grant)
@@ -23,6 +25,8 @@ const teamService = {
     audit: (params) => api.get("/admin/team/audit", { params }),
     create: (data) => api.post("/admin/team", data),
     resendInvite: (id) => api.post(`/admin/team/${id}/resend-invite`),
+    setPermissions: (id, permissions) => api.put(`/admin/team/${id}/permissions`, permissions),
+    setAllocation: (id, data) => api.put(`/admin/team/${id}/allocation`, data),
     changeRole: (id, data) => api.patch(`/admin/team/${id}/role`, data),
     setStatus: (id, is_active) => api.patch(`/admin/team/${id}/status`, { is_active }),
     grantSuperAdminCreate: (id, password) =>

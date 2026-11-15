@@ -6,6 +6,9 @@ import {
     CheckCircle2,
     History,
     KeyRound,
+    PauseCircle,
+    PlayCircle,
+    SlidersHorizontal,
     Loader2,
     Mail,
     Search,
@@ -52,6 +55,28 @@ const ACTION_LABELS = {
     "user.invite_resend": "Resent invitation",
     "privilege.grant": "Granted Super Admin creation",
     "privilege.revoke": "Revoked Super Admin creation",
+    "permissions.update": "Changed permissions",
+    "permissions.delete": "Removed permissions",
+    "allocation.pause": "Paused lead allocation",
+    "allocation.resume": "Resumed lead allocation",
+    "allocation.update": "Changed lead allocation",
+};
+
+// Per-person permissions for Sub-Admins and Consultants (Admins have them all)
+const PERMISSION_INFO = {
+    can_assign_courses: ["Assign courses", "Give students access to courses"],
+    can_send_discounts: ["Discount links", "Create and send discount links"],
+    can_issue_certificates: ["Certificates", "Issue and regenerate certificates for eligible students"],
+    can_manage_students: ["Students", "View and manage student accounts"],
+    can_view_payments: ["Payments", "View payments and revenue"],
+    can_manage_courses: ["Courses", "Create and edit courses, curriculum and reviews"],
+    can_manage_tests: ["Tests", "Create and edit quizzes and exams"],
+};
+
+const ALLOCATION_BADGE = {
+    receiving: ["Receiving leads", "text-emerald-700"],
+    paused: ["Leads paused", "text-amber-700"],
+    on_leave: ["On leave", "text-slate-500"],
 };
 
 const apiMessage = (err, fallback) => err.response?.data?.message || fallback;
@@ -176,12 +201,165 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
     );
 }
 
-function CreateMemberModal({ roles, onClose, onCreated }) {
+function PermissionChecklist({ keys, value, onChange }) {
+    return (
+        <fieldset className="space-y-1.5">
+            {keys.map((k) => (
+                <label key={k} className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
+                    <input
+                        type="checkbox"
+                        checked={Boolean(value[k])}
+                        onChange={(e) => onChange({ ...value, [k]: e.target.checked })}
+                        className="mt-0.5 h-4 w-4 accent-[#3282B8]"
+                    />
+                    <span>
+                        <span className="block text-[13.5px] font-semibold text-slate-800">{PERMISSION_INFO[k]?.[0] ?? k}</span>
+                        <span className="block text-[12px] text-slate-500">{PERMISSION_INFO[k]?.[1]}</span>
+                    </span>
+                </label>
+            ))}
+        </fieldset>
+    );
+}
+
+function PermissionsModal({ member, keys, onClose, onDone }) {
+    const [value, setValue] = useState(member.permissions ?? {});
+    const [busy, setBusy] = useState(false);
+    const submit = async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        try {
+            await teamService.setPermissions(member.id, Object.fromEntries(keys.map((k) => [k, Boolean(value[k])])));
+            toast.success("Permissions updated");
+            onDone();
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not update permissions"));
+        } finally {
+            setBusy(false);
+        }
+    };
+    return (
+        <Modal title={`Permissions — ${member.name}`} onClose={onClose}>
+            <form onSubmit={submit}>
+                <p className="mb-3 text-[13px] text-slate-500">
+                    What this {ROLE_LABELS[member.role]} can do. Changes apply on their next action and are recorded
+                    in the audit log.
+                </p>
+                <PermissionChecklist keys={keys} value={value} onChange={setValue} />
+                <div className="mt-5 flex justify-end gap-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60">
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        Save permissions
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function AllocationModal({ member, onClose, onDone }) {
+    const a = member.allocation ?? {};
+    const [form, setForm] = useState({
+        accepting_leads: a.accepting_leads ?? true,
+        paused_reason: a.paused_reason ?? "",
+        on_leave_until: a.on_leave_until ? String(a.on_leave_until).slice(0, 10) : "",
+        daily_limit: a.daily_limit ?? "",
+        open_limit: a.open_limit ?? "",
+    });
+    const [busy, setBusy] = useState(false);
+    const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+    const num = (v) => (v === "" || v == null ? null : Number(v));
+
+    const submit = async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        try {
+            await teamService.setAllocation(member.id, {
+                accepting_leads: form.accepting_leads,
+                paused_reason: form.accepting_leads ? null : form.paused_reason,
+                on_leave_until: form.on_leave_until || null,
+                daily_limit: num(form.daily_limit),
+                open_limit: num(form.open_limit),
+            });
+            toast.success("Lead allocation updated");
+            onDone();
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not update lead allocation"));
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <Modal title={`Lead allocation — ${member.name}`} onClose={onClose}>
+            <form onSubmit={submit} className="space-y-4">
+                <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3">
+                    <span>
+                        <span className="block text-[14px] font-semibold text-slate-800">Receive new leads</span>
+                        <span className="block text-[12px] text-slate-500">
+                            Off = skipped by automatic distribution. Existing leads stay with them.
+                        </span>
+                    </span>
+                    <input
+                        type="checkbox"
+                        checked={form.accepting_leads}
+                        onChange={(e) => setForm((f) => ({ ...f, accepting_leads: e.target.checked }))}
+                        className="h-5 w-5 accent-[#3282B8]"
+                    />
+                </label>
+                {!form.accepting_leads && (
+                    <label className="block">
+                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Reason (optional)</span>
+                        <input value={form.paused_reason} onChange={set("paused_reason")} placeholder="Training week" className={inputCls} />
+                    </label>
+                )}
+                <label className="block">
+                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">On leave until (optional)</span>
+                    <input type="date" value={form.on_leave_until} onChange={set("on_leave_until")} className={inputCls} />
+                    <span className="mt-1 block text-[12px] text-slate-500">Skipped for new leads up to and including this date.</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                    <label className="block">
+                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">New leads per day</span>
+                        <input type="number" min="0" value={form.daily_limit} onChange={set("daily_limit")} placeholder="No limit" className={inputCls} />
+                    </label>
+                    <label className="block">
+                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Max open leads</span>
+                        <input type="number" min="0" value={form.open_limit} onChange={set("open_limit")} placeholder="No limit" className={inputCls} />
+                    </label>
+                </div>
+                <p className="text-[12px] text-slate-500">
+                    Automatic distribution (Round Robin) arrives in a later phase and will follow these settings.
+                </p>
+                <div className="flex justify-end gap-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60">
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        Save
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose, onCreated }) {
     const [form, setForm] = useState({ name: "", email: "", mobile: "", role: roles[roles.length - 1] ?? "" });
     const [password, setPassword] = useState("");
     const [busy, setBusy] = useState(false);
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
     const isSuper = form.role === "super_admin";
+    const hasPermissions = Boolean(defaults[form.role]);
+    const [perms, setPerms] = useState({});
+    // Role defaults until the person ticks something themselves
+    const shownPerms = perms[form.role] ?? Object.fromEntries((defaults[form.role] ?? []).map((k) => [k, true]));
 
     const submit = async (e) => {
         e.preventDefault();
@@ -190,7 +368,13 @@ function CreateMemberModal({ roles, onClose, onCreated }) {
         if (isSuper && !password) return toast.error("Enter your password to create a Super Admin");
         setBusy(true);
         try {
-            const { data } = await teamService.create({ ...form, ...(isSuper && { password }) });
+            const { data } = await teamService.create({
+                ...form,
+                ...(isSuper && { password }),
+                ...(hasPermissions && {
+                    permissions: Object.fromEntries(permissionKeys.map((k) => [k, Boolean(shownPerms[k])])),
+                }),
+            });
             toast.success(data?.message || "Invitation sent");
             onCreated();
             onClose();
@@ -226,6 +410,16 @@ function CreateMemberModal({ roles, onClose, onCreated }) {
                         ))}
                     </select>
                 </label>
+                {hasPermissions && (
+                    <div>
+                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Permissions</span>
+                        <PermissionChecklist
+                            keys={permissionKeys}
+                            value={shownPerms}
+                            onChange={(v) => setPerms((p) => ({ ...p, [form.role]: v }))}
+                        />
+                    </div>
+                )}
                 {isSuper && (
                     <>
                         <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900">
@@ -645,6 +839,12 @@ export default function TeamPage() {
                                                 ) : (
                                                     <span className="text-[12.5px] font-semibold text-slate-500">Inactive</span>
                                                 )}
+                                                {m.allocation && m.is_active && (
+                                                    <span className={cn("mt-0.5 block text-[11.5px] font-semibold", ALLOCATION_BADGE[m.allocation.state]?.[1])}>
+                                                        {ALLOCATION_BADGE[m.allocation.state]?.[0]}
+                                                        {m.allocation.state === "on_leave" && ` until ${fmt(m.allocation.on_leave_until).split(",")[0]}`}
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="px-4 py-3 text-[12.5px]">
                                                 {m.role === "super_admin" ? (
@@ -675,6 +875,20 @@ export default function TeamPage() {
                                                             {m.invite_pending && (
                                                                 <ActionBtn icon={Mail} label="Resend invite" onClick={() => setModal({ type: "resend", member: m })} />
                                                             )}
+                                                            {["sub_admin", "consultant"].includes(m.role) && (
+                                                                <ActionBtn
+                                                                    icon={SlidersHorizontal}
+                                                                    label="Permissions"
+                                                                    onClick={() => setModal({ type: "permissions", member: m })}
+                                                                />
+                                                            )}
+                                                            {m.role === "consultant" && (
+                                                                <ActionBtn
+                                                                    icon={m.allocation?.accepting_leads === false ? PlayCircle : PauseCircle}
+                                                                    label="Lead settings"
+                                                                    onClick={() => setModal({ type: "allocation", member: m })}
+                                                                />
+                                                            )}
                                                             <ActionBtn label="Change role" onClick={() => setModal({ type: "role", member: m })} />
                                                             <ActionBtn
                                                                 label={m.is_active ? "Deactivate" : "Activate"}
@@ -694,7 +908,19 @@ export default function TeamPage() {
                 </>
             )}
 
-            {modal?.type === "create" && <CreateMemberModal roles={caps.can_create_roles} onClose={close} onCreated={load} />}
+            {modal?.type === "create" && (
+                <CreateMemberModal
+                    roles={caps.can_create_roles}
+                    permissionKeys={caps.permission_keys}
+                    defaults={caps.default_permissions}
+                    onClose={close}
+                    onCreated={load}
+                />
+            )}
+            {modal?.type === "permissions" && (
+                <PermissionsModal member={modal.member} keys={caps.permission_keys ?? []} onClose={close} onDone={load} />
+            )}
+            {modal?.type === "allocation" && <AllocationModal member={modal.member} onClose={close} onDone={load} />}
             {modal?.type === "history" && <HistoryModal member={modal.member} onClose={close} />}
             {modal?.type === "role" && (
                 <ChangeRoleModal member={modal.member} roles={caps.can_create_roles} onClose={close} onDone={load} />
