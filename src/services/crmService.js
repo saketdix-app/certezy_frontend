@@ -50,6 +50,9 @@ const crmService = {
     certificates: () => api.get("/crm/certificates"),
     sales: (params) => api.get("/crm/sales", { params }),
     settings: () => api.get("/crm/settings"),
+    // Phase 6 — reports (Admins)
+    reportOverview: (params) => api.get("/crm/reports/overview", { params }),
+    exportLeads: (params) => api.get("/crm/reports/leads.csv", { params, responseType: "blob" }),
     saveSettings: (data) => api.put("/crm/settings", data),
     setRoundRobin: (enabled) => api.put("/crm/distribution/settings", { round_robin_enabled: enabled }),
     savePool: (id, data) => (id ? api.put(`/crm/distribution/pools/${id}`, data) : api.post("/crm/distribution/pools", data)),
