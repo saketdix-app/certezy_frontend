@@ -1,43 +1,42 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AlertTriangle, CheckCircle2, Copy, Loader2, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Copy, KeyRound, Loader2, Plug, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
 
 import integrationService from "@/services/integrationService";
 import crmService from "@/services/crmService";
 import courseService from "@/services/courseService";
 import { cn } from "@/lib/utils";
 import { apiMessage, fmtDateTime, inputCls } from "@/lib/crm";
+import { selectUser } from "@/features/auth/authSlice";
 
 /**
  * Admin → Integrations (2.0 phase 7, PRD §8): Meta and LinkedIn lead forms
- * and the website contact form. Secrets live only in the server's .env — this
- * page shows whether they're present, never their values.
+ * and the website contact form. A Super Admin saves each platform's keys here
+ * (encrypted on the server, write-only: this page only learns whether each key
+ * is set and where from — never the value).
  */
 
 const INFO = {
     meta: {
         title: "Meta (Facebook & Instagram)",
         about: "Leads from Facebook and Instagram lead-form ads arrive within seconds.",
-        settings: { app_secret: "META_APP_SECRET", verify_token: "META_VERIFY_TOKEN", page_access_token: "META_PAGE_ACCESS_TOKEN" },
         formLabel: "Meta lead form ID",
     },
     linkedin: {
         title: "LinkedIn Lead Gen Forms",
         about: "Leads from LinkedIn lead-gen ads, checked every 10 minutes.",
-        settings: { client_secret: "LINKEDIN_CLIENT_SECRET", access_token: "LINKEDIN_ACCESS_TOKEN", ad_account_id: "LINKEDIN_AD_ACCOUNT_ID" },
         formLabel: "LinkedIn form ID",
     },
     whatsapp: {
         title: "WhatsApp",
         about: "Messages from new numbers become leads; replies happen on each lead's WhatsApp thread.",
-        settings: { token: "WHATSAPP_TOKEN", phone_number_id: "WHATSAPP_PHONE_NUMBER_ID", verify_token: "WHATSAPP_VERIFY_TOKEN", app_secret: "META_APP_SECRET" },
         formLabel: null,
     },
     website: {
         title: "Website contact form",
         about: "Messages from the Contact Us page also become leads (source: Website).",
-        settings: {},
         formLabel: null,
     },
 };
@@ -70,6 +69,174 @@ function Switch({ checked, onChange, label, disabled }) {
         >
             <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
         </button>
+    );
+}
+
+function keyState(f) {
+    if (f.unreadable) return ["Saved value can't be read — enter it again", "text-amber-700"];
+    if (f.from === "admin") return [`Saved${f.hint ? ` · ends ${f.hint}` : ""}${f.updated_by_name ? ` · ${f.updated_by_name}` : ""}`, "text-slate-500"];
+    if (f.from === "server") return ["Set in server .env", "text-slate-500"];
+    if (f.from === "meta") return ["Uses the Meta app secret", "text-slate-500"];
+    return [f.optional ? "Not set (optional)" : "Not set", f.optional ? "text-slate-400" : "text-amber-700"];
+}
+
+/** Keys for one integration. Values are typed in, never shown back. */
+function IntegrationKeys({ integration, canEdit, onSaved }) {
+    const fields = integration.credentials ?? [];
+    const [open, setOpen] = useState(false);
+    const [values, setValues] = useState({});
+    const [remove, setRemove] = useState({});
+    const [password, setPassword] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [testing, setTesting] = useState(false);
+    const [result, setResult] = useState(null);
+
+    const close = () => {
+        setOpen(false);
+        setValues({});
+        setRemove({});
+        setPassword("");
+    };
+
+    const save = async (e) => {
+        e.preventDefault();
+        const body = {};
+        for (const f of fields) {
+            if (remove[f.name]) body[f.name] = "";
+            else if (values[f.name]?.trim()) body[f.name] = values[f.name].trim();
+        }
+        if (!Object.keys(body).length) return toast.error("Type a key, or tick Remove");
+        if (!password) return toast.error("Enter your password");
+        setSaving(true);
+        try {
+            const { data: res } = await integrationService.saveKeys(integration.source, body, password);
+            toast.success(res?.message || "Keys saved");
+            close();
+            setResult(null);
+            await onSaved();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not save the keys"));
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const test = async () => {
+        setTesting(true);
+        setResult(null);
+        try {
+            const { data: res } = await integrationService.test(integration.source);
+            setResult(res.data);
+        } catch (err) {
+            setResult({ ok: false, message: apiMessage(err, "Could not run the test") });
+        } finally {
+            setTesting(false);
+        }
+    };
+
+    if (!fields.length) return null;
+    return (
+        <div className="mt-3">
+            <ul className="space-y-1 text-[12.5px]">
+                {fields.map((f) => {
+                    const [text, tone] = keyState(f);
+                    return (
+                        <li key={f.name} className="flex items-center gap-1.5">
+                            {f.set ? (
+                                <CheckCircle2 size={13} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                            ) : (
+                                <XCircle size={13} className="shrink-0 text-slate-400" aria-hidden="true" />
+                            )}
+                            <span className="font-medium text-slate-700">{f.label}</span>
+                            <span className={cn("min-w-0 truncate", tone)}>{text}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+
+            <div className="mt-2 flex flex-wrap gap-2">
+                {canEdit && !open && (
+                    <button
+                        type="button"
+                        onClick={() => setOpen(true)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12.5px] font-semibold text-slate-700"
+                    >
+                        <KeyRound size={13} aria-hidden="true" /> {fields.some((f) => f.set) ? "Change keys" : "Add keys"}
+                    </button>
+                )}
+                <button
+                    type="button"
+                    onClick={test}
+                    disabled={testing}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12.5px] font-semibold text-slate-700 disabled:opacity-60"
+                >
+                    {testing ? <Loader2 size={13} className="animate-spin" aria-hidden="true" /> : <Plug size={13} aria-hidden="true" />} Test connection
+                </button>
+            </div>
+            {result && (
+                <p role="status" className={cn("mt-2 rounded-lg px-2.5 py-1.5 text-[12px]", result.ok ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700")}>
+                    {result.message}
+                </p>
+            )}
+            {!canEdit && <p className="mt-2 text-[12px] text-slate-400">Only a Super Admin can change these keys.</p>}
+
+            {open && (
+                <form onSubmit={save} className="mt-3 space-y-2.5 rounded-lg bg-slate-50 p-3" autoComplete="off">
+                    <p className="text-[12px] text-slate-500">
+                        Leave a box empty to keep the current key. Keys are encrypted and can't be viewed again after saving.
+                    </p>
+                    {fields.map((f) => (
+                        <div key={f.name}>
+                            <div className="flex items-center justify-between gap-2">
+                                <label htmlFor={`${integration.source}-${f.name}`} className="text-[12.5px] font-semibold text-slate-700">
+                                    {f.label}
+                                    {f.optional && <span className="font-normal text-slate-400"> (optional)</span>}
+                                </label>
+                                {f.from === "admin" && (
+                                    <label className="flex items-center gap-1 text-[12px] text-slate-500">
+                                        <input
+                                            type="checkbox"
+                                            checked={Boolean(remove[f.name])}
+                                            onChange={(e) => setRemove((r) => ({ ...r, [f.name]: e.target.checked }))}
+                                        />
+                                        Remove
+                                    </label>
+                                )}
+                            </div>
+                            <input
+                                id={`${integration.source}-${f.name}`}
+                                type={f.secret ? "password" : "text"}
+                                autoComplete="new-password"
+                                spellCheck={false}
+                                disabled={Boolean(remove[f.name])}
+                                value={values[f.name] ?? ""}
+                                onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                                placeholder={f.from === "admin" ? "Saved — type to replace" : f.from === "server" ? "Set in server .env — type to override" : "Paste here"}
+                                className={cn(inputCls, "mt-1 py-1.5 font-mono text-[12.5px] disabled:opacity-50")}
+                            />
+                        </div>
+                    ))}
+                    <label className="block border-t border-slate-200 pt-2.5">
+                        <span className="text-[12.5px] font-semibold text-slate-700">Confirm with your password</span>
+                        <input
+                            type="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={cn(inputCls, "mt-1 py-1.5")}
+                        />
+                    </label>
+                    <div className="flex justify-end gap-2">
+                        <button type="button" onClick={close} className="rounded-lg px-3 py-1.5 text-[12.5px] font-semibold text-slate-600">
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                            {saving && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Save keys
+                        </button>
+                    </div>
+                </form>
+            )}
+        </div>
     );
 }
 
@@ -130,6 +297,7 @@ export default function IntegrationsPage() {
     const [courses, setCourses] = useState([]);
     const [busy, setBusy] = useState(null);
     const [automations, setAutomations] = useState(null);
+    const isSuper = useSelector(selectUser)?.role === "super_admin";
 
     const load = useCallback(
         () =>
@@ -192,7 +360,9 @@ export default function IntegrationsPage() {
                 <p className="mt-1 text-[13px] text-slate-500">
                     Leads from ads and forms go through the same duplicate checks and{" "}
                     <Link to="/admin/distribution" className="font-semibold text-[#3282B8]">Round Robin</Link> as leads added by hand.
-                    Keys and secrets are set on the server, never here.
+                    {isSuper
+                        ? "Paste each platform's keys into its card — they're encrypted and never shown again."
+                        : "A Super Admin adds each platform's keys; you can see whether they're set and test the connection."}
                 </p>
             </div>
 
@@ -215,20 +385,10 @@ export default function IntegrationsPage() {
                                 />
                             </div>
 
-                            {Object.keys(info.settings).length > 0 && (
-                                <ul className="mt-3 space-y-1 text-[12.5px]">
-                                    {Object.entries(info.settings).map(([k, envName]) => (
-                                        <li key={k} className="flex items-center gap-1.5">
-                                            {i.ready[k] ? <CheckCircle2 size={13} className="text-emerald-600" aria-hidden="true" /> : <XCircle size={13} className="text-slate-400" aria-hidden="true" />}
-                                            <code className="text-[11.5px]">{envName}</code>
-                                            <span className="text-slate-400">{i.ready[k] ? "set" : "missing"}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+                            <IntegrationKeys integration={i} canEdit={isSuper} onSaved={load} />
                             {!i.configured && i.source !== "website" && (
                                 <p className="mt-2 flex gap-1.5 text-[12px] text-amber-700">
-                                    <AlertTriangle size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> Add the missing settings to the server's .env and restart to turn this on.
+                                    <AlertTriangle size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> Add the missing keys to turn this on.
                                 </p>
                             )}
 
