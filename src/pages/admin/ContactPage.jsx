@@ -566,7 +566,7 @@ export default function ContactPage() {
                                             className="ml-6 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] p-4"
                                         >
                                             <p className="text-[11.5px] font-semibold text-[#3282B8] mb-1">
-                                                Reply by {r.admin_name || "Certezy team"} ·{" "}
+                                                Reply by {r.admin_name || "CERTEZY team"} ·{" "}
                                                 {formatDate(r.created_at)}
                                             </p>
                                             <p className="text-sm text-slate-700 whitespace-pre-wrap">

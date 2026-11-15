@@ -105,7 +105,7 @@ export default function HeroSection() {
 
             {/* SEO: semantic landmark, descriptive aria-label */}
             <section
-                aria-label="Certezy — Industry-ready IT certification courses"
+                aria-label="CERTEZY — Industry-ready IT certification courses"
                 style={{
                     background: "var(--c-bg)",
                     fontFamily: "'Plus Jakarta Sans', sans-serif",

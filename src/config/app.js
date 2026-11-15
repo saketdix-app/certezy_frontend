@@ -7,7 +7,7 @@ const trimSlash = (value) => (value || "").replace(/\/$/, "");
 
 // Brand and contact details are fixed in code on purpose: a stale VITE_* value
 // in a server .env must not be able to change (or misspell) them on the live site.
-export const APP_NAME = "Certezy";
+export const APP_NAME = "CERTEZY";
 export const APP_URL = trimSlash(import.meta.env.VITE_APP_URL || window.location.origin);
 export const API_BASE_URL = trimSlash(import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1");
 
@@ -29,7 +29,7 @@ export const PMI_ATP = {
  * admin course list still shows the real creator.
  */
 export const COURSE_INSTRUCTOR = {
-    name: "Certezy E-Learning Pvt. Ltd.",
+    name: "CERTEZY E-Learning Pvt. Ltd.",
     avatar: "/brand/certezy-icon-192.png",
 };
 
@@ -44,12 +44,12 @@ export const SUPPORT_PHONES = [
 /** WhatsApp chat (24 × 7) on the same India and US numbers. */
 export const WHATSAPP_LINES = SUPPORT_PHONES.map((p) => ({
     ...p,
-    href: `https://wa.me/${p.number.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Certezy, I have a question.")}`,
+    href: `https://wa.me/${p.number.replace(/\D/g, "")}?text=${encodeURIComponent("Hi CERTEZY, I have a question.")}`,
 }));
 
 /** Registered office — shown on the Contact page. */
 export const COMPANY = {
-    legalName: "Certezy E-Learning Pvt. Ltd.",
+    legalName: "CERTEZY E-Learning Pvt. Ltd.",
     // One line per row
     addressLines: [
         "3rd Floor, Streamline J-1 Tower",

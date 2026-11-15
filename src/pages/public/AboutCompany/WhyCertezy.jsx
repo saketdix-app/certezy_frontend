@@ -114,7 +114,7 @@ export default function WhyCertezy() {
             <style>{CSS}</style>
 
             <section
-                aria-label="Why thousands choose Certezy"
+                aria-label="Why thousands choose CERTEZY"
                 className="bg-[#F8FAFC] py-24"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
@@ -131,7 +131,7 @@ export default function WhyCertezy() {
                                     backgroundClip: "text",
                                 }}
                             >
-                                Certezy
+                                CERTEZY
                             </span>
                         </h2>
                         <p className="text-[#64748B] text-base lg:text-lg max-w-xl mx-auto leading-relaxed">

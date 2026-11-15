@@ -16,7 +16,7 @@ export default function ImpactNumbers() {
             <div className="max-w-[1200px] mx-auto px-6">
                 {/* Heading */}
                 <h2 className="text-center text-white font-black text-4xl lg:text-5xl tracking-tight mb-16">
-                    Certezy at a Glance
+                    CERTEZY at a Glance
                 </h2>
 
                 {/* Stats grid */}

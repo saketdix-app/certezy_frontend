@@ -52,7 +52,7 @@ export default function WhyChooseSection() {
 
                 {/* Heading */}
                 <h2 className="text-center font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
-                    Why Choose <span className="text-blue-400">Certezy?</span>
+                    Why Choose <span className="text-blue-400">CERTEZY?</span>
                 </h2>
 
                 <p className="text-center text-gray-400 max-w-2xl mx-auto mb-16">

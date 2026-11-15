@@ -120,7 +120,7 @@ export default function CTABanner() {
 
             <section
                 className="cta-section"
-                aria-label="Start your IT career with Certezy"
+                aria-label="Start your IT career with CERTEZY"
                 style={{
                     background: "#0B1120",
                     borderTop: "1px solid rgba(255,255,255,0.05)",
@@ -290,7 +290,7 @@ export default function CTABanner() {
                                 <Link
                                     to="/register"
                                     className="cta-btn-primary"
-                                    aria-label="Get started free with Certezy"
+                                    aria-label="Get started free with CERTEZY"
                                     style={{ marginBottom: "12px" }}
                                 >
                                     Get Started Free <ArrowRight size={18} aria-hidden="true" />

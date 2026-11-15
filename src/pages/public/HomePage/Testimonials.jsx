@@ -174,7 +174,7 @@ export default function Testimonials() {
                         .map((review, i) => ({
                             id: review.id,
                             quote: review.comment.trim(),
-                            name: review.student_name || review.reviewer_name || "Certezy learner",
+                            name: review.student_name || review.reviewer_name || "CERTEZY learner",
                             role: review.course_title || "Student",
                             avatar: {
                                 initial: (review.student_name ||

@@ -17,7 +17,7 @@ export default function AboutMission() {
                         </h2>
 
                         <p className="text-gray-600 leading-relaxed mb-8 max-w-[600px]">
-                            At Certezy, we believe that high-quality career advancement shouldn't be gated by
+                            At CERTEZY, we believe that high-quality career advancement shouldn't be gated by
                             geography or circumstance. Our platform bridges the gap between ambition and
                             professional achievement by providing direct access to world-class certification
                             programs and industry-driven learning paths.

@@ -112,7 +112,7 @@ export default function RegisterPage() {
                 const result = await dispatch(
                     loginUser({ email: form.email.trim(), password: form.password })
                 ).unwrap();
-                toast.success(`Welcome to Certezy, ${result.user?.name?.split(" ")[0] || "learner"}!`);
+                toast.success(`Welcome to CERTEZY, ${result.user?.name?.split(" ")[0] || "learner"}!`);
                 navigate(redirect || homeForRole(result.user?.role), { replace: true });
             } catch {
                 // e.g. the account needs verifying first — fall back to the login page
@@ -284,7 +284,7 @@ export default function RegisterPage() {
                                 letterSpacing: "0.05em",
                             }}
                         >
-                            © {new Date().getFullYear()} Certezy • Secure Registration
+                            © {new Date().getFullYear()} CERTEZY • Secure Registration
                         </p>
                     </div>
                 </div>

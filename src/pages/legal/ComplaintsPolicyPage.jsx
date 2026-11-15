@@ -87,11 +87,11 @@ export default function ComplaintsPolicyPage() {
             effectiveDate={EFFECTIVE_DATE}
             meta="Version 1.0"
             sections={SECTIONS}
-            intro="How students, customers and other service users can raise a complaint with Certezy, how we review it, how to escalate it, and the response times you can expect."
+            intro="How students, customers and other service users can raise a complaint with CERTEZY, how we review it, how to escalate it, and the response times you can expect."
         >
             <Section title="Purpose and commitment">
                 <p>
-                    {COMPANY.legalName} (&ldquo;Certezy&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo; or
+                    {COMPANY.legalName} (&ldquo;CERTEZY&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo; or
                     &ldquo;us&rdquo;) is committed to providing reliable, fair and professional education,
                     training and related services. We welcome feedback and take complaints seriously. This
                     policy explains how students, customers, clients and other service users can raise a
@@ -107,14 +107,14 @@ export default function ComplaintsPolicyPage() {
 
             <Section title="Scope">
                 <p>
-                    This policy applies to complaints about services provided by Certezy, including course
+                    This policy applies to complaints about services provided by CERTEZY, including course
                     enrolment and registration, payments and invoices, access to the learning platform, course
                     videos and learning materials, assessments and practice tests, instructors and support
-                    staff, course administration, certificates issued by Certezy, and customer service or
+                    staff, course administration, certificates issued by CERTEZY, and customer service or
                     communication.
                 </p>
                 <p>
-                    This policy does not give Certezy authority over decisions made independently by external
+                    This policy does not give CERTEZY authority over decisions made independently by external
                     certification bodies, examination providers, universities, payment providers or other
                     third parties. Where a complaint concerns such an organisation&rsquo;s examination,
                     credential, eligibility, result or decision, we will explain the relevant boundary and,
@@ -157,7 +157,7 @@ export default function ComplaintsPolicyPage() {
 
             <Section title="Acknowledgement and response times">
                 <p>
-                    The timelines below are Certezy&rsquo;s customer-service targets and are measured in working
+                    The timelines below are CERTEZY&rsquo;s customer-service targets and are measured in working
                     days (Monday to Friday, excluding public holidays in the location of the handling team). We
                     will make reasonable efforts to respond sooner.
                 </p>
@@ -189,7 +189,7 @@ export default function ComplaintsPolicyPage() {
             </Section>
 
             <Section title="Complaint review and resolution process">
-                <p>Certezy follows a documented, step-by-step process:</p>
+                <p>CERTEZY follows a documented, step-by-step process:</p>
                 <ol>
                     {PROCESS.map(([step, text]) => (
                         <li key={step}>
@@ -220,7 +220,7 @@ export default function ComplaintsPolicyPage() {
                     revised timeframe and keep the customer informed.
                 </p>
                 <p>
-                    If the customer remains dissatisfied after completing Certezy&rsquo;s internal process, they
+                    If the customer remains dissatisfied after completing CERTEZY&rsquo;s internal process, they
                     may consider any remedies available under applicable consumer protection laws or approach
                     the appropriate external consumer grievance or legal forum. Nothing in this policy limits
                     any statutory rights or remedies.
@@ -246,7 +246,7 @@ export default function ComplaintsPolicyPage() {
 
             <Section title="Continuous improvement">
                 <p>
-                    Certezy reviews complaint themes and outcomes periodically to identify recurring issues and
+                    CERTEZY reviews complaint themes and outcomes periodically to identify recurring issues and
                     improve our courses, platform, communication, support processes and service quality. Where
                     appropriate, we may make operational or training changes to reduce the likelihood of similar
                     complaints.
@@ -255,7 +255,7 @@ export default function ComplaintsPolicyPage() {
 
             <Section title="Policy publication and review">
                 <p>
-                    This policy is intended for public access and is available on Certezy&rsquo;s website and
+                    This policy is intended for public access and is available on CERTEZY&rsquo;s website and
                     provided to customers on request. It will be reviewed at least annually and earlier if there
                     are material changes to our services, applicable requirements or complaint-handling
                     arrangements.
