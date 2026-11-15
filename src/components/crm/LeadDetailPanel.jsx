@@ -41,6 +41,7 @@ const ACTIVITY_TEXT = {
     discount_revoked: () => "Discount link withdrawn",
     certificate_issued: (m) => `Certificate issued (${m?.certificate_no ?? ""})`,
     sale: (m) => `Sale: ${m?.currency ?? ""} ${Number(m?.amount ?? 0).toFixed(2)}`,
+    repeat_enquiry: (m) => `Enquired again via ${m?.source ?? "a form"}${m?.campaign ? ` (${m.campaign})` : ""}`,
 };
 
 const QUICK_LOG = [
