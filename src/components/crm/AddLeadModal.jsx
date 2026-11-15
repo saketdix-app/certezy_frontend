@@ -21,7 +21,7 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
         preferred_schedule: "",
         source: "manual",
         campaign: "",
-        owner_id: "",
+        owner_id: isAdmin ? "auto" : "",
     });
     const [courses, setCourses] = useState([]);
     const [owners, setOwners] = useState([]);
@@ -56,7 +56,10 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                 preferred_schedule: form.preferred_schedule.trim() || null,
                 source: form.source,
                 ...(form.campaign.trim() && { source_meta: { campaign: form.campaign.trim() } }),
-                ...(isAdmin && { owner_id: form.owner_id ? Number(form.owner_id) : null }),
+                ...(isAdmin && {
+                    owner_id: /^\d+$/.test(form.owner_id) ? Number(form.owner_id) : null,
+                    auto_assign: form.owner_id === "auto",
+                }),
             });
             toast.success("Lead added");
             onCreated(data.data);
@@ -155,7 +158,8 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                     <label className="block">
                         <span className="mb-1 block text-[13px] font-semibold text-slate-700">Owner</span>
                         <select value={form.owner_id} onChange={set("owner_id")} className={inputCls}>
-                            <option value="">Unassigned</option>
+                            <option value="auto">Auto (Round Robin)</option>
+                            <option value="">Leave unassigned</option>
                             {owners.map((o) => (
                                 <option key={o.id} value={o.id}>
                                     {o.name}

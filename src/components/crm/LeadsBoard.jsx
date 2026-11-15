@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { CalendarClock, Loader2, Plus, Search } from "lucide-react";
+import { CalendarClock, Loader2, Plus, Search, Shuffle } from "lucide-react";
 
 import crmService from "@/services/crmService";
 import { cn } from "@/lib/utils";
 import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
+import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
 import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, inputCls, isOverdue, maskPhone } from "@/lib/crm";
 
@@ -13,16 +15,21 @@ import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, inputCls
  * Lead list with the eight status tabs (PRD §4.1–4.3). Consultants get their
  * own leads; Admins get everyone's, plus an owner filter.
  */
-export default function LeadsBoard({ isAdmin, initialLeadId }) {
+export default function LeadsBoard({ isAdmin }) {
+    // Deep links from notifications: ?lead=123 opens it, ?owner=unassigned filters
+    const [params] = useSearchParams();
     const [stage, setStage] = useState("");
     const [search, setSearch] = useState("");
     const [source, setSource] = useState("");
-    const [ownerId, setOwnerId] = useState("");
+    const [ownerId, setOwnerId] = useState(isAdmin ? (params.get("owner") ?? "") : "");
+    const [selected, setSelected] = useState([]);
+    const [moving, setMoving] = useState(null); // lead ids
+    const [panelKey, setPanelKey] = useState(0);
     const [overdueOnly, setOverdueOnly] = useState(false);
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [owners, setOwners] = useState([]);
-    const [openId, setOpenId] = useState(initialLeadId ?? null);
+    const [openId, setOpenId] = useState(Number(params.get("lead")) || null);
     const [adding, setAdding] = useState(false);
 
     const load = useCallback(async () => {
@@ -61,7 +68,9 @@ export default function LeadsBoard({ isAdmin, initialLeadId }) {
     const resetPage = (fn) => (v) => {
         fn(v);
         setPage(1);
+        setSelected([]);
     };
+    const toggle = (id) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
     return (
         <div>
@@ -136,6 +145,24 @@ export default function LeadsBoard({ isAdmin, initialLeadId }) {
                 </label>
             </div>
 
+            {isAdmin && selected.length > 0 && (
+                <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#3282B8] bg-[#EBF4FF] px-4 py-2.5">
+                    <p className="text-[13.5px] font-semibold text-[#1A5F8A]">{selected.length} selected</p>
+                    <div className="flex gap-2">
+                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
+                            Clear
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setMoving(selected)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white"
+                        >
+                            <Shuffle size={13} aria-hidden="true" /> Assign / transfer
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* List */}
             {!data ? (
                 <div className="flex justify-center py-16">
@@ -148,11 +175,24 @@ export default function LeadsBoard({ isAdmin, initialLeadId }) {
             ) : (
                 <ul className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-3">
                     {data.leads.map((l) => (
-                        <li key={l.id}>
+                        <li key={l.id} className="relative">
+                            {isAdmin && (
+                                <input
+                                    type="checkbox"
+                                    checked={selected.includes(l.id)}
+                                    onChange={() => toggle(l.id)}
+                                    aria-label={`Select ${l.name}`}
+                                    className="absolute left-3 top-[18px] z-10 h-4 w-4 accent-[#3282B8]"
+                                />
+                            )}
                             <button
                                 type="button"
                                 onClick={() => setOpenId(l.id)}
-                                className="block w-full rounded-xl border border-slate-200 bg-white p-4 text-left transition-colors hover:border-[#3282B8]"
+                                className={cn(
+                                    "block w-full rounded-xl border bg-white p-4 text-left transition-colors hover:border-[#3282B8]",
+                                    isAdmin && "pl-9",
+                                    selected.includes(l.id) ? "border-[#3282B8]" : "border-slate-200"
+                                )}
                             >
                                 <div className="flex items-start justify-between gap-2">
                                     <p className="truncate text-[15px] font-bold text-slate-900">{l.name}</p>
@@ -208,7 +248,27 @@ export default function LeadsBoard({ isAdmin, initialLeadId }) {
                     onOpenLead={setOpenId}
                 />
             )}
-            {openId && <LeadDetailPanel leadId={openId} onClose={() => setOpenId(null)} onChanged={load} />}
+            {openId && (
+                <LeadDetailPanel
+                    key={`${openId}-${panelKey}`}
+                    leadId={openId}
+                    isAdmin={isAdmin}
+                    onClose={() => setOpenId(null)}
+                    onChanged={load}
+                    onMove={(id) => setMoving([id])}
+                />
+            )}
+            {moving && (
+                <MoveLeadsModal
+                    leadIds={moving}
+                    onClose={() => setMoving(null)}
+                    onDone={() => {
+                        setSelected([]);
+                        load();
+                        setPanelKey((k) => k + 1); // reload the open lead
+                    }}
+                />
+            )}
         </div>
     );
 }

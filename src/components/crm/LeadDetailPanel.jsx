@@ -9,6 +9,7 @@ import {
     MessageCircle,
     MessageSquareText,
     Phone,
+    Shuffle,
     StickyNote,
     X,
     XCircle,
@@ -42,7 +43,7 @@ const QUICK_LOG = [
 ];
 
 /** Slide-over panel: everything about one lead, and the actions allowed on it. */
-export default function LeadDetailPanel({ leadId, onClose, onChanged }) {
+export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, onMove }) {
     const [lead, setLead] = useState(null);
     const [stageTarget, setStageTarget] = useState(null);
     const [reason, setReason] = useState("");
@@ -161,6 +162,15 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged }) {
                                                 <MessageCircle size={14} aria-hidden="true" /> WhatsApp
                                             </a>
                                         </>
+                                    )}
+                                    {isAdmin && onMove && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onMove(lead.id)}
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-bold text-slate-700"
+                                        >
+                                            <Shuffle size={14} aria-hidden="true" /> {lead.owner_id ? "Transfer" : "Assign"}
+                                        </button>
                                     )}
                                     {lead.email && (
                                         <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-bold text-slate-700">
