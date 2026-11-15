@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
+import LeadStudentActions from "./LeadStudentActions";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
 import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, apiMessage, fmtDateTime, inputCls, isOverdue, waLink } from "@/lib/crm";
@@ -34,6 +35,12 @@ const ACTIVITY_TEXT = {
     follow_up_done: () => "Follow-up done",
     follow_up_missed: () => "Follow-up missed",
     follow_up_cancelled: () => "Follow-up cancelled",
+    student_account: (m) => (m?.existing ? "Linked to existing student account" : "Student account created"),
+    course_assigned: () => "Course assigned",
+    discount_sent: (m) => `Discount link sent (${m?.discount_pct ?? "?"}% off)`,
+    discount_revoked: () => "Discount link withdrawn",
+    certificate_issued: (m) => `Certificate issued (${m?.certificate_no ?? ""})`,
+    sale: (m) => `Sale: ${m?.currency ?? ""} ${Number(m?.amount ?? 0).toFixed(2)}`,
 };
 
 const QUICK_LOG = [
@@ -352,6 +359,11 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     </div>
                                 )}
                             </section>
+
+                            <LeadStudentActions key={lead.id} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
+                                setLead(l);
+                                onChanged?.();
+                            }} />
 
                             {/* Follow-ups */}
                             {lead.follow_ups?.length > 0 && (

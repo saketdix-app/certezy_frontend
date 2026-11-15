@@ -15,6 +15,8 @@ import api from "./api";
  *   GET   /follow-ups                → (?when=today|overdue|upcoming&owner_id)
  *   PATCH /follow-ups/:id            → { status: done|missed|cancelled, outcome? }
  *   GET   /owners                    → people a lead can be assigned to (admins)
+ *   POST  /leads/:id/student-account | assign-course | discount-link | certificate   (phase 5)
+ *   GET   /sales, /discounts, /assignments, /certificates;  GET/PUT /settings
  *   POST  /leads/assign(/preview)    → { lead_ids, owner_id, reason?, mode? } assign / transfer / rebalance
  *   GET   /distribution              → pools + Round Robin switch;  PUT /distribution/settings
  *   POST/PUT/DELETE /distribution/pools(/:id), POST /distribution/run, GET /distribution/report
@@ -36,6 +38,19 @@ const crmService = {
     previewMove: (data) => api.post("/crm/leads/assign/preview", data),
     move: (data) => api.post("/crm/leads/assign", data),
     distribution: () => api.get("/crm/distribution"),
+
+    // Phase 5 — CRM → LMS actions and sales
+    studentAccount: (id) => api.post(`/crm/leads/${id}/student-account`),
+    assignCourse: (id, data) => api.post(`/crm/leads/${id}/assign-course`, data),
+    sendDiscount: (id, data) => api.post(`/crm/leads/${id}/discount-link`, data),
+    issueCertificate: (id, data) => api.post(`/crm/leads/${id}/certificate`, data),
+    revokeDiscount: (id, reason) => api.post(`/crm/discounts/${id}/revoke`, { reason }),
+    discounts: () => api.get("/crm/discounts"),
+    assignments: () => api.get("/crm/assignments"),
+    certificates: () => api.get("/crm/certificates"),
+    sales: (params) => api.get("/crm/sales", { params }),
+    settings: () => api.get("/crm/settings"),
+    saveSettings: (data) => api.put("/crm/settings", data),
     setRoundRobin: (enabled) => api.put("/crm/distribution/settings", { round_robin_enabled: enabled }),
     savePool: (id, data) => (id ? api.put(`/crm/distribution/pools/${id}`, data) : api.post("/crm/distribution/pools", data)),
     deletePool: (id) => api.delete(`/crm/distribution/pools/${id}`),
