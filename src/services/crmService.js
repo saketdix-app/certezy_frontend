@@ -50,6 +50,12 @@ const crmService = {
     certificates: () => api.get("/crm/certificates"),
     sales: (params) => api.get("/crm/sales", { params }),
     settings: () => api.get("/crm/settings"),
+    // Phase 8 — WhatsApp and automations
+    whatsappThread: (id) => api.get(`/crm/leads/${id}/whatsapp`),
+    whatsappSend: (id, data) => api.post(`/crm/leads/${id}/whatsapp`, data),
+    whatsappTemplates: () => api.get("/crm/whatsapp/templates"),
+    automations: () => api.get("/crm/automations"),
+    saveAutomations: (data) => api.put("/crm/automations", data),
     // Phase 6 — reports (Admins)
     reportOverview: (params) => api.get("/crm/reports/overview", { params }),
     exportLeads: (params) => api.get("/crm/reports/leads.csv", { params, responseType: "blob" }),

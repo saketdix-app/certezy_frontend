@@ -17,6 +17,7 @@ import {
 
 import crmService from "@/services/crmService";
 import LeadStudentActions from "./LeadStudentActions";
+import LeadWhatsApp from "./LeadWhatsApp";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
 import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, apiMessage, fmtDateTime, inputCls, isOverdue, waLink } from "@/lib/crm";
@@ -25,7 +26,7 @@ const ACTIVITY_TEXT = {
     created: () => "Lead created",
     assignment: () => "Lead assigned",
     updated: (m) => `Details updated (${(m?.fields ?? []).join(", ")})`,
-    status_change: (m) => `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}`,
+    status_change: (m) => `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation ? " (automatic)" : ""}`,
     note: () => "Note",
     call: () => "Call",
     message: () => "Message",
@@ -41,6 +42,8 @@ const ACTIVITY_TEXT = {
     discount_revoked: () => "Discount link withdrawn",
     certificate_issued: (m) => `Certificate issued (${m?.certificate_no ?? ""})`,
     sale: (m) => `Sale: ${m?.currency ?? ""} ${Number(m?.amount ?? 0).toFixed(2)}`,
+    whatsapp_in: () => "WhatsApp received",
+    checkout_abandoned: (m) => `Started checkout for ${m?.course ?? "a course"} but didn't pay`,
     repeat_enquiry: (m) => `Enquired again via ${m?.source ?? "a form"}${m?.campaign ? ` (${m.campaign})` : ""}`,
 };
 
@@ -360,6 +363,8 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     </div>
                                 )}
                             </section>
+
+                            {lead.phone && <LeadWhatsApp leadId={lead.id} onSent={onChanged} />}
 
                             <LeadStudentActions key={lead.id} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
                                 setLead(l);
