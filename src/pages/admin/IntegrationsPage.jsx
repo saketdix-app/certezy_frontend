@@ -72,7 +72,8 @@ function Switch({ checked, onChange, label, disabled }) {
     );
 }
 
-function keyState(f) {
+function keyState(f, source) {
+    if (!f.set && APP_KEYS[source]?.includes(f.name)) return ["Not set — needed for Connect", "text-amber-700"];
     if (f.unreadable) return ["Saved value can't be read — enter it again", "text-amber-700"];
     if (f.from === "admin") return [`Saved${f.hint ? ` · ends ${f.hint}` : ""}${f.updated_by_name ? ` · ${f.updated_by_name}` : ""}`, "text-slate-500"];
     if (f.from === "server") return ["Set in server .env", "text-slate-500"];
@@ -139,7 +140,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
         <div className="mt-3">
             <ul className="space-y-1 text-[12.5px]">
                 {fields.map((f) => {
-                    const [text, tone] = keyState(f);
+                    const [text, tone] = keyState(f, integration.source);
                     return (
                         <li key={f.name} className="flex items-center gap-1.5">
                             {f.set ? (
@@ -481,6 +482,7 @@ export default function IntegrationsPage() {
     const [courses, setCourses] = useState([]);
     const [busy, setBusy] = useState(null);
     const [automations, setAutomations] = useState(null);
+    const [blocked, setBlocked] = useState(null); // card whose switch was pressed before it was set up
     const isSuper = useSelector(selectUser)?.role === "super_admin";
     const navigate = useNavigate();
     const { source: returnedFrom } = useParams();
@@ -503,7 +505,7 @@ export default function IntegrationsPage() {
         load();
         courseService
             .getAll({ limit: 100 })
-            .then(({ data: res }) => setCourses(res?.data ?? []))
+            .then(({ data: res }) => setCourses(Array.isArray(res?.data) ? res.data : []))
             .catch(() => {});
         crmService
             .automations()
@@ -601,11 +603,42 @@ export default function IntegrationsPage() {
                                 </div>
                                 <Switch
                                     checked={i.enabled}
-                                    disabled={busy === i.source || (!i.configured && !i.enabled)}
+                                    disabled={busy === i.source}
                                     label={`${info.title} on`}
-                                    onChange={(v) => act(i.source, () => integrationService.save(i.source, { enabled: v }), v ? "Turned on" : "Turned off")}
+                                    onChange={(v) => {
+                                        // Not set up yet: explain instead of saving a switch that can't work
+                                        if (v && !i.configured) return setBlocked(i.source);
+                                        setBlocked(null);
+                                        act(i.source, () => integrationService.save(i.source, { enabled: v }), v ? "Turned on" : "Turned off");
+                                    }}
                                 />
                             </div>
+                            {blocked === i.source && !i.configured && (
+                                <div role="alert" className="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[12.5px] text-amber-800">
+                                    <AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-semibold">{info.title} can't be switched on yet.</p>
+                                        <p className="mt-0.5">
+                                            Missing:{" "}
+                                            {(i.credentials ?? [])
+                                                .filter((f) => !f.set && !f.optional)
+                                                .map((f) => f.label)
+                                                .join(", ")}
+                                            .
+                                        </p>
+                                        <p className="mt-0.5">
+                                            {!isSuper
+                                                ? "Ask a Super Admin to connect it."
+                                                : i.oauth
+                                                  ? `Easiest: save the ${i.source === "meta" ? "App ID and App secret" : "Client ID and Client secret"} under Change keys, then click Connect with ${PLATFORM[i.source]}.`
+                                                  : "Add them under Add keys below."}
+                                        </p>
+                                    </div>
+                                    <button type="button" onClick={() => setBlocked(null)} aria-label="Dismiss" className="text-amber-700 hover:text-amber-900">
+                                        <XCircle size={14} />
+                                    </button>
+                                </div>
+                            )}
 
                             <ConnectionLine source={i.source} connection={i.connection} />
                             {isSuper && i.oauth && <ConnectButton integration={i} />}
