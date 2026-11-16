@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AlertTriangle, CheckCircle2, Copy, KeyRound, Loader2, Plug, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Copy, KeyRound, Link2, Loader2, Plug, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
 
 import integrationService from "@/services/integrationService";
 import crmService from "@/services/crmService";
@@ -240,6 +240,190 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
     );
 }
 
+const PLATFORM = { meta: "Facebook", linkedin: "LinkedIn" };
+const APP_KEYS = { meta: ["app_id", "app_secret"], linkedin: ["client_id", "client_secret"] };
+
+function copy(text) {
+    navigator.clipboard?.writeText(text).then(() => toast.success("Copied"));
+}
+
+/** What "Connect" set up, in one line (no tokens). */
+function ConnectionLine({ source, connection }) {
+    if (!connection) return null;
+    const when = connection.connected_at ? new Date(connection.connected_at).toLocaleDateString() : null;
+    const what = source === "meta" ? `Page "${connection.page_name}"` : connection.account_name ? `"${connection.account_name}"` : "LinkedIn";
+    const renew =
+        source === "linkedin" && connection.expires_at
+            ? connection.auto_renew
+                ? " · renews automatically"
+                : ` · connect again before ${new Date(connection.expires_at).toLocaleDateString()}`
+            : "";
+    return (
+        <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-[12px] text-emerald-800">
+            <Link2 size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <span>
+                Connected to {what}
+                {connection.connected_by ? ` by ${connection.connected_by}` : ""}
+                {when ? ` on ${when}` : ""}
+                {renew}
+            </span>
+        </p>
+    );
+}
+
+/** "Connect with Facebook / LinkedIn": password, then off to the platform's sign-in. */
+function ConnectButton({ integration }) {
+    const [asking, setAsking] = useState(false);
+    const [password, setPassword] = useState("");
+    const [busy, setBusy] = useState(false);
+    const source = integration.source;
+    const keys = Object.fromEntries((integration.credentials ?? []).map((f) => [f.name, f.set]));
+    const ready = APP_KEYS[source].every((k) => keys[k]);
+    const connected = Boolean(integration.connection);
+
+    const go = async (e) => {
+        e.preventDefault();
+        if (!password) return toast.error("Enter your password");
+        setBusy(true);
+        try {
+            const { data: res } = await integrationService.connect(source, password);
+            window.location.assign(res.data.url);
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not start the connection"));
+            setBusy(false);
+        }
+    };
+
+    return (
+        <div className="mt-3 rounded-lg border border-dashed border-slate-300 p-3">
+            {!asking ? (
+                <button
+                    type="button"
+                    disabled={!ready}
+                    onClick={() => setAsking(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                >
+                    <Link2 size={13} aria-hidden="true" /> {connected ? `Reconnect ${PLATFORM[source]}` : `Connect with ${PLATFORM[source]}`}
+                </button>
+            ) : (
+                <form onSubmit={go} className="flex flex-wrap items-end gap-2">
+                    <label className="min-w-[180px] flex-1">
+                        <span className="text-[12.5px] font-semibold text-slate-700">Confirm with your password</span>
+                        <input
+                            type="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={cn(inputCls, "mt-1 py-1.5")}
+                        />
+                    </label>
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                        {busy && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Continue to {PLATFORM[source]}
+                    </button>
+                    <button type="button" onClick={() => setAsking(false)} className="px-2 py-1.5 text-[12.5px] font-semibold text-slate-600">
+                        Cancel
+                    </button>
+                </form>
+            )}
+            <p className="mt-2 text-[12px] text-slate-500">
+                {ready
+                    ? `Sign in to ${PLATFORM[source]} and CERTEZY sets up the rest${source === "meta" ? " (Page token, webhook, lead events)" : " (token, ad account, renewal)"}.`
+                    : `One-time: save the ${source === "meta" ? "App ID and App secret" : "Client ID and Client secret"} under Change keys first.`}
+            </p>
+            {integration.oauth?.redirect_uri && (
+                <details className="mt-1.5 text-[12px] text-slate-500">
+                    <summary className="cursor-pointer font-semibold text-slate-600">One-time app setup</summary>
+                    <p className="mt-1">
+                        {source === "meta"
+                            ? "In your Meta app → Facebook Login for Business → Settings → Valid OAuth Redirect URIs, add:"
+                            : "In your LinkedIn app → Auth → Authorized redirect URLs, add:"}
+                    </p>
+                    <div className="mt-1 flex items-center gap-1.5">
+                        <code className="min-w-0 flex-1 truncate rounded bg-slate-100 px-2 py-1 text-[11.5px]">{integration.oauth.redirect_uri}</code>
+                        <button type="button" onClick={() => copy(integration.oauth.redirect_uri)} aria-label="Copy redirect URL" className="rounded border border-slate-200 p-1 text-slate-500">
+                            <Copy size={13} />
+                        </button>
+                    </div>
+                </details>
+            )}
+        </div>
+    );
+}
+
+/** Shown after Facebook / LinkedIn send the Super Admin back: progress, picker, result. */
+function ConnectResult({ result, onChoose, onClose }) {
+    const [choosing, setChoosing] = useState(null);
+    if (!result) return null;
+    const name = PLATFORM[result.source];
+    return (
+        <section className="rounded-xl border border-[#3282B8]/30 bg-sky-50/60 p-4" aria-live="polite">
+            {result.status === "working" && (
+                <p className="flex items-center gap-2 text-[13.5px] font-semibold text-slate-700">
+                    <Loader2 size={15} className="animate-spin" aria-hidden="true" /> Finishing the {name} connection…
+                </p>
+            )}
+            {result.status === "choose" && (
+                <>
+                    <h2 className="text-[14.5px] font-bold text-slate-900">
+                        {result.source === "meta" ? "Which Facebook Page runs your lead ads?" : "Which LinkedIn ad account runs your lead ads?"}
+                    </h2>
+                    <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                        {result.options.map((o) => (
+                            <li key={o.id}>
+                                <button
+                                    type="button"
+                                    disabled={Boolean(choosing)}
+                                    onClick={async () => {
+                                        setChoosing(o.id);
+                                        await onChoose(o.id);
+                                        setChoosing(null);
+                                    }}
+                                    className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left text-[13px] font-semibold text-slate-800 hover:border-[#3282B8] disabled:opacity-60"
+                                >
+                                    <span className="min-w-0 truncate">{o.name}</span>
+                                    {choosing === o.id ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <span className="text-[11.5px] font-normal text-slate-400">{o.id}</span>}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
+            {result.status === "done" && (
+                <>
+                    <h2 className="text-[14.5px] font-bold text-slate-900">
+                        {result.steps.every((x) => x.ok) ? `${name} is connected` : `${name} is connected — one step needs attention`}
+                    </h2>
+                    <ul className="mt-2 space-y-1 text-[13px]">
+                        {result.steps.map((x) => (
+                            <li key={x.label} className="flex items-start gap-1.5">
+                                {x.ok ? (
+                                    <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-600" aria-hidden="true" />
+                                ) : (
+                                    <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
+                                )}
+                                <span className={x.ok ? "text-slate-700" : "text-amber-800"}>{x.label}</span>
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="mt-2 text-[12.5px] text-slate-500">Next: Test connection, switch it on, and map your forms to courses below.</p>
+                </>
+            )}
+            {result.status === "error" && (
+                <p className="flex items-start gap-1.5 text-[13px] text-red-700">
+                    <XCircle size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> {result.message}
+                </p>
+            )}
+            {result.status !== "working" && (
+                <div className="mt-3 flex justify-end">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold text-slate-700">
+                        Close
+                    </button>
+                </div>
+            )}
+        </section>
+    );
+}
+
 function FormCourses({ integration, courses, onSave }) {
     const [rows, setRows] = useState(Object.entries(integration.config?.form_courses ?? {}).map(([form, course]) => ({ form, course: String(course) })));
     const [fallback, setFallback] = useState(integration.config?.default_course_id ? String(integration.config.default_course_id) : "");
@@ -298,6 +482,14 @@ export default function IntegrationsPage() {
     const [busy, setBusy] = useState(null);
     const [automations, setAutomations] = useState(null);
     const isSuper = useSelector(selectUser)?.role === "super_admin";
+    const navigate = useNavigate();
+    const { source: returnedFrom } = useParams();
+    const [params] = useSearchParams();
+    const oauthState = params.get("state");
+    const [connectResult, setConnectResult] = useState(() =>
+        returnedFrom && oauthState ? { source: returnedFrom, status: "working" } : null
+    );
+    const finished = useRef(false);
 
     const load = useCallback(
         () =>
@@ -318,6 +510,33 @@ export default function IntegrationsPage() {
             .then(({ data: res }) => setAutomations(res.data))
             .catch(() => {});
     }, [load]);
+
+    // Back from Facebook / LinkedIn: finish on the server (tokens never come to the browser)
+    useEffect(() => {
+        if (!returnedFrom || !oauthState || finished.current) return;
+        finished.current = true;
+        const body = { state: oauthState, ...(params.get("code") ? { code: params.get("code") } : { error: params.get("error") || "access_denied" }) };
+        integrationService
+            .finishConnect(returnedFrom, body)
+            .then(({ data: res }) => {
+                if (res.data.status === "redirect") return window.location.assign(res.data.url);
+                setConnectResult({ source: returnedFrom, ...res.data });
+                if (res.data.status === "done") load();
+            })
+            .catch((err) => setConnectResult({ source: returnedFrom, status: "error", message: apiMessage(err, "The connection didn't finish — click Connect again") }))
+            // Drop ?code=… from the address bar
+            .finally(() => navigate("/admin/integrations", { replace: true }));
+    }, [returnedFrom, oauthState, params, navigate, load]);
+
+    const chooseConnect = async (id) => {
+        try {
+            const { data: res } = await integrationService.chooseConnect(connectResult.source, { selection: connectResult.selection, id });
+            setConnectResult({ source: connectResult.source, ...res.data });
+            await load();
+        } catch (err) {
+            setConnectResult({ source: connectResult.source, status: "error", message: apiMessage(err, "Could not finish — click Connect again") });
+        }
+    };
 
     const toggleAutomation = async (key, value) => {
         setBusy(key);
@@ -360,11 +579,14 @@ export default function IntegrationsPage() {
                 <p className="mt-1 text-[13px] text-slate-500">
                     Leads from ads and forms go through the same duplicate checks and{" "}
                     <Link to="/admin/distribution" className="font-semibold text-[#3282B8]">Round Robin</Link> as leads added by hand.
+                    {" "}
                     {isSuper
-                        ? "Paste each platform's keys into its card — they're encrypted and never shown again."
-                        : "A Super Admin adds each platform's keys; you can see whether they're set and test the connection."}
+                        ? "Use Connect with Facebook / LinkedIn, or paste keys into a card — they're encrypted and never shown again."
+                        : "A Super Admin connects each platform; you can see whether it's set up and test the connection."}
                 </p>
             </div>
+
+            <ConnectResult result={connectResult} onChoose={chooseConnect} onClose={() => setConnectResult(null)} />
 
             <div className="grid gap-4 md:grid-cols-2">
                 {data.integrations.map((i) => {
@@ -385,6 +607,8 @@ export default function IntegrationsPage() {
                                 />
                             </div>
 
+                            <ConnectionLine source={i.source} connection={i.connection} />
+                            {isSuper && i.oauth && <ConnectButton integration={i} />}
                             <IntegrationKeys integration={i} canEdit={isSuper} onSaved={load} />
                             {!i.configured && i.source !== "website" && (
                                 <p className="mt-2 flex gap-1.5 text-[12px] text-amber-700">

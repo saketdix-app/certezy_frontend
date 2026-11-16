@@ -8,6 +8,9 @@ import api from "./api";
  *   POST /integrations/linkedin/sync
  *   PUT  /integrations/:source/credentials → { values: { key: string ('' removes) }, password } (Super Admin)
  *   POST /integrations/:source/test        → { ok, message }
+ *   POST /integrations/:source/connect     → { url }  (Super Admin + password; meta | linkedin)
+ *   POST /integrations/:source/oauth       → { code | error, state } → done | choose | redirect
+ *   POST /integrations/:source/oauth/choose → { selection, id }
  */
 const integrationService = {
     status: () => api.get("/integrations"),
@@ -16,6 +19,9 @@ const integrationService = {
     syncLinkedIn: () => api.post("/integrations/linkedin/sync"),
     saveKeys: (source, values, password) => api.put(`/integrations/${source}/credentials`, { values, password }),
     test: (source) => api.post(`/integrations/${source}/test`),
+    connect: (source, password) => api.post(`/integrations/${source}/connect`, { password }),
+    finishConnect: (source, body) => api.post(`/integrations/${source}/oauth`, body),
+    chooseConnect: (source, body) => api.post(`/integrations/${source}/oauth/choose`, body),
 };
 
 export default integrationService;
