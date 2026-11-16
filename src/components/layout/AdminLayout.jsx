@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 import Logo from "@/components/shared/Logo";
 import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import { ROLE_LABELS, TEAM_MANAGER_ROLES } from "@/config/app";
+import IntegrationAlertBanner from "./IntegrationAlertBanner";
 
 const ADMIN_NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, to: "/admin/dashboard" },
@@ -188,6 +189,8 @@ export default function AdminLayout() {
                         </div>
                     </div>
                 </header>
+                {/* Facebook / LinkedIn connection expiring or broken (Admins only) */}
+                {TEAM_MANAGER_ROLES.includes(user?.role) && <IntegrationAlertBanner />}
 
                 {/* Page content */}
                 <main className="admin-main flex-1 p-4 lg:p-6">

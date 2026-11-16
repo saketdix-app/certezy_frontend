@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { CalendarClock, Loader2, Plus, Search, Shuffle } from "lucide-react";
+import { CalendarClock, Columns3, LayoutGrid, List, Loader2, Plus, Search, Shuffle } from "lucide-react";
 
 import crmService from "@/services/crmService";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,47 @@ import LeadDetailPanel from "./LeadDetailPanel";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
 import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, inputCls, isOverdue, maskPhone } from "@/lib/crm";
+
+// ── List view: columns people can show or hide (remembered per browser) ──
+const COLUMNS = [
+    { key: "phone", label: "Phone", cell: (l) => maskPhone(l.phone) || "—" },
+    { key: "email", label: "Email", cell: (l) => l.email || "—" },
+    { key: "stage", label: "Status", cell: (l) => <StageBadge stage={l.stage} /> },
+    { key: "course", label: "Course", cell: (l) => l.course_title || <span className="text-slate-400">No course</span> },
+    { key: "source", label: "Source", cell: (l) => SOURCE_LABEL[l.source] ?? l.source },
+    { key: "owner", label: "Owner", admin: true, cell: (l) => l.owner_name ?? <span className="text-amber-700">Unassigned</span> },
+    { key: "added", label: "Added", cell: (l) => <span title={fmtDateTime(l.created_at)}>{ageOf(l.created_at)} ago</span> },
+    {
+        key: "follow_up",
+        label: "Next follow-up",
+        cell: (l) =>
+            l.next_follow_up_at ? (
+                <span className={cn(isOverdue(l.next_follow_up_at) && "font-semibold text-red-600")}>{fmtDateTime(l.next_follow_up_at)}</span>
+            ) : (
+                "—"
+            ),
+    },
+    { key: "stage_changed", label: "Status changed", cell: (l) => <span title={fmtDateTime(l.stage_changed_at)}>{ageOf(l.stage_changed_at)} ago</span> },
+    { key: "enrolled", label: "Enrolled", cell: (l) => (l.enrolled ? <span className="font-semibold text-emerald-700">Yes</span> : "—") },
+];
+const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "owner", "added", "follow_up"];
+
+// Browser storage can be blocked (private mode); the page still works without it
+const readPref = (key, fallback) => {
+    try {
+        const v = JSON.parse(localStorage.getItem(key));
+        return v ?? fallback;
+    } catch {
+        return fallback;
+    }
+};
+const writePref = (key, value) => {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+        /* not saved — fine */
+    }
+};
 
 /**
  * Lead list with the eight status tabs (PRD §4.1–4.3). Consultants get their
@@ -31,6 +72,22 @@ export default function LeadsBoard({ isAdmin }) {
     const [owners, setOwners] = useState([]);
     const [openId, setOpenId] = useState(Number(params.get("lead")) || null);
     const [adding, setAdding] = useState(false);
+    const [view, setViewState] = useState(() => (readPref("crm.leads.view", "list") === "cards" ? "cards" : "list"));
+    const [columns, setColumnsState] = useState(() => {
+        const saved = readPref("crm.leads.columns", DEFAULT_COLUMNS);
+        return Array.isArray(saved) ? saved.filter((k) => COLUMNS.some((c) => c.key === k)) : DEFAULT_COLUMNS;
+    });
+    const setView = (v) => {
+        setViewState(v);
+        writePref("crm.leads.view", v);
+    };
+    const toggleColumn = (key) =>
+        setColumnsState((cols) => {
+            const next = cols.includes(key) ? cols.filter((k) => k !== key) : COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
+            writePref("crm.leads.columns", next);
+            return next;
+        });
+    const shownColumns = COLUMNS.filter((c) => columns.includes(c.key) && (!c.admin || isAdmin));
 
     const load = useCallback(async () => {
         try {
@@ -143,6 +200,46 @@ export default function LeadsBoard({ isAdmin }) {
                     <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-[#3282B8]" />
                     Overdue follow-ups
                 </label>
+                <div className="ml-auto flex items-center gap-2">
+                    {view === "list" && (
+                        <details className="relative">
+                            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
+                                <Columns3 size={14} aria-hidden="true" /> Columns
+                            </summary>
+                            <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+                                <p className="px-2 pb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-400">Show in the list</p>
+                                <p className="flex items-center gap-2 px-2 py-1 text-[13px] text-slate-400">
+                                    <input type="checkbox" checked disabled className="accent-[#3282B8]" /> Name (always)
+                                </p>
+                                {COLUMNS.filter((c) => !c.admin || isAdmin).map((c) => (
+                                    <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-[13px] text-slate-700 hover:bg-slate-50">
+                                        <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-[#3282B8]" />
+                                        {c.label}
+                                    </label>
+                                ))}
+                            </div>
+                        </details>
+                    )}
+                    <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5" role="group" aria-label="View">
+                        {[
+                            ["list", "List", List],
+                            ["cards", "Cards", LayoutGrid],
+                        ].map(([v, label, Icon]) => (
+                            <button
+                                key={v}
+                                type="button"
+                                aria-pressed={view === v}
+                                onClick={() => setView(v)}
+                                className={cn(
+                                    "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12.5px] font-semibold",
+                                    view === v ? "bg-[#EBF4FF] text-[#1A5F8A]" : "text-slate-500 hover:text-slate-700"
+                                )}
+                            >
+                                <Icon size={14} aria-hidden="true" /> {label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             {isAdmin && selected.length > 0 && (
@@ -172,6 +269,76 @@ export default function LeadsBoard({ isAdmin }) {
                 <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
                     {total ? "No leads match these filters." : "No leads yet. Add your first lead to get started."}
                 </p>
+            ) : view === "list" ? (
+                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                    <table className="w-full min-w-[640px] text-left text-[13px]">
+                        <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                            <tr>
+                                {isAdmin && (
+                                    <th className="w-10 px-3 py-2.5">
+                                        <input
+                                            type="checkbox"
+                                            aria-label="Select all on this page"
+                                            checked={data.leads.every((l) => selected.includes(l.id))}
+                                            onChange={(e) =>
+                                                setSelected((sel) =>
+                                                    e.target.checked
+                                                        ? [...new Set([...sel, ...data.leads.map((l) => l.id)])]
+                                                        : sel.filter((id) => !data.leads.some((l) => l.id === id))
+                                                )
+                                            }
+                                            className="h-4 w-4 accent-[#3282B8]"
+                                        />
+                                    </th>
+                                )}
+                                <th className="px-3 py-2.5">Name</th>
+                                {shownColumns.map((c) => (
+                                    <th key={c.key} className="whitespace-nowrap px-3 py-2.5">
+                                        {c.label}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {data.leads.map((l) => (
+                                <tr
+                                    key={l.id}
+                                    onClick={() => setOpenId(l.id)}
+                                    className={cn("cursor-pointer hover:bg-slate-50", selected.includes(l.id) && "bg-[#F5FAFF]")}
+                                >
+                                    {isAdmin && (
+                                        <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selected.includes(l.id)}
+                                                onChange={() => toggle(l.id)}
+                                                aria-label={`Select ${l.name}`}
+                                                className="h-4 w-4 accent-[#3282B8]"
+                                            />
+                                        </td>
+                                    )}
+                                    <td className="max-w-[220px] px-3 py-2.5">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setOpenId(l.id);
+                                            }}
+                                            className="block max-w-full truncate text-left font-semibold text-slate-900 hover:text-[#3282B8]"
+                                        >
+                                            {l.name}
+                                        </button>
+                                    </td>
+                                    {shownColumns.map((c) => (
+                                        <td key={c.key} className="max-w-[240px] truncate whitespace-nowrap px-3 py-2.5 text-slate-600">
+                                            {c.cell(l)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
                 <ul className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-3">
                     {data.leads.map((l) => (
