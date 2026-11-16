@@ -686,6 +686,16 @@ export default function IntegrationsPage() {
                                 </p>
                             )}
 
+                            {(i.last_7_days.failed ?? 0) > 0 && (
+                                <button
+                                    type="button"
+                                    disabled={busy === `retry-all-${i.source}`}
+                                    onClick={() => act(`retry-all-${i.source}`, () => integrationService.retryFailed(i.source), "Queued")}
+                                    className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[12.5px] font-semibold text-red-700 disabled:opacity-60"
+                                >
+                                    <RefreshCw size={13} className={cn(busy === `retry-all-${i.source}` && "animate-spin")} aria-hidden="true" /> Retry {i.last_7_days.failed} failed
+                                </button>
+                            )}
                             {i.source === "linkedin" && i.enabled && (
                                 <button
                                     type="button"

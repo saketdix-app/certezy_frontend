@@ -16,6 +16,7 @@ const integrationService = {
     status: () => api.get("/integrations"),
     save: (source, data) => api.put(`/integrations/${source}`, data),
     retry: (eventId) => api.post(`/integrations/events/${eventId}/retry`),
+    retryFailed: (source) => api.post(`/integrations/${source}/retry-failed`),
     syncLinkedIn: () => api.post("/integrations/linkedin/sync"),
     saveKeys: (source, values, password) => api.put(`/integrations/${source}/credentials`, { values, password }),
     test: (source) => api.post(`/integrations/${source}/test`),
