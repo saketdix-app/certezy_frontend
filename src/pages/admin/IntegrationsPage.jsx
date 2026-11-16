@@ -107,7 +107,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
             else if (values[f.name]?.trim()) body[f.name] = values[f.name].trim();
         }
         if (!Object.keys(body).length) return toast.error("Type a key, or tick Remove");
-        if (!password) return toast.error("Enter your password");
+        if (!password) return toast.error("Enter your CERTEZY password");
         setSaving(true);
         try {
             const { data: res } = await integrationService.saveKeys(integration.source, body, password);
@@ -218,7 +218,8 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                         </div>
                     ))}
                     <label className="block border-t border-slate-200 pt-2.5">
-                        <span className="text-[12.5px] font-semibold text-slate-700">Confirm with your password</span>
+                        <span className="text-[12.5px] font-semibold text-slate-700">Your CERTEZY password</span>
+                        <span className="block text-[11.5px] text-slate-500">The one you use to sign in here — not your Facebook or LinkedIn password</span>
                         <input
                             type="password"
                             autoComplete="current-password"
@@ -284,7 +285,7 @@ function ConnectButton({ integration }) {
 
     const go = async (e) => {
         e.preventDefault();
-        if (!password) return toast.error("Enter your password");
+        if (!password) return toast.error("Enter your CERTEZY password");
         setBusy(true);
         try {
             const { data: res } = await integrationService.connect(source, password);
@@ -309,7 +310,8 @@ function ConnectButton({ integration }) {
             ) : (
                 <form onSubmit={go} className="flex flex-wrap items-end gap-2">
                     <label className="min-w-[180px] flex-1">
-                        <span className="text-[12.5px] font-semibold text-slate-700">Confirm with your password</span>
+                        <span className="text-[12.5px] font-semibold text-slate-700">Your CERTEZY password</span>
+                        <span className="block text-[11.5px] text-slate-500">The one you use to sign in here — not your Facebook or LinkedIn password</span>
                         <input
                             type="password"
                             autoComplete="current-password"
