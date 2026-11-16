@@ -295,6 +295,15 @@ export default function AppRoutes() {
                             </ProtectedRoute>
                         }
                     />
+                    {/* Facebook / LinkedIn send the Super Admin back here after "Connect" */}
+                    <Route
+                        path="integrations/connect/:source"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <IntegrationsPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="crm-reports"
                         element={
