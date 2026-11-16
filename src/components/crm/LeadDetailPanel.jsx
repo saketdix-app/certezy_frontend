@@ -16,16 +16,49 @@ import {
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
+import courseService from "@/services/courseService";
 import LeadStudentActions from "./LeadStudentActions";
 import LeadWhatsApp from "./LeadWhatsApp";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
 import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, apiMessage, fmtDateTime, inputCls, isOverdue, waLink } from "@/lib/crm";
 
+/** Any course, or none — change it whenever the lead's interest changes. */
+function CourseSelect({ lead, disabled, onChange }) {
+    const [courses, setCourses] = useState(null);
+    useEffect(() => {
+        courseService
+            .getAll({ limit: 100 })
+            .then(({ data: res }) => setCourses(Array.isArray(res?.data) ? res.data : []))
+            .catch(() => setCourses([]));
+    }, []);
+    const value = lead.course_id ? String(lead.course_id) : "";
+    return (
+        <select
+            value={value}
+            disabled={disabled || !courses}
+            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}
+            aria-label="Course"
+            className={cn(inputCls, "py-1 text-[13px]")}
+        >
+            <option value="">No course</option>
+            {/* keep the current one listed even if it's unpublished / not in the first page */}
+            {value && !courses?.some((c) => String(c.id) === value) && <option value={value}>{lead.course_title ?? `Course #${value}`}</option>}
+            {(courses ?? []).map((c) => (
+                <option key={c.id} value={c.id}>
+                    {c.title}
+                </option>
+            ))}
+        </select>
+    );
+}
+
+const FIELD_LABEL = { course_id: "course", preferred_schedule: "schedule" };
+
 const ACTIVITY_TEXT = {
     created: () => "Lead created",
     assignment: () => "Lead assigned",
-    updated: (m) => `Details updated (${(m?.fields ?? []).join(", ")})`,
+    updated: (m) => `Details updated (${(m?.fields ?? []).map((f) => FIELD_LABEL[f] ?? f).join(", ")})`,
     status_change: (m) => `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation ? " (automatic)" : ""}`,
     note: () => "Note",
     call: () => "Call",
@@ -195,7 +228,13 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     <dt className="text-slate-500">Email</dt>
                                     <dd className="break-all text-slate-900">{lead.email || "—"}</dd>
                                     <dt className="text-slate-500">Course</dt>
-                                    <dd className="text-slate-900">{lead.course_title || "Not sure yet"}</dd>
+                                    <dd className="text-slate-900">
+                                        <CourseSelect
+                                            lead={lead}
+                                            disabled={busy}
+                                            onChange={(course_id) => run(() => crmService.update(lead.id, { course_id }), course_id ? "Course updated" : "Course removed")}
+                                        />
+                                    </dd>
                                     {lead.preferred_schedule && (
                                         <>
                                             <dt className="text-slate-500">Schedule</dt>
@@ -366,7 +405,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
 
                             {lead.phone && <LeadWhatsApp leadId={lead.id} onSent={onChanged} />}
 
-                            <LeadStudentActions key={lead.id} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
+                            <LeadStudentActions key={`${lead.id}-${lead.course_id ?? "none"}`} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
                                 setLead(l);
                                 onChanged?.();
                             }} />

@@ -15,6 +15,7 @@ import api from "./api";
 const integrationService = {
     status: () => api.get("/integrations"),
     save: (source, data) => api.put(`/integrations/${source}`, data),
+    alerts: () => api.get("/integrations/alerts"),
     retry: (eventId) => api.post(`/integrations/events/${eventId}/retry`),
     retryFailed: (source) => api.post(`/integrations/${source}/retry-failed`),
     syncLinkedIn: () => api.post("/integrations/linkedin/sync"),
