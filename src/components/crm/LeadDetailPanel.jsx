@@ -313,7 +313,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         )}
                                         {stageTarget === "course_done" && (
                                             <p className="mb-2 text-[12px] text-slate-500">
-                                                Only allowed once the student has completed the course (all lessons and every exam).
+                                                Marks this lead as done. It doesn't check the student's course progress.
                                             </p>
                                         )}
                                         <div className="flex justify-end gap-2">
