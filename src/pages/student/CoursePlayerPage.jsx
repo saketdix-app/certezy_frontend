@@ -10,8 +10,6 @@ import {
     BookOpen,
     Clock,
     FileText,
-    Menu,
-    X,
     AlertCircle,
     Award,
     FileDown,
@@ -19,6 +17,10 @@ import {
     MonitorPlay,
     Headphones,
     ClipboardList,
+    Minus,
+    Plus,
+    PanelLeftClose,
+    PanelLeftOpen,
 } from "lucide-react";
 
 import sectionService from "@/services/sectionService";
@@ -54,6 +56,25 @@ const LESSON_ICONS = {
     quiz: ClipboardList,
 };
 
+// Zoom steps: reading lessons scale the text; videos and other media change
+// the frame width. Each is remembered per browser.
+const ZOOM_STEPS = {
+    reading: [0.85, 1, 1.15, 1.3, 1.5],
+    media: [0.6, 0.7, 0.8, 0.9, 1],
+};
+const ZOOM_KEY = "player.zoom";
+function readZoomPrefs() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(ZOOM_KEY)) || {};
+        return {
+            reading: ZOOM_STEPS.reading.includes(saved.reading) ? saved.reading : 1,
+            media: ZOOM_STEPS.media.includes(saved.media) ? saved.media : 1,
+        };
+    } catch {
+        return { reading: 1, media: 1 };
+    }
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmtDuration(seconds) {
     if (!seconds) return null;
@@ -80,6 +101,7 @@ export default function CoursePlayerPage() {
     // Lesson list starts open on desktop, closed on phones/tablets (it overlays there)
     const [sidebarOpen, setSidebarOpen] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
     const [expandedSections, setExpandedSections] = useState({});
+    const [zoomPrefs, setZoomPrefs] = useState(readZoomPrefs);
 
     // ── Video / progress refs ──────────────────────────────────────────────────
     const videoRef = useRef(null);
@@ -312,6 +334,24 @@ export default function CoursePlayerPage() {
     const nextSection =
         nextSectionIndex >= 0 ? { ...sections[nextSectionIndex], index: nextSectionIndex } : null;
     const currentDone = !!progressMap[currentLesson?.id]?.is_completed;
+    const currentSectionIndex = sections.findIndex((s) => s.id === currentLesson?.section_id);
+    const currentSection =
+        currentSectionIndex >= 0 ? { ...sections[currentSectionIndex], index: currentSectionIndex } : null;
+
+    // Zoom: text size for reading lessons, frame width for video and other media
+    const isReading = ["text", "article"].includes(currentLesson?.type);
+    const zoomKind = isReading ? "reading" : "media";
+    const zoom = zoomPrefs[zoomKind];
+    const setZoom = (value) =>
+        setZoomPrefs((prev) => {
+            const next = { ...prev, [zoomKind]: value };
+            try {
+                localStorage.setItem(ZOOM_KEY, JSON.stringify(next));
+            } catch {
+                /* private mode: zoom just isn't remembered */
+            }
+            return next;
+        });
 
     // "Next" finishes the current lesson first (quizzes complete by passing their test),
     // then opens the next one. On the last lesson it finishes the course: if earlier
@@ -422,236 +462,8 @@ export default function CoursePlayerPage() {
                 onToggleSidebar={() => setSidebarOpen((p) => !p)}
             />
 
-            {/* ── Body ────────────────────────────────────────────────────── */}
+            {/* ── Body: lesson list on the left, the lesson in a framed card ── */}
             <div className="flex flex-1 overflow-hidden">
-                {/* ── Video + controls ────────────────────────────────────── */}
-                <main className="flex-1 flex flex-col overflow-y-auto bg-[#F1F5F9]">
-                    {currentLesson ? (
-                        <>
-                            {/* Lesson area — 16:9 frame for video; everything else sizes to its content */}
-                            <div
-                                className={
-                                    currentLesson.type === "video"
-                                        ? "w-full shrink-0 bg-black"
-                                        : ["text", "article"].includes(currentLesson.type)
-                                          ? "w-full shrink-0 bg-[#F1F5F9]"
-                                          : "w-full shrink-0 bg-[#0a1628]"
-                                }
-                                style={
-                                    currentLesson.type === "video"
-                                        ? { aspectRatio: "16/9", maxHeight: "calc(100dvh - 200px)" }
-                                        : undefined
-                                }
-                            >
-                                {currentLesson.type === "pdf" ? (
-                                    <PdfLesson lesson={currentLesson} />
-                                ) : currentLesson.type === "video" ? (
-                                    <VideoLesson
-                                        lesson={currentLesson}
-                                        startAt={watchTimesRef.current[currentLesson.id] || 0}
-                                        videoRef={videoRef}
-                                        onTimeUpdate={handleTimeUpdate}
-                                        onEnded={handleVideoEnded}
-                                    />
-                                ) : currentLesson.type === "embed" ? (
-                                    <EmbedLesson lesson={currentLesson} />
-                                ) : currentLesson.type === "link" ? (
-                                    <LinkLesson lesson={currentLesson} />
-                                ) : currentLesson.type === "audio" ? (
-                                    <AudioLesson lesson={currentLesson} onEnded={markLessonComplete} />
-                                ) : currentLesson.type === "quiz" ? (
-                                    <QuizLesson
-                                        lesson={currentLesson}
-                                        exams={courseExams}
-                                        onStart={(exam) =>
-                                            navigate(`/student/course/${courseId}/exam/${exam.id}`)
-                                        }
-                                    />
-                                ) : (
-                                    // Text / article lesson content area
-                                    <div className="w-full h-full bg-[#F1F5F9] overflow-y-auto">
-                                        {currentLesson.content ? (
-                                            // Same column as the lesson panel below, so the edges line up
-                                            <div className="max-w-4xl w-full mx-auto px-5 py-5 sm:py-6">
-                                                {/* Complete + Next live in the lesson panel below */}
-                                                <EnhancedTextLesson lesson={currentLesson} />
-                                            </div>
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center py-20">
-                                                <div className="text-center">
-                                                    <FileText
-                                                        size={48}
-                                                        className="mx-auto mb-3 text-white/20"
-                                                    />
-                                                    <p className="text-white/40 text-ui">
-                                                        No content available
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Lesson info + nav */}
-                            <div className="bg-white border-t border-[#E2E8F0] flex-1">
-                                <div className="px-5 py-5 max-w-4xl w-full mx-auto">
-                                    {/* Title row */}
-                                    <div className="flex items-start justify-between gap-4 mb-4">
-                                        <div>
-                                            <p
-                                                style={{
-                                                    fontSize: "11.5px",
-                                                    fontWeight: 700,
-                                                    color: "#2563EB",
-                                                    textTransform: "uppercase",
-                                                    letterSpacing: "0.08em",
-                                                    marginBottom: "6px",
-                                                }}
-                                            >
-                                                Lesson {currentIdx + 1} of {totalLessons}
-                                            </p>
-                                            <h1
-                                                style={{
-                                                    fontSize: "22px",
-                                                    fontWeight: 800,
-                                                    color: "#0F172A",
-                                                    lineHeight: 1.3,
-                                                }}
-                                            >
-                                                {currentLesson.title}
-                                            </h1>
-                                        </div>
-
-                                        {/* Mark complete */}
-                                        {!progressMap[currentLesson.id]?.is_completed ? (
-                                            <button
-                                                onClick={markLessonComplete}
-                                                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl transition-colors"
-                                                style={{
-                                                    background: "#2563EB",
-                                                    color: "#fff",
-                                                    fontSize: "13.5px",
-                                                    fontWeight: 700,
-                                                    boxShadow: "0 6px 16px rgba(37,99,235,0.25)",
-                                                }}
-                                            >
-                                                <CheckCircle2 size={15} />
-                                                Mark Complete
-                                            </button>
-                                        ) : (
-                                            <div
-                                                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl"
-                                                style={{
-                                                    background: "#EFF6FF",
-                                                    border: "1px solid #BFDBFE",
-                                                    color: "#1D4ED8",
-                                                    fontSize: "13.5px",
-                                                    fontWeight: 700,
-                                                }}
-                                            >
-                                                <CheckCircle2 size={15} />
-                                                Completed
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Duration */}
-                                    {currentLesson.duration > 0 && (
-                                        <div className="flex items-center gap-1.5 mb-5">
-                                            <Clock size={13} style={{ color: "#64748B" }} />
-                                            <span style={{ fontSize: "12.5px", color: "#64748B" }}>
-                                                {fmtDuration(currentLesson.duration)}
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    {/* Up next — names the next lesson, and its section when a new one starts */}
-                                    {nextLesson && (
-                                        <p
-                                            className="pt-4 mb-3 truncate"
-                                            style={{
-                                                borderTop: "1px solid #E2E8F0",
-                                                fontSize: "12.5px",
-                                                color: "#64748B",
-                                            }}
-                                        >
-                                            <span style={{ color: "#2563EB", fontWeight: 700 }}>
-                                                {nextSection ? "Next section" : "Up next"}:
-                                            </span>{" "}
-                                            {nextSection && (
-                                                <span style={{ color: "#0F172A", fontWeight: 600 }}>
-                                                    Section {nextSection.index + 1}: {nextSection.title}{" "}
-                                                    ·{" "}
-                                                </span>
-                                            )}
-                                            {nextLesson.title}
-                                        </p>
-                                    )}
-
-                                    {/* Prev / Next buttons — every lesson type */}
-                                    <div
-                                        className={`flex items-center justify-between ${nextLesson ? "" : "pt-4"}`}
-                                        style={nextLesson ? undefined : { borderTop: "1px solid #E2E8F0" }}
-                                    >
-                                        <button
-                                            onClick={goToPrevLesson}
-                                            disabled={currentIdx === 0}
-                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                            style={{
-                                                background: "#fff",
-                                                border: "1px solid #CBD5E1",
-                                                color: "#334155",
-                                                fontSize: "13.5px",
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            <ChevronLeft size={16} />
-                                            Previous
-                                        </button>
-
-                                        <button
-                                            onClick={goToNextLesson}
-                                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all disabled:opacity-30"
-                                            style={{
-                                                background: isLastLesson ? "#1D4ED8" : "#2563EB",
-                                                color: "#fff",
-                                                fontSize: "13.5px",
-                                                fontWeight: 700,
-                                            }}
-                                        >
-                                            {isLastLesson
-                                                ? "Finish Course"
-                                                : nextSection
-                                                  ? currentDone || currentLesson.type === "quiz"
-                                                      ? "Next Section"
-                                                      : "Complete & Next Section"
-                                                  : currentDone || currentLesson.type === "quiz"
-                                                    ? "Next Lesson"
-                                                    : "Complete & Next"}
-                                            {isLastLesson ? <Award size={16} /> : <ChevronRight size={16} />}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="flex-1 flex items-center justify-center">
-                            <div className="text-center">
-                                <BookOpen
-                                    size={48}
-                                    style={{ color: "rgba(255,255,255,0.15)" }}
-                                    className="mx-auto mb-4"
-                                />
-                                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "15px" }}>
-                                    No lessons available
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </main>
-
-                {/* ── Sidebar ─────────────────────────────────────────────── */}
                 {sidebarOpen && (
                     <div
                         className="fixed inset-0 z-30 bg-black/50 lg:hidden"
@@ -680,7 +492,221 @@ export default function CoursePlayerPage() {
                         navigate={navigate}
                     />
                 )}
+
+                <main className="flex-1 min-w-0 overflow-y-auto bg-[#EEF2F7]">
+                    {currentLesson ? (
+                        <div className="mx-auto w-full max-w-[1200px] p-2.5 sm:p-5 lg:p-6">
+                            <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_-12px_rgba(15,23,42,0.12)]">
+                                {/* Lesson header: where you are, the title, zoom and complete */}
+                                <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b border-slate-200 px-4 py-3.5 sm:px-6">
+                                    <div className="min-w-0 basis-full sm:basis-0 sm:flex-1">
+                                        <p className="truncate text-label font-bold uppercase tracking-[0.08em] text-[#2563EB]">
+                                            Lesson {currentIdx + 1} of {totalLessons}
+                                            {currentSection && (
+                                                <span className="font-semibold normal-case tracking-normal text-slate-500">
+                                                    {" "}
+                                                    · Section {currentSection.index + 1}: {currentSection.title}
+                                                </span>
+                                            )}
+                                        </p>
+                                        <h1 className="mt-1 text-[17px] font-extrabold leading-snug text-slate-900 sm:text-[19px]">
+                                            {currentLesson.title}
+                                        </h1>
+                                        {currentLesson.duration > 0 && (
+                                            <p className="mt-1 flex items-center gap-1.5 text-small text-slate-500">
+                                                <Clock size={12} aria-hidden="true" />
+                                                {fmtDuration(currentLesson.duration)}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
+                                        <ZoomControl
+                                            className={isReading ? undefined : "hidden sm:flex"}
+                                            value={zoom}
+                                            steps={ZOOM_STEPS[zoomKind]}
+                                            label={zoomKind === "reading" ? "Text size" : "Player size"}
+                                            onChange={setZoom}
+                                        />
+                                        {!currentDone ? (
+                                            <button
+                                                onClick={markLessonComplete}
+                                                className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3.5 py-2 text-ui font-bold text-white shadow-[0_4px_12px_rgba(37,99,235,0.25)] transition-colors hover:bg-[#1D4ED8]"
+                                            >
+                                                <CheckCircle2 size={15} aria-hidden="true" />
+                                                Mark complete
+                                            </button>
+                                        ) : (
+                                            <span className="flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3.5 py-2 text-ui font-bold text-[#1D4ED8]">
+                                                <CheckCircle2 size={15} aria-hidden="true" />
+                                                Completed
+                                            </span>
+                                        )}
+                                    </div>
+                                </header>
+
+                                {/* Lesson content */}
+                                {isReading ? (
+                                    <div className="border-b border-slate-200 bg-white">
+                                        {currentLesson.content ? (
+                                            <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-10 sm:py-8" style={{ zoom }}>
+                                                <EnhancedTextLesson lesson={currentLesson} plain />
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center py-20 text-center">
+                                                <div>
+                                                    <FileText size={44} className="mx-auto mb-3 text-slate-300" />
+                                                    <p className="text-ui text-slate-500">No content available</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="border-b border-slate-200 bg-[#F8FAFC] p-2.5 sm:p-5">
+                                        <div
+                                            className={cn(
+                                                // phones always use the full width; the zoom applies from tablet size up
+                                                "mx-auto w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm transition-[width] duration-300 sm:w-[var(--zoom-w)]",
+                                                currentLesson.type === "video" ? "bg-black" : "bg-[#0a1628]"
+                                            )}
+                                            style={
+                                                currentLesson.type === "video"
+                                                    ? {
+                                                          aspectRatio: "16/9",
+                                                          // never taller than the screen leaves room for
+                                                          "--zoom-w": `min(${zoom * 100}%, max(320px, calc((100dvh - 340px) * 16 / 9)))`,
+                                                      }
+                                                    : { "--zoom-w": `${zoom * 100}%` }
+                                            }
+                                        >
+                                            {currentLesson.type === "pdf" ? (
+                                                <PdfLesson lesson={currentLesson} />
+                                            ) : currentLesson.type === "video" ? (
+                                                <VideoLesson
+                                                    lesson={currentLesson}
+                                                    startAt={watchTimesRef.current[currentLesson.id] || 0}
+                                                    videoRef={videoRef}
+                                                    onTimeUpdate={handleTimeUpdate}
+                                                    onEnded={handleVideoEnded}
+                                                />
+                                            ) : currentLesson.type === "embed" ? (
+                                                <EmbedLesson lesson={currentLesson} />
+                                            ) : currentLesson.type === "link" ? (
+                                                <LinkLesson lesson={currentLesson} />
+                                            ) : currentLesson.type === "audio" ? (
+                                                <AudioLesson lesson={currentLesson} onEnded={markLessonComplete} />
+                                            ) : (
+                                                <QuizLesson
+                                                    lesson={currentLesson}
+                                                    exams={courseExams}
+                                                    onStart={(exam) =>
+                                                        navigate(`/student/course/${courseId}/exam/${exam.id}`)
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Up next + Previous / Next */}
+                                <footer className="px-4 py-4 sm:px-6">
+                                    {nextLesson && (
+                                        <p className="mb-3 truncate text-small text-slate-500">
+                                            <span className="font-bold text-[#2563EB]">
+                                                {nextSection ? "Next section" : "Up next"}:
+                                            </span>{" "}
+                                            {nextSection && (
+                                                <span className="font-semibold text-slate-900">
+                                                    Section {nextSection.index + 1}: {nextSection.title} ·{" "}
+                                                </span>
+                                            )}
+                                            {nextLesson.title}
+                                        </p>
+                                    )}
+                                    <div className="flex items-center justify-between gap-3">
+                                        <button
+                                            onClick={goToPrevLesson}
+                                            disabled={currentIdx === 0}
+                                            className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-ui font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                                        >
+                                            <ChevronLeft size={16} aria-hidden="true" />
+                                            Previous
+                                        </button>
+                                        <button
+                                            onClick={goToNextLesson}
+                                            className={cn(
+                                                "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-ui font-bold text-white transition-colors",
+                                                isLastLesson ? "bg-[#1D4ED8] hover:bg-[#1E40AF]" : "bg-[#2563EB] hover:bg-[#1D4ED8]"
+                                            )}
+                                        >
+                                            {isLastLesson
+                                                ? "Finish Course"
+                                                : nextSection
+                                                  ? currentDone || currentLesson.type === "quiz"
+                                                      ? "Next Section"
+                                                      : "Complete & Next Section"
+                                                  : currentDone || currentLesson.type === "quiz"
+                                                    ? "Next Lesson"
+                                                    : "Complete & Next"}
+                                            {isLastLesson ? (
+                                                <Award size={16} aria-hidden="true" />
+                                            ) : (
+                                                <ChevronRight size={16} aria-hidden="true" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </footer>
+                            </article>
+                        </div>
+                    ) : (
+                        <div className="flex h-full items-center justify-center">
+                            <div className="text-center">
+                                <BookOpen size={48} className="mx-auto mb-4 text-slate-300" />
+                                <p className="text-body text-slate-500">No lessons available</p>
+                            </div>
+                        </div>
+                    )}
+                </main>
             </div>
+        </div>
+    );
+}
+
+// ─── Zoom control: − 100% + (click the number to reset) ──────────────────────
+function ZoomControl({ value, steps, label, onChange, className }) {
+    const idx = Math.max(0, steps.indexOf(value));
+    const reset = steps.includes(1) ? 1 : steps[steps.length - 1];
+    const btn =
+        "flex h-8 w-8 items-center justify-center text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-35";
+    return (
+        <div role="group" aria-label={label} className={cn("flex items-center overflow-hidden rounded-lg border border-slate-300 bg-white", className)}>
+            <button
+                type="button"
+                onClick={() => onChange(steps[idx - 1])}
+                disabled={idx === 0}
+                aria-label={`${label}: smaller`}
+                title="Zoom out"
+                className={btn}
+            >
+                <Minus size={15} />
+            </button>
+            <button
+                type="button"
+                onClick={() => onChange(reset)}
+                title={`${label} — click to reset`}
+                className="h-8 min-w-[52px] border-x border-slate-200 px-1.5 text-small font-bold tabular-nums text-slate-700 hover:bg-slate-50"
+            >
+                {Math.round(value * 100)}%
+            </button>
+            <button
+                type="button"
+                onClick={() => onChange(steps[idx + 1])}
+                disabled={idx === steps.length - 1}
+                aria-label={`${label}: bigger`}
+                title="Zoom in"
+                className={btn}
+            >
+                <Plus size={15} />
+            </button>
         </div>
     );
 }
@@ -703,6 +729,23 @@ function TopBar({
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
             }}
         >
+            {/* Lesson list toggle — the list opens on the left */}
+            <button
+                onClick={onToggleSidebar}
+                aria-pressed={sidebarOpen}
+                title={sidebarOpen ? "Hide course content" : "Show course content"}
+                className="flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors"
+                style={{
+                    background: sidebarOpen ? "rgba(96,165,250,0.18)" : "rgba(255,255,255,0.06)",
+                    color: sidebarOpen ? "#93C5FD" : "rgba(255,255,255,0.7)",
+                    fontSize: "12.5px",
+                    fontWeight: 600,
+                }}
+            >
+                {sidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+                <span className="hidden sm:block">Contents</span>
+            </button>
+
             {/* Back */}
             <button
                 onClick={() => navigate("/student/my-courses")}
@@ -747,7 +790,7 @@ function TopBar({
             {onGetCertificate && (
                 <button
                     onClick={onGetCertificate}
-                    className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 text-amber-950 hover:bg-amber-300 transition-colors"
+                    className="ml-auto flex shrink-0 items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 text-amber-950 hover:bg-amber-300 transition-colors"
                     style={{ fontSize: "12.5px", fontWeight: 700 }}
                 >
                     <Award size={14} />
@@ -755,20 +798,6 @@ function TopBar({
                 </button>
             )}
 
-            {/* Sidebar toggle */}
-            <button
-                onClick={onToggleSidebar}
-                className={`${onGetCertificate ? "" : "ml-auto "}flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors`}
-                style={{
-                    background: sidebarOpen ? "rgba(50,130,184,0.2)" : "rgba(255,255,255,0.06)",
-                    color: sidebarOpen ? "#3282B8" : "rgba(255,255,255,0.55)",
-                    fontSize: "12.5px",
-                    fontWeight: 600,
-                }}
-            >
-                {sidebarOpen ? <X size={15} /> : <Menu size={15} />}
-                <span className="hidden sm:block">Course Content</span>
-            </button>
         </div>
     );
 }
@@ -797,15 +826,15 @@ function CourseSidebar({
     const pct = totalLessons ? Math.round((totalDone / totalLessons) * 100) : 0;
 
     return (
-        <aside className="fixed inset-y-0 right-0 z-40 w-[86vw] max-w-[360px] lg:static lg:z-auto lg:w-[320px] lg:max-w-none xl:w-[350px] shrink-0 flex flex-col overflow-hidden bg-white border-l border-[#E2E8F0] shadow-[-8px_0_24px_rgba(15,23,42,0.06)] lg:shadow-none">
+        <aside className="fixed inset-y-0 left-0 z-40 w-[86vw] max-w-[320px] lg:static lg:z-auto lg:w-[272px] lg:max-w-none xl:w-[296px] shrink-0 flex flex-col overflow-hidden bg-white border-r border-[#E2E8F0] shadow-[8px_0_24px_rgba(15,23,42,0.08)] lg:shadow-none">
             {/* Header + overall progress */}
-            <div className="px-5 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
-                <p className="text-body font-extrabold text-slate-900">Course Content</p>
-                <p className="mt-0.5 text-small text-slate-500">
+            <div className="px-4 pt-4 pb-3 shrink-0 border-b border-[#E2E8F0]">
+                <p className="text-ui font-extrabold text-slate-900">Course content</p>
+                <p className="mt-0.5 text-label text-slate-500">
                     {sections.length} sections · {totalLessons} lessons · {totalDone} completed
                 </p>
-                <div className="mt-3 flex items-center gap-3">
-                    <div className="h-2 flex-1 rounded-full bg-[#DBEAFE] overflow-hidden">
+                <div className="mt-2.5 flex items-center gap-2.5">
+                    <div className="h-1.5 flex-1 rounded-full bg-[#DBEAFE] overflow-hidden">
                         <div
                             className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
                             style={{ width: `${pct}%` }}
@@ -832,13 +861,13 @@ function CourseSidebar({
                                 onClick={() => onToggleSection(section.id)}
                                 aria-expanded={isExpanded}
                                 className={cn(
-                                    "w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors",
+                                    "w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-colors",
                                     isExpanded ? "bg-[#EFF6FF]" : "hover:bg-[#F8FAFF]"
                                 )}
                             >
                                 <span
                                     className={cn(
-                                        "w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-small font-extrabold",
+                                        "w-7 h-7 shrink-0 rounded-md flex items-center justify-center text-label font-extrabold",
                                         secDone
                                             ? "bg-[#2563EB] text-white"
                                             : hasActive || isExpanded
@@ -846,10 +875,10 @@ function CourseSidebar({
                                               : "bg-[#F1F5F9] text-slate-500"
                                     )}
                                 >
-                                    {secDone ? <CheckCircle2 size={15} /> : String(sIdx + 1).padStart(2, "0")}
+                                    {secDone ? <CheckCircle2 size={14} /> : String(sIdx + 1).padStart(2, "0")}
                                 </span>
                                 <div className="flex-1 min-w-0">
-                                    <p className="truncate text-ui font-bold leading-snug text-slate-900">
+                                    <p className="truncate text-small font-bold leading-snug text-slate-900" title={section.title}>
                                         {section.title}
                                     </p>
                                     <p className="mt-0.5 text-label text-slate-500">
@@ -867,7 +896,7 @@ function CourseSidebar({
 
                             {/* Lessons */}
                             {isExpanded && (
-                                <div className="py-1.5">
+                                <div className="py-1">
                                     {section.lessons.map((lesson, lIdx) => {
                                         const isActive = currentLesson?.id === lesson.id;
                                         const isCompleted = !!progressMap[lesson.id]?.is_completed;
@@ -879,14 +908,14 @@ function CourseSidebar({
                                                 onClick={() => onSelectLesson(lesson)}
                                                 aria-current={isActive ? "true" : undefined}
                                                 className={cn(
-                                                    "group w-[calc(100%-16px)] mx-2 my-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all",
+                                                    "group w-[calc(100%-12px)] mx-1.5 my-0.5 flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all",
                                                     isActive
-                                                        ? "bg-[#2563EB] shadow-[0_6px_16px_rgba(37,99,235,0.28)]"
+                                                        ? "bg-[#2563EB] shadow-[0_4px_12px_rgba(37,99,235,0.25)]"
                                                         : "hover:bg-[#EFF6FF]"
                                                 )}
                                             >
                                                 {/* Status */}
-                                                <span className="shrink-0 w-6 h-6 flex items-center justify-center">
+                                                <span className="shrink-0 w-5 h-5 flex items-center justify-center">
                                                     {isCompleted ? (
                                                         <CheckCircle2
                                                             size={18}
@@ -907,13 +936,14 @@ function CourseSidebar({
                                                 <span className="flex-1 min-w-0">
                                                     <span
                                                         className={cn(
-                                                            "block truncate text-ui leading-snug",
+                                                            "block truncate text-small leading-snug",
                                                             isActive
                                                                 ? "font-bold text-white"
                                                                 : isCompleted
                                                                   ? "font-medium text-slate-500"
                                                                   : "font-medium text-slate-800"
                                                         )}
+                                                        title={lesson.title}
                                                     >
                                                         {lesson.title}
                                                     </span>
@@ -962,8 +992,8 @@ function CourseSidebar({
             {/* Exams */}
             {courseExams.length > 0 && (
                 <div className="shrink-0 border-t border-[#E2E8F0] bg-white">
-                    <div className="px-5 pt-4 pb-2">
-                        <p className="text-ui font-extrabold text-slate-900">Course Exams</p>
+                    <div className="px-4 pt-3 pb-2">
+                        <p className="text-small font-extrabold text-slate-900">Course exams</p>
                         <p className="mt-0.5 text-label text-slate-500">
                             {examsPassed} of {courseExams.length} passed
                         </p>
@@ -975,12 +1005,12 @@ function CourseSidebar({
                             </p>
                         )}
                     </div>
-                    <div className="px-3 pb-4 space-y-1.5">
+                    <div className="px-2.5 pb-3 space-y-1.5">
                         {courseExams.map((exam) => (
                             <button
                                 key={exam.id}
                                 onClick={() => navigate(`/student/course/${courseId}/exam/${exam.id}`)}
-                                className="w-full flex items-center gap-3 rounded-xl border border-[#DBEAFE] bg-[#F5F9FF] px-3 py-2.5 text-left transition-colors hover:border-[#93C5FD] hover:bg-[#EFF6FF]"
+                                className="w-full flex items-center gap-2.5 rounded-lg border border-[#DBEAFE] bg-[#F5F9FF] px-2.5 py-2 text-left transition-colors hover:border-[#93C5FD] hover:bg-[#EFF6FF]"
                             >
                                 <span
                                     className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center ${
@@ -994,7 +1024,7 @@ function CourseSidebar({
                                     )}
                                 </span>
                                 <span className="flex-1 min-w-0">
-                                    <span className="block truncate text-ui font-semibold text-slate-900">
+                                    <span className="block truncate text-small font-semibold text-slate-900">
                                         {exam.title}
                                     </span>
                                     <span className="mt-0.5 block text-label text-slate-500">
@@ -1051,17 +1081,13 @@ function NotEnrolledState({ navigate }) {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 function PlayerSkeleton() {
     return (
-        <div className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col bg-[#0F172A] animate-pulse">
+        <div className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col bg-[#EEF2F7] animate-pulse">
             <div
                 className="h-[60px] bg-[#0a1628]"
                 style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
             />
             <div className="flex flex-1 overflow-hidden">
-                <div className="flex-1 bg-black" style={{ aspectRatio: "16/9" }} />
-                <div
-                    className="w-[300px] bg-[#0a1628]"
-                    style={{ borderLeft: "1px solid rgba(255,255,255,0.08)" }}
-                >
+                <div className="hidden w-[272px] bg-white lg:block xl:w-[296px]" style={{ borderRight: "1px solid #E2E8F0" }}>
                     <div className="p-5 space-y-4">
                         {Array(6)
                             .fill(0)
@@ -1069,10 +1095,13 @@ function PlayerSkeleton() {
                                 <div
                                     key={i}
                                     className="h-10 rounded-xl"
-                                    style={{ background: "rgba(255,255,255,0.05)" }}
+                                    style={{ background: "#F1F5F9" }}
                                 />
                             ))}
                     </div>
+                </div>
+                <div className="flex-1 bg-[#EEF2F7] p-2.5 sm:p-5 lg:p-6">
+                    <div className="mx-auto h-full max-w-[1200px] rounded-2xl border border-slate-200 bg-white" />
                 </div>
             </div>
         </div>
