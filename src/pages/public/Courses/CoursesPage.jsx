@@ -243,7 +243,7 @@ export default function CoursesPage() {
                                         style={{
                                             height: "40px",
                                             padding: "0 22px",
-                                            background: "#3282B8",
+                                            background: "#236A9E",
                                             color: "#fff",
                                             border: "none",
                                             borderRadius: "10px",
@@ -254,7 +254,7 @@ export default function CoursesPage() {
                                             whiteSpace: "nowrap",
                                         }}
                                         onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                                        onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                                     >
                                         Search
                                     </button>
@@ -268,7 +268,7 @@ export default function CoursesPage() {
                                 style={{
                                     fontSize: "12px",
                                     fontWeight: 500,
-                                    color: "rgba(255,255,255,0.36)",
+                                    color: "rgba(255,255,255,0.62)",
                                     flexShrink: 0,
                                 }}
                             >

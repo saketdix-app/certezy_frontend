@@ -65,7 +65,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
                 .legal-body li { color: #475569; font-size: 15px; line-height: 1.7; margin-bottom: 6px; }
                 .legal-body h3 { color: #0F172A; font-size: 16px; font-weight: 700; margin: 18px 0 8px; }
                 .legal-body strong { color: #0F172A; }
-                .legal-body a { color: #3282B8; }
+                .legal-body a { color: #236A9E; }
                 .legal-body table { width: 100%; border-collapse: collapse; font-size: 14px; }
                 .legal-body th, .legal-body td { border: 1px solid #E2E8F0; padding: 10px 12px; text-align: left; vertical-align: top; color: #475569; line-height: 1.6; }
                 .legal-body th { background: #F8FAFC; color: #0F172A; font-weight: 700; }
@@ -96,7 +96,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
             <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-10">
                 <nav aria-label="On this page" className="hidden lg:block">
                     <div className="sticky top-24">
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">
+                        <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">
                             On this page
                         </p>
                         <ol className="space-y-2">

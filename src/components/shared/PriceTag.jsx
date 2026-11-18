@@ -21,7 +21,7 @@ export default function PriceTag({ course, size = "md", className }) {
 
     if (p.isFree) {
         return (
-            <span className={cn("font-extrabold text-emerald-600 leading-none", s.price, className)}>
+            <span className={cn("font-extrabold text-emerald-700 leading-none", s.price, className)}>
                 Free
             </span>
         );

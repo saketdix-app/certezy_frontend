@@ -34,7 +34,7 @@ const CSS = `
     width: 100%;
     padding: 17px 32px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #3282B8 0%, #6C3BD5 100%);
+    background: linear-gradient(135deg, #236A9E 0%, #6C3BD5 100%);
     color: #fff;
     font-size: 16px;
     font-weight: 700;
@@ -205,7 +205,7 @@ export default function CTABanner() {
                                     style={{
                                         fontSize: "9.5px",
                                         fontWeight: 700,
-                                        color: "#64748B",
+                                        color: "#94A3B8",
                                         letterSpacing: "0.1em",
                                         textTransform: "uppercase",
                                     }}
@@ -229,7 +229,7 @@ export default function CTABanner() {
                                         fontWeight: 700,
                                         letterSpacing: "0.14em",
                                         textTransform: "uppercase",
-                                        color: "#3282B8",
+                                        color: "#4E9CD3",
                                         marginBottom: "16px",
                                     }}
                                 >
@@ -255,7 +255,7 @@ export default function CTABanner() {
                                     className="cta-f2"
                                     style={{
                                         fontSize: "16px",
-                                        color: "#64748B",
+                                        color: "#94A3B8",
                                         lineHeight: 1.7,
                                         marginBottom: "28px",
                                         maxWidth: "500px",
@@ -311,7 +311,7 @@ export default function CTABanner() {
                                         textAlign: "center",
                                         marginTop: "14px",
                                         fontSize: "12px",
-                                        color: "#475569",
+                                        color: "#94A3B8",
                                         fontWeight: 500,
                                     }}
                                 >

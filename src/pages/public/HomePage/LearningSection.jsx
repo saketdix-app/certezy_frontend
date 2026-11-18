@@ -163,7 +163,7 @@ export default function LearningSection() {
                                 fontSize: "10.5px",
                                 fontWeight: 700,
                                 letterSpacing: "0.12em",
-                                color: "#475569",
+                                color: "#94A3B8",
                                 textTransform: "uppercase",
                                 marginBottom: "20px",
                             }}
@@ -213,7 +213,7 @@ export default function LearningSection() {
                                             <div
                                                 style={{
                                                     fontSize: "12px",
-                                                    color: "#64748B",
+                                                    color: "#94A3B8",
                                                     marginTop: "5px",
                                                     fontWeight: 500,
                                                 }}
@@ -228,7 +228,7 @@ export default function LearningSection() {
                                                     fontSize: "32px",
                                                     fontWeight: 900,
                                                     lineHeight: 1,
-                                                    color: "#3282B8",
+                                                    color: "#4E9CD3",
                                                     marginBottom: "8px",
                                                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                                                 }}
@@ -247,7 +247,7 @@ export default function LearningSection() {
                                             <div
                                                 style={{
                                                     fontSize: "11.5px",
-                                                    color: "#64748B",
+                                                    color: "#94A3B8",
                                                     marginTop: "3px",
                                                     fontWeight: 500,
                                                 }}
@@ -273,14 +273,14 @@ export default function LearningSection() {
                                     marginBottom: "16px",
                                 }}
                             >
-                                You Can Learn Anything, <span style={{ color: "#3282B8" }}>Anytime</span> From
+                                You Can Learn Anything, <span style={{ color: "#4E9CD3" }}>Anytime</span> From
                                 Anywhere
                             </h2>
 
                             <p
                                 style={{
                                     fontSize: "15.5px",
-                                    color: "#64748B",
+                                    color: "#94A3B8",
                                     lineHeight: 1.7,
                                     maxWidth: "440px",
                                 }}
@@ -315,7 +315,7 @@ export default function LearningSection() {
                                             <p
                                                 style={{
                                                     fontSize: "12.5px",
-                                                    color: "#64748B",
+                                                    color: "#94A3B8",
                                                     lineHeight: 1.6,
                                                 }}
                                             >

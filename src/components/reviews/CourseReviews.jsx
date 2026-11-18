@@ -228,7 +228,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
         return (
             <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
-                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Your review
                     </p>
                     <StarRating value={existing.rating} size={14} />
@@ -280,7 +280,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
                     htmlFor="review-comment"
                     className="block text-[13px] font-medium text-slate-600 mb-1.5"
                 >
-                    Your review <span className="text-slate-400">(optional)</span>
+                    Your review <span className="text-slate-500">(optional)</span>
                 </label>
                 <textarea
                     id="review-comment"
@@ -291,7 +291,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
                     placeholder="What did you like? What could be better?"
                     className="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-[14px] text-slate-700 bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-none"
                 />
-                <p className="text-right text-[11.5px] text-slate-400 mt-1">{comment.length}/1000</p>
+                <p className="text-right text-[11.5px] text-slate-500 mt-1">{comment.length}/1000</p>
             </div>
             <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
@@ -366,7 +366,7 @@ function ReviewList({ reviews, loading, filtered }) {
                                     {r.student_name || "Student"}
                                 </span>
                                 <StarRating value={r.rating} size={12} />
-                                <span className="text-[12px] text-slate-400">
+                                <span className="text-[12px] text-slate-500">
                                     {formatDate(r.review_date || r.created_at)}
                                 </span>
                             </div>

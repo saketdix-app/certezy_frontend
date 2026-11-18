@@ -25,9 +25,9 @@
     /* ── Surfaces (redefined by the admin dark mode) ── */
     --color-surface: #ffffff;
 
-    /* Logo blue, kept for logos, illustrations and text on the navy website */
-    --color-primary: #3282b8;
-    --color-primary-hover: #2a6fa0;
+    /* Links and accents on white: the readable blue (logo blue is brand-500) */
+    --color-primary: #236a9e;
+    --color-primary-hover: #1b5582;
     --color-primary-light: #ebf4fb;
     --color-page: #f5f8fb;
     --color-border: #e2e8f0;

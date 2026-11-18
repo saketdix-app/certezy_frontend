@@ -267,7 +267,7 @@ export default function RegisterPage() {
                                         >
                                             {f.title}
                                         </p>
-                                        <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.42)" }}>
+                                        <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.7)" }}>
                                             {f.desc}
                                         </p>
                                     </div>
@@ -280,7 +280,7 @@ export default function RegisterPage() {
                         <p
                             style={{
                                 fontSize: "11.5px",
-                                color: "rgba(255,255,255,0.28)",
+                                color: "rgba(255,255,255,0.7)",
                                 letterSpacing: "0.05em",
                             }}
                         >
@@ -475,7 +475,7 @@ export default function RegisterPage() {
                             Already have an account?{" "}
                             <Link
                                 to={`/login${params.toString() ? `?${params.toString()}` : ""}`}
-                                style={{ fontWeight: 700, color: "#3282B8", textDecoration: "none" }}
+                                style={{ fontWeight: 700, color: "#236A9E", textDecoration: "none" }}
                             >
                                 Sign in
                             </Link>
@@ -485,17 +485,17 @@ export default function RegisterPage() {
                             style={{
                                 textAlign: "center",
                                 fontSize: "11.5px",
-                                color: "#94A3B8",
+                                color: "#64748B",
                                 marginTop: "14px",
                                 lineHeight: 1.5,
                             }}
                         >
                             By creating an account, you agree to our{" "}
-                            <Link to={ROUTES.TERMS} style={{ color: "#3282B8", textDecoration: "none" }}>
+                            <Link to={ROUTES.TERMS} style={{ color: "#236A9E", textDecoration: "none" }}>
                                 Terms
                             </Link>{" "}
                             and{" "}
-                            <Link to={ROUTES.PRIVACY} style={{ color: "#3282B8", textDecoration: "none" }}>
+                            <Link to={ROUTES.PRIVACY} style={{ color: "#236A9E", textDecoration: "none" }}>
                                 Privacy Policy
                             </Link>
                         </p>
@@ -520,7 +520,7 @@ function Divider() {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "22px 0" }}>
             <div style={{ flex: 1, height: "1px", background: "#E2E8F0" }} />
-            <span style={{ fontSize: "12px", fontWeight: 600, color: "#94A3B8" }}>
+            <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748B" }}>
                 OR CONTINUE WITH EMAIL
             </span>
             <div style={{ flex: 1, height: "1px", background: "#E2E8F0" }} />
@@ -559,7 +559,7 @@ function EyeBtn({ show, toggle }) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: "#94A3B8",
+                color: "#64748B",
                 padding: 0,
             }}
         >
@@ -583,7 +583,7 @@ function SubmitBtn({ loading, label, loadingLabel }) {
                 height: "46px",
                 borderRadius: "10px",
                 border: "none",
-                background: loading ? "#94A3B8" : "#3282B8",
+                background: loading ? "#94A3B8" : "#236A9E",
                 color: "#fff",
                 fontSize: "14px",
                 fontWeight: 700,
@@ -599,7 +599,7 @@ function SubmitBtn({ loading, label, loadingLabel }) {
                 if (!loading) e.currentTarget.style.background = "#2a6fa0";
             }}
             onMouseLeave={(e) => {
-                if (!loading) e.currentTarget.style.background = "#3282B8";
+                if (!loading) e.currentTarget.style.background = "#236A9E";
             }}
         >
             {loading ? (
@@ -629,7 +629,7 @@ const iconSt = {
     left: "14px",
     top: "50%",
     transform: "translateY(-50%)",
-    color: "#94A3B8",
+    color: "#64748B",
 };
 
 const inputSt = (hasError) => ({
@@ -649,7 +649,7 @@ const inputSt = (hasError) => ({
 
 const onFocus = (e, hasError) => {
     if (!hasError) {
-        e.target.style.borderColor = "#3282B8";
+        e.target.style.borderColor = "#236A9E";
         e.target.style.background = "#fff";
         e.target.style.boxShadow = "0 0 0 3px rgba(50,130,184,0.10)";
     }

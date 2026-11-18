@@ -29,7 +29,7 @@ function getCourseBadge({ enrolled_count = 0, created_at }, pricing, highlight) 
     }
     if (enrolled_count >= 100) return { label: "Bestseller", style: "bg-amber-400 text-amber-900" };
     if (!highlight && created_at && (Date.now() - new Date(created_at).getTime()) / 86_400_000 <= 30) {
-        return { label: "New", style: "bg-emerald-500 text-white" };
+        return { label: "New", style: "bg-emerald-700 text-white" };
     }
     return null;
 }
@@ -76,12 +76,12 @@ export default function CourseCard({ course }) {
                     </span>
                 )}
                 {certificate_eligible === 1 && (
-                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-[10px] font-semibold text-white px-2 py-0.5 rounded-full bg-[rgba(50,130,184,0.85)] backdrop-blur-sm">
+                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-[10px] font-semibold text-white px-2 py-0.5 rounded-full bg-[rgba(35,106,158,0.92)] backdrop-blur-sm">
                         <Award size={10} /> Certificate
                     </span>
                 )}
                 {category_name && (
-                    <span className="absolute bottom-3 left-3 max-w-[85%] truncate text-[10.5px] font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm">
+                    <span className="absolute bottom-3 left-3 max-w-[85%] truncate text-[10.5px] font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-sm">
                         {category_name}
                     </span>
                 )}
@@ -93,7 +93,7 @@ export default function CourseCard({ course }) {
                     {title}
                 </h3>
 
-                <p className="text-[11.5px] text-slate-400 truncate mb-2.5">{COURSE_INSTRUCTOR.name}</p>
+                <p className="text-[11.5px] text-slate-500 truncate mb-2.5">{COURSE_INSTRUCTOR.name}</p>
 
                 <div className="flex items-center gap-2 flex-wrap mb-3">
                     <StarRating
@@ -128,7 +128,7 @@ export default function CourseCard({ course }) {
                 <div className="h-px bg-slate-100 mb-3" />
 
                 <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-3 text-slate-400 text-[12px] min-w-0">
+                    <div className="flex items-center gap-3 text-slate-500 text-[12px] min-w-0">
                         {duration && (
                             <span className="inline-flex items-center gap-1">
                                 <Clock size={12} /> {duration}

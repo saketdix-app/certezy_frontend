@@ -67,7 +67,7 @@ export default function CertificationsMarquee() {
                         {items.map((cert, i) => (
                             <span
                                 key={i}
-                                className="px-10 text-[#94A3B8] font-bold text-lg lg:text-xl hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
+                                className="px-10 text-slate-500 font-bold text-lg lg:text-xl hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
                             >
                                 {cert}
                             </span>

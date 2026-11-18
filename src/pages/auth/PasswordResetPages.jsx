@@ -43,7 +43,7 @@ function BackToLogin() {
     return (
         <Link
             to={ROUTES.LOGIN}
-            className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-[#3282B8] hover:underline"
+            className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-action hover:underline"
         >
             <ArrowLeft size={15} /> Back to sign in
         </Link>
