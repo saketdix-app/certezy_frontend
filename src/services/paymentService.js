@@ -27,6 +27,12 @@ const paymentService = {
     paypalCreateOrder: (data) => api.post("/payments/paypal/create-order", data),
     paypalCapture: (data) => api.post("/payments/paypal/capture", data),
 
+    // Guest checkout (no login): { course_id, name, email, phone, consent } → order + guest_token
+    guestRazorpayCreateOrder: (data) => api.post("/payments/guest/razorpay/create-order", data),
+    guestRazorpayVerify: (data) => api.post("/payments/guest/razorpay/verify", data),
+    guestPaypalCreateOrder: (data) => api.post("/payments/guest/paypal/create-order", data),
+    guestPaypalCapture: (data) => api.post("/payments/guest/paypal/capture", data),
+
     // Admin: check Razorpay / PayPal keys (no money moves)
     checkGateways: () => api.get("/payments/admin/gateways"),
 

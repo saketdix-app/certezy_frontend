@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router-dom";
 
@@ -42,6 +43,7 @@ const CoursePlayerPage = lazy(() => import("@/pages/student/CoursePlayerPage"));
 const ExamInterface = lazy(() => import("@/pages/student/ExamInterface"));
 const CheckoutPage = lazy(() => import("@/pages/student/CheckoutPage/PaymentIndex"));
 const PaypalReturnPage = lazy(() => import("@/pages/student/CheckoutPage/PaypalReturnPage"));
+const CheckoutDonePage = lazy(() => import("@/pages/student/CheckoutPage/CheckoutDonePage"));
 
 // Admin
 const AdminLayout = lazy(() => import("@/components/layout/AdminLayout"));
@@ -125,6 +127,13 @@ function NotFound() {
 // Learner pages: students, and admins trying the site as a learner
 const studentOnly = (element) => <ProtectedRoute allowedRoles={LEARNER_ROLES}>{element}</ProtectedRoute>;
 
+/** Checkout: open to guests (guest checkout); signed-in staff who can't buy are turned away as before. */
+function CheckoutGate({ children }) {
+    const { isLoggedIn, isInitializing } = useSelector((state) => state.auth);
+    if (isInitializing) return null;
+    return isLoggedIn ? <ProtectedRoute allowedRoles={LEARNER_ROLES}>{children}</ProtectedRoute> : children;
+}
+
 /**
  * Browser tab title while moving around the app. The first page load keeps the
  * page's own title from the server (what Google and AI crawlers read); later
@@ -200,7 +209,8 @@ export default function AppRoutes() {
                     </Route>
 
                     {/* ── CHECKOUT ── */}
-                    <Route path={ROUTES.CHECKOUT} element={studentOnly(<CheckoutPage />)} />
+                    <Route path={ROUTES.CHECKOUT} element={<CheckoutGate><CheckoutPage /></CheckoutGate>} />
+                    <Route path={ROUTES.CHECKOUT_DONE} element={<CheckoutDonePage />} />
                     {/* PayPal return_url / cancel_url (checkout popup or mobile tab) */}
                     <Route path="/payment/paypal/:outcome" element={<PaypalReturnPage />} />
                 </Route>

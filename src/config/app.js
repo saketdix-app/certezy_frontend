@@ -80,6 +80,7 @@ export const ROUTES = {
     REGISTER: "/register",
     OAUTH_CALLBACK: "/oauth/callback",
     CHECKOUT: "/checkout",
+    CHECKOUT_DONE: "/checkout/done",
     STUDENT_DASHBOARD: "/student/dashboard",
     STUDENT_PROFILE: "/student/profile",
     ADMIN_DASHBOARD: "/admin/dashboard",
@@ -90,7 +91,8 @@ export const ROUTES = {
 };
 
 export const AUTH_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.OAUTH_CALLBACK];
-export const PROTECTED_PREFIXES = ["/student", "/admin", "/consultant", ROUTES.CHECKOUT];
+// Checkout is not here: guests can buy without an account (guest checkout)
+export const PROTECTED_PREFIXES = ["/student", "/admin", "/consultant"];
 
 export const ADMIN_ROLES = ["super_admin", "admin", "sub_admin"];
 

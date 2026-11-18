@@ -47,8 +47,11 @@ export default function PaypalReturnPage() {
         }
 
         let alive = true;
-        paymentService
-            .paypalCapture({ payment_id: pending.payment_id, paypal_order_id: pending.paypal_order_id })
+        const ids = { payment_id: pending.payment_id, paypal_order_id: pending.paypal_order_id };
+        (pending.guest_token
+            ? paymentService.guestPaypalCapture({ ...ids, guest_token: pending.guest_token })
+            : paymentService.paypalCapture(ids)
+        )
             .then(() => {
                 try {
                     localStorage.removeItem("certezy_paypal_pending");
@@ -57,6 +60,24 @@ export default function PaypalReturnPage() {
                 }
                 if (!alive) return;
                 setState({ phase: "done", message: "" });
+                if (pending.guest_token) {
+                    // Guest checkout: no login yet — the done page explains how to get in
+                    try {
+                        sessionStorage.setItem(
+                            "certezy_checkout_done",
+                            JSON.stringify({
+                                account: pending.account,
+                                email: pending.email,
+                                course_id: pending.course_id,
+                                course_title: pending.course_title,
+                            })
+                        );
+                    } catch {
+                        /* generic message */
+                    }
+                    setTimeout(() => navigate("/checkout/done", { replace: true }), 1200);
+                    return;
+                }
                 setTimeout(
                     () => navigate(`/student/course/${pending.course_id}/learn`, { replace: true }),
                     1200

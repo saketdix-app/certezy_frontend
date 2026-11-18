@@ -111,13 +111,13 @@ export default function CourseDetailIndex() {
     const handleEnroll = async () => {
         const isFree = getPricing(course).isFree;
         const target = isFree ? `/courses/${course.slug}` : `/checkout?course=${course.id}`;
-        if (!isLoggedIn) {
-            // New visitors create an account in one step and land back on checkout
-            // (the sign-up page links to log in for existing students)
+        if (!isLoggedIn && isFree) {
+            // Free courses still need an account to enrol
             navigate(`/register?redirect=${encodeURIComponent(target)}`);
             return;
         }
         if (!isFree) {
+            // Paid: straight to checkout — guests can pay without an account
             sessionStorage.setItem(`course_${course.id}`, JSON.stringify(course));
             navigate(target);
             return;
