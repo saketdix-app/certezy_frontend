@@ -47,15 +47,6 @@ const AUTOMATIONS = [
     ["follow_up_reminders", "Follow-up reminders", "Remind the consultant 15 minutes before a follow-up is due."],
 ];
 
-const STATUS = {
-    created: ["New lead", "bg-emerald-50 text-emerald-700"],
-    duplicate: ["Existing lead", "bg-sky-50 text-sky-700"],
-    failed: ["Failed", "bg-red-50 text-red-700"],
-    received: ["Waiting", "bg-amber-50 text-amber-700"],
-    processing: ["Working", "bg-amber-50 text-amber-700"],
-    skipped: ["Skipped (off)", "bg-slate-100 text-slate-500"],
-};
-
 function Switch({ checked, onChange, label, disabled }) {
     return (
         <button
@@ -966,63 +957,6 @@ export default function IntegrationsPage() {
                     </ul>
                 </section>
             )}
-
-            <section className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-                <h2 className="px-4 pt-3 text-[15px] font-bold text-slate-900">Recent imports</h2>
-                <table className="mt-2 w-full min-w-[760px] text-left text-[13px]">
-                    <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
-                        <tr>
-                            <th className="px-4 py-2">Received</th>
-                            <th className="px-4 py-2">Source</th>
-                            <th className="px-4 py-2">Result</th>
-                            <th className="px-4 py-2">Lead</th>
-                            <th className="px-4 py-2">Details</th>
-                            <th className="px-4 py-2" />
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        {!data.events.length && (
-                            <tr>
-                                <td colSpan={6} className="px-4 py-6 text-center text-slate-500">Nothing imported yet.</td>
-                            </tr>
-                        )}
-                        {data.events.map((e) => (
-                            <tr key={e.id}>
-                                <td className="whitespace-nowrap px-4 py-2 text-slate-500">{fmtDateTime(e.received_at)}</td>
-                                <td className="px-4 py-2 capitalize">{e.source}</td>
-                                <td className="px-4 py-2">
-                                    <span className={cn("rounded-md px-2 py-0.5 text-[11.5px] font-semibold", STATUS[e.status]?.[1])}>{STATUS[e.status]?.[0] ?? e.status}</span>
-                                    {e.attempts > 1 && <span className="ml-1 text-[11.5px] text-slate-400">{e.attempts} tries</span>}
-                                </td>
-                                <td className="px-4 py-2">
-                                    {e.lead_id ? (
-                                        <Link to={`/admin/leads?lead=${e.lead_id}`} className="font-semibold text-[#3282B8]">
-                                            {e.lead_name ?? `#${e.lead_id}`}
-                                        </Link>
-                                    ) : (
-                                        "—"
-                                    )}
-                                </td>
-                                <td className="max-w-[320px] truncate px-4 py-2 text-[12px] text-slate-500" title={e.error ?? e.external_id}>
-                                    {e.error ?? e.external_id}
-                                </td>
-                                <td className="px-4 py-2 text-right">
-                                    {["failed", "skipped"].includes(e.status) && (
-                                        <button
-                                            type="button"
-                                            disabled={busy === `retry-${e.id}`}
-                                            onClick={() => act(`retry-${e.id}`, () => integrationService.retry(e.id), "Queued")}
-                                            className="rounded-lg border border-slate-200 px-2.5 py-1 text-[12px] font-semibold text-slate-700"
-                                        >
-                                            Retry
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </section>
         </div>
     );
 }
