@@ -885,6 +885,36 @@ export default function IntegrationsPage() {
                                     <RefreshCw size={13} className={cn(busy === `retry-all-${i.source}` && "animate-spin")} aria-hidden="true" /> Retry {i.last_7_days.failed} failed
                                 </button>
                             )}
+                            {i.source === "meta" && i.enabled && i.configured && (
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
+                                    <button
+                                        type="button"
+                                        disabled={busy === "meta-sync"}
+                                        onClick={() => act("meta-sync", () => integrationService.syncMeta(), "Synced")}
+                                        className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12.5px] font-semibold text-slate-700 disabled:opacity-60"
+                                    >
+                                        <RefreshCw size={13} className={cn(busy === "meta-sync" && "animate-spin")} aria-hidden="true" /> Sync now
+                                    </button>
+                                    <label className="inline-flex items-center gap-1.5 text-[12.5px] text-slate-600">
+                                        Import older leads:
+                                        <select
+                                            value=""
+                                            disabled={busy === "meta-sync"}
+                                            onChange={(e) => {
+                                                const days = Number(e.target.value);
+                                                if (days) act("meta-sync", () => integrationService.syncMeta(days), "Imported");
+                                            }}
+                                            className={cn(inputCls, "w-auto py-1 text-[12.5px]")}
+                                            aria-label="Import older Facebook leads"
+                                        >
+                                            <option value="">Choose…</option>
+                                            <option value="7">Last 7 days</option>
+                                            <option value="30">Last 30 days</option>
+                                            <option value="90">Last 90 days (the most Facebook keeps)</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            )}
                             {i.source === "linkedin" && i.enabled && (
                                 <button
                                     type="button"
