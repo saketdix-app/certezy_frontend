@@ -29,6 +29,8 @@ const authService = {
     // Delete (restorable for 30 days) / restore — admins only
     deleteUser: (id) => api.delete(`/auth/users/${id}`),
     restoreUser: (id) => api.post(`/auth/users/${id}/restore`),
+    // Erase a deleted user now instead of after 30 days — cannot be undone
+    eraseUser: (id, confirm_email) => api.post(`/auth/users/${id}/erase`, { confirm_email }),
 };
 
 export default authService;

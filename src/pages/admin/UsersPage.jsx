@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { ROLE_LABELS } from "@/config/app";
 import { Link } from "react-router-dom";
 import {
     Users,
@@ -223,6 +224,29 @@ export default function UsersPage() {
             toast.error(err.response?.data?.message || "Could not delete user");
         } finally {
             setBlockLoading(false);
+        }
+    };
+
+    // Erase now: skip the rest of the 30 days (type the email to confirm)
+    const [eraseTarget, setEraseTarget] = useState(null);
+    const [eraseConfirm, setEraseConfirm] = useState("");
+    const [erasing, setErasing] = useState(false);
+    const closeErase = () => {
+        setEraseTarget(null);
+        setEraseConfirm("");
+    };
+    const handleErase = async () => {
+        if (!eraseTarget) return;
+        setErasing(true);
+        try {
+            const { data } = await authService.eraseUser(eraseTarget.id, eraseConfirm.trim());
+            toast.success(data?.message || "User erased");
+            setDeletedUsers((list) => list.filter((u) => u.id !== eraseTarget.id));
+            closeErase();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Could not erase user");
+        } finally {
+            setErasing(false);
         }
     };
 
@@ -737,7 +761,8 @@ export default function UsersPage() {
                             <Archive size={15} className="text-slate-500 shrink-0 mt-0.5" />
                             Deleted users can&apos;t sign in. Restore them within 30 days to bring back their
                             account, courses, progress and certificates. After 30 days their data is erased
-                            permanently (payment records are kept for accounting).
+                            permanently (payment records are kept for accounting). Use <b>Erase now</b> to do
+                            that straight away.
                         </p>
                         <div className="relative">
                             <Search
@@ -779,7 +804,7 @@ export default function UsersPage() {
                                             <p className="text-ui font-bold text-slate-900 truncate">
                                                 {user.name}{" "}
                                                 <span className="text-label font-semibold text-slate-500">
-                                                    {user.role === "sub_admin" ? "· Sub-admin" : "· Student"}
+                                                    · {ROLE_LABELS[user.role] ?? "Student"}
                                                 </span>
                                             </p>
                                             <p className="text-label text-slate-500 truncate">
@@ -809,12 +834,62 @@ export default function UsersPage() {
                                             )}
                                             Restore
                                         </button>
+                                        <button
+                                            onClick={() => setEraseTarget(user)}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-small font-bold text-red-700 bg-red-50 hover:bg-red-100 transition-colors shrink-0"
+                                            title="Erase permanently now instead of after 30 days"
+                                        >
+                                            <Trash2 size={13} />
+                                            Erase now
+                                        </button>
                                     </div>
                                 );
                             })
                         )}
                     </div>
                 </>
+            )}
+
+            {/* ── Erase now Modal ── */}
+            {eraseTarget && (
+                <Overlay onClose={closeErase}>
+                    <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
+                        <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                            <Trash2 size={26} className="text-red-600" />
+                        </div>
+                        <h3 className="text-h3 font-extrabold text-slate-900 mb-2">Erase {eraseTarget.name} now?</h3>
+                        <p className="text-ui text-slate-500 leading-relaxed mb-4">
+                            This skips the rest of the 30 days. Their courses, progress, test results, certificates,
+                            reviews and personal details are erased permanently and <b>can&apos;t be restored</b>.
+                            Payment records are kept for accounting, under &ldquo;Deleted user&rdquo;.
+                        </p>
+                        <label className="block text-left text-small font-semibold text-slate-600 mb-1.5">
+                            Type their email <span className="font-mono text-red-600">{eraseTarget.email}</span> to confirm
+                        </label>
+                        <input
+                            value={eraseConfirm}
+                            onChange={(e) => setEraseConfirm(e.target.value)}
+                            autoComplete="off"
+                            className={cn(inputCls, "mb-4")}
+                            autoFocus
+                        />
+                        <div className="space-y-2.5">
+                            <button
+                                onClick={handleErase}
+                                disabled={erasing || eraseConfirm.trim().toLowerCase() !== String(eraseTarget.email).toLowerCase()}
+                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-ui font-bold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50"
+                            >
+                                {erasing ? <Loader2 size={15} className="animate-spin" /> : "Erase permanently"}
+                            </button>
+                            <button
+                                onClick={closeErase}
+                                className="w-full py-3 rounded-xl text-ui font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </Overlay>
             )}
 
             {/* ── Delete Modal ── */}
@@ -834,8 +909,8 @@ export default function UsersPage() {
                         </h3>
                         <p className="text-ui text-slate-500 leading-relaxed mb-4">
                             They are signed out and can&apos;t sign in. You can restore them from the{" "}
-                            <b>Deleted</b> tab for 30 days. After that their courses, progress, test results,
-                            certificates and reviews are erased permanently.
+                            <b>Deleted</b> tab for 30 days, or erase them there straight away. After 30 days
+                            their courses, progress, test results, certificates and reviews are erased permanently.
                         </p>
                         <label className="block text-left text-small font-semibold text-slate-600 mb-1.5">
                             Type <span className="font-mono text-red-600">DELETE</span> to confirm
