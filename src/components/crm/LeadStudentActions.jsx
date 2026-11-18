@@ -90,7 +90,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                         type="button"
                         disabled={busy || !lead.email}
                         onClick={() => run(() => crmService.studentAccount(lead.id), "Student account created")}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
                     >
                         <UserPlus size={13} aria-hidden="true" /> Create student account
                     </button>
@@ -111,7 +111,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                         onClick={() => setOpen(open === key ? null : key)}
                         className={cn(
                             "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold disabled:opacity-40",
-                            open === key ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                            open === key ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                         )}
                     >
                         <Icon size={13} aria-hidden="true" /> {label}
@@ -180,7 +180,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                         <button type="button" onClick={() => setOpen(null)} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
                             Cancel
                         </button>
-                        <button type="button" disabled={busy} onClick={submit} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                        <button type="button" disabled={busy} onClick={submit} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                             {busy && <Loader2 size={13} className="animate-spin" />}
                             {ACTIONS.find(([k]) => k === open)?.[1]}
                         </button>

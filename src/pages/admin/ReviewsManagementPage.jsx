@@ -47,7 +47,7 @@ const SOURCE_OPTIONS = [
 ];
 
 const fieldCls =
-    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-700 bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all";
+    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-700 bg-white outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
 
 const apiError = (err, fallback) =>
     err.response?.data?.errors?.[0] || err.response?.data?.message || err.message || fallback;
@@ -145,14 +145,14 @@ export default function ReviewsManagementPage() {
                 <div className="flex gap-2">
                     <Link
                         to="/admin/import"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-700 hover:border-primary hover:text-primary"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action"
                     >
                         <FileUp size={15} /> Import CSV
                     </Link>
                     <button
                         type="button"
                         onClick={() => setEditing({})}
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover"
                     >
                         <Plus size={15} /> Add review
                     </button>
@@ -162,7 +162,7 @@ export default function ReviewsManagementPage() {
             {/* Filters */}
             <div className="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col md:flex-row gap-3">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                     <input
                         type="search"
                         placeholder="Search reviewer, course or comment…"
@@ -199,12 +199,12 @@ export default function ReviewsManagementPage() {
             <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-7 h-7 text-primary animate-spin" />
+                        <Loader2 className="w-7 h-7 text-action animate-spin" />
                     </div>
                 ) : reviews.length === 0 ? (
                     <div className="text-center py-16 px-4">
-                        <div className="w-14 h-14 rounded-full bg-primary-light flex items-center justify-center mx-auto mb-3">
-                            <Star className="text-primary" size={22} />
+                        <div className="w-14 h-14 rounded-full bg-action-soft flex items-center justify-center mx-auto mb-3">
+                            <Star className="text-action" size={22} />
                         </div>
                         <p className="text-[15px] font-semibold text-slate-800">No reviews found</p>
                         <p className="text-[13px] text-slate-500 mt-1">
@@ -284,7 +284,7 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
     return (
         <li className="p-4 sm:px-5 flex flex-col lg:flex-row lg:items-start gap-3">
             <div className="flex items-start gap-3 flex-1 min-w-0">
-                <div className="w-9 h-9 rounded-full bg-primary-light text-primary text-[12px] font-bold flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-full bg-action-soft text-action text-[12px] font-bold flex items-center justify-center shrink-0">
                     {(r.student_name || "?").slice(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -353,7 +353,7 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
                     <IconBtn
                         title="Edit"
                         onClick={onEdit}
-                        className="text-primary bg-primary-light hover:bg-blue-100"
+                        className="text-action bg-action-soft hover:bg-blue-100"
                     >
                         <Pencil size={15} />
                     </IconBtn>
@@ -465,7 +465,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                         type="button"
                         onClick={onClose}
                         aria-label="Close"
-                        className="p-2 rounded-lg text-slate-400 hover:bg-slate-100"
+                        className="p-2 rounded-lg text-slate-500 hover:bg-slate-100"
                     >
                         <X size={18} />
                     </button>
@@ -564,7 +564,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                             type="checkbox"
                             checked={!!form.is_approved}
                             onChange={(e) => set("is_approved", e.target.checked ? 1 : 0)}
-                            className="w-4 h-4 accent-[#3282B8]"
+                            className="w-4 h-4 accent-action"
                         />
                         Show on the course page now
                     </label>
@@ -575,7 +575,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                                 type="checkbox"
                                 checked={confirmed}
                                 onChange={(e) => setConfirmed(e.target.checked)}
-                                className="w-4 h-4 mt-0.5 accent-[#3282B8] shrink-0"
+                                className="w-4 h-4 mt-0.5 accent-action shrink-0"
                             />
                             <span>
                                 I confirm this is a genuine review given by a real learner, and the rating and
@@ -596,7 +596,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                     <button
                         type="submit"
                         disabled={saving || !confirmed}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {saving && <Loader2 size={14} className="animate-spin" />}
                         {isEdit ? "Save changes" : "Add review"}

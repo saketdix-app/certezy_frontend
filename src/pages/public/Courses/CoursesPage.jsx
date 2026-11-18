@@ -347,7 +347,7 @@ export default function CoursesPage() {
                         className={cn(
                             "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13.5px] font-semibold transition-all",
                             activeFilterCount > 0
-                                ? "bg-primary text-white border-primary"
+                                ? "bg-action text-white border-primary"
                                 : "bg-white border-border text-text-primary hover:border-primary hover:text-primary"
                         )}
                         style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
@@ -477,7 +477,7 @@ export default function CoursesPage() {
                         <div className="px-5 py-4 border-t border-border">
                             <button
                                 onClick={() => setMobileFilterOpen(false)}
-                                className="w-full h-12 rounded-xl bg-primary text-white text-[14px] font-bold hover:bg-primary-hover transition-colors"
+                                className="w-full h-12 rounded-xl bg-action text-white text-[14px] font-bold hover:bg-action-hover transition-colors"
                                 style={{ boxShadow: "0 2px 8px rgba(37,99,235,0.3)" }}
                             >
                                 {activeFilterCount > 0
@@ -524,7 +524,7 @@ function Pagination({ pagination, onPageChange }) {
                     className={cn(
                         "w-9 h-9 rounded-lg text-[13px] font-semibold transition-all",
                         p === page
-                            ? "bg-primary text-white shadow-sm"
+                            ? "bg-action text-white shadow-sm"
                             : "bg-white border border-border text-text-secondary hover:border-primary hover:text-primary"
                     )}
                 >

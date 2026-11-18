@@ -384,7 +384,7 @@ export default function CoursePlayerPage() {
                     <p className="text-white font-semibold mb-3">{error}</p>
                     <button
                         onClick={() => navigate("/student/my-courses")}
-                        className="px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-bold"
+                        className="px-4 py-2 rounded-xl bg-action text-white text-sm font-bold"
                     >
                         ← My Courses
                     </button>

@@ -132,7 +132,7 @@ function NotifItem({ notif }) {
             <div
                 className={cn(
                     "w-2 h-2 rounded-full shrink-0 mt-[5px]",
-                    notif.read ? "bg-transparent" : "bg-primary"
+                    notif.read ? "bg-transparent" : "bg-action"
                 )}
             />
             <div className="flex-1">

@@ -41,7 +41,7 @@ export default function PaymentMethod({ selected, onChange }) {
                                     active ? "border-[#3282B8]" : "border-slate-300"
                                 )}
                             >
-                                {active && <div className="w-2.5 h-2.5 rounded-full bg-[#3282B8]" />}
+                                {active && <div className="w-2.5 h-2.5 rounded-full bg-action" />}
                             </div>
 
                             <div>
@@ -65,7 +65,7 @@ export default function PaymentMethod({ selected, onChange }) {
 export function SectionTitle({ title }) {
     return (
         <div className="flex items-center gap-2.5">
-            <div className="w-[3px] h-5 rounded-full bg-[#3282B8] shrink-0" />
+            <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
             <h2 className="text-[14px] font-bold text-slate-900">{title}</h2>
         </div>
     );

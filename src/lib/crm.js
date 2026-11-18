@@ -81,5 +81,5 @@ export const isOverdue = (d) => d && new Date(d).getTime() < Date.now();
 export const apiMessage = (err, fallback) => err?.response?.data?.message || fallback;
 
 export const inputCls =
-    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-[#3282B8]";
+    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-action";
 

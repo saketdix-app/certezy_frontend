@@ -291,7 +291,7 @@ function ExamScreen({
                                 type="button"
                                 onClick={() => setConfirmExit(false)}
                                 autoFocus
-                                className="flex-1 py-2.5 rounded-xl bg-[#3282B8] text-white text-[13.5px] font-bold hover:bg-[#2A6FA0]"
+                                className="flex-1 py-2.5 rounded-xl bg-action text-white text-[13.5px] font-bold hover:bg-action-hover"
                             >
                                 Keep going
                             </button>

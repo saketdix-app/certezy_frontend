@@ -39,7 +39,7 @@ function Table({ title, intro, head, rows, render, empty }) {
             <p className="mt-1 mb-4 text-[13px] text-slate-500">{intro}</p>
             {!rows ? (
                 <div className="flex justify-center py-16">
-                    <Loader2 className="animate-spin text-slate-400" />
+                    <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : !rows.length ? (
                 <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">{empty}</p>
@@ -90,7 +90,7 @@ export function DiscountLinksBoard({ isAdmin }) {
                     <td className="px-4 py-2.5">{r.lead_name ?? r.email}</td>
                     <td className="px-4 py-2.5">{r.course_title}</td>
                     <td className="px-4 py-2.5">
-                        ${Number(r.discount_price).toFixed(0)} <span className="text-slate-400 line-through">${Number(r.original_price).toFixed(0)}</span>
+                        ${Number(r.discount_price).toFixed(0)} <span className="text-slate-500 line-through">${Number(r.original_price).toFixed(0)}</span>
                         <span className="ml-1 text-slate-500">({Math.round(r.discount_pct)}%)</span>
                     </td>
                     <td className="px-4 py-2.5">
@@ -157,7 +157,7 @@ export function IssuedCertificatesBoard({ isAdmin }) {
                     <td className="px-4 py-2.5">{r.course_title}</td>
                     <td className="px-4 py-2.5">
                         {r.pdf_url ? (
-                            <a href={r.pdf_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-[#3282B8]">
+                            <a href={r.pdf_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-action">
                                 {r.certificate_no} <ExternalLink size={12} aria-hidden="true" />
                             </a>
                         ) : (

@@ -780,7 +780,7 @@ function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, on
                     onClick={onEnroll}
                     disabled={enrolling}
                     tabIndex={visible ? 0 : -1}
-                    className="shrink-0 rounded-lg bg-primary px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
+                    className="shrink-0 rounded-lg bg-action px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
                 >
                     {isEnrolled ? "Go to course" : "Enroll now"}
                 </button>
@@ -806,7 +806,7 @@ function ContentCard({ title, action = null, children }) {
         >
             <div className="flex flex-wrap items-center justify-between gap-2.5 mb-5">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-[3px] h-5 rounded-full bg-primary shrink-0" />
+                    <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
                     <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>{title}</h2>
                 </div>
                 {action}

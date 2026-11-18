@@ -34,7 +34,7 @@ export function FollowUpList({ items, onOpen, onDone, busyId, showOwner }) {
                     </button>
                     <div className="flex gap-1.5">
                         {f.phone && (
-                            <a href={`tel:${f.phone}`} aria-label={`Call ${f.lead_name}`} className="rounded-lg border border-slate-200 p-2 text-[#3282B8]">
+                            <a href={`tel:${f.phone}`} aria-label={`Call ${f.lead_name}`} className="rounded-lg border border-slate-200 p-2 text-action">
                                 <Phone size={14} />
                             </a>
                         )}
@@ -113,7 +113,7 @@ export default function FollowUpsBoard({ isAdmin }) {
                         }}
                         className={cn(
                             "-mb-px border-b-2 px-4 py-2 text-[13.5px] font-semibold",
-                            tab === k ? "border-[#3282B8] text-[#3282B8]" : "border-transparent text-slate-500"
+                            tab === k ? "border-action text-action" : "border-transparent text-slate-500"
                         )}
                     >
                         {l}
@@ -123,7 +123,7 @@ export default function FollowUpsBoard({ isAdmin }) {
             <div className="rounded-xl border border-slate-200 bg-white px-4">
                 {!items ? (
                     <div className="flex justify-center py-10">
-                        <Loader2 className="animate-spin text-slate-400" />
+                        <Loader2 className="animate-spin text-slate-500" />
                     </div>
                 ) : (
                     <FollowUpList items={items} onOpen={setOpenId} onDone={complete} busyId={busyId} showOwner={isAdmin} />

@@ -199,15 +199,15 @@ export default function PaymentsPage() {
                             label: "Total Sales",
                             value: stats.total_sales,
                             icon: CheckCircle,
-                            bg: "#EBF4FF",
-                            color: "#3282B8",
+                            bg: "#EEF6FC",
+                            color: "#236A9E",
                         },
                         {
                             label: "Successful",
                             value: stats.successCount,
                             icon: CheckCircle,
-                            bg: "#EBF4FF",
-                            color: "#3282B8",
+                            bg: "#EEF6FC",
+                            color: "#236A9E",
                         },
                         {
                             label: "Pending",
@@ -237,7 +237,7 @@ export default function PaymentsPage() {
                                     <Icon size={20} style={{ color }} />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                                         {label}
                                     </p>
                                     <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
@@ -258,7 +258,7 @@ export default function PaymentsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="relative">
                         <Search
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500"
                             size={16}
                         />
                         <input
@@ -266,13 +266,13 @@ export default function PaymentsPage() {
                             placeholder="Search by student or course..."
                             value={searchTerm}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                         />
                     </div>
                     <select
                         value={selectedStatus}
                         onChange={(e) => handleStatusFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                     >
                         <option value="">All Status</option>
                         <option value="success">Success</option>
@@ -282,7 +282,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedMethod}
                         onChange={(e) => handleMethodFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                     >
                         <option value="">All Methods</option>
                         <option value="razorpay">Razorpay</option>
@@ -292,7 +292,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedCurrency}
                         onChange={(e) => handleCurrencyFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                     >
                         <option value="">All Currencies</option>
                         <option value="INR">INR</option>
@@ -309,7 +309,7 @@ export default function PaymentsPage() {
             >
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3282B8]" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-action" />
                     </div>
                 ) : payments.length === 0 ? (
                     <div className="text-center py-20">

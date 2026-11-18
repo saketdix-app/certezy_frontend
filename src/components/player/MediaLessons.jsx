@@ -14,7 +14,7 @@ import { getVideoEmbedUrl, getEmbedUrl, isHttpUrl, hostnameOf } from "@/lib/medi
 const panel =
     "rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center bg-white/[0.04] border border-white/[0.08]";
 const primaryBtn =
-    "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold bg-[#3282B8] hover:bg-[#2a6fa0] text-white transition-colors w-full sm:w-auto";
+    "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold bg-action hover:bg-action-hover text-white transition-colors w-full sm:w-auto";
 
 function Unavailable({ icon: Icon = FileText, text = "This lesson's content isn't available yet." }) {
     return (

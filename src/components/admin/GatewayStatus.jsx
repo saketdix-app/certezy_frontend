@@ -64,7 +64,7 @@ export default function GatewayStatus() {
                     type="button"
                     onClick={run}
                     disabled={state.loading}
-                    className="flex items-center gap-2 rounded-xl bg-[#3282B8] px-4 py-2 text-[13px] font-bold text-white disabled:opacity-60"
+                    className="flex items-center gap-2 rounded-xl bg-action px-4 py-2 text-[13px] font-bold text-white disabled:opacity-60"
                 >
                     {state.loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                     Check gateways

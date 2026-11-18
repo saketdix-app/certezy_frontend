@@ -38,7 +38,7 @@ function Switch({ checked, onChange, label, disabled }) {
             aria-label={label}
             disabled={disabled}
             onClick={() => onChange(!checked)}
-            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-[#3282B8]" : "bg-slate-300")}
+            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-action" : "bg-slate-300")}
         >
             <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
         </button>
@@ -118,7 +118,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                                         onClick={() => toggleIn("course_ids", c.id)}
                                         className={cn(
                                             "rounded-full border px-2.5 py-1 text-[12px]",
-                                            form.course_ids.includes(c.id) ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-600"
+                                            form.course_ids.includes(c.id) ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-600"
                                         )}
                                     >
                                         {c.title}
@@ -136,7 +136,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                                         onClick={() => toggleIn("sources", v)}
                                         className={cn(
                                             "rounded-full border px-2.5 py-1 text-[12px]",
-                                            form.sources.includes(v) ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-600"
+                                            form.sources.includes(v) ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-600"
                                         )}
                                     >
                                         {l}
@@ -156,9 +156,9 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                                     const pos = form.member_ids.indexOf(c.id);
                                     return (
                                         <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px]">
-                                            <input type="checkbox" checked={pos >= 0} onChange={() => toggleIn("member_ids", c.id)} className="accent-[#3282B8]" />
+                                            <input type="checkbox" checked={pos >= 0} onChange={() => toggleIn("member_ids", c.id)} className="accent-action" />
                                             <span className="flex-1">{c.name}</span>
-                                            {pos >= 0 && <span className="text-[11.5px] text-slate-400">#{pos + 1}</span>}
+                                            {pos >= 0 && <span className="text-[11.5px] text-slate-500">#{pos + 1}</span>}
                                         </label>
                                     );
                                 })}
@@ -174,7 +174,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save pool
                     </button>
@@ -223,7 +223,7 @@ export default function DistributionPage() {
     if (!cfg || !report) {
         return (
             <div className="flex justify-center py-20">
-                <Loader2 className="animate-spin text-slate-400" />
+                <Loader2 className="animate-spin text-slate-500" />
             </div>
         );
     }
@@ -235,7 +235,7 @@ export default function DistributionPage() {
                 <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Lead distribution</h1>
                 <p className="mt-1 text-[13px] text-slate-500">
                     Round Robin gives new leads to eligible consultants in turn. Pause someone or set their limits on{" "}
-                    <Link to="/admin/team" className="font-semibold text-[#3282B8]">Team → Lead settings</Link>.
+                    <Link to="/admin/team" className="font-semibold text-action">Team → Lead settings</Link>.
                 </p>
             </div>
 
@@ -259,12 +259,12 @@ export default function DistributionPage() {
                 </div>
                 <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-5">
                     <div className="flex items-center gap-3">
-                        <Inbox size={22} className="text-slate-400" aria-hidden="true" />
+                        <Inbox size={22} className="text-slate-500" aria-hidden="true" />
                         <div>
                             <p className="text-[15px] font-bold text-slate-900">
                                 {report.unassigned} lead{report.unassigned === 1 ? "" : "s"} waiting
                             </p>
-                            <Link to="/admin/leads?owner=unassigned" className="text-[13px] font-semibold text-[#3282B8]">
+                            <Link to="/admin/leads?owner=unassigned" className="text-[13px] font-semibold text-action">
                                 Review the unassigned queue →
                             </Link>
                         </div>
@@ -274,7 +274,7 @@ export default function DistributionPage() {
                         disabled={busy || !report.unassigned || !cfg.round_robin_enabled}
                         onClick={() => act(() => crmService.distributeQueue(), "Done")}
                         title={!cfg.round_robin_enabled ? "Turn Round Robin on first" : undefined}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-2 text-[13px] font-bold text-white disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-[13px] font-bold text-white disabled:opacity-50"
                     >
                         <Shuffle size={14} aria-hidden="true" /> Distribute now
                     </button>
@@ -319,7 +319,7 @@ export default function DistributionPage() {
                             <p className="mt-2 text-[12.5px] text-slate-600">
                                 {p.members.length ? p.members.map((m) => m.name).join(" → ") : "No consultants"}
                             </p>
-                            {p.next_up && <p className="mt-0.5 text-[12px] text-slate-400">Last assigned: {p.next_up}</p>}
+                            {p.next_up && <p className="mt-0.5 text-[12px] text-slate-500">Last assigned: {p.next_up}</p>}
                             <div className="mt-3 flex gap-1.5">
                                 <button type="button" onClick={() => setEditing(p)} className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-[12px] font-semibold text-slate-700">
                                     <Pencil size={12} aria-hidden="true" /> Edit

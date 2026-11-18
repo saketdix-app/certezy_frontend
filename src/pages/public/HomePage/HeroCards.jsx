@@ -78,7 +78,7 @@ export function PmpCourseCard({ pmp }) {
                 </div>
                 <Link
                     to={`/courses/${PMP_SLUG}`}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-[#3282B8] px-4 py-2.5 text-[13.5px] font-bold text-white transition-colors hover:bg-[#2A6FA0]"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-action px-4 py-2.5 text-[13.5px] font-bold text-white transition-colors hover:bg-action-hover"
                 >
                     View course <ArrowRight size={15} aria-hidden="true" />
                 </Link>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 /**
  * SearchPicker — a text box that searches as you type and shows matches below.
@@ -63,7 +63,7 @@ export default function SearchPicker({
 
     return (
         <div ref={boxRef} className="relative">
-            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
             <input
                 type="text"
                 role="combobox"
@@ -93,18 +93,18 @@ export default function SearchPicker({
                 placeholder={placeholder}
                 className={cn(inputCls, "pl-10 pr-9")}
             />
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
             {open && (
                 <ul
                     role="listbox"
                     className="absolute z-30 mt-1.5 w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg py-1"
                 >
                     {loading && items.length === 0 ? (
-                        <li className="px-4 py-3 text-[13px] text-slate-400 flex items-center gap-2">
+                        <li className="px-4 py-3 text-[13px] text-slate-500 flex items-center gap-2">
                             <Loader2 className="w-4 h-4 animate-spin" /> Searching…
                         </li>
                     ) : items.length === 0 ? (
-                        <li className="px-4 py-3 text-[13px] text-slate-400">{emptyText}</li>
+                        <li className="px-4 py-3 text-[13px] text-slate-500">{emptyText}</li>
                     ) : (
                         items.map((item, i) => (
                             <li
@@ -116,7 +116,7 @@ export default function SearchPicker({
                                     choose(item);
                                 }}
                                 onMouseEnter={() => setActive(i)}
-                                className={cn("px-3 py-2 cursor-pointer", i === active && "bg-[#EBF4FF]")}
+                                className={cn("px-3 py-2 cursor-pointer", i === active && "bg-action-soft")}
                             >
                                 {renderItem(item)}
                             </li>

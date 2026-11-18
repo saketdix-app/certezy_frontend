@@ -78,7 +78,7 @@ export default function VerifyCertificatePage() {
         <div className="min-h-[70vh] bg-[#F1F5F9] px-4 py-10 sm:py-16">
             <div className="max-w-2xl mx-auto">
                 <div className="text-center mb-8">
-                    <div className="inline-flex w-12 h-12 rounded-full bg-primary/10 text-primary items-center justify-center mb-3">
+                    <div className="inline-flex w-12 h-12 rounded-full bg-action/10 text-primary items-center justify-center mb-3">
                         <Award size={22} />
                     </div>
                     <h1 className="text-[26px] sm:text-[30px] font-extrabold text-slate-900 tracking-tight">
@@ -99,7 +99,7 @@ export default function VerifyCertificatePage() {
                     />
                     <button
                         type="submit"
-                        className="flex items-center gap-2 px-4 sm:px-5 rounded-xl bg-primary text-white text-[14px] font-bold hover:opacity-90"
+                        className="flex items-center gap-2 px-4 sm:px-5 rounded-xl bg-action text-white text-[14px] font-bold hover:opacity-90"
                     >
                         <Search size={16} />
                         <span className="hidden sm:inline">Verify</span>
@@ -181,7 +181,7 @@ export default function VerifyCertificatePage() {
                                     href={cert.pdf_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-[13px] font-bold no-underline hover:opacity-90"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-[13px] font-bold no-underline hover:opacity-90"
                                 >
                                     <Download size={15} /> View certificate PDF
                                 </a>

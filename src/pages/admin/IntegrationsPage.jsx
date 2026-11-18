@@ -56,7 +56,7 @@ function Switch({ checked, onChange, label, disabled }) {
             aria-label={label}
             disabled={disabled}
             onClick={() => onChange(!checked)}
-            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-[#3282B8]" : "bg-slate-300")}
+            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-action" : "bg-slate-300")}
         >
             <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
         </button>
@@ -69,7 +69,7 @@ function keyState(f, source) {
     if (f.from === "admin") return [`Saved${f.hint ? ` · ends ${f.hint}` : ""}${f.updated_by_name ? ` · ${f.updated_by_name}` : ""}`, "text-slate-500"];
     if (f.from === "server") return ["Set in server .env", "text-slate-500"];
     if (f.from === "meta") return ["Uses the Meta app secret", "text-slate-500"];
-    return [f.optional ? "Not set (optional)" : "Not set", f.optional ? "text-slate-400" : "text-amber-700"];
+    return [f.optional ? "Not set (optional)" : "Not set", f.optional ? "text-slate-500" : "text-amber-700"];
 }
 
 /** Keys for one integration. Values are typed in, never shown back. */
@@ -137,7 +137,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                             {f.set ? (
                                 <CheckCircle2 size={13} className="shrink-0 text-emerald-600" aria-hidden="true" />
                             ) : (
-                                <XCircle size={13} className="shrink-0 text-slate-400" aria-hidden="true" />
+                                <XCircle size={13} className="shrink-0 text-slate-500" aria-hidden="true" />
                             )}
                             <span className="font-medium text-slate-700">{f.label}</span>
                             <span className={cn("min-w-0 truncate", tone)}>{text}</span>
@@ -170,7 +170,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                     {result.message}
                 </p>
             )}
-            {!canEdit && <p className="mt-2 text-[12px] text-slate-400">Only a Super Admin can change these keys.</p>}
+            {!canEdit && <p className="mt-2 text-[12px] text-slate-500">Only a Super Admin can change these keys.</p>}
 
             {open && (
                 <form onSubmit={save} className="mt-3 space-y-2.5 rounded-lg bg-slate-50 p-3" autoComplete="off">
@@ -182,7 +182,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                             <div className="flex items-center justify-between gap-2">
                                 <label htmlFor={`${integration.source}-${f.name}`} className="text-[12.5px] font-semibold text-slate-700">
                                     {f.label}
-                                    {f.optional && <span className="font-normal text-slate-400"> (optional)</span>}
+                                    {f.optional && <span className="font-normal text-slate-500"> (optional)</span>}
                                 </label>
                                 {f.from === "admin" && (
                                     <label className="flex items-center gap-1 text-[12px] text-slate-500">
@@ -231,7 +231,7 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                         <button type="button" onClick={close} className="rounded-lg px-3 py-1.5 text-[12.5px] font-semibold text-slate-600">
                             Cancel
                         </button>
-                        <button type="submit" disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                        <button type="submit" disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                             {saving && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Save keys
                         </button>
                     </div>
@@ -308,7 +308,7 @@ function ConnectButton({ integration }) {
                     type="button"
                     disabled={!ready}
                     onClick={() => setAsking(true)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
                 >
                     <Link2 size={13} aria-hidden="true" /> {connected ? `Reconnect ${PLATFORM[source]}` : `Connect with ${PLATFORM[source]}`}
                 </button>
@@ -325,7 +325,7 @@ function ConnectButton({ integration }) {
                             className={cn(inputCls, "mt-1 py-1.5")}
                         />
                     </label>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                         {busy && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Continue to {PLATFORM[source]}
                     </button>
                     <button type="button" onClick={() => setAsking(false)} className="px-2 py-1.5 text-[12.5px] font-semibold text-slate-600">
@@ -377,12 +377,12 @@ function ChooseMany({ result, onChoose }) {
                         <label
                             className={cn(
                                 "flex cursor-pointer items-center gap-2.5 rounded-lg border bg-white px-3 py-2 text-[13px] font-semibold text-slate-800",
-                                picked.includes(o.id) ? "border-[#3282B8]" : "border-slate-200"
+                                picked.includes(o.id) ? "border-action" : "border-slate-200"
                             )}
                         >
-                            <input type="checkbox" checked={picked.includes(o.id)} onChange={() => toggle(o.id)} className="h-4 w-4 accent-[#3282B8]" />
+                            <input type="checkbox" checked={picked.includes(o.id)} onChange={() => toggle(o.id)} className="h-4 w-4 accent-action" />
                             <span className="min-w-0 flex-1 truncate">{o.name}</span>
-                            <span className="text-[11.5px] font-normal text-slate-400">{o.id}</span>
+                            <span className="text-[11.5px] font-normal text-slate-500">{o.id}</span>
                         </label>
                     </li>
                 ))}
@@ -397,7 +397,7 @@ function ChooseMany({ result, onChoose }) {
                         await onChoose(picked);
                         setBusy(false);
                     }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
                 >
                     {busy && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Connect selected
                 </button>
@@ -410,7 +410,7 @@ function ConnectResult({ result, onChoose, onClose }) {
     if (!result) return null;
     const name = PLATFORM[result.source];
     return (
-        <section className="rounded-xl border border-[#3282B8]/30 bg-sky-50/60 p-4" aria-live="polite">
+        <section className="rounded-xl border border-action/30 bg-sky-50/60 p-4" aria-live="polite">
             {result.status === "working" && (
                 <p className="flex items-center gap-2 text-[13.5px] font-semibold text-slate-700">
                     <Loader2 size={15} className="animate-spin" aria-hidden="true" /> Finishing the {name} connection…
@@ -539,7 +539,7 @@ function LeadForms({ integration, courses, onSave }) {
         <div className="mt-3 rounded-lg bg-slate-50 p-3">
             <div className="flex items-center justify-between gap-2">
                 <p className="text-[12.5px] font-semibold text-slate-700">Lead forms ({list.forms.length})</p>
-                <button type="button" onClick={load} className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#3282B8]">
+                <button type="button" onClick={load} className="inline-flex items-center gap-1 text-[12px] font-semibold text-action">
                     <RefreshCw size={12} aria-hidden="true" /> Refresh
                 </button>
             </div>
@@ -552,7 +552,7 @@ function LeadForms({ integration, courses, onSave }) {
                         setAllForms(e.target.checked);
                         if (!e.target.checked && !picked.length) setPicked(list.forms.filter(active).map((f) => f.id));
                     }}
-                    className="mt-0.5 accent-[#3282B8]"
+                    className="mt-0.5 accent-action"
                 />
                 <span>
                     <span className="font-semibold">Import from every form</span>, including forms created later. Untick to choose.
@@ -562,14 +562,14 @@ function LeadForms({ integration, courses, onSave }) {
             <div className="mt-2 space-y-3">
                 {groups.map((g) => (
                     <div key={g || "forms"}>
-                        {groups.length > 1 && g && <p className="mb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-400">{g}</p>}
+                        {groups.length > 1 && g && <p className="mb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">{g}</p>}
                         <ul className="space-y-1.5">
                             {shown
                                 .filter((f) => (f.owner_name ?? "") === g)
                                 .map((f) => (
                                     <li key={f.id} className={cn("grid items-center gap-2 rounded-lg border bg-white p-2 sm:grid-cols-[1fr_minmax(0,220px)]", isOn(f.id) ? "border-slate-200" : "border-dashed border-slate-200 opacity-70")}>
                                         <label className="flex min-w-0 cursor-pointer items-start gap-2">
-                                            <input type="checkbox" checked={isOn(f.id)} disabled={allForms} onChange={() => toggle(f.id)} className="mt-0.5 h-4 w-4 accent-[#3282B8]" aria-label={`Import ${f.name}`} />
+                                            <input type="checkbox" checked={isOn(f.id)} disabled={allForms} onChange={() => toggle(f.id)} className="mt-0.5 h-4 w-4 accent-action" aria-label={`Import ${f.name}`} />
                                             <span className="min-w-0">
                                                 <span className="block truncate text-[13px] font-semibold text-slate-800">{f.name}</span>
                                                 <span className="flex flex-wrap items-center gap-x-2 text-[11.5px] text-slate-500">
@@ -587,7 +587,7 @@ function LeadForms({ integration, courses, onSave }) {
                 ))}
             </div>
             {hiddenCount > 0 && (
-                <button type="button" onClick={() => setShowArchived(true)} className="mt-2 text-[12px] font-semibold text-[#3282B8]">
+                <button type="button" onClick={() => setShowArchived(true)} className="mt-2 text-[12px] font-semibold text-action">
                     Show {hiddenCount} archived form{hiddenCount === 1 ? "" : "s"}
                 </button>
             )}
@@ -598,7 +598,7 @@ function LeadForms({ integration, courses, onSave }) {
             </div>
             <div className="mt-2 flex items-center justify-end gap-3">
                 {!allForms && <span className="text-[12px] text-slate-500">{picked.length} form{picked.length === 1 ? "" : "s"} selected</span>}
-                <button type="button" disabled={!allForms && !picked.length} onClick={save} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50">
+                <button type="button" disabled={!allForms && !picked.length} onClick={save} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50">
                     Save forms
                 </button>
             </div>
@@ -637,13 +637,13 @@ function FormCourses({ integration, courses, onSave }) {
                             className={cn(inputCls, "py-1.5")}
                         />
                         {courseSelect(r.course, (v) => setRows((x) => x.map((y, j) => (j === i ? { ...y, course: v } : y))), "Course")}
-                        <button type="button" onClick={() => setRows((x) => x.filter((_, j) => j !== i))} aria-label="Remove" className="px-1 text-slate-400 hover:text-red-600">
+                        <button type="button" onClick={() => setRows((x) => x.filter((_, j) => j !== i))} aria-label="Remove" className="px-1 text-slate-500 hover:text-red-600">
                             <Trash2 size={14} />
                         </button>
                     </div>
                 ))}
             </div>
-            <button type="button" onClick={() => setRows((x) => [...x, { form: "", course: "" }])} className="mt-2 inline-flex items-center gap-1 text-[12.5px] font-semibold text-[#3282B8]">
+            <button type="button" onClick={() => setRows((x) => [...x, { form: "", course: "" }])} className="mt-2 inline-flex items-center gap-1 text-[12.5px] font-semibold text-action">
                 <Plus size={13} aria-hidden="true" /> Add form
             </button>
             <div className="mt-2 grid grid-cols-[auto_1fr] items-center gap-2 text-[12.5px] text-slate-600">
@@ -651,7 +651,7 @@ function FormCourses({ integration, courses, onSave }) {
                 {courseSelect(fallback, setFallback, "Default course")}
             </div>
             <div className="mt-2 flex justify-end">
-                <button type="button" onClick={save} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white">
+                <button type="button" onClick={save} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white">
                     Save mapping
                 </button>
             </div>
@@ -751,7 +751,7 @@ export default function IntegrationsPage() {
     if (!data) {
         return (
             <div className="flex justify-center py-20">
-                <Loader2 className="animate-spin text-slate-400" />
+                <Loader2 className="animate-spin text-slate-500" />
             </div>
         );
     }
@@ -762,7 +762,7 @@ export default function IntegrationsPage() {
                 <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Lead integrations</h1>
                 <p className="mt-1 text-[13px] text-slate-500">
                     Leads from ads and forms go through the same duplicate checks and{" "}
-                    <Link to="/admin/distribution" className="font-semibold text-[#3282B8]">Round Robin</Link> as leads added by hand.
+                    <Link to="/admin/distribution" className="font-semibold text-action">Round Robin</Link> as leads added by hand.
                     {" "}
                     {isSuper
                         ? "Use Connect with Facebook / LinkedIn, or paste keys into a card — they're encrypted and never shown again."
@@ -850,7 +850,7 @@ export default function IntegrationsPage() {
 
                             <dl className="mt-3 grid grid-cols-2 gap-y-1 text-[12.5px]">
                                 <dt className="text-slate-500">Status</dt>
-                                <dd className={cn("text-right font-semibold", !i.enabled ? "text-slate-400" : healthy ? "text-emerald-700" : i.last_error_at ? "text-red-600" : "text-slate-500")}>
+                                <dd className={cn("text-right font-semibold", !i.enabled ? "text-slate-500" : healthy ? "text-emerald-700" : i.last_error_at ? "text-red-600" : "text-slate-500")}>
                                     {!i.enabled ? "Off" : healthy ? "Working" : i.last_error_at ? "Problem" : "Waiting for first lead"}
                                 </dd>
                                 <dt className="text-slate-500">Last lead</dt>

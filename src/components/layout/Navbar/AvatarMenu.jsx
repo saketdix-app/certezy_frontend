@@ -62,7 +62,7 @@ export default function AvatarMenu({ user }) {
                 )}
             >
                 {/* Initials circle */}
-                <div className="w-[30px] h-[30px] rounded-full shrink-0 bg-primary flex items-center justify-center text-white text-[11.5px] font-bold">
+                <div className="w-[30px] h-[30px] rounded-full shrink-0 bg-action flex items-center justify-center text-white text-[11.5px] font-bold">
                     {initials}
                 </div>
 
@@ -88,7 +88,7 @@ export default function AvatarMenu({ user }) {
                     <p className="text-[13.5px] font-semibold text-text-primary truncate flex items-center gap-1.5">
                         <span className="truncate">{user.name}</span>
                         {isAdmin && (
-                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-primary rounded px-1.5 py-0.5">
+                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-action rounded px-1.5 py-0.5">
                                 {ROLE_LABELS[user.role] ?? "Admin"}
                             </span>
                         )}

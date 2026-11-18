@@ -6,7 +6,7 @@ import { isResizableImage, loadImageUrl, renderAdjusted } from "@/lib/image";
 import ThumbnailAdjuster from "@/components/admin/ThumbnailAdjuster";
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-primary focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 function Preview({ kind, url, aspect }) {
     if (kind === "image") {
@@ -29,7 +29,7 @@ function Preview({ kind, url, aspect }) {
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 text-[13px] font-semibold text-primary break-all"
+            className="flex items-center gap-2 text-[13px] font-semibold text-action break-all"
         >
             <FileText size={16} className="shrink-0" /> {decodeURIComponent(url.split("/").pop())}
         </a>
@@ -170,7 +170,7 @@ export default function FileUpload({
                         <div className="flex items-center gap-3">
                             <label
                                 htmlFor={inputId}
-                                className="text-[12px] font-semibold text-primary cursor-pointer hover:underline"
+                                className="text-[12px] font-semibold text-action cursor-pointer hover:underline"
                             >
                                 Replace
                             </label>
@@ -178,7 +178,7 @@ export default function FileUpload({
                                 <button
                                     type="button"
                                     onClick={adjustCurrent}
-                                    className="flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
+                                    className="flex items-center gap-1 text-[12px] font-semibold text-action hover:underline"
                                 >
                                     <Crop size={13} /> Adjust
                                 </button>
@@ -201,18 +201,18 @@ export default function FileUpload({
                     className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-5 text-center transition-colors ${
                         uploading || disabled
                             ? "border-slate-200 pointer-events-none"
-                            : "border-slate-300 hover:border-primary cursor-pointer"
+                            : "border-slate-300 hover:border-action cursor-pointer"
                     }`}
                 >
                     {uploading ? (
                         <>
-                            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                            <Loader2 className="w-6 h-6 text-action animate-spin" />
                             <span className="text-[13px] font-semibold text-slate-700">
                                 Uploading… {progress}%
                             </span>
                             <div className="w-full max-w-[220px] h-1.5 bg-slate-200 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-primary transition-all"
+                                    className="h-full bg-action transition-all"
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
@@ -226,7 +226,7 @@ export default function FileUpload({
                         </>
                     ) : (
                         <>
-                            <Upload className="w-6 h-6 text-slate-400" />
+                            <Upload className="w-6 h-6 text-slate-500" />
                             <span className="text-[13px] font-semibold text-slate-700">
                                 Click or drop a {rules?.noun || kind} to upload
                             </span>
@@ -274,7 +274,7 @@ export default function FileUpload({
                         <button
                             type="button"
                             onClick={() => setShowUrl(true)}
-                            className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-primary"
+                            className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-action"
                         >
                             <Link2 size={13} /> or paste a URL
                         </button>

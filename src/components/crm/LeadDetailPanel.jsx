@@ -174,7 +174,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
             >
                 {!lead ? (
                     <div className="flex flex-1 items-center justify-center">
-                        <Loader2 className="animate-spin text-slate-400" />
+                        <Loader2 className="animate-spin text-slate-500" />
                     </div>
                 ) : (
                     <>
@@ -188,7 +188,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     <span>· {SOURCE_LABEL[lead.source] ?? lead.source}</span>
                                 </div>
                             </div>
-                            <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-400 hover:bg-slate-100">
+                            <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-500 hover:bg-slate-100">
                                 <X size={20} />
                             </button>
                         </div>
@@ -199,7 +199,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                 <div className="flex flex-wrap gap-2">
                                     {lead.phone && (
                                         <>
-                                            <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-2 text-[13px] font-bold text-white">
+                                            <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-[13px] font-bold text-white">
                                                 <Phone size={14} aria-hidden="true" /> Call
                                             </a>
                                             <a href={waLink(lead.phone)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[13px] font-bold text-emerald-700">
@@ -286,7 +286,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                 }}
                                                 className={cn(
                                                     "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
-                                                    stageTarget === s ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                                                    stageTarget === s ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                                 )}
                                             >
                                                 <ArrowRight size={12} aria-hidden="true" /> {STAGE_LABEL[s]}
@@ -320,7 +320,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
                                                 Cancel
                                             </button>
-                                            <button type="button" disabled={busy} onClick={moveStage} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={moveStage} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                                                 Move to {STAGE_LABEL[stageTarget]}
                                             </button>
                                         </div>
@@ -339,7 +339,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             onClick={() => setLogType(logType === type ? null : type)}
                                             className={cn(
                                                 "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
-                                                logType === type ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                                                logType === type ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                             )}
                                         >
                                             <Icon size={13} aria-hidden="true" /> {label}
@@ -351,7 +351,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             onClick={() => setShowFollowUp((v) => !v)}
                                             className={cn(
                                                 "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
-                                                showFollowUp ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                                                showFollowUp ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                             )}
                                         >
                                             <CalendarClock size={13} aria-hidden="true" /> Schedule follow-up
@@ -369,7 +369,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             autoFocus
                                         />
                                         <div className="mt-2 flex justify-end">
-                                            <button type="button" disabled={busy} onClick={saveLog} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={saveLog} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                                                 Save
                                             </button>
                                         </div>
@@ -395,7 +395,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         </div>
                                         <input value={fu.note} onChange={(e) => setFu((f) => ({ ...f, note: e.target.value }))} placeholder="Note (optional)" className={inputCls} />
                                         <div className="flex justify-end">
-                                            <button type="button" disabled={busy} onClick={saveFollowUp} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={saveFollowUp} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
                                                 Schedule
                                             </button>
                                         </div>
@@ -458,7 +458,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             <span className="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-slate-300" aria-hidden="true" />
                                             <p className="font-semibold text-slate-800">{(ACTIVITY_TEXT[a.type] ?? (() => a.type))(a.meta)}</p>
                                             {a.body && <p className="whitespace-pre-wrap text-slate-600">{a.body}</p>}
-                                            <p className="text-[11.5px] text-slate-400">
+                                            <p className="text-[11.5px] text-slate-500">
                                                 {a.actor_name ?? "System"} · {fmtDateTime(a.created_at)}
                                             </p>
                                         </li>

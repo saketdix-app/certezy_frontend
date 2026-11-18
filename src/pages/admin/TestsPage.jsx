@@ -32,7 +32,7 @@ const testService = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 const EMPTY_FORM = {
     title: "",
@@ -43,7 +43,7 @@ const EMPTY_FORM = {
 };
 
 const TYPE_STYLE = {
-    practice: { label: "PRACTICE", bg: "#EBF4FF", color: "#3282B8" },
+    practice: { label: "PRACTICE", bg: "#EEF6FC", color: "#236A9E" },
     certification: { label: "CERTIFICATION", bg: "#F5F3FF", color: "#8B5CF6" },
 };
 
@@ -171,7 +171,7 @@ export default function TestsPage() {
     return (
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-400 flex-wrap">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-wrap">
                 <span
                     className="hover:text-slate-600 cursor-pointer"
                     onClick={() => navigate("/admin/dashboard")}
@@ -194,7 +194,7 @@ export default function TestsPage() {
                     {course?.title ?? "..."}
                 </span>
                 <ChevronRight size={11} />
-                <span style={{ color: "#3282B8" }}>Tests</span>
+                <span style={{ color: "#236A9E" }}>Tests</span>
             </div>
 
             {/* Header */}
@@ -210,9 +210,9 @@ export default function TestsPage() {
                 <button
                     onClick={openCreate}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white shrink-0 transition-colors"
-                    style={{ background: "#3282B8" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                    style={{ background: "#236A9E" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                 >
                     <Plus size={15} /> + Create Test
                 </button>
@@ -226,8 +226,8 @@ export default function TestsPage() {
                         value: totalTests,
                         sub: "",
                         icon: ClipboardList,
-                        ibg: "#EBF4FF",
-                        ic: "#3282B8",
+                        ibg: "#EEF6FC",
+                        ic: "#236A9E",
                     },
                     {
                         label: "Active Now",
@@ -259,7 +259,7 @@ export default function TestsPage() {
                                 <Icon size={20} style={{ color: ic }} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                                     {label}
                                 </p>
                                 <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
@@ -274,7 +274,7 @@ export default function TestsPage() {
             {/* Tests list */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 size={28} className="animate-spin" style={{ color: "#3282B8" }} />
+                    <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
                 </div>
             ) : tests.length === 0 ? (
                 <EmptyState onAdd={openCreate} />
@@ -302,13 +302,13 @@ export default function TestsPage() {
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
                                     {editTest ? "Edit Test" : "Create Test"}
                                 </h3>
-                                <p className="text-[12px] text-slate-400 mt-0.5">
+                                <p className="text-[12px] text-slate-500 mt-0.5">
                                     {editTest ? "Update test configuration" : "Add a new test to this course"}
                                 </p>
                             </div>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={17} />
                             </button>
@@ -380,12 +380,12 @@ export default function TestsPage() {
                                     type="submit"
                                     disabled={saving}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
-                                    style={{ background: "#3282B8" }}
+                                    style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
-                                        if (!saving) e.currentTarget.style.background = "#2a6fa0";
+                                        if (!saving) e.currentTarget.style.background = "#1B5582";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#3282B8";
+                                        e.currentTarget.style.background = "#236A9E";
                                     }}
                                 >
                                     {saving ? (
@@ -445,7 +445,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
                         <span
                             className={cn(
                                 "text-[11.5px] font-bold uppercase tracking-wider",
-                                isActive ? "text-green-600" : "text-slate-400"
+                                isActive ? "text-green-600" : "text-slate-500"
                             )}
                         >
                             {isActive ? "Active" : "Inactive"}
@@ -470,7 +470,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
                 </button>
                 <button
                     onClick={onEdit}
-                    className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-500 hover:text-[#3282B8] hover:bg-[#EBF4FF] hover:border-[#BFDBFE] transition-colors"
+                    className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-500 hover:text-action hover:bg-action-soft hover:border-brand-200 transition-colors"
                 >
                     <Edit2 size={14} />
                 </button>
@@ -503,19 +503,19 @@ function EmptyState({ onAdd }) {
             className="bg-white rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
-            <div className="w-14 h-14 rounded-2xl bg-[#EBF4FF] flex items-center justify-center">
-                <ClipboardList size={26} style={{ color: "#3282B8" }} />
+            <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">
+                <ClipboardList size={26} style={{ color: "#236A9E" }} />
             </div>
             <div>
                 <p className="text-[15px] font-bold text-slate-800">No tests yet</p>
-                <p className="text-[13px] text-slate-400 mt-1">Create your first test for this course</p>
+                <p className="text-[13px] text-slate-500 mt-1">Create your first test for this course</p>
             </div>
             <button
                 onClick={onAdd}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white"
-                style={{ background: "#3282B8" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                style={{ background: "#236A9E" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
             >
                 <Plus size={15} /> Create Test
             </button>
@@ -542,7 +542,7 @@ function Overlay({ onClose, children }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}

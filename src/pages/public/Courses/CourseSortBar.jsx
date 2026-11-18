@@ -80,7 +80,7 @@ export default function CourseSortBar() {
                             "px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold shrink-0 whitespace-nowrap",
                             "transition-all duration-150 border",
                             !filters.sort
-                                ? "bg-primary text-white border-primary shadow-sm"
+                                ? "bg-action text-white border-primary shadow-sm"
                                 : "bg-white text-text-secondary border-border hover:border-primary/50 hover:text-primary hover:bg-primary-light"
                         )}
                     >
@@ -97,7 +97,7 @@ export default function CourseSortBar() {
                                     "px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold shrink-0 whitespace-nowrap",
                                     "transition-all duration-150 border",
                                     active
-                                        ? "bg-primary text-white border-primary shadow-sm"
+                                        ? "bg-action text-white border-primary shadow-sm"
                                         : "bg-white text-text-secondary border-border hover:border-primary/50 hover:text-primary hover:bg-primary-light"
                                 )}
                             >

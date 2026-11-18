@@ -37,7 +37,7 @@ import adminService from "@/services/adminService";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 const PER_PAGE = 10;
 
@@ -47,8 +47,8 @@ const PERMISSIONS = [
         label: "Course Management",
         desc: "Can create, edit and archive courses",
         icon: BookOpen,
-        color: "#3282B8",
-        bg: "#EBF4FF",
+        color: "#236A9E",
+        bg: "#EEF6FC",
     },
     {
         key: "can_manage_students",
@@ -386,8 +386,8 @@ export default function UsersPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-                        Dashboard › <span style={{ color: "#3282B8" }}>Users</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+                        Dashboard › <span style={{ color: "#236A9E" }}>Users</span>
                     </p>
                     <h1 className="text-[24px] font-extrabold text-slate-900 tracking-tight">
                         User Management
@@ -400,9 +400,9 @@ export default function UsersPage() {
                     <button
                         onClick={() => setShowAddModal(true)}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white shrink-0 transition-colors"
-                        style={{ background: "#3282B8" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                        style={{ background: "#236A9E" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                     >
                         <Plus size={15} /> Add Sub-Admin
                     </button>
@@ -421,8 +421,8 @@ export default function UsersPage() {
                         label: "Total Users",
                         value: activeStudents + blockedStudents + subAdmins.length,
                         icon: Users,
-                        ibg: "#EBF4FF",
-                        ic: "#3282B8",
+                        ibg: "#EEF6FC",
+                        ic: "#236A9E",
                     },
                     {
                         label: "Active Students",
@@ -459,7 +459,7 @@ export default function UsersPage() {
                                 <Icon size={18} style={{ color: ic }} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                                     {label}
                                 </p>
                                 <p className="text-[22px] font-extrabold text-slate-900 leading-none mt-0.5">
@@ -485,7 +485,7 @@ export default function UsersPage() {
                             "px-5 py-2 rounded-xl text-[13px] font-bold transition-all duration-150",
                             tab === key ? "text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
                         )}
-                        style={tab === key ? { background: "#3282B8" } : {}}
+                        style={tab === key ? { background: "#236A9E" } : {}}
                     >
                         {label}
                     </button>
@@ -503,19 +503,19 @@ export default function UsersPage() {
                         <div className="relative flex-1">
                             <Search
                                 size={15}
-                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
                             />
                             <input
                                 value={stuSearch}
                                 onChange={(e) => setStuSearch(e.target.value)}
                                 placeholder="Search by name or email..."
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-slate-50 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-slate-50 outline-none focus:border-action focus:bg-white transition-colors"
                             />
                         </div>
                         <select
                             value={stuStatus}
                             onChange={(e) => setStuStatus(e.target.value)}
-                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-white outline-none focus:border-[#3282B8] cursor-pointer"
+                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             <option value="active">Active</option>
@@ -539,7 +539,7 @@ export default function UsersPage() {
                             {["User", "Mobile", "Joined", "Status", "Action"].map((h) => (
                                 <span
                                     key={h}
-                                    className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider"
+                                    className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider"
                                 >
                                     {h}
                                 </span>
@@ -576,7 +576,7 @@ export default function UsersPage() {
                                                 <p className="text-[13px] font-bold text-slate-900 truncate">
                                                     {user.name}
                                                 </p>
-                                                <p className="text-[11.5px] text-slate-400 truncate">
+                                                <p className="text-[11.5px] text-slate-500 truncate">
                                                     {user.email}
                                                 </p>
                                             </div>
@@ -608,7 +608,7 @@ export default function UsersPage() {
                                         <div className="flex items-center gap-2">
                                             <Link
                                                 to={`/admin/assign-courses?user=${user.id}`}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-[12px] font-bold text-[#3282B8] bg-blue-50 hover:bg-blue-100 transition-colors"
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-[12px] font-bold text-action bg-blue-50 hover:bg-blue-100 transition-colors"
                                                 title="View and assign free courses"
                                             >
                                                 <BookOpen size={13} /> Courses
@@ -634,7 +634,7 @@ export default function UsersPage() {
                                                 onClick={() => setDeleteTarget(user)}
                                                 title="Delete user (can be restored for 30 days)"
                                                 aria-label={`Delete ${user.name}`}
-                                                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors"
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors"
                                             >
                                                 <Trash2 size={14} />
                                             </button>
@@ -667,7 +667,7 @@ export default function UsersPage() {
                                                         ? "text-white"
                                                         : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                                 )}
-                                                style={stuPage === p ? { background: "#3282B8" } : {}}
+                                                style={stuPage === p ? { background: "#236A9E" } : {}}
                                             >
                                                 {p}
                                             </button>
@@ -691,7 +691,7 @@ export default function UsersPage() {
             {tab === "subadmins" &&
                 (saLoading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 size={28} className="animate-spin" style={{ color: "#3282B8" }} />
+                        <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
                     </div>
                 ) : subAdmins.length === 0 ? (
                     <div
@@ -703,12 +703,12 @@ export default function UsersPage() {
                         </div>
                         <div>
                             <p className="text-[15px] font-bold text-slate-800">No sub-admins yet</p>
-                            <p className="text-[13px] text-slate-400 mt-1">Grant team members admin access</p>
+                            <p className="text-[13px] text-slate-500 mt-1">Grant team members admin access</p>
                         </div>
                         <button
                             onClick={() => setShowAddModal(true)}
                             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white"
-                            style={{ background: "#3282B8" }}
+                            style={{ background: "#236A9E" }}
                         >
                             <Plus size={15} /> Add Sub-Admin
                         </button>
@@ -734,7 +734,7 @@ export default function UsersPage() {
                         style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
                     >
                         <p className="text-[12.5px] text-slate-500 flex items-start gap-2">
-                            <Archive size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                            <Archive size={15} className="text-slate-500 shrink-0 mt-0.5" />
                             Deleted users can&apos;t sign in. Restore them within 30 days to bring back their
                             account, courses, progress and certificates. After 30 days their data is erased
                             permanently (payment records are kept for accounting).
@@ -742,7 +742,7 @@ export default function UsersPage() {
                         <div className="relative">
                             <Search
                                 size={15}
-                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
                             />
                             <input
                                 value={delSearch}
@@ -778,11 +778,11 @@ export default function UsersPage() {
                                         <div className="min-w-0 flex-1">
                                             <p className="text-[13px] font-bold text-slate-900 truncate">
                                                 {user.name}{" "}
-                                                <span className="text-[11px] font-semibold text-slate-400">
+                                                <span className="text-[11px] font-semibold text-slate-500">
                                                     {user.role === "sub_admin" ? "· Sub-admin" : "· Student"}
                                                 </span>
                                             </p>
-                                            <p className="text-[11.5px] text-slate-400 truncate">
+                                            <p className="text-[11.5px] text-slate-500 truncate">
                                                 {user.email}
                                             </p>
                                         </div>
@@ -926,13 +926,13 @@ export default function UsersPage() {
                                 <h3 className="text-[17px] font-extrabold text-slate-900">
                                     Add New Sub-Admin
                                 </h3>
-                                <p className="text-[12.5px] text-slate-400 mt-0.5">
+                                <p className="text-[12.5px] text-slate-500 mt-0.5">
                                     Grant system access to a new team member.
                                 </p>
                             </div>
                             <button
                                 onClick={() => setShowAddModal(false)}
-                                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors mt-0.5"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors mt-0.5"
                             >
                                 <X size={17} />
                             </button>
@@ -979,7 +979,7 @@ export default function UsersPage() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowPw((p) => !p)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600"
                                                 >
                                                     {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                                                 </button>
@@ -1017,12 +1017,12 @@ export default function UsersPage() {
                                 onClick={handleCreateSubAdmin}
                                 disabled={saving}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
-                                style={{ background: "#3282B8" }}
+                                style={{ background: "#236A9E" }}
                                 onMouseEnter={(e) => {
-                                    if (!saving) e.currentTarget.style.background = "#2a6fa0";
+                                    if (!saving) e.currentTarget.style.background = "#1B5582";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = "#3282B8";
+                                    e.currentTarget.style.background = "#236A9E";
                                 }}
                             >
                                 {saving ? (
@@ -1047,11 +1047,11 @@ export default function UsersPage() {
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
                                     Edit Permissions
                                 </h3>
-                                <p className="text-[12px] text-slate-400 mt-0.5">{showEditModal.name}</p>
+                                <p className="text-[12px] text-slate-500 mt-0.5">{showEditModal.name}</p>
                             </div>
                             <button
                                 onClick={() => setShowEditModal(null)}
-                                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={17} />
                             </button>
@@ -1079,12 +1079,12 @@ export default function UsersPage() {
                                     type="submit"
                                     disabled={saving}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#3282B8" }}
+                                    style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
-                                        if (!saving) e.currentTarget.style.background = "#2a6fa0";
+                                        if (!saving) e.currentTarget.style.background = "#1B5582";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#3282B8";
+                                        e.currentTarget.style.background = "#236A9E";
                                     }}
                                 >
                                     {saving ? (
@@ -1111,16 +1111,16 @@ export default function UsersPage() {
                             </div>
                             <div>
                                 <h3 className="text-[15px] font-extrabold text-slate-900">Revoke Access</h3>
-                                <p className="text-[12px] text-slate-400 mt-0.5">
+                                <p className="text-[12px] text-slate-500 mt-0.5">
                                     This cannot be undone easily.
                                 </p>
                             </div>
                         </div>
                         <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 mb-4">
                             <p className="text-[13.5px] font-bold text-slate-800">{showRevoke.name}</p>
-                            <p className="text-[12px] text-slate-400 mt-0.5">{showRevoke.email}</p>
+                            <p className="text-[12px] text-slate-500 mt-0.5">{showRevoke.email}</p>
                         </div>
-                        <p className="text-[12.5px] text-slate-400 mb-5">
+                        <p className="text-[12.5px] text-slate-500 mb-5">
                             All admin permissions will be removed. They will become a regular user.
                         </p>
                         <div className="flex gap-3">
@@ -1164,7 +1164,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
                 </div>
                 <div className="min-w-0">
                     <p className="text-[14px] font-extrabold text-slate-900 truncate">{subAdmin.name}</p>
-                    <p className="text-[12px] text-slate-400 truncate">{subAdmin.email}</p>
+                    <p className="text-[12px] text-slate-500 truncate">{subAdmin.email}</p>
                 </div>
             </div>
 
@@ -1182,7 +1182,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
                             <span
                                 className={cn(
                                     "text-[12.5px]",
-                                    has ? "text-slate-700 font-medium" : "text-slate-400"
+                                    has ? "text-slate-700 font-medium" : "text-slate-500"
                                 )}
                             >
                                 {p.label}
@@ -1196,7 +1196,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
             <div className="flex gap-2 pt-3 border-t border-slate-100">
                 <button
                     onClick={onEdit}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-[#BFDBFE] text-[12.5px] font-bold text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-brand-200 text-[12.5px] font-bold text-action hover:bg-action-soft transition-colors"
                 >
                     <Edit2 size={13} /> Edit Permissions
                 </button>
@@ -1219,7 +1219,7 @@ function PermissionRow({ perm, checked, onChange }) {
         <div
             className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors cursor-pointer",
-                checked ? "border-[#BFDBFE] bg-[#F0F7FF]" : "border-slate-200 bg-slate-50 hover:bg-slate-100"
+                checked ? "border-brand-200 bg-action-soft" : "border-slate-200 bg-slate-50 hover:bg-slate-100"
             )}
             onClick={() => onChange(!checked)}
         >
@@ -1231,13 +1231,13 @@ function PermissionRow({ perm, checked, onChange }) {
             </div>
             <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-bold text-slate-800">{perm.label}</p>
-                <p className="text-[11.5px] text-slate-400">{perm.desc}</p>
+                <p className="text-[11.5px] text-slate-500">{perm.desc}</p>
             </div>
             {/* Checkbox style */}
             <div
                 className={cn(
                     "w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors",
-                    checked ? "border-[#3282B8] bg-[#3282B8]" : "border-slate-300 bg-white"
+                    checked ? "border-action bg-action" : "border-slate-300 bg-white"
                 )}
             >
                 {checked && <CheckCircle2 size={12} className="text-white fill-white" />}
@@ -1251,8 +1251,8 @@ function PermissionRow({ perm, checked, onChange }) {
 function SectionLabel({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-2">
-            <Icon size={14} style={{ color: "#3282B8" }} />
-            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#3282B8" }}>
+            <Icon size={14} style={{ color: "#236A9E" }} />
+            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#236A9E" }}>
                 {label}
             </span>
         </div>
@@ -1309,7 +1309,7 @@ function EmptyRow({ message }) {
     return (
         <div className="py-16 text-center">
             <Users size={32} className="text-slate-200 mx-auto mb-3" />
-            <p className="text-[14px] font-semibold text-slate-400">{message}</p>
+            <p className="text-[14px] font-semibold text-slate-500">{message}</p>
         </div>
     );
 }

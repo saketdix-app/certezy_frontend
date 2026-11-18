@@ -328,7 +328,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                 {onRetry && (
                     <button
                         onClick={onRetry}
-                        className="flex-1 px-6 py-3 bg-[#3282B8] text-white rounded-lg hover:bg-[#2A6FA0] transition-colors font-medium"
+                        className="flex-1 px-6 py-3 bg-action text-white rounded-lg hover:bg-action-hover transition-colors font-medium"
                     >
                         {passed ? "Retake Exam" : "Retry Exam"}
                     </button>
@@ -337,7 +337,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                     onClick={onBackToCourse}
                     className={`px-6 py-3 rounded-lg transition-colors font-medium ${
                         passed && !onRetry
-                            ? "bg-[#3282B8] text-white hover:bg-[#2A6FA0]"
+                            ? "bg-action text-white hover:bg-action-hover"
                             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     }`}
                 >

@@ -25,7 +25,7 @@ const PER_PAGE = 8;
 const initials = (name) => name?.slice(0, 2).toUpperCase() ?? "??";
 
 const ICON_COLORS = [
-    { bg: "#EBF4FF", color: "#3282B8" },
+    { bg: "#EEF6FC", color: "#236A9E" },
     { bg: "#FFF7ED", color: "#F97316" },
     { bg: "#F0FDF4", color: "#16A34A" },
     { bg: "#FDF2F8", color: "#A855F7" },
@@ -36,7 +36,7 @@ const colorFor = (id) => ICON_COLORS[id % ICON_COLORS.length];
 
 // ─── Field style ──────────────────────────────────────────────────────────────
 const fieldCls =
-    "w-full px-4 py-2.5 border border-[#E2E8F0] rounded-xl text-[13.5px] text-slate-900 bg-[#F8FAFC] focus:outline-none focus:border-[#3282B8] focus:ring-2 focus:ring-[#3282B8]/10 transition-all";
+    "w-full px-4 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-900 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
@@ -128,16 +128,16 @@ export default function CategoriesPage() {
 
     return (
         <div
-            className="min-h-screen bg-[#F1F5F9] p-6"
+            className="min-h-screen bg-slate-100 p-6"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-4">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-4">
                 <span className="hover:text-slate-600 cursor-pointer">Dashboard</span>
                 <ChevronRight size={11} />
                 <span className="hover:text-slate-600 cursor-pointer">Courses</span>
                 <ChevronRight size={11} />
-                <span className="text-[#3282B8]">Categories</span>
+                <span className="text-action">Categories</span>
             </div>
 
             {/* Header */}
@@ -149,16 +149,16 @@ export default function CategoriesPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
                         <Download size={15} />
                         Export
                     </button>
                     <button
                         onClick={openCreate}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
-                        style={{ background: "#3282B8" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                        style={{ background: "#236A9E" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                     >
                         <Plus size={15} />
                         Create Category
@@ -168,11 +168,11 @@ export default function CategoriesPage() {
 
             {/* Search + filters */}
             <div
-                className="bg-white rounded-2xl border border-[#EEF2F7] px-4 py-3.5 mb-5 flex flex-col sm:flex-row gap-3"
+                className="bg-white rounded-2xl border border-slate-200 px-4 py-3.5 mb-5 flex flex-col sm:flex-row gap-3"
                 style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
             >
                 <div className="relative flex-1">
-                    <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                         value={search}
                         onChange={(e) => {
@@ -180,7 +180,7 @@ export default function CategoriesPage() {
                             setPage(1);
                         }}
                         placeholder="Filter categories by name, ID or tags..."
-                        className="w-full pl-10 pr-4 py-2.5 border border-[#E2E8F0] rounded-xl text-[13px] text-slate-700 bg-[#F8FAFC] focus:outline-none focus:border-[#3282B8] focus:ring-2 focus:ring-[#3282B8]/10 transition-all"
+                        className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-[13px] text-slate-700 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all"
                     />
                 </div>
                 <div className="flex gap-3 shrink-0">
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
                                 setStatusFilter(e.target.value);
                                 setPage(1);
                             }}
-                            className="appearance-none pl-4 pr-9 py-2.5 border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-slate-600 bg-white focus:outline-none focus:border-[#3282B8] cursor-pointer"
+                            className="appearance-none pl-4 pr-9 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-white focus:outline-none focus:border-action cursor-pointer"
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -200,10 +200,10 @@ export default function CategoriesPage() {
                         </select>
                         <ChevronDown
                             size={14}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
                         />
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2.5 border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-slate-600 bg-white hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-white hover:bg-slate-50 transition-colors">
                         <SlidersHorizontal size={14} />
                         Filters
                     </button>
@@ -212,12 +212,12 @@ export default function CategoriesPage() {
 
             {/* Table */}
             <div
-                className="bg-white rounded-2xl border border-[#EEF2F7] overflow-x-auto"
+                className="bg-white rounded-2xl border border-slate-200 overflow-x-auto"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {/* Table head */}
                 <div
-                    className="grid px-6 py-3 bg-[#F8FAFC] border-b border-[#F1F5F9]"
+                    className="grid px-6 py-3 bg-slate-50 border-b border-slate-100"
                     style={{
                         gridTemplateColumns: "minmax(220px, 1fr) 130px 80px 110px 100px",
                         minWidth: 680,
@@ -226,7 +226,7 @@ export default function CategoriesPage() {
                     {["Category Name & Taxonomy", "Hierarchy", "Order", "Status", "Actions"].map((h) => (
                         <span
                             key={h}
-                            className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider"
+                            className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider"
                         >
                             {h}
                         </span>
@@ -238,7 +238,7 @@ export default function CategoriesPage() {
                 ) : paginated.length === 0 ? (
                     <div className="py-16 text-center">
                         <Folder size={36} className="text-slate-200 mx-auto mb-3" />
-                        <p className="text-[14px] font-semibold text-slate-400">No categories found</p>
+                        <p className="text-[14px] font-semibold text-slate-500">No categories found</p>
                     </div>
                 ) : (
                     paginated.map((cat) => (
@@ -253,7 +253,7 @@ export default function CategoriesPage() {
 
                 {/* Footer */}
                 {!loading && filtered.length > 0 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-[#F1F5F9]">
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
                         <p className="text-[12.5px] text-slate-500">
                             Showing <span className="font-bold text-slate-700">{parentCount}</span> main
                             categories and <span className="font-bold text-slate-700">{childCount}</span>{" "}
@@ -296,8 +296,8 @@ function CategoryRow({ cat, onEdit, onDelete }) {
     return (
         <div
             className={cn(
-                "grid px-6 py-4 border-b border-[#F8FAFC] hover:bg-[#FAFBFC] transition-colors items-center",
-                isChild && "bg-[#FAFBFC]"
+                "grid px-6 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors items-center",
+                isChild && "bg-slate-50"
             )}
             style={{ gridTemplateColumns: "minmax(220px, 1fr) 130px 80px 110px 100px", minWidth: 680 }}
         >
@@ -337,7 +337,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                         )}
                     </div>
                     {cat.description && (
-                        <p className="text-[12px] text-slate-400 truncate mt-0.5">{cat.description}</p>
+                        <p className="text-[12px] text-slate-500 truncate mt-0.5">{cat.description}</p>
                     )}
                 </div>
             </div>
@@ -349,7 +349,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                         Main Level
                     </span>
                 ) : (
-                    <span className="text-[12px] text-slate-400">Sub-category</span>
+                    <span className="text-[12px] text-slate-500">Sub-category</span>
                 )}
             </div>
 
@@ -369,7 +369,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                 <span
                     className={cn(
                         "text-[12.5px] font-semibold",
-                        isActive ? "text-emerald-600" : "text-slate-400"
+                        isActive ? "text-emerald-600" : "text-slate-500"
                     )}
                 >
                     {isActive ? "Active" : "Inactive"}
@@ -380,14 +380,14 @@ function CategoryRow({ cat, onEdit, onDelete }) {
             <div className="flex items-center gap-1">
                 <button
                     onClick={onEdit}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-action hover:bg-action-soft transition-colors"
                     title="Edit"
                 >
                     <Edit2 size={15} />
                 </button>
                 <button
                     onClick={onDelete}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors"
                     title="Delete"
                 >
                     <Trash2 size={15} />
@@ -447,13 +447,13 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#F1F5F9]">
+                <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100">
                     <h3 className="text-[16px] font-extrabold text-slate-900">
                         {isEdit ? "Edit Category" : "Create Category"}
                     </h3>
                     <button
                         onClick={onClose}
-                        className="text-slate-400 hover:text-slate-600 transition-colors"
+                        className="text-slate-500 hover:text-slate-600 transition-colors"
                     >
                         <X size={18} />
                     </button>
@@ -539,7 +539,7 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                         >
                             Cancel
                         </button>
@@ -547,12 +547,12 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                             type="submit"
                             disabled={loading}
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-50 transition-colors"
-                            style={{ background: "#3282B8" }}
+                            style={{ background: "#236A9E" }}
                             onMouseEnter={(e) => {
-                                if (!loading) e.currentTarget.style.background = "#2a6fa0";
+                                if (!loading) e.currentTarget.style.background = "#1B5582";
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "#3282B8";
+                                e.currentTarget.style.background = "#236A9E";
                             }}
                         >
                             {loading ? (
@@ -590,21 +590,21 @@ function DeleteModal({ cat, onClose, onConfirm }) {
                     </div>
                 </div>
 
-                <div className="px-4 py-3 rounded-xl bg-slate-50 border border-[#E2E8F0] mb-5">
+                <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 mb-5">
                     <p className="text-[13.5px] font-bold text-slate-800">{cat.name}</p>
                     {cat.description && (
                         <p className="text-[12px] text-slate-500 mt-0.5">{cat.description}</p>
                     )}
                 </div>
 
-                <p className="text-[12px] text-slate-400 mb-5">
+                <p className="text-[12px] text-slate-500 mb-5">
                     Note: Categories with active courses or sub-categories cannot be deleted.
                 </p>
 
                 <div className="flex gap-3">
                     <button
                         onClick={onClose}
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                     >
                         Cancel
                     </button>
@@ -651,7 +651,7 @@ function Pagination({ page, total, onChange }) {
             <button
                 onClick={() => onChange(page - 1)}
                 disabled={page === 1}
-                className="w-8 h-8 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
+                className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
             >
                 <ChevronLeft size={14} />
             </button>
@@ -661,9 +661,9 @@ function Pagination({ page, total, onChange }) {
                     onClick={() => onChange(p)}
                     className={cn(
                         "w-8 h-8 rounded-lg text-[13px] font-bold transition-colors",
-                        p === page ? "text-white" : "border border-[#E2E8F0] text-slate-500 hover:bg-slate-50"
+                        p === page ? "text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50"
                     )}
-                    style={p === page ? { background: "#3282B8" } : {}}
+                    style={p === page ? { background: "#236A9E" } : {}}
                 >
                     {p}
                 </button>
@@ -671,7 +671,7 @@ function Pagination({ page, total, onChange }) {
             <button
                 onClick={() => onChange(page + 1)}
                 disabled={page === total}
-                className="w-8 h-8 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
+                className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
             >
                 <ChevronRight size={14} />
             </button>
@@ -681,7 +681,7 @@ function Pagination({ page, total, onChange }) {
 
 function TableSkeleton() {
     return (
-        <div className="animate-pulse divide-y divide-[#F8FAFC]">
+        <div className="animate-pulse divide-y divide-slate-100">
             {Array(6)
                 .fill(0)
                 .map((_, i) => (

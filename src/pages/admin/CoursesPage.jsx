@@ -39,11 +39,11 @@ const PER_PAGE = 10;
 const STATUS_STYLE = {
     published: { dot: "bg-green-500", text: "text-green-700", bg: "bg-green-50", label: "PUBLISHED" },
     draft: { dot: "bg-yellow-500", text: "text-yellow-700", bg: "bg-yellow-50", label: "DRAFT" },
-    archived: { dot: "bg-gray-400", text: "text-gray-600", bg: "bg-gray-100", label: "ARCHIVED" },
+    archived: { dot: "bg-slate-400", text: "text-slate-600", bg: "bg-slate-100", label: "ARCHIVED" },
 };
 
 const LEVEL_STYLE = {
-    beginner: "bg-gray-100 text-gray-700",
+    beginner: "bg-slate-100 text-slate-700",
     intermediate: "bg-blue-50 text-blue-700",
     advanced: "bg-purple-50 text-purple-700",
 };
@@ -410,8 +410,8 @@ export default function CoursesPage() {
             {/* ── Header ── */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                        Dashboard › <span style={{ color: "#3282B8" }}>Courses</span>
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">
+                        Dashboard › <span style={{ color: "#236A9E" }}>Courses</span>
                     </p>
                     <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Courses</h1>
                     <p className="text-sm text-slate-500 mt-0.5">Manage your course catalog and content</p>
@@ -423,9 +423,9 @@ export default function CoursesPage() {
                     <button
                         onClick={openCreate}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-colors whitespace-nowrap"
-                        style={{ background: "#3282B8" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                        style={{ background: "#236A9E" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                     >
                         <Plus size={16} /> Create Course
                     </button>
@@ -439,10 +439,10 @@ export default function CoursesPage() {
                         label: "Total Courses",
                         value: stats.total,
                         sub: "All courses",
-                        subColor: "text-[#3282B8]",
+                        subColor: "text-action",
                         icon: BookOpen,
-                        ibg: "#EBF4FF",
-                        ic: "#3282B8",
+                        ibg: "#EEF6FC",
+                        ic: "#236A9E",
                     },
                     {
                         label: "Published",
@@ -506,14 +506,14 @@ export default function CoursesPage() {
                     <div className="relative">
                         <Search
                             size={15}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
                         />
                         <input
                             type="text"
                             placeholder="Search by course title, instructor..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 bg-slate-50 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 bg-slate-50 outline-none focus:border-action focus:bg-white transition-colors"
                         />
                     </div>
                     {/* Filters row */}
@@ -521,7 +521,7 @@ export default function CoursesPage() {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-[#3282B8] cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             {STATUSES.map((s) => (
@@ -533,7 +533,7 @@ export default function CoursesPage() {
                         <select
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-[#3282B8] cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Levels</option>
                             {LEVELS.map((l) => (
@@ -549,7 +549,7 @@ export default function CoursesPage() {
                                 setSelectedParent(e.target.value);
                                 setCatId("");
                             }}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-[#3282B8] cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Categories</option>
                             {categories
@@ -565,7 +565,7 @@ export default function CoursesPage() {
                             <select
                                 value={catId}
                                 onChange={(e) => setCatId(e.target.value)}
-                                className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-[#3282B8] cursor-pointer"
+                                className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
                             >
                                 <option value="">All Sub-Categories</option>
                                 {getChildCategories(selectedParent).map((c) => (
@@ -586,7 +586,7 @@ export default function CoursesPage() {
             >
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 size={28} className="animate-spin" style={{ color: "#3282B8" }} />
+                        <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
                     </div>
                 ) : error ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
@@ -595,7 +595,7 @@ export default function CoursesPage() {
                         <button
                             onClick={loadCourses}
                             className="px-4 py-2 rounded-xl text-sm font-bold text-white"
-                            style={{ background: "#3282B8" }}
+                            style={{ background: "#236A9E" }}
                         >
                             Retry
                         </button>
@@ -607,7 +607,7 @@ export default function CoursesPage() {
                         <button
                             onClick={openCreate}
                             className="px-4 py-2 rounded-xl text-sm font-bold text-white"
-                            style={{ background: "#3282B8" }}
+                            style={{ background: "#236A9E" }}
                         >
                             Create First Course
                         </button>
@@ -629,7 +629,7 @@ export default function CoursesPage() {
                                     ].map(({ label, cls }) => (
                                         <th
                                             key={label}
-                                            className={`text-left py-3 px-4 text-[10.5px] font-bold text-slate-400 tracking-widest uppercase whitespace-nowrap ${cls}`}
+                                            className={`text-left py-3 px-4 text-[10.5px] font-bold text-slate-500 tracking-widest uppercase whitespace-nowrap ${cls}`}
                                         >
                                             {label}
                                         </th>
@@ -660,7 +660,7 @@ export default function CoursesPage() {
                                                         </p>
                                                         <p
                                                             className="text-[11px] font-semibold uppercase tracking-wider mt-0.5 truncate max-w-[180px]"
-                                                            style={{ color: "#3282B8" }}
+                                                            style={{ color: "#236A9E" }}
                                                         >
                                                             {course.category_name ?? "—"}
                                                         </p>
@@ -683,7 +683,7 @@ export default function CoursesPage() {
                                             {/* Level */}
                                             <td className="py-3.5 px-4">
                                                 <span
-                                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide ${LEVEL_STYLE[course.level] ?? "bg-gray-100 text-gray-600"}`}
+                                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide ${LEVEL_STYLE[course.level] ?? "bg-slate-100 text-slate-600"}`}
                                                 >
                                                     {course.level ?? "—"}
                                                 </span>
@@ -748,7 +748,7 @@ export default function CoursesPage() {
                                                     </button>
                                                     <button
                                                         onClick={() => openEdit(course)}
-                                                        className="p-1.5 rounded-lg text-slate-500 hover:bg-[#EBF4FF] hover:text-[#3282B8] transition-colors"
+                                                        className="p-1.5 rounded-lg text-slate-500 hover:bg-action-soft hover:text-action transition-colors"
                                                         title="Edit"
                                                     >
                                                         <Edit2 size={14} />
@@ -800,14 +800,14 @@ export default function CoursesPage() {
                                             ? "text-white"
                                             : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                     )}
-                                    style={page === p ? { background: "#3282B8" } : {}}
+                                    style={page === p ? { background: "#236A9E" } : {}}
                                 >
                                     {p}
                                 </button>
                             ))}
                             {totalPages > 5 && (
                                 <>
-                                    <span className="text-slate-400 text-sm">...</span>
+                                    <span className="text-slate-500 text-sm">...</span>
                                     <button
                                         onClick={() => setPage(totalPages)}
                                         className={cn(
@@ -816,7 +816,7 @@ export default function CoursesPage() {
                                                 ? "text-white"
                                                 : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                         )}
-                                        style={page === totalPages ? { background: "#3282B8" } : {}}
+                                        style={page === totalPages ? { background: "#236A9E" } : {}}
                                     >
                                         {totalPages}
                                     </button>
@@ -855,7 +855,7 @@ export default function CoursesPage() {
                             </div>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                                className="p-2 rounded-xl text-slate-500 hover:text-slate-600 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={18} />
                             </button>
@@ -914,7 +914,7 @@ export default function CoursesPage() {
                                             </select>
                                         )}
                                         {getFormSelectedCategory() && (
-                                            <p className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">
+                                            <p className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">
                                                 Selected:{" "}
                                                 <span className="font-semibold text-slate-600">
                                                     {getFormSelectedCategory().name}
@@ -1024,7 +1024,7 @@ export default function CoursesPage() {
                                         type="checkbox"
                                         checked={form.inr_enabled}
                                         onChange={(e) => setF("inr_enabled", e.target.checked)}
-                                        className="mt-0.5 w-4 h-4 accent-[#3282B8]"
+                                        className="mt-0.5 w-4 h-4 accent-action"
                                     />
                                     <span className="text-[13px] leading-snug">
                                         <span className="font-semibold text-slate-800">
@@ -1077,11 +1077,11 @@ export default function CoursesPage() {
                                     {form.inr_enabled && form.price_inr !== "" && (
                                         <span className="flex items-center gap-2">
                                             India:{" "}
-                                            <span className="font-bold text-primary">
+                                            <span className="font-bold text-action">
                                                 ₹{Number(form.price_inr).toLocaleString("en-IN")}
                                             </span>
                                             {form.original_price_inr !== "" && (
-                                                <span className="line-through text-slate-400">
+                                                <span className="line-through text-slate-500">
                                                     ₹{Number(form.original_price_inr).toLocaleString("en-IN")}
                                                 </span>
                                             )}
@@ -1253,12 +1253,12 @@ export default function CoursesPage() {
                                 onClick={handleSave}
                                 disabled={saving}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
-                                style={{ background: "#3282B8" }}
+                                style={{ background: "#236A9E" }}
                                 onMouseEnter={(e) => {
-                                    if (!saving) e.currentTarget.style.background = "#2a6fa0";
+                                    if (!saving) e.currentTarget.style.background = "#1B5582";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = "#3282B8";
+                                    e.currentTarget.style.background = "#236A9E";
                                 }}
                             >
                                 {saving ? (
@@ -1285,13 +1285,13 @@ export default function CoursesPage() {
                             <h3 className="text-[15px] font-extrabold text-slate-900">Change Status</h3>
                             <button
                                 onClick={() => setShowStatusModal(false)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors"
+                                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={16} />
                             </button>
                         </div>
                         <div className="px-6 py-4">
-                            <p className="text-xs text-slate-400 mb-1">Course</p>
+                            <p className="text-xs text-slate-500 mb-1">Course</p>
                             <p className="text-[13.5px] font-bold text-slate-900 mb-4 line-clamp-2">
                                 {selectedCourse.title}
                             </p>
@@ -1334,12 +1334,12 @@ export default function CoursesPage() {
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}
@@ -1354,7 +1354,7 @@ function Toggle({ label, checked, onChange }) {
                 onClick={() => onChange(!checked)}
                 className={cn(
                     "w-10 h-5 rounded-full relative transition-colors duration-200",
-                    checked ? "bg-[#3282B8]" : "bg-slate-200"
+                    checked ? "bg-action" : "bg-slate-200"
                 )}
             >
                 <div

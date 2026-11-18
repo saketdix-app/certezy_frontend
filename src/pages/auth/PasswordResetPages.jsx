@@ -131,7 +131,7 @@ export function ForgotPasswordPage() {
                 <button
                     type="submit"
                     disabled={busy}
-                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#3282B8] hover:bg-[#2A6FA0] text-white text-[14px] font-bold disabled:opacity-60"
+                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold disabled:opacity-60"
                 >
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     Send reset link
@@ -210,7 +210,7 @@ export function ResetPasswordPage() {
                 </div>
                 <Link
                     to="/forgot-password"
-                    className="mt-5 w-full flex items-center justify-center py-3 rounded-xl bg-[#3282B8] hover:bg-[#2A6FA0] text-white text-[14px] font-bold"
+                    className="mt-5 w-full flex items-center justify-center py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold"
                 >
                     Send a new link
                 </Link>
@@ -276,7 +276,7 @@ export function ResetPasswordPage() {
                 <button
                     type="submit"
                     disabled={busy}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#3282B8] hover:bg-[#2A6FA0] text-white text-[14px] font-bold disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold disabled:opacity-60"
                 >
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     Change password

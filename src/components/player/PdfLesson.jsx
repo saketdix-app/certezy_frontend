@@ -64,7 +64,7 @@ export default function PdfLesson({ lesson }) {
                         href={url}
                         target="_blank"
                         rel="noreferrer"
-                        className={`${btn} w-full sm:w-auto bg-[#3282B8] hover:bg-[#2a6fa0] text-white`}
+                        className={`${btn} w-full sm:w-auto bg-action hover:bg-action-hover text-white`}
                     >
                         <ExternalLink size={16} /> Open PDF
                     </a>

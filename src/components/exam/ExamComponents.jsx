@@ -90,7 +90,7 @@ export function QuestionNavigator({
                                 onClick={() => onQuestionSelect(index)}
                                 className={`relative w-12 h-12 rounded-lg font-semibold text-sm transition-all ${
                                     isCurrent
-                                        ? "bg-[#3282B8] text-white ring-2 ring-[#3282B8]/30"
+                                        ? "bg-action text-white ring-2 ring-[#3282B8]/30"
                                         : isAnswered
                                           ? "bg-green-100 text-green-700 hover:bg-green-200"
                                           : isFlagged
@@ -117,7 +117,7 @@ export function QuestionNavigator({
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                            className="bg-[#3282B8] h-2 rounded-full transition-all duration-300"
+                            className="bg-action h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
                         />
                     </div>
@@ -173,7 +173,7 @@ export function SubmitExamModal({ isOpen, onClose, onSubmit, unansweredCount, fl
                     <button
                         onClick={onSubmit}
                         disabled={isSubmitting}
-                        className="flex-1 px-4 py-3 bg-[#3282B8] text-white rounded-lg hover:bg-[#2A6FA0] transition-colors font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-1 px-4 py-3 bg-action text-white rounded-lg hover:bg-action-hover transition-colors font-medium disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                         {isSubmitting ? (
                             <>

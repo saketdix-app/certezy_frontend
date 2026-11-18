@@ -91,15 +91,15 @@ function StudentList({ selectedId, onSelect }) {
             <div className="p-4 border-b border-slate-100">
                 <p className="text-[13px] font-bold text-slate-900 mb-3">
                     Registered students{" "}
-                    <span className="text-slate-400 font-semibold">({pagination.total ?? 0})</span>
+                    <span className="text-slate-500 font-semibold">({pagination.total ?? 0})</span>
                 </p>
                 <div className="relative">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by name or email"
-                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-primary focus:bg-white"
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
                     />
                 </div>
             </div>
@@ -107,10 +107,10 @@ function StudentList({ selectedId, onSelect }) {
             <div className="flex-1 overflow-y-auto">
                 {loading ? (
                     <div className="flex justify-center py-12">
-                        <Loader2 className="animate-spin text-primary" size={22} />
+                        <Loader2 className="animate-spin text-action" size={22} />
                     </div>
                 ) : users.length === 0 ? (
-                    <p className="text-center text-[13px] text-slate-400 py-12">No students found</p>
+                    <p className="text-center text-[13px] text-slate-500 py-12">No students found</p>
                 ) : (
                     users.map((u) => (
                         <button
@@ -124,7 +124,7 @@ function StudentList({ selectedId, onSelect }) {
                             <Avatar name={u.name} />
                             <div className="min-w-0 flex-1">
                                 <p className="text-[13px] font-bold text-slate-900 truncate">{u.name}</p>
-                                <p className="text-[11.5px] text-slate-400 truncate">{u.email}</p>
+                                <p className="text-[11.5px] text-slate-500 truncate">{u.email}</p>
                             </div>
                             {!u.is_active && (
                                 <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
@@ -217,7 +217,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
     return (
         <Card className="p-5">
             <div className="flex items-center gap-2 mb-1">
-                <Gift size={17} className="text-primary" />
+                <Gift size={17} className="text-action" />
                 <h2 className="text-[15px] font-extrabold text-slate-900">Assign free courses</h2>
             </div>
             <p className="text-[12.5px] text-slate-500 mb-4">
@@ -226,22 +226,22 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
             </p>
 
             <div className="relative mb-3">
-                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search courses"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-primary focus:bg-white"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
                 />
             </div>
 
             <div className="border border-slate-100 rounded-xl max-h-[260px] overflow-y-auto">
                 {loading ? (
                     <div className="flex justify-center py-8">
-                        <Loader2 className="animate-spin text-primary" size={20} />
+                        <Loader2 className="animate-spin text-action" size={20} />
                     </div>
                 ) : visible.length === 0 ? (
-                    <p className="text-center text-[13px] text-slate-400 py-8">No courses found</p>
+                    <p className="text-center text-[13px] text-slate-500 py-8">No courses found</p>
                 ) : (
                     visible.map((c) => {
                         const enrolled = enrolledIds.has(c.id);
@@ -259,7 +259,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                             >
                                 <input
                                     type="checkbox"
-                                    className="accent-[#3282B8] w-4 h-4"
+                                    className="accent-action w-4 h-4"
                                     disabled={enrolled}
                                     checked={checked || enrolled}
                                     onChange={() => toggle(c.id)}
@@ -268,7 +268,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                                     <p className="text-[13px] font-semibold text-slate-800 truncate">
                                         {c.title}
                                     </p>
-                                    <p className="text-[11px] text-slate-400">
+                                    <p className="text-[11px] text-slate-500">
                                         {c.status === "draft" ? "Draft · " : ""}
                                         <span className="line-through">
                                             {Number(c.price) > 0 ? `$${c.price}` : ""}
@@ -293,13 +293,13 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                 onChange={(e) => setNote(e.target.value)}
                 maxLength={255}
                 placeholder="Note (optional) — e.g. scholarship, corporate batch, support goodwill"
-                className="w-full mt-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-primary focus:bg-white"
+                className="w-full mt-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
             />
 
             <button
                 onClick={assign}
                 disabled={!selected.length || saving}
-                className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white text-[13.5px] font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[13.5px] font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {saving ? <Loader2 size={16} className="animate-spin" /> : <Gift size={16} />}
                 {selected.length
@@ -329,18 +329,18 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
         <Card>
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                    <BookOpen size={16} className="text-primary" />
+                    <BookOpen size={16} className="text-action" />
                     <h2 className="text-[15px] font-extrabold text-slate-900">{user.name}&apos;s courses</h2>
                 </div>
-                <span className="text-[12px] text-slate-400">{enrollments.length} total</span>
+                <span className="text-[12px] text-slate-500">{enrollments.length} total</span>
             </div>
 
             {loading ? (
                 <div className="flex justify-center py-10">
-                    <Loader2 className="animate-spin text-primary" size={20} />
+                    <Loader2 className="animate-spin text-action" size={20} />
                 </div>
             ) : enrollments.length === 0 ? (
-                <p className="text-center text-[13px] text-slate-400 py-10">No courses yet</p>
+                <p className="text-center text-[13px] text-slate-500 py-10">No courses yet</p>
             ) : (
                 <div className="divide-y divide-slate-50">
                     {enrollments.map((e) => {
@@ -351,7 +351,7 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
                                     <p className="text-[13px] font-bold text-slate-900 truncate">
                                         {e.course_title}
                                     </p>
-                                    <p className="text-[11.5px] text-slate-400 mt-0.5">
+                                    <p className="text-[11.5px] text-slate-500 mt-0.5">
                                         {free ? (
                                             <>
                                                 <span className="font-semibold text-green-700">
@@ -374,11 +374,11 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
                                 <div className="w-24 hidden sm:block">
                                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-primary"
+                                            className="h-full bg-action"
                                             style={{ width: `${Math.min(e.progress || 0, 100)}%` }}
                                         />
                                     </div>
-                                    <p className="text-[10.5px] text-slate-400 mt-1 text-right">
+                                    <p className="text-[10.5px] text-slate-500 mt-1 text-right">
                                         {Math.round(e.progress || 0)}% done
                                     </p>
                                 </div>
@@ -391,7 +391,7 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
                                     </button>
                                 ) : (
                                     <span
-                                        className="text-[11px] text-slate-400 w-[74px] text-center"
+                                        className="text-[11px] text-slate-500 w-[74px] text-center"
                                         title="Paid enrollments are removed through a refund"
                                     >
                                         Paid
@@ -415,7 +415,7 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
                         <div className="flex items-start justify-between mb-3">
                             <h3 className="text-[16px] font-extrabold text-slate-900">Revoke access?</h3>
                             <button onClick={() => setConfirm(null)} aria-label="Close">
-                                <X size={16} className="text-slate-400" />
+                                <X size={16} className="text-slate-500" />
                             </button>
                         </div>
                         <p className="text-[13px] text-slate-600 mb-5">
@@ -517,10 +517,10 @@ export default function AssignCoursesPage() {
                                 <p className="text-[14px] font-extrabold text-slate-900 truncate">
                                     {user.name}
                                 </p>
-                                <p className="text-[12px] text-slate-400 truncate">{user.email}</p>
+                                <p className="text-[12px] text-slate-500 truncate">{user.email}</p>
                             </div>
                             {user.role !== "student" && (
-                                <span className="ml-auto text-[11px] font-bold text-[#3282B8] bg-[#EBF4FF] px-2 py-1 rounded">
+                                <span className="ml-auto text-[11px] font-bold text-action bg-action-soft px-2 py-1 rounded">
                                     {user.role === "sub_admin" ? "Sub-admin" : "Admin"} · learner access for
                                     testing
                                 </span>
@@ -542,7 +542,7 @@ export default function AssignCoursesPage() {
                 ) : (
                     <Card className="flex flex-col items-center justify-center text-center min-h-[520px] p-8">
                         <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-                            <UserRound size={26} className="text-primary" />
+                            <UserRound size={26} className="text-action" />
                         </div>
                         <p className="text-[15px] font-extrabold text-slate-900 mb-1">Select a student</p>
                         <p className="text-[13px] text-slate-500 max-w-xs">

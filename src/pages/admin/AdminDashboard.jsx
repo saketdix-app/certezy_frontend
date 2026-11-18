@@ -34,11 +34,11 @@ function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600">{title}</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+                    <p className="text-sm font-medium text-slate-600">{title}</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
                     {change && (
                         <p
                             className={cn(
@@ -66,8 +66,8 @@ function RevenueChart({ data }) {
     const maxRevenue = Math.max(...data.map((d) => d.revenue));
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Overview</h3>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Revenue Overview</h3>
             <div className="h-64 flex items-end justify-between gap-2">
                 {data.map((item) => (
                     <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
@@ -79,9 +79,9 @@ function RevenueChart({ data }) {
                                     minHeight: "20px",
                                 }}
                             />
-                            <span className="text-xs text-gray-600 mt-2">{item.month}</span>
+                            <span className="text-xs text-slate-600 mt-2">{item.month}</span>
                         </div>
-                        <span className="text-xs font-medium text-gray-900">
+                        <span className="text-xs font-medium text-slate-900">
                             ${item.revenue.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                         </span>
                     </div>
@@ -106,7 +106,7 @@ function RecentPaymentsTable({ payments }) {
             <span
                 className={cn(
                     "px-2 py-1 text-xs font-medium rounded-full",
-                    styles[status] || "bg-gray-100 text-gray-800"
+                    styles[status] || "bg-slate-100 text-slate-800"
                 )}
             >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -115,9 +115,9 @@ function RecentPaymentsTable({ payments }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Recent Payments</h3>
+                <h3 className="text-lg font-semibold text-slate-900">Recent Payments</h3>
                 <button
                     onClick={() => navigate("payments")}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -128,24 +128,24 @@ function RecentPaymentsTable({ payments }) {
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[720px]">
                     <thead>
-                        <tr className="border-b border-gray-200">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">User</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Course</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Amount</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Status</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Date</th>
+                        <tr className="border-b border-slate-200">
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">User</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Course</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Amount</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Status</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         {payments.map((payment) => (
-                            <tr key={payment.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="py-3 px-4 text-sm text-gray-900">{payment.user}</td>
-                                <td className="py-3 px-4 text-sm text-gray-900">{payment.course}</td>
-                                <td className="py-3 px-4 text-sm font-medium text-gray-900">
+                            <tr key={payment.id} className="border-b border-slate-100 hover:bg-slate-50">
+                                <td className="py-3 px-4 text-sm text-slate-900">{payment.user}</td>
+                                <td className="py-3 px-4 text-sm text-slate-900">{payment.course}</td>
+                                <td className="py-3 px-4 text-sm font-medium text-slate-900">
                                     ${payment.amount}
                                 </td>
                                 <td className="py-3 px-4">{getStatusBadge(payment.status)}</td>
-                                <td className="py-3 px-4 text-sm text-gray-600">{payment.date}</td>
+                                <td className="py-3 px-4 text-sm text-slate-600">{payment.date}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -184,15 +184,15 @@ function PendingReviews({ reviews }) {
             <Star
                 key={i}
                 size={14}
-                className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
+                className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-slate-300"}
             />
         ));
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Pending Reviews</h3>
+                <h3 className="text-lg font-semibold text-slate-900">Pending Reviews</h3>
                 <button
                     onClick={() => navigate("/admin/reviews")}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -202,17 +202,17 @@ function PendingReviews({ reviews }) {
             </div>
             <div className="space-y-4">
                 {reviews.map((review) => (
-                    <div key={review.id} className="border-b border-gray-100 pb-4 last:border-b-0">
+                    <div key={review.id} className="border-b border-slate-100 pb-4 last:border-b-0">
                         <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm font-medium text-gray-900">{review.user}</span>
+                                    <span className="text-sm font-medium text-slate-900">{review.user}</span>
                                     <div className="flex items-center gap-1">
                                         {renderStars(review.rating)}
                                     </div>
                                 </div>
-                                <p className="text-sm text-gray-600 mb-1">{review.course}</p>
-                                <p className="text-sm text-gray-700">{review.comment}</p>
+                                <p className="text-sm text-slate-600 mb-1">{review.course}</p>
+                                <p className="text-sm text-slate-700">{review.comment}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
@@ -231,7 +231,7 @@ function PendingReviews({ reviews }) {
                                 </button>
                             </div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">{review.date}</p>
+                        <p className="text-xs text-slate-500 mt-2">{review.date}</p>
                     </div>
                 ))}
             </div>
@@ -257,25 +257,25 @@ function QuickActions() {
             purple: "bg-purple-100 text-purple-600",
             orange: "bg-orange-100 text-orange-600",
         };
-        return colorMap[color] || "bg-gray-100 text-gray-600";
+        return colorMap[color] || "bg-slate-100 text-slate-600";
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 gap-4">
                 {actions.map((action) => (
                     <button
                         key={action.title}
                         onClick={() => navigate(action.href)}
-                        className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                        className="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
                     >
                         <div
                             className={`w-10 h-10 rounded-lg flex items-center justify-center ${getColorClasses(action.color)}`}
                         >
                             <action.icon className="w-5 h-5" />
                         </div>
-                        <span className="text-sm font-medium text-gray-900">{action.title}</span>
+                        <span className="text-sm font-medium text-slate-900">{action.title}</span>
                     </button>
                 ))}
             </div>
@@ -459,10 +459,10 @@ export default function AdminDashboard() {
         return (
             <div className="space-y-6">
                 <div className="animate-pulse">
-                    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+                    <div className="h-8 bg-slate-200 rounded w-48 mb-4"></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-32 bg-gray-200 rounded"></div>
+                            <div key={i} className="h-32 bg-slate-200 rounded"></div>
                         ))}
                     </div>
                 </div>
@@ -496,8 +496,8 @@ export default function AdminDashboard() {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+                <p className="text-slate-600 mt-1">
                     Welcome back! Here's what's happening with your platform today.
                 </p>
             </div>

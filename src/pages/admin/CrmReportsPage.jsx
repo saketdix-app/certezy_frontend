@@ -56,8 +56,8 @@ function VolumeChart({ series }) {
             <div className="flex h-44 items-end gap-[3px]" role="img" aria-label={`Leads per period: ${series.map((s) => `${s.period} ${s.leads}`).join(", ")}`}>
                 {series.map((s) => (
                     <div key={s.period} className="group relative flex h-full min-w-0 flex-1 flex-col justify-end">
-                        <div className="flex w-full flex-col justify-end rounded-t bg-[#BFDBF7]" style={{ height: `${(s.leads / max) * 100}%` }}>
-                            <div className="w-full rounded-t bg-[#3282B8]" style={{ height: s.leads ? `${(s.converted / s.leads) * 100}%` : 0 }} />
+                        <div className="flex w-full flex-col justify-end rounded-t bg-brand-100" style={{ height: `${(s.leads / max) * 100}%` }}>
+                            <div className="w-full rounded-t bg-action" style={{ height: s.leads ? `${(s.converted / s.leads) * 100}%` : 0 }} />
                         </div>
                         <span className="pointer-events-none absolute -top-7 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[11px] text-white group-hover:block">
                             {s.period}: {s.leads} leads, {s.converted} converted
@@ -65,13 +65,13 @@ function VolumeChart({ series }) {
                     </div>
                 ))}
             </div>
-            <div className="mt-1 flex justify-between text-[11px] text-slate-400">
+            <div className="mt-1 flex justify-between text-[11px] text-slate-500">
                 <span>{label(series[0].period)}</span>
                 <span>{label(series[series.length - 1].period)}</span>
             </div>
             <p className="mt-2 flex gap-4 text-[12px] text-slate-500">
-                <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-[#BFDBF7]" /> Leads</span>
-                <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-[#3282B8]" /> Converted (paid)</span>
+                <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-brand-100" /> Leads</span>
+                <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-action" /> Converted (paid)</span>
             </p>
         </div>
     );
@@ -92,7 +92,7 @@ function Breakdown({ rows, labelOf }) {
                         </span>
                     </div>
                     <div className="mt-1 h-1.5 rounded-full bg-slate-100">
-                        <div className="h-1.5 rounded-full bg-[#3282B8]" style={{ width: `${(r.leads / max) * 100}%` }} />
+                        <div className="h-1.5 rounded-full bg-action" style={{ width: `${(r.leads / max) * 100}%` }} />
                     </div>
                 </li>
             ))}
@@ -151,7 +151,7 @@ export default function CrmReportsPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     {PRESETS.map(([d, l]) => (
-                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 hover:border-[#3282B8]">
+                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 hover:border-action">
                             {l}
                         </button>
                     ))}
@@ -175,7 +175,7 @@ export default function CrmReportsPage() {
 
             {!data ? (
                 <div className="flex justify-center py-20">
-                    <Loader2 className="animate-spin text-slate-400" />
+                    <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : (
                 <>
@@ -241,14 +241,14 @@ export default function CrmReportsPage() {
                                     </tr>
                                 )}
                                 {data.consultants.map((c) => (
-                                    <tr key={c.id} className={cn(!c.active && "text-slate-400")}>
+                                    <tr key={c.id} className={cn(!c.active && "text-slate-500")}>
                                         <td className="py-2 pr-3 font-semibold">{c.name}{!c.active && " (inactive)"}</td>
                                         <td className="py-2 pr-3 text-right">{c.leads}</td>
                                         <td className="py-2 pr-3 text-right">{c.contact_attempts}</td>
                                         <td className="py-2 pr-3 text-right">{c.follow_ups_done} / {c.follow_ups_missed}</td>
                                         <td className={cn("py-2 pr-3 text-right", c.follow_ups_overdue > 0 && "font-semibold text-red-600")}>{c.follow_ups_overdue}</td>
                                         <td className="py-2 pr-3 text-right">{c.applications}</td>
-                                        <td className="py-2 pr-3 text-right">{c.conversions} <span className="text-slate-400">({c.conversion_rate}%)</span></td>
+                                        <td className="py-2 pr-3 text-right">{c.conversions} <span className="text-slate-500">({c.conversion_rate}%)</span></td>
                                         <td className="py-2 pr-3 text-right">{money(c.revenue)}</td>
                                         <td className="py-2 text-right">{c.avg_first_contact_hours == null ? "—" : `${c.avg_first_contact_hours} h`}</td>
                                     </tr>
@@ -267,7 +267,7 @@ export default function CrmReportsPage() {
                                             <li key={b.label} className="grid grid-cols-[96px_1fr_40px] items-center gap-3">
                                                 <span className="text-slate-600">{b.label}</span>
                                                 <div className="h-2.5 rounded-full bg-slate-100">
-                                                    <div className={cn("h-2.5 rounded-full", i >= 4 ? "bg-amber-500" : "bg-[#3282B8]")} style={{ width: `${(b.count / max) * 100}%` }} />
+                                                    <div className={cn("h-2.5 rounded-full", i >= 4 ? "bg-amber-500" : "bg-action")} style={{ width: `${(b.count / max) * 100}%` }} />
                                                 </div>
                                                 <span className="text-right font-semibold text-slate-900">{b.count}</span>
                                             </li>
@@ -284,13 +284,13 @@ export default function CrmReportsPage() {
                                 <dt className="text-slate-500">Enrollments</dt>
                                 <dd className="text-right font-semibold">{data.lms.enrollments}</dd>
                                 <dt className="text-slate-500">Free course assignments</dt>
-                                <dd className="text-right font-semibold">{data.lms.assignments} <span className="font-normal text-slate-400">({data.lms.assignments_from_leads} from leads)</span></dd>
+                                <dd className="text-right font-semibold">{data.lms.assignments} <span className="font-normal text-slate-500">({data.lms.assignments_from_leads} from leads)</span></dd>
                                 <dt className="text-slate-500">Certificates issued</dt>
                                 <dd className="text-right font-semibold">{data.lms.certificates} {data.lms.certificate_overrides > 0 && <span className="font-normal text-amber-700">({data.lms.certificate_overrides} override)</span>}</dd>
                                 <dt className="text-slate-500">Leads → Course Done</dt>
                                 <dd className="text-right font-semibold">{data.lms.course_done}</dd>
                                 <dt className="text-slate-500">Discount links paid</dt>
-                                <dd className="text-right font-semibold">{data.discount_links.redeemed} / {data.discount_links.generated} <span className="font-normal text-slate-400">({data.discount_links.redemption_rate}%)</span></dd>
+                                <dd className="text-right font-semibold">{data.discount_links.redeemed} / {data.discount_links.generated} <span className="font-normal text-slate-500">({data.discount_links.redemption_rate}%)</span></dd>
                                 <dt className="text-slate-500">Revenue from discount links</dt>
                                 <dd className="text-right font-semibold">{money(data.discount_links.revenue)}</dd>
                                 <dt className="text-slate-500">Transfers</dt>
@@ -298,7 +298,7 @@ export default function CrmReportsPage() {
                                 <dt className="text-slate-500">Round Robin balance</dt>
                                 <dd className="text-right font-semibold">
                                     {data.operations.round_robin_balance.min}–{data.operations.round_robin_balance.max}{" "}
-                                    <span className="font-normal text-slate-400">leads per consultant</span>
+                                    <span className="font-normal text-slate-500">leads per consultant</span>
                                 </dd>
                             </dl>
                         </Panel>

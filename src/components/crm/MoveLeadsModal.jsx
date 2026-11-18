@@ -86,7 +86,7 @@ export default function MoveLeadsModal({ leadIds, onClose, onDone }) {
 
             {ownerId && !preview && (
                 <div className="flex justify-center py-6">
-                    <Loader2 className="animate-spin text-slate-400" />
+                    <Loader2 className="animate-spin text-slate-500" />
                 </div>
             )}
 
@@ -114,11 +114,11 @@ export default function MoveLeadsModal({ leadIds, onClose, onDone }) {
                                         </td>
                                         <td className="px-3 py-2 text-slate-600">
                                             {l.change === "no_change" ? (
-                                                <span className="text-slate-400">Already theirs</span>
+                                                <span className="text-slate-500">Already theirs</span>
                                             ) : (
                                                 <span className="inline-flex items-center gap-1">
                                                     {l.current_owner ?? "Unassigned"} <ArrowRight size={12} aria-hidden="true" /> {preview.new_owner.name}
-                                                    {l.pending_follow_ups > 0 && <span className="text-slate-400"> · {l.pending_follow_ups} follow-up(s)</span>}
+                                                    {l.pending_follow_ups > 0 && <span className="text-slate-500"> · {l.pending_follow_ups} follow-up(s)</span>}
                                                 </span>
                                             )}
                                         </td>
@@ -139,7 +139,7 @@ export default function MoveLeadsModal({ leadIds, onClose, onDone }) {
                     )}
                     {leadIds.length > 1 && (
                         <label className="mt-3 flex items-center gap-2 text-[13px] text-slate-700">
-                            <input type="checkbox" checked={rebalance} onChange={(e) => setRebalance(e.target.checked)} className="accent-[#3282B8]" />
+                            <input type="checkbox" checked={rebalance} onChange={(e) => setRebalance(e.target.checked)} className="accent-action" />
                             Record this as a workload rebalance
                         </label>
                     )}
@@ -154,7 +154,7 @@ export default function MoveLeadsModal({ leadIds, onClose, onDone }) {
                     type="button"
                     disabled={busy || !preview || !changing.length}
                     onClick={confirm}
-                    className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-50"
                 >
                     {busy && <Loader2 size={15} className="animate-spin" />}
                     Confirm
