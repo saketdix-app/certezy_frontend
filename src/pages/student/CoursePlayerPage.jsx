@@ -340,6 +340,7 @@ export default function CoursePlayerPage() {
 
     // Zoom: text size for reading lessons, frame width for video and other media
     const isReading = ["text", "article"].includes(currentLesson?.type);
+    const isQuiz = currentLesson?.type === "quiz";
     const zoomKind = isReading ? "reading" : "media";
     const zoom = zoomPrefs[zoomKind];
     const setZoom = (value) =>
@@ -496,14 +497,14 @@ export default function CoursePlayerPage() {
                 <main className="flex-1 min-w-0 overflow-y-auto bg-[#EEF2F7]">
                     {currentLesson ? (
                         <div className="mx-auto w-full max-w-[1200px] p-2.5 sm:p-5 lg:p-6">
-                            <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_-12px_rgba(15,23,42,0.12)]">
+                            <article className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_-12px_rgba(15,23,42,0.12)]">
                                 {/* Lesson header: where you are, the title, zoom and complete */}
                                 <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b border-slate-200 px-4 py-3.5 sm:px-6">
                                     <div className="min-w-0 basis-full sm:basis-0 sm:flex-1">
-                                        <p className="truncate text-label font-bold uppercase tracking-[0.08em] text-[#2563EB]">
+                                        <p className="truncate text-label font-bold uppercase tracking-[0.08em] text-slate-500">
                                             Lesson {currentIdx + 1} of {totalLessons}
                                             {currentSection && (
-                                                <span className="font-semibold normal-case tracking-normal text-slate-500">
+                                                <span className="font-medium normal-case tracking-normal text-slate-500">
                                                     {" "}
                                                     · Section {currentSection.index + 1}: {currentSection.title}
                                                 </span>
@@ -527,19 +528,23 @@ export default function CoursePlayerPage() {
                                             label={zoomKind === "reading" ? "Text size" : "Player size"}
                                             onChange={setZoom}
                                         />
-                                        {!currentDone ? (
-                                            <button
-                                                onClick={markLessonComplete}
-                                                className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3.5 py-2 text-ui font-bold text-white shadow-[0_4px_12px_rgba(37,99,235,0.25)] transition-colors hover:bg-[#1D4ED8]"
-                                            >
-                                                <CheckCircle2 size={15} aria-hidden="true" />
-                                                Mark complete
-                                            </button>
-                                        ) : (
-                                            <span className="flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3.5 py-2 text-ui font-bold text-[#1D4ED8]">
+                                        {currentDone ? (
+                                            <span className="flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-ui font-semibold text-emerald-700">
                                                 <CheckCircle2 size={15} aria-hidden="true" />
                                                 Completed
                                             </span>
+                                        ) : isQuiz ? (
+                                            <span className="rounded-full bg-slate-100 px-3.5 py-2 text-small font-medium text-slate-600">
+                                                Completes when you pass
+                                            </span>
+                                        ) : (
+                                            <button
+                                                onClick={markLessonComplete}
+                                                className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3.5 py-2 text-ui font-semibold text-slate-700 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+                                            >
+                                                <CheckCircle2 size={15} aria-hidden="true" />
+                                                Mark as complete
+                                            </button>
                                         )}
                                     </div>
                                 </header>
@@ -561,12 +566,17 @@ export default function CoursePlayerPage() {
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="border-b border-slate-200 bg-[#F8FAFC] p-2.5 sm:p-5">
+                                    <div className={cn("border-b border-slate-200 p-2.5 sm:p-5", isQuiz ? "bg-white" : "bg-[#F8FAFC]")}>
                                         <div
                                             className={cn(
                                                 // phones always use the full width; the zoom applies from tablet size up
-                                                "mx-auto w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm transition-[width] duration-300 sm:w-[var(--zoom-w)]",
-                                                currentLesson.type === "video" ? "bg-black" : "bg-[#0a1628]"
+                                                "mx-auto w-full overflow-hidden rounded-2xl transition-[width] duration-300 sm:w-[var(--zoom-w)]",
+                                                isQuiz
+                                                    ? ""
+                                                    : cn(
+                                                          "border border-slate-200 shadow-sm",
+                                                          currentLesson.type === "video" ? "bg-black" : "bg-[#0a1628]"
+                                                      )
                                             )}
                                             style={
                                                 currentLesson.type === "video"
@@ -598,6 +608,7 @@ export default function CoursePlayerPage() {
                                                 <QuizLesson
                                                     lesson={currentLesson}
                                                     exams={courseExams}
+                                                    passedExamIds={passedExamIds}
                                                     onStart={(exam) =>
                                                         navigate(`/student/course/${courseId}/exam/${exam.id}`)
                                                     }
@@ -611,7 +622,7 @@ export default function CoursePlayerPage() {
                                 <footer className="px-4 py-4 sm:px-6">
                                     {nextLesson && (
                                         <p className="mb-3 truncate text-small text-slate-500">
-                                            <span className="font-bold text-[#2563EB]">
+                                            <span className="font-bold text-slate-700">
                                                 {nextSection ? "Next section" : "Up next"}:
                                             </span>{" "}
                                             {nextSection && (
@@ -626,7 +637,7 @@ export default function CoursePlayerPage() {
                                         <button
                                             onClick={goToPrevLesson}
                                             disabled={currentIdx === 0}
-                                            className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-ui font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                                            className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-ui font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-40"
                                         >
                                             <ChevronLeft size={16} aria-hidden="true" />
                                             Previous
@@ -634,8 +645,11 @@ export default function CoursePlayerPage() {
                                         <button
                                             onClick={goToNextLesson}
                                             className={cn(
-                                                "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-ui font-bold text-white transition-colors",
-                                                isLastLesson ? "bg-[#1D4ED8] hover:bg-[#1E40AF]" : "bg-[#2563EB] hover:bg-[#1D4ED8]"
+                                                "flex items-center gap-1.5 rounded-full px-4 py-2 text-ui font-bold transition-colors",
+                                                // on a quiz, "Start quiz" is the main action, so this one steps back
+                                                isQuiz && !currentDone
+                                                    ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                                                    : "bg-brand-600 text-white shadow-[0_4px_12px_rgba(35,106,158,0.25)] hover:bg-brand-700"
                                             )}
                                         >
                                             {isLastLesson
@@ -678,7 +692,7 @@ function ZoomControl({ value, steps, label, onChange, className }) {
     const btn =
         "flex h-8 w-8 items-center justify-center text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-35";
     return (
-        <div role="group" aria-label={label} className={cn("flex items-center overflow-hidden rounded-lg border border-slate-300 bg-white", className)}>
+        <div role="group" aria-label={label} className={cn("flex items-center overflow-hidden rounded-full border border-slate-300 bg-white", className)}>
             <button
                 type="button"
                 onClick={() => onChange(steps[idx - 1])}
@@ -736,8 +750,8 @@ function TopBar({
                 title={sidebarOpen ? "Hide course content" : "Show course content"}
                 className="flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors"
                 style={{
-                    background: sidebarOpen ? "rgba(96,165,250,0.18)" : "rgba(255,255,255,0.06)",
-                    color: sidebarOpen ? "#93C5FD" : "rgba(255,255,255,0.7)",
+                    background: sidebarOpen ? "rgba(127,186,227,0.18)" : "rgba(255,255,255,0.06)",
+                    color: sidebarOpen ? "#B0D5EF" : "rgba(255,255,255,0.7)",
                     fontSize: "12.5px",
                     fontWeight: 600,
                 }}
@@ -771,7 +785,7 @@ function TopBar({
                         className="h-full rounded-full transition-all duration-500"
                         style={{
                             width: `${progressPct}%`,
-                            background: "linear-gradient(90deg, #3282B8, #60A5FA)",
+                            background: "linear-gradient(90deg, #3282B8, #7FBAE3)",
                         }}
                     />
                 </div>
@@ -834,13 +848,13 @@ function CourseSidebar({
                     {sections.length} sections · {totalLessons} lessons · {totalDone} completed
                 </p>
                 <div className="mt-2.5 flex items-center gap-2.5">
-                    <div className="h-1.5 flex-1 rounded-full bg-[#DBEAFE] overflow-hidden">
+                    <div className="h-1.5 flex-1 rounded-full bg-brand-100 overflow-hidden">
                         <div
-                            className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
+                            className="h-full rounded-full bg-brand-600 transition-all duration-500"
                             style={{ width: `${pct}%` }}
                         />
                     </div>
-                    <span className="text-small font-bold text-[#2563EB] tabular-nums">{pct}%</span>
+                    <span className="text-small font-bold text-brand-600 tabular-nums">{pct}%</span>
                 </div>
             </div>
 
@@ -862,16 +876,16 @@ function CourseSidebar({
                                 aria-expanded={isExpanded}
                                 className={cn(
                                     "w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-colors",
-                                    isExpanded ? "bg-[#EFF6FF]" : "hover:bg-[#F8FAFF]"
+                                    isExpanded ? "bg-brand-50" : "hover:bg-brand-50"
                                 )}
                             >
                                 <span
                                     className={cn(
                                         "w-7 h-7 shrink-0 rounded-md flex items-center justify-center text-label font-extrabold",
                                         secDone
-                                            ? "bg-[#2563EB] text-white"
+                                            ? "bg-brand-600 text-white"
                                             : hasActive || isExpanded
-                                              ? "bg-white text-[#2563EB] ring-1 ring-[#BFDBFE]"
+                                              ? "bg-white text-brand-600 ring-1 ring-brand-200"
                                               : "bg-[#F1F5F9] text-slate-500"
                                     )}
                                 >
@@ -889,7 +903,7 @@ function CourseSidebar({
                                     size={16}
                                     className={cn(
                                         "shrink-0 transition-transform duration-200",
-                                        isExpanded ? "rotate-180 text-[#2563EB]" : "text-slate-400"
+                                        isExpanded ? "rotate-180 text-brand-600" : "text-slate-400"
                                     )}
                                 />
                             </button>
@@ -910,8 +924,8 @@ function CourseSidebar({
                                                 className={cn(
                                                     "group w-[calc(100%-12px)] mx-1.5 my-0.5 flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all",
                                                     isActive
-                                                        ? "bg-[#2563EB] shadow-[0_4px_12px_rgba(37,99,235,0.25)]"
-                                                        : "hover:bg-[#EFF6FF]"
+                                                        ? "bg-brand-600 shadow-[0_4px_12px_rgba(35,106,158,0.25)]"
+                                                        : "hover:bg-brand-50"
                                                 )}
                                             >
                                                 {/* Status */}
@@ -920,13 +934,13 @@ function CourseSidebar({
                                                         <CheckCircle2
                                                             size={18}
                                                             className={
-                                                                isActive ? "text-white" : "text-[#2563EB]"
+                                                                isActive ? "text-white" : "text-brand-600"
                                                             }
                                                         />
                                                     ) : isActive ? (
                                                         <PlayCircle size={18} className="text-white" />
                                                     ) : (
-                                                        <span className="w-[18px] h-[18px] rounded-full border-2 border-[#CBD5E1] group-hover:border-[#93C5FD] flex items-center justify-center text-label font-bold text-slate-400">
+                                                        <span className="w-[18px] h-[18px] rounded-full border-2 border-[#CBD5E1] group-hover:border-brand-300 flex items-center justify-center text-label font-bold text-slate-400">
                                                             {lIdx + 1}
                                                         </span>
                                                     )}
@@ -971,7 +985,7 @@ function CourseSidebar({
                                                                     "rounded px-1.5 py-px text-label font-bold",
                                                                     isActive
                                                                         ? "bg-white/20 text-white"
-                                                                        : "bg-[#DBEAFE] text-[#1D4ED8]"
+                                                                        : "bg-brand-100 text-brand-700"
                                                                 )}
                                                             >
                                                                 FREE
@@ -1010,11 +1024,11 @@ function CourseSidebar({
                             <button
                                 key={exam.id}
                                 onClick={() => navigate(`/student/course/${courseId}/exam/${exam.id}`)}
-                                className="w-full flex items-center gap-2.5 rounded-lg border border-[#DBEAFE] bg-[#F5F9FF] px-2.5 py-2 text-left transition-colors hover:border-[#93C5FD] hover:bg-[#EFF6FF]"
+                                className="w-full flex items-center gap-2.5 rounded-lg border border-brand-100 bg-brand-50 px-2.5 py-2 text-left transition-colors hover:border-brand-300 hover:bg-brand-50"
                             >
                                 <span
                                     className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center ${
-                                        passedExamIds.has(exam.id) ? "bg-green-600" : "bg-[#2563EB]"
+                                        passedExamIds.has(exam.id) ? "bg-green-600" : "bg-brand-600"
                                     }`}
                                 >
                                     {passedExamIds.has(exam.id) ? (
@@ -1035,7 +1049,7 @@ function CourseSidebar({
                                         {exam.total_questions ?? exam.questions_count ?? 0} questions
                                     </span>
                                 </span>
-                                <ChevronRight size={15} className="shrink-0 text-[#2563EB]" />
+                                <ChevronRight size={15} className="shrink-0 text-brand-600" />
                             </button>
                         ))}
                     </div>
