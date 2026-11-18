@@ -237,7 +237,7 @@ export default function Testimonials() {
                                 fontWeight: 700,
                                 letterSpacing: "0.16em",
                                 textTransform: "uppercase",
-                                color: "#475569",
+                                color: "#94A3B8",
                                 marginBottom: "16px",
                             }}
                         >
@@ -276,7 +276,7 @@ export default function Testimonials() {
                                 textAlign: "center",
                                 fontSize: "12px",
                                 fontWeight: 600,
-                                color: "#64748B",
+                                color: "#94A3B8",
                                 marginBottom: "14px",
                             }}
                         >
@@ -307,7 +307,7 @@ export default function Testimonials() {
                                         style={{
                                             fontSize: "26px",
                                             fontWeight: 900,
-                                            color: "#3282B8",
+                                            color: "#4E9CD3",
                                             letterSpacing: "-0.02em",
                                             fontFamily: "'Plus Jakarta Sans', sans-serif",
                                         }}
@@ -368,7 +368,7 @@ export default function Testimonials() {
                                             style={{
                                                 fontSize: "52px",
                                                 lineHeight: 1,
-                                                color: "#3282B8",
+                                                color: "#4E9CD3",
                                                 fontWeight: 900,
                                                 marginBottom: "8px",
                                                 fontFamily: "Georgia, serif",
@@ -440,7 +440,7 @@ export default function Testimonials() {
                                                 <div
                                                     style={{
                                                         fontSize: "12px",
-                                                        color: "#64748B",
+                                                        color: "#94A3B8",
                                                         fontWeight: 500,
                                                     }}
                                                 >

@@ -66,7 +66,7 @@ export default function SkillsSection() {
                         </div>
 
                         <div className="flex flex-wrap gap-4">
-                            <button className="bg-gradient-to-r from-blue-500 to-purple-500 px-7 py-3 rounded-lg font-semibold">
+                            <button className="bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3 rounded-lg font-semibold">
                                 Start Your Journey
                             </button>
 

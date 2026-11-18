@@ -203,7 +203,7 @@ export default function CourseDetailIndex() {
                         {/* Breadcrumb */}
                         <div
                             className="flex items-center gap-1.5 mb-5 flex-wrap"
-                            style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px" }}
+                            style={{ color: "rgba(255,255,255,0.65)", fontSize: "12px" }}
                         >
                             <span
                                 className="hover:text-white cursor-pointer transition-colors"
@@ -566,7 +566,7 @@ export default function CourseDetailIndex() {
                                             <p
                                                 style={{
                                                     fontSize: "13px",
-                                                    color: "#3282B8",
+                                                    color: "#236A9E",
                                                     fontWeight: 500,
                                                     marginBottom: "10px",
                                                 }}
@@ -671,7 +671,7 @@ export default function CourseDetailIndex() {
                                             style={{
                                                 fontSize: "10.5px",
                                                 fontWeight: 700,
-                                                color: "#94A3B8",
+                                                color: "#64748B",
                                                 textTransform: "uppercase",
                                                 letterSpacing: "0.06em",
                                                 marginBottom: "5px",

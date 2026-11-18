@@ -87,7 +87,7 @@ export default function ContactForm() {
     const inputCls = [
         "w-full rounded-xl px-4 py-3 text-sm text-slate-200",
         "bg-white/5 border border-white/10",
-        "placeholder:text-slate-500",
+        "placeholder:text-slate-400",
         "focus:outline-none focus:border-[#3282B8] focus:bg-[#3282B8]/5",
         "transition-colors duration-200",
     ].join(" ");
@@ -116,7 +116,7 @@ export default function ContactForm() {
                             <button
                                 type="button"
                                 onClick={() => setSubmittedName(null)}
-                                className="text-sm font-semibold text-[#3282B8] hover:brightness-125"
+                                className="text-sm font-semibold text-[#7FBAE3] hover:brightness-125"
                             >
                                 Send another message
                             </button>
@@ -183,7 +183,7 @@ export default function ContactForm() {
                             <div className="flex flex-col gap-1.5 mb-4">
                                 <label className="text-xs font-bold uppercase tracking-widest text-white">
                                     Phone{" "}
-                                    <span className="text-slate-500 normal-case font-normal tracking-normal">
+                                    <span className="text-slate-400 normal-case font-normal tracking-normal">
                                         (Optional)
                                     </span>
                                 </label>
@@ -252,7 +252,7 @@ export default function ContactForm() {
                                 disabled={loading}
                                 className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide transition-all duration-200 hover:brightness-90 active:scale-[0.99]"
                                 style={{
-                                    background: "#3282B8",
+                                    background: "#236A9E",
                                     opacity: loading ? 0.7 : 1,
                                     cursor: loading ? "not-allowed" : "pointer",
                                     boxShadow: loading ? "none" : "0 4px 20px rgba(50,130,184,0.3)",
@@ -331,7 +331,7 @@ export default function ContactForm() {
                                 </a>
                             ))}
                         </div>
-                        <p className="mt-4 text-xs text-slate-500 leading-relaxed">
+                        <p className="mt-4 text-xs text-slate-400 leading-relaxed">
                             Or call us:{" "}
                             {SUPPORT_PHONES.map((p, i) => (
                                 <span key={p.region}>

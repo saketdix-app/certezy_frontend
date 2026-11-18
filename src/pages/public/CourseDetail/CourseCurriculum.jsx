@@ -71,7 +71,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
                 canPreview && "cursor-pointer group transition-colors duration-150 hover:bg-[#F5F9FF]"
             )}
         >
-            <span className="w-6 shrink-0 text-right text-[11.5px] font-semibold text-[#94A3B8] tabular-nums">
+            <span className="w-6 shrink-0 text-right text-[11.5px] font-semibold text-slate-500 tabular-nums">
                 {index + 1}
             </span>
 
@@ -98,7 +98,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
             ) : null}
 
             {duration && (
-                <span className="w-14 shrink-0 text-right text-[12px] text-slate-400 tabular-nums">
+                <span className="w-14 shrink-0 text-right text-[12px] text-slate-500 tabular-nums">
                     {duration}
                 </span>
             )}
@@ -178,7 +178,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                 </span>
 
                 <div className="flex-1 min-w-0">
-                    <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#60A5FA]">
+                    <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-action">
                         Section {index + 1}
                     </p>
                     <p
@@ -190,7 +190,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                         {section.title}
                     </p>
                     {(lessons.length > 0 || loading) && (
-                        <p className="mt-0.5 text-[12px] text-slate-500 truncate">
+                        <p className="mt-0.5 text-[12px] text-slate-600 truncate">
                             {loading
                                 ? "Loading..."
                                 : `${lessons.length} lesson${lessons.length !== 1 ? "s" : ""}${duration ? ` · ${duration}` : ""}${typeSummary ? ` · ${typeSummary}` : ""}`}
@@ -201,7 +201,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                 <span
                     className={cn(
                         "w-8 h-8 shrink-0 rounded-full flex items-center justify-center",
-                        open ? "bg-white text-[#2563EB]" : "bg-[#F1F5F9] text-slate-400"
+                        open ? "bg-white text-action" : "bg-[#F1F5F9] text-slate-500"
                     )}
                 >
                     {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}

@@ -48,7 +48,7 @@ export default function AboutMission() {
 
                     {/* RIGHT VISUAL CARD */}
                     <div className="relative">
-                        <div className="relative rounded-3xl overflow-hidden border border-gray-200 shadow-xl h-[380px] flex items-center justify-center bg-gradient-to-br from-[#3282B8] via-[#4F8DFF] to-[#7C3AED]">
+                        <div className="relative rounded-3xl overflow-hidden border border-gray-200 shadow-xl h-[380px] flex items-center justify-center bg-gradient-to-br from-[#236A9E] via-[#3B6FE0] to-[#6D28D9]">
                             {/* glow effect */}
                             <div className="absolute w-40 h-40 bg-white/20 blur-3xl rounded-full top-10 left-10"></div>
 

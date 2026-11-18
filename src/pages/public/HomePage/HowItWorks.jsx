@@ -56,7 +56,7 @@ const CSS = `
     gap: 9px;
     padding: 15px 34px;
     border-radius: 14px;
-    background: #3282B8;
+    background: #236A9E;
     color: #fff;
     font-size: 15px;
     font-weight: 700;
@@ -222,7 +222,7 @@ export default function HowItWorks() {
                                 fontWeight: 700,
                                 letterSpacing: "0.16em",
                                 textTransform: "uppercase",
-                                color: "#475569",
+                                color: "#94A3B8",
                                 marginBottom: "16px",
                             }}
                         >
@@ -256,7 +256,7 @@ export default function HowItWorks() {
                         <p
                             style={{
                                 fontSize: "15.5px",
-                                color: "#64748B",
+                                color: "#94A3B8",
                                 lineHeight: 1.7,
                                 maxWidth: "520px",
                                 margin: "0 auto",
@@ -329,7 +329,7 @@ export default function HowItWorks() {
                                                 <p
                                                     style={{
                                                         fontSize: "13.5px",
-                                                        color: "#64748B",
+                                                        color: "#94A3B8",
                                                         lineHeight: 1.7,
                                                         flex: 1,
                                                         marginBottom: "28px",
@@ -352,7 +352,7 @@ export default function HowItWorks() {
                                                     style={{
                                                         fontSize: "11px",
                                                         fontWeight: 700,
-                                                        color: "#3282B8",
+                                                        color: "#4E9CD3",
                                                         letterSpacing: "0.1em",
                                                         textTransform: "uppercase",
                                                     }}

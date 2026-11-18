@@ -22,7 +22,7 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
     const style = {
         width: "100%",
         height: "44px",
-        background: "#3282B8",
+        background: "#236A9E",
         color: "#fff",
         border: "none",
         borderRadius: "12px",
@@ -43,8 +43,8 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
             <Link
                 to={href}
                 style={style}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
             >
                 {children}
             </Link>
@@ -56,8 +56,8 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
             onClick={onClick}
             disabled={disabled}
             style={{ ...style, opacity: disabled ? 0.7 : 1, cursor: disabled ? "wait" : "pointer" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
         >
             {children}
         </button>

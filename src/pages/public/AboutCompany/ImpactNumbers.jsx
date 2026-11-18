@@ -29,7 +29,7 @@ export default function ImpactNumbers() {
                             >
                                 {value}
                             </span>
-                            <span className="text-[#475569] text-xs font-bold tracking-[0.14em]">
+                            <span className="text-[#94A3B8] text-xs font-bold tracking-[0.14em]">
                                 {label}
                             </span>
                         </div>

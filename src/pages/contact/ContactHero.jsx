@@ -72,16 +72,16 @@ export default function ContactHero() {
                 <div className="text-center mb-14 animate-[fadeUp_0.6s_ease_both]">
                     <span
                         className="inline-block text-xs font-bold uppercase tracking-[0.14em] mb-4"
-                        style={{ color: "#3282B8" }}
+                        style={{ color: "#4E9CD3" }}
                     >
                         Contact Us
                     </span>
 
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-100 leading-tight mb-4">
-                        Get in <span style={{ color: "#3282B8" }}>Touch</span>
+                        Get in <span style={{ color: "#4E9CD3" }}>Touch</span>
                     </h1>
 
-                    <p className="text-base text-slate-500 max-w-lg mx-auto leading-relaxed">
+                    <p className="text-base text-slate-400 max-w-lg mx-auto leading-relaxed">
                         We're here to help with your learning journey. Reach out for technical support,
                         partnerships or any other question.
                     </p>
@@ -125,7 +125,7 @@ export default function ContactHero() {
                             {/* Body */}
                             <div className="flex flex-col max-md:flex-1">
                                 <p className="text-sm font-bold text-white mb-1">{card.title}</p>
-                                <p className="text-xs text-slate-500 mb-2.5 leading-relaxed">{card.sub}</p>
+                                <p className="text-xs text-slate-400 mb-2.5 leading-relaxed">{card.sub}</p>
                                 <div className="flex flex-col gap-1">
                                     {card.values.map((v) =>
                                         v.href ? (

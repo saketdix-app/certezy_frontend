@@ -164,7 +164,7 @@ function FooterLink({ to = "#", children, highlight }) {
             className={`block py-1 text-sm transition-colors duration-150 no-underline ${
                 highlight
                     ? "text-blue-400 font-semibold hover:text-blue-300"
-                    : "text-slate-500 font-normal hover:text-slate-200"
+                    : "text-slate-400 font-normal hover:text-slate-200"
             }`}
         >
             {children}
@@ -202,7 +202,7 @@ function BackToTop() {
     return (
         <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-1.5 bg-transparent border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 text-xs font-semibold text-slate-500 hover:text-slate-200 transition-all duration-200 cursor-pointer"
+            className="flex items-center gap-1.5 bg-transparent border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-200 cursor-pointer"
         >
             <IconArrowUp /> Back to top
         </button>
@@ -221,7 +221,7 @@ function SupportCard() {
                     <IconMail />
                 </span>
                 <div>
-                    <p className="text-xs text-slate-500 mb-0.5">Email us</p>
+                    <p className="text-xs text-slate-400 mb-0.5">Email us</p>
                     <a
                         href={`mailto:${SUPPORT_EMAIL}`}
                         className="text-sm text-slate-400 font-medium hover:text-white"
@@ -238,7 +238,7 @@ function SupportCard() {
                         <IconPhone />
                     </span>
                     <div>
-                        <p className="text-xs text-slate-500 mb-0.5">Call us · {phone.label}</p>
+                        <p className="text-xs text-slate-400 mb-0.5">Call us · {phone.label}</p>
                         <a href={phone.href} className="text-sm text-slate-400 font-medium hover:text-white">
                             {phone.number}
                         </a>
@@ -271,7 +271,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <CertezyLogo />
-                        <p className="text-sm text-slate-500 leading-relaxed mb-5">
+                        <p className="text-sm text-slate-400 leading-relaxed mb-5">
                             Industry-recognized certification courses taught by experts. Advance your career
                             with confidence.
                         </p>
@@ -327,7 +327,7 @@ export default function Footer() {
                 <div className="md:hidden">
                     <div className="pb-6 border-b border-white/[0.07]">
                         <CertezyLogo />
-                        <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                        <p className="text-sm text-slate-400 leading-relaxed mb-4">
                             Industry-recognized certification courses to accelerate your career.
                         </p>
                         <SocialLinks />
@@ -377,29 +377,29 @@ export default function Footer() {
                             <p className="text-[13px] font-semibold text-slate-300">
                                 {APP_NAME} is a PMI<sup>®</sup> Authorized Training Partner
                             </p>
-                            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">{PMI_ATP.notice}</p>
+                            <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{PMI_ATP.notice}</p>
                         </div>
                     </div>
                     <div className="flex items-center justify-between flex-wrap gap-3 py-5">
-                        <span className="text-xs text-slate-600">
+                        <span className="text-xs text-slate-400">
                             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
                         </span>
                         <div className="flex items-center gap-5 flex-wrap">
                             <Link
                                 to={ROUTES.PRIVACY}
-                                className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
+                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Privacy Policy
                             </Link>
                             <Link
                                 to={ROUTES.TERMS}
-                                className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
+                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Terms of Service
                             </Link>
                             <Link
                                 to={ROUTES.COMPLAINTS}
-                                className="text-xs text-slate-600 hover:text-slate-400 transition-colors no-underline"
+                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Complaints Policy
                             </Link>

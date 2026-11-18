@@ -7,7 +7,7 @@ export default function AboutHero() {
             <div className="relative max-w-[1440px] mx-auto px-6 py-24 md:py-32">
                 <div className="text-center max-w-[950px] mx-auto">
                     {/* Badge */}
-                    <div className="inline-flex items-center border border-[#3282B8]/40 text-[#3282B8] px-5 py-2 rounded-full text-sm font-medium mb-6">
+                    <div className="inline-flex items-center border border-[#3282B8]/40 text-[#4E9CD3] px-5 py-2 rounded-full text-sm font-medium mb-6">
                         ABOUT CERTEZY
                     </div>
 
