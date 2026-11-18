@@ -57,7 +57,7 @@ export default function NotificationsMenu({ className }) {
                 )}
             </button>
             {open && (
-                <div className="absolute right-0 z-50 mt-2 w-[min(340px,calc(100vw-24px))] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
+                <div className="absolute right-0 z-50 mt-2 w-[min(340px,calc(100vw-24px))] overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-xl">
                     <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5">
                         <p className="text-[14px] font-bold text-slate-900">Notifications</p>
                         {data.unread > 0 && (

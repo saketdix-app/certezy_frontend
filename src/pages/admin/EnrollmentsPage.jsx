@@ -238,7 +238,7 @@ export default function EnrollmentsPage() {
                             onClick={() => setFilter("status", key)}
                             aria-pressed={active}
                             className={cn(
-                                "text-left bg-white rounded-2xl border p-4 transition-all",
+                                "text-left bg-surface rounded-2xl border p-4 transition-all",
                                 active
                                     ? "border-action ring-2 ring-action/15"
                                     : "border-slate-100 hover:border-slate-200"
@@ -302,7 +302,7 @@ export default function EnrollmentsPage() {
 
             {/* Filters */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 p-4"
+                className="bg-surface rounded-2xl border border-slate-100 p-4"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -396,7 +396,7 @@ export default function EnrollmentsPage() {
 
             {/* Enrollments Table */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading ? (
@@ -560,7 +560,7 @@ export default function EnrollmentsPage() {
 }
 
 const inputCls =
-    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 // ─── Breakdown: stacked bar per row (completed / in progress / not started) ──
 
@@ -571,7 +571,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
 
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 p-5"
+            className="bg-surface rounded-2xl border border-slate-100 p-5"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="flex items-center justify-between gap-3 mb-4">

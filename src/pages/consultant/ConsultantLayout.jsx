@@ -5,6 +5,8 @@ import { Award, BookOpenCheck, CalendarClock, LayoutDashboard, LogOut, MoreHoriz
 
 import Logo from "@/components/shared/Logo";
 import NotificationsMenu from "@/components/shared/NotificationsMenu";
+import ThemeToggle from "@/components/layout/ThemeToggle";
+import { usePortalTheme } from "@/lib/portalTheme";
 import { logoutUser, selectUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +32,7 @@ export default function ConsultantLayout() {
     const dispatch = useDispatch();
     const { pathname } = useLocation();
     const [moreOpen, setMoreOpen] = useState(false);
+    const [theme, setTheme] = usePortalTheme();
     const logout = async () => {
         try {
             await dispatch(logoutUser());
@@ -39,13 +42,14 @@ export default function ConsultantLayout() {
     };
 
     return (
-        <div className="min-h-dvh bg-slate-100" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6">
+        <div className="min-h-dvh bg-page" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-surface px-4 lg:px-6">
                 <div className="flex items-center gap-2">
                     <Logo to="/consultant" height={26} />
                     <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-action-soft-ink">Sales</span>
                 </div>
                 <div className="flex items-center gap-3">
+                    <ThemeToggle mode={theme} onChange={setTheme} />
                     <NotificationsMenu />
                     <span className="hidden text-[13px] text-slate-600 sm:inline">{user?.name}</span>
                     <button
@@ -59,7 +63,7 @@ export default function ConsultantLayout() {
             </header>
 
             <div className="flex">
-                <nav aria-label="Sales workspace" className="sticky top-14 hidden h-[calc(100dvh-56px)] w-56 shrink-0 border-r border-slate-200 bg-white p-3 lg:block">
+                <nav aria-label="Sales workspace" className="sticky top-14 hidden h-[calc(100dvh-56px)] w-56 shrink-0 border-r border-slate-200 bg-surface p-3 lg:block">
                     <ul className="space-y-1">
                         {NAV.map(({ to, label, icon: Icon, end }) => (
                             <li key={to}>
@@ -90,7 +94,7 @@ export default function ConsultantLayout() {
             {/* Phone: bottom tabs + More */}
             {moreOpen && (
                 <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setMoreOpen(false)}>
-                    <ul className="absolute inset-x-3 bottom-[68px] rounded-2xl bg-white p-2 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                    <ul className="absolute inset-x-3 bottom-[68px] rounded-2xl bg-surface p-2 shadow-xl" onClick={(e) => e.stopPropagation()}>
                         {MORE.map(({ to, label, icon: Icon }) => (
                             <li key={to}>
                                 <NavLink
@@ -107,7 +111,7 @@ export default function ConsultantLayout() {
                     </ul>
                 </div>
             )}
-            <nav aria-label="Sales workspace" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-white lg:hidden">
+            <nav aria-label="Sales workspace" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-surface lg:hidden">
                 {TABS.map(({ to, label, icon: Icon, end }) => (
                     <NavLink
                         key={to}

@@ -6,7 +6,7 @@ import { isResizableImage, loadImageUrl, renderAdjusted } from "@/lib/image";
 import ThumbnailAdjuster from "@/components/admin/ThumbnailAdjuster";
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 function Preview({ kind, url, aspect }) {
     if (kind === "image") {
@@ -164,7 +164,7 @@ export default function FileUpload({
     return (
         <div className="space-y-2">
             {value && !uploading ? (
-                <div className="relative border border-slate-200 rounded-xl p-2 bg-white">
+                <div className="relative border border-slate-200 rounded-xl p-2 bg-surface">
                     <Preview kind={kind} url={value} aspect={aspect} />
                     <div className="flex items-center justify-between gap-2 mt-2 px-1">
                         <div className="flex items-center gap-3">

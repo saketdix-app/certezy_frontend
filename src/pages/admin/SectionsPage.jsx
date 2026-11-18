@@ -48,7 +48,7 @@ function SectionForm({ section, onSave, onCancel }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <h3 className="text-lg font-semibold text-slate-900 mb-4">
                 {section?.id ? "Edit Section" : "Create Section"}
             </h3>
@@ -151,7 +151,7 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                 />
                 <section className="absolute inset-y-0 right-0 max-w-full flex">
                     <div className="relative w-screen max-w-md">
-                        <div className="h-full flex flex-col bg-white shadow-xl">
+                        <div className="h-full flex flex-col bg-surface shadow-xl">
                             {/* Header */}
                             <div className="px-6 py-4 border-b border-slate-200">
                                 <div className="flex items-center justify-between">
@@ -259,7 +259,7 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[720px]">
                     <thead>
@@ -346,19 +346,19 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
 // Pagination Component
 function Pagination({ currentPage, totalPages, onPageChange }) {
     return (
-        <div className="flex items-center justify-between bg-white px-4 py-3 border-t border-slate-200 sm:px-6">
+        <div className="flex items-center justify-between bg-surface px-4 py-3 border-t border-slate-200 sm:px-6">
             <div className="flex-1 flex justify-between sm:hidden">
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50"
+                    className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
                 >
                     Previous
                 </button>
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
                 >
                     Next
                 </button>
@@ -375,14 +375,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
                         <button
                             onClick={() => onPageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-surface text-sm font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronLeft size={16} />
                         </button>
                         <button
                             onClick={() => onPageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-surface text-sm font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -564,7 +564,7 @@ export default function SectionsPage() {
             </div>
 
             {/* Search and Filters */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1">

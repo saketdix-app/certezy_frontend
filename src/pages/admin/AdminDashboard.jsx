@@ -34,7 +34,7 @@ function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-slate-600">{title}</p>
@@ -66,7 +66,7 @@ function RevenueChart({ data }) {
     const maxRevenue = Math.max(...data.map((d) => d.revenue));
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Revenue Overview</h3>
             <div className="h-64 flex items-end justify-between gap-2">
                 {data.map((item) => (
@@ -115,7 +115,7 @@ function RecentPaymentsTable({ payments }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-slate-900">Recent Payments</h3>
                 <button
@@ -190,7 +190,7 @@ function PendingReviews({ reviews }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-slate-900">Pending Reviews</h3>
                 <button
@@ -261,7 +261,7 @@ function QuickActions() {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 gap-4">
                 {actions.map((action) => (

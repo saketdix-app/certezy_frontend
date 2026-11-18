@@ -52,7 +52,7 @@ export default function GatewayStatus() {
     };
 
     return (
-        <div className="rounded-2xl border border-slate-200 bg-white p-5">
+        <div className="rounded-2xl border border-slate-200 bg-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <p className="text-[15px] font-bold text-slate-900">Payment gateways</p>

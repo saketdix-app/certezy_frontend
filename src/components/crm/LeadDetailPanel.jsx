@@ -169,7 +169,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                 role="dialog"
                 aria-modal="true"
                 aria-label="Lead details"
-                className="flex h-full w-full max-w-[560px] flex-col bg-white shadow-2xl"
+                className="flex h-full w-full max-w-[560px] flex-col bg-surface shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {!lead ? (
@@ -317,7 +317,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             </p>
                                         )}
                                         <div className="flex justify-end gap-2">
-                                            <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
+                                            <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
                                                 Cancel
                                             </button>
                                             <button type="button" disabled={busy} onClick={moveStage} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">

@@ -28,7 +28,7 @@ const money = (obj) =>
 
 function Card({ label, value, sub }) {
     return (
-        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <div className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
             <p className="text-[12px] font-semibold text-slate-500">{label}</p>
             <p className="mt-1 text-[22px] font-extrabold text-slate-900">{value}</p>
             {sub && <p className="text-[12px] text-slate-500">{sub}</p>}
@@ -116,7 +116,7 @@ export default function SalesBoard({ isAdmin }) {
                         <Card label="Discount links" value={`${data.discount_links.redeemed} / ${data.discount_links.generated}`} sub={`redeemed · ${money(data.discount_links.revenue)}`} />
                     </div>
 
-                    <section className="rounded-xl border border-slate-200 bg-white p-4">
+                    <section className="rounded-xl border border-slate-200 bg-surface p-4">
                         <h2 className="mb-2 text-[15px] font-bold text-slate-900">Payments by status</h2>
                         <div className="flex flex-wrap gap-x-6 gap-y-1">
                             {STATES.map(([k, l, tone]) => (
@@ -129,7 +129,7 @@ export default function SalesBoard({ isAdmin }) {
                     </section>
 
                     <div className="grid gap-5 lg:grid-cols-2">
-                        <section className="rounded-xl border border-slate-200 bg-white p-4">
+                        <section className="rounded-xl border border-slate-200 bg-surface p-4">
                             <h2 className="mb-2 text-[15px] font-bold text-slate-900">Course mix</h2>
                             {!data.by_course.length ? (
                                 <p className="text-[13px] text-slate-500">No sales in this period.</p>
@@ -146,7 +146,7 @@ export default function SalesBoard({ isAdmin }) {
                                 </ul>
                             )}
                         </section>
-                        <section className="rounded-xl border border-slate-200 bg-white p-4">
+                        <section className="rounded-xl border border-slate-200 bg-surface p-4">
                             <h2 className="mb-2 text-[15px] font-bold text-slate-900">{isAdmin && !ownerId ? "By consultant" : "By lead source"}</h2>
                             <ul className="space-y-1.5 text-[13px]">
                                 {(isAdmin && !ownerId ? data.by_consultant : data.by_source).map((r, i) => (
@@ -162,7 +162,7 @@ export default function SalesBoard({ isAdmin }) {
                         </section>
                     </div>
 
-                    <section className="rounded-xl border border-slate-200 bg-white p-4">
+                    <section className="rounded-xl border border-slate-200 bg-surface p-4">
                         <h2 className="mb-2 text-[15px] font-bold text-slate-900">Discount links</h2>
                         <p className="text-[13px] text-slate-600">
                             Sent {data.discount_links.generated} · opened {data.discount_links.clicked} · paid {data.discount_links.redeemed} · expired{" "}
@@ -170,7 +170,7 @@ export default function SalesBoard({ isAdmin }) {
                         </p>
                     </section>
 
-                    <section className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                    <section className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
                         <h2 className="px-4 pt-3 text-[15px] font-bold text-slate-900">Recent sales</h2>
                         <table className="mt-2 w-full min-w-[640px] text-left text-[13px]">
                             <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
@@ -207,7 +207,7 @@ export default function SalesBoard({ isAdmin }) {
                     </section>
 
                     {isAdmin && limit != null && (
-                        <section className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                        <section className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-surface p-4">
                             <p className="text-[13px] text-slate-700">
                                 <b>Largest discount</b> Consultants and Sub-Admins can send without an Admin:
                             </p>

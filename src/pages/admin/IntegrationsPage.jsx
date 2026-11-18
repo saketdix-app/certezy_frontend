@@ -58,7 +58,7 @@ function Switch({ checked, onChange, label, disabled }) {
             onClick={() => onChange(!checked)}
             className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-action" : "bg-slate-300")}
         >
-            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
+            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
         </button>
     );
 }
@@ -376,7 +376,7 @@ function ChooseMany({ result, onChoose }) {
                     <li key={o.id}>
                         <label
                             className={cn(
-                                "flex cursor-pointer items-center gap-2.5 rounded-lg border bg-white px-3 py-2 text-[13px] font-semibold text-slate-800",
+                                "flex cursor-pointer items-center gap-2.5 rounded-lg border bg-surface px-3 py-2 text-[13px] font-semibold text-slate-800",
                                 picked.includes(o.id) ? "border-action" : "border-slate-200"
                             )}
                         >
@@ -446,7 +446,7 @@ function ConnectResult({ result, onChoose, onClose }) {
             )}
             {result.status !== "working" && (
                 <div className="mt-3 flex justify-end">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold text-slate-700">
                         Close
                     </button>
                 </div>
@@ -567,7 +567,7 @@ function LeadForms({ integration, courses, onSave }) {
                             {shown
                                 .filter((f) => (f.owner_name ?? "") === g)
                                 .map((f) => (
-                                    <li key={f.id} className={cn("grid items-center gap-2 rounded-lg border bg-white p-2 sm:grid-cols-[1fr_minmax(0,220px)]", isOn(f.id) ? "border-slate-200" : "border-dashed border-slate-200 opacity-70")}>
+                                    <li key={f.id} className={cn("grid items-center gap-2 rounded-lg border bg-surface p-2 sm:grid-cols-[1fr_minmax(0,220px)]", isOn(f.id) ? "border-slate-200" : "border-dashed border-slate-200 opacity-70")}>
                                         <label className="flex min-w-0 cursor-pointer items-start gap-2">
                                             <input type="checkbox" checked={isOn(f.id)} disabled={allForms} onChange={() => toggle(f.id)} className="mt-0.5 h-4 w-4 accent-action" aria-label={`Import ${f.name}`} />
                                             <span className="min-w-0">
@@ -777,7 +777,7 @@ export default function IntegrationsPage() {
                     const info = INFO[i.source];
                     const healthy = i.last_success_at && (!i.last_error_at || new Date(i.last_success_at) > new Date(i.last_error_at));
                     return (
-                        <section key={i.source} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4">
+                        <section key={i.source} className="flex flex-col rounded-xl border border-slate-200 bg-surface p-4">
                             <div className="flex items-start justify-between gap-3">
                                 <div>
                                     <h2 className="text-[15px] font-bold text-slate-900">{info.title}</h2>
@@ -939,7 +939,7 @@ export default function IntegrationsPage() {
             </div>
 
             {automations && (
-                <section className="rounded-xl border border-slate-200 bg-white p-4">
+                <section className="rounded-xl border border-slate-200 bg-surface p-4">
                     <h2 className="text-[15px] font-bold text-slate-900">Automations</h2>
                     <p className="mt-0.5 mb-3 text-[12.5px] text-slate-500">
                         Automatic moves only go forward and show on the lead's timeline as "automatic".

@@ -97,7 +97,7 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                                                 onClose();
                                                 onOpenLead(d.id);
                                             }}
-                                            className="rounded-md border border-amber-300 bg-white px-2 py-0.5 text-[12px] font-semibold"
+                                            className="rounded-md border border-amber-300 bg-surface px-2 py-0.5 text-[12px] font-semibold"
                                         >
                                             Open lead
                                         </button>

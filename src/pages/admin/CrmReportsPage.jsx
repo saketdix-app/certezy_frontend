@@ -29,7 +29,7 @@ const money = (obj) =>
 
 function Kpi({ label, value, sub, tone }) {
     return (
-        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <div className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
             <p className="text-[12px] font-semibold text-slate-500">{label}</p>
             <p className={cn("mt-1 text-[22px] font-extrabold text-slate-900", tone)}>{value}</p>
             {sub && <p className="text-[12px] text-slate-500">{sub}</p>}
@@ -39,7 +39,7 @@ function Kpi({ label, value, sub, tone }) {
 
 function Panel({ title, children, className }) {
     return (
-        <section className={cn("rounded-xl border border-slate-200 bg-white p-4", className)}>
+        <section className={cn("rounded-xl border border-slate-200 bg-surface p-4", className)}>
             <h2 className="mb-3 text-[15px] font-bold text-slate-900">{title}</h2>
             {children}
         </section>
@@ -151,7 +151,7 @@ export default function CrmReportsPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     {PRESETS.map(([d, l]) => (
-                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 hover:border-action">
+                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 hover:border-action">
                             {l}
                         </button>
                     ))}
@@ -166,7 +166,7 @@ export default function CrmReportsPage() {
                         type="button"
                         onClick={exportCsv}
                         disabled={exporting}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] font-semibold text-slate-700 disabled:opacity-60"
                     >
                         {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} aria-hidden="true" />} Export leads (CSV)
                     </button>
