@@ -176,7 +176,7 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                     <button
                         type="submit"
                         disabled={busy}
-                        className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Add lead

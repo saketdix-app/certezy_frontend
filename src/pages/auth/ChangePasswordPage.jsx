@@ -94,7 +94,7 @@ export default function ChangePasswordPage() {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full h-11 mt-2 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-[14px] transition-colors disabled:opacity-60"
+                    className="w-full h-11 mt-2 rounded-xl bg-action hover:bg-action-hover text-white font-bold text-[14px] transition-colors disabled:opacity-60"
                 >
                     {submitting ? "Updating…" : "Update password"}
                 </button>

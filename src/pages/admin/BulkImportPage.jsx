@@ -167,8 +167,8 @@ export default function BulkImportPage() {
             {/* Header */}
             <div>
                 <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <FileUp size={18} className="text-primary" />
+                    <div className="w-9 h-9 rounded-xl bg-action/10 flex items-center justify-center">
+                        <FileUp size={18} className="text-action" />
                     </div>
                     <h1 className="text-[20px] sm:text-[22px] font-extrabold text-slate-900">Bulk Import</h1>
                 </div>
@@ -190,12 +190,12 @@ export default function BulkImportPage() {
                         className={cn(
                             "text-left rounded-2xl border p-4 transition-all",
                             type === t
-                                ? "border-primary bg-primary/5 ring-2 ring-primary/15"
+                                ? "border-action bg-action/5 ring-2 ring-action/15"
                                 : "border-slate-200 bg-white hover:border-slate-300"
                         )}
                     >
                         <div className="flex items-center gap-2 mb-1.5">
-                            <Icon size={16} className={type === t ? "text-primary" : "text-slate-400"} />
+                            <Icon size={16} className={type === t ? "text-action" : "text-slate-500"} />
                             <span className="text-[14px] font-bold text-slate-900">{label}</span>
                         </div>
                         <p className="text-[12px] text-slate-500 leading-snug">{hint}</p>
@@ -215,7 +215,7 @@ export default function BulkImportPage() {
                     <button
                         type="button"
                         onClick={() => download(type)}
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:border-primary hover:text-primary transition-colors"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action transition-colors"
                     >
                         <Download size={15} /> Download sample CSV
                     </button>
@@ -229,7 +229,7 @@ export default function BulkImportPage() {
                             className="w-full flex items-center justify-between px-4 py-3 text-[13px] font-semibold text-slate-700"
                         >
                             <span className="inline-flex items-center gap-2">
-                                <Info size={14} className="text-primary" /> Column guide ({columns.length}{" "}
+                                <Info size={14} className="text-action" /> Column guide ({columns.length}{" "}
                                 columns)
                             </span>
                             <ChevronDown
@@ -265,9 +265,9 @@ export default function BulkImportPage() {
                             e.preventDefault();
                             onFile(e.dataTransfer.files?.[0]);
                         }}
-                        className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-300 hover:border-primary rounded-2xl p-8 text-center cursor-pointer transition-colors"
+                        className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-300 hover:border-action rounded-2xl p-8 text-center cursor-pointer transition-colors"
                     >
-                        <Upload className="w-7 h-7 text-slate-400" />
+                        <Upload className="w-7 h-7 text-slate-500" />
                         <span className="text-[14px] font-semibold text-slate-700">
                             Click or drop your CSV here
                         </span>
@@ -284,7 +284,7 @@ export default function BulkImportPage() {
                     </label>
                 ) : (
                     <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
-                        <FileUp size={18} className="text-primary shrink-0" />
+                        <FileUp size={18} className="text-action shrink-0" />
                         <div className="flex-1 min-w-0">
                             <p className="text-[13.5px] font-semibold text-slate-800 truncate">{file.name}</p>
                             <p className="text-[12px] text-slate-500">
@@ -296,7 +296,7 @@ export default function BulkImportPage() {
                             type="button"
                             onClick={reset}
                             aria-label="Remove file"
-                            className="p-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50"
+                            className="p-2 rounded-lg text-slate-500 hover:text-rose-500 hover:bg-rose-50"
                         >
                             <X size={16} />
                         </button>
@@ -309,7 +309,7 @@ export default function BulkImportPage() {
                             type="checkbox"
                             checked={createCategories}
                             onChange={(e) => setCreateCategories(e.target.checked)}
-                            className="w-4 h-4 accent-[#3282B8]"
+                            className="w-4 h-4 accent-action"
                         />
                         Create categories that don&apos;t exist yet
                     </label>
@@ -321,7 +321,7 @@ export default function BulkImportPage() {
                             type="checkbox"
                             checked={confirmGenuine}
                             onChange={(e) => setConfirmGenuine(e.target.checked)}
-                            className="w-4 h-4 mt-0.5 accent-[#3282B8] shrink-0"
+                            className="w-4 h-4 mt-0.5 accent-action shrink-0"
                         />
                         <span>
                             I confirm every row is a genuine review given by a real learner, with their rating
@@ -336,7 +336,7 @@ export default function BulkImportPage() {
                         type="button"
                         disabled={!csv || !!busy}
                         onClick={() => run(true)}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {busy === "check" && <Loader2 size={14} className="animate-spin" />}
                         Check file (preview)
@@ -345,7 +345,7 @@ export default function BulkImportPage() {
                         type="button"
                         disabled={!csv || !!busy || (type === "reviews" && !confirmGenuine)}
                         onClick={() => run(false)}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {busy === "import" && <Loader2 size={14} className="animate-spin" />}
                         Import
@@ -400,7 +400,7 @@ function ImportResult({ result }) {
                     {!result.dryRun && (
                         <Link
                             to="/admin/courses"
-                            className="inline-block mt-1.5 font-semibold text-primary hover:underline"
+                            className="inline-block mt-1.5 font-semibold text-action hover:underline"
                         >
                             Go to Courses →
                         </Link>
@@ -427,7 +427,7 @@ function ImportResult({ result }) {
                 <div className="max-h-80 overflow-auto border-t border-rose-200 bg-white rounded-b-xl">
                     <table className="w-full text-[12.5px]">
                         <thead className="sticky top-0 bg-white">
-                            <tr className="text-left text-slate-400 uppercase tracking-wider text-[10.5px]">
+                            <tr className="text-left text-slate-500 uppercase tracking-wider text-[10.5px]">
                                 <th className="py-2 px-4 font-bold">Row</th>
                                 <th className="py-2 px-4 font-bold">Column</th>
                                 <th className="py-2 px-4 font-bold">Problem</th>
@@ -491,7 +491,7 @@ function StandardPacks() {
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <Cloud size={17} className="text-primary" />
+                        <Cloud size={17} className="text-action" />
                         <h2 className="text-[15px] font-extrabold text-slate-900">Standard courses</h2>
                     </div>
                     <p className="text-[12.5px] text-slate-500">
@@ -506,7 +506,7 @@ function StandardPacks() {
                         type="button"
                         disabled={!!importing}
                         onClick={() => importPack({ id: "all", title: "All courses" })}
-                        className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-60"
+                        className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-60"
                     >
                         {importing === "all" ? (
                             <Loader2 size={14} className="animate-spin" />
@@ -560,7 +560,7 @@ function StandardPacks() {
                                     "self-start inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[12.5px] font-semibold transition-colors disabled:opacity-60",
                                     done[p.id]
                                         ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                        : "bg-primary text-white hover:bg-primary-hover"
+                                        : "bg-action text-white hover:bg-action-hover"
                                 )}
                             >
                                 {importing === p.id ? (

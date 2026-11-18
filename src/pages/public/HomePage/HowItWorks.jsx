@@ -183,7 +183,7 @@ function SampleCertificateModal({ onClose }) {
                     </p>
                     <Link
                         to="/courses"
-                        className="rounded-lg bg-[#3282B8] px-4 py-2 text-[13px] font-bold text-white no-underline hover:opacity-90"
+                        className="rounded-lg bg-action px-4 py-2 text-[13px] font-bold text-white no-underline hover:opacity-90"
                     >
                         Start earning yours
                     </Link>

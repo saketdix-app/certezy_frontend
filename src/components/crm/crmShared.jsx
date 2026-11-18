@@ -30,7 +30,7 @@ export function CrmModal({ title, onClose, children, wide }) {
             >
                 <div className="mb-4 flex items-start justify-between gap-3">
                     <h2 className="text-[17px] font-bold text-slate-900">{title}</h2>
-                    <button type="button" onClick={onClose} aria-label="Close" className="px-1 text-[20px] leading-none text-slate-400 hover:text-slate-600">
+                    <button type="button" onClick={onClose} aria-label="Close" className="px-1 text-[20px] leading-none text-slate-500 hover:text-slate-600">
                         ×
                     </button>
                 </div>

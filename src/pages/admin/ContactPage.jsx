@@ -24,7 +24,7 @@ const PER_PAGE = 10;
 
 const STATUS_COLORS = {
     new: { bg: "#FFFBEB", color: "#F59E0B", icon: Clock },
-    read: { bg: "#EBF4FF", color: "#3282B8", icon: MessageSquare },
+    read: { bg: "#EEF6FC", color: "#236A9E", icon: MessageSquare },
     resolved: { bg: "#F0FDF4", color: "#16A34A", icon: CheckCircle },
 };
 
@@ -246,16 +246,16 @@ export default function ContactPage() {
                             label: "Total Messages",
                             value: stats.total,
                             icon: MessageSquare,
-                            bg: "#EBF4FF",
-                            color: "#3282B8",
+                            bg: "#EEF6FC",
+                            color: "#236A9E",
                         },
                         { label: "New", value: stats.new, icon: Clock, bg: "#FFFBEB", color: "#F59E0B" },
                         {
                             label: "Read",
                             value: stats.read,
                             icon: MessageSquare,
-                            bg: "#EBF4FF",
-                            color: "#3282B8",
+                            bg: "#EEF6FC",
+                            color: "#236A9E",
                         },
                         {
                             label: "Resolved",
@@ -278,7 +278,7 @@ export default function ContactPage() {
                                     <Icon size={20} style={{ color }} />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                                         {label}
                                     </p>
                                     <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
@@ -300,7 +300,7 @@ export default function ContactPage() {
                     <div className="flex-1">
                         <div className="relative">
                             <Search
-                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
+                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500"
                                 size={16}
                             />
                             <input
@@ -308,7 +308,7 @@ export default function ContactPage() {
                                 placeholder="Search by name, email, or subject..."
                                 value={searchTerm}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                             />
                         </div>
                     </div>
@@ -316,7 +316,7 @@ export default function ContactPage() {
                         <select
                             value={selectedStatus}
                             onChange={(e) => handleStatusFilter(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors"
+                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
                         >
                             <option value="">All Status</option>
                             <option value="new">New</option>
@@ -334,7 +334,7 @@ export default function ContactPage() {
             >
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3282B8]" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-action" />
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="text-center py-20">
@@ -391,7 +391,7 @@ export default function ContactPage() {
                                                             {message.email}
                                                         </p>
                                                         {message.phone && (
-                                                            <p className="text-xs text-slate-400">
+                                                            <p className="text-xs text-slate-500">
                                                                 {message.phone}
                                                             </p>
                                                         )}
@@ -563,9 +563,9 @@ export default function ContactPage() {
                                     {selectedMessage.replies.map((r) => (
                                         <div
                                             key={r.id}
-                                            className="ml-6 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] p-4"
+                                            className="ml-6 rounded-xl border border-brand-200 bg-action-soft p-4"
                                         >
-                                            <p className="text-[11.5px] font-semibold text-[#3282B8] mb-1">
+                                            <p className="text-[11.5px] font-semibold text-action mb-1">
                                                 Reply by {r.admin_name || "CERTEZY team"} ·{" "}
                                                 {formatDate(r.created_at)}
                                             </p>
@@ -590,7 +590,7 @@ export default function ContactPage() {
                                         maxLength={5000}
                                         autoFocus
                                         placeholder={`Hi ${selectedMessage.name?.split(" ")[0] || "there"},`}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] resize-y"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-[13.5px] text-slate-800 outline-none focus:border-action resize-y"
                                     />
                                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[12px] text-slate-500">
                                         <label className="flex items-center gap-2 cursor-pointer">
@@ -598,7 +598,7 @@ export default function ContactPage() {
                                                 type="checkbox"
                                                 checked={replyResolve}
                                                 onChange={(e) => setReplyResolve(e.target.checked)}
-                                                className="w-4 h-4 accent-[#3282B8]"
+                                                className="w-4 h-4 accent-action"
                                             />
                                             Mark as resolved after sending
                                         </label>
@@ -657,7 +657,7 @@ export default function ContactPage() {
                                             <button
                                                 onClick={handleSendReply}
                                                 disabled={sendingReply || replyText.trim().length < 2}
-                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-semibold hover:bg-[#2A6FA0] transition-colors disabled:opacity-50"
+                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-sm font-semibold hover:bg-action-hover transition-colors disabled:opacity-50"
                                             >
                                                 {sendingReply ? (
                                                     <Loader2 size={16} className="animate-spin" />
@@ -670,7 +670,7 @@ export default function ContactPage() {
                                     ) : (
                                         <button
                                             onClick={() => setReplyOpen(true)}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-semibold hover:bg-[#2A6FA0] transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-sm font-semibold hover:bg-action-hover transition-colors"
                                         >
                                             <Reply size={16} />
                                             Reply

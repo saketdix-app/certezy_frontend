@@ -64,7 +64,7 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
     );
 }
 
-export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll, enrolling = false }) {
+export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll, enrolling = false, onAdvisor = null, onSyllabus = null }) {
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const currency = useCurrency(); // ₹ in India, $ elsewhere
     if (!course) return null;
@@ -132,14 +132,31 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                 ) : (
                     <EnrollButton onClick={onEnroll} disabled={enrolling}>
                         {enrolling && <Loader2 size={16} className="animate-spin" />}
-                        {!isLoggedIn
-                            ? pricing.isFree
-                                ? "Log In to Enroll for Free"
-                                : "Log In to Enroll"
-                            : pricing.isFree
-                              ? "Enroll for Free"
-                              : "Enroll Now"}
+                        {pricing.isFree ? "Enroll for Free" : "Enroll Now"}
                     </EnrollButton>
+                )}
+
+                {/* Not ready to buy? Ask, or take the syllabus (each creates a lead) */}
+                {!isEnrolled && (onAdvisor || onSyllabus) && (
+                    <div className="mt-2.5 grid gap-2">
+                        {onAdvisor && (
+                            <button
+                                type="button"
+                                onClick={onAdvisor}
+                                className="w-full rounded-[10px] border border-slate-200 px-4 py-2.5 text-[13.5px] font-semibold text-slate-800 hover:bg-slate-50"
+                            >
+                                Talk to an advisor
+                            </button>
+                        )}
+                        {onSyllabus && (
+                            <button type="button" onClick={onSyllabus} className="text-[13px] font-semibold text-[#236A9E] hover:underline">
+                                Download the syllabus
+                            </button>
+                        )}
+                    </div>
+                )}
+                {!isLoggedIn && !isEnrolled && (
+                    <p className="mt-2 text-center text-[12px] text-slate-500">Create your account in the next step.</p>
                 )}
 
                 {/* Guarantee (paid courses only) */}

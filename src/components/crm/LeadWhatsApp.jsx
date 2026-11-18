@@ -65,14 +65,14 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                 <span className="inline-flex items-center gap-1.5">
                     <MessageCircle size={14} className="text-emerald-600" aria-hidden="true" /> WhatsApp conversation
                 </span>
-                <span className="text-[12px] font-semibold normal-case text-[#3282B8]">{open ? "Hide" : "Show"}</span>
+                <span className="text-[12px] font-semibold normal-case text-action">{open ? "Hide" : "Show"}</span>
             </button>
 
             {open && (
                 <div className="mt-2 rounded-xl border border-slate-200 bg-[#F7F5F0]">
                     {!data ? (
                         <div className="flex justify-center py-6">
-                            <Loader2 className="animate-spin text-slate-400" />
+                            <Loader2 className="animate-spin text-slate-500" />
                         </div>
                     ) : (
                         <>

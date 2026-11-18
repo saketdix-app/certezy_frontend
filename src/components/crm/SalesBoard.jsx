@@ -105,7 +105,7 @@ export default function SalesBoard({ isAdmin }) {
 
             {!data ? (
                 <div className="flex justify-center py-16">
-                    <Loader2 className="animate-spin text-slate-400" />
+                    <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : (
                 <div className="space-y-5">
@@ -213,7 +213,7 @@ export default function SalesBoard({ isAdmin }) {
                             </p>
                             <input type="number" min="1" max="100" value={limit} onChange={(e) => setLimit(e.target.value)} className={cn(inputCls, "w-24")} aria-label="Max discount percent" />
                             <span className="text-[13px] text-slate-600">%</span>
-                            <button type="button" onClick={saveLimit} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white">
+                            <button type="button" onClick={saveLimit} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white">
                                 Save
                             </button>
                         </section>

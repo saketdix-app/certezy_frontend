@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 10;
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 const fmtDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -200,14 +200,14 @@ export default function CertificatesPage() {
                 </div>
                 <button
                     onClick={() => setIssueOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] shrink-0"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover shrink-0"
                 >
                     <Plus size={15} /> Issue certificate
                 </button>
             </div>
 
             <div className="relative">
-                <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                     type="search"
                     value={searchInput}
@@ -226,7 +226,7 @@ export default function CertificatesPage() {
             >
                 {loading && rows.length === 0 ? (
                     <div className="flex justify-center py-16">
-                        <Loader2 className="w-6 h-6 animate-spin text-[#3282B8]" />
+                        <Loader2 className="w-6 h-6 animate-spin text-action" />
                     </div>
                 ) : rows.length === 0 ? (
                     <div className="text-center py-16">
@@ -315,7 +315,7 @@ export default function CertificatesPage() {
                                                     type="button"
                                                     onClick={() => setRegenTarget(c)}
                                                     title="Regenerate with corrected dates"
-                                                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-[12px] font-semibold text-[#3282B8] hover:bg-[#EBF4FF]"
+                                                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-[12px] font-semibold text-action hover:bg-action-soft"
                                                 >
                                                     <RotateCw size={13} /> Regenerate
                                                 </button>
@@ -323,7 +323,7 @@ export default function CertificatesPage() {
                                                     type="button"
                                                     onClick={() => setRevokeTarget(c)}
                                                     title="Revoke certificate"
-                                                    className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
+                                                    className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
@@ -511,12 +511,12 @@ function IssueCertificateModal({ onClose, onIssued }) {
             <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                     <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
-                        <Award size={18} className="text-[#3282B8]" /> Issue certificate
+                        <Award size={18} className="text-action" /> Issue certificate
                     </h3>
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                        className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-600"
                     >
                         <X size={18} />
                     </button>
@@ -615,7 +615,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                                     type="checkbox"
                                     checked={replace}
                                     onChange={(e) => setReplace(e.target.checked)}
-                                    className="w-4 h-4 accent-[#3282B8]"
+                                    className="w-4 h-4 accent-action"
                                 />
                                 Replace existing certificate (same number, new dates and PDF)
                             </label>
@@ -633,7 +633,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                     <button
                         onClick={submit}
                         disabled={busy || !student || !course || (exists && !replace)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
                     >
                         {busy ? <Loader2 size={15} className="animate-spin" /> : <Award size={15} />}
                         {replace ? "Replace certificate" : "Issue certificate"}
@@ -679,12 +679,12 @@ function RegenerateModal({ cert, onClose, onDone }) {
             <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                     <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
-                        <RotateCw size={17} className="text-[#3282B8]" /> Regenerate certificate
+                        <RotateCw size={17} className="text-action" /> Regenerate certificate
                     </h3>
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                        className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-600"
                     >
                         <X size={18} />
                     </button>
@@ -711,7 +711,7 @@ function RegenerateModal({ cert, onClose, onDone }) {
                     <button
                         onClick={save}
                         disabled={busy}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
                     >
                         {busy ? <Loader2 size={15} className="animate-spin" /> : <RotateCw size={15} />}
                         Regenerate
@@ -733,7 +733,7 @@ function Chosen({ title, subtitle, onClear }) {
                 type="button"
                 onClick={onClear}
                 aria-label="Change"
-                className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-200 hover:text-slate-600"
             >
                 <X size={16} />
             </button>

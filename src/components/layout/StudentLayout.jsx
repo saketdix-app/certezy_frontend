@@ -97,7 +97,7 @@ export default function StudentLayout() {
                                 >
                                     {/* Active left border */}
                                     {active && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full bg-[#3282B8]" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full bg-action" />
                                     )}
                                     <Icon
                                         size={17}

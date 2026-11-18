@@ -134,7 +134,7 @@ function RegisterBtn() {
             to="/register"
             className={cn(
                 "flex items-center h-[36px] px-5 rounded-lg shrink-0",
-                "bg-primary hover:bg-primary-hover",
+                "bg-action hover:bg-action-hover",
                 "text-[13.5px] font-bold text-white",
                 "transition-colors duration-200 whitespace-nowrap",
                 "shadow-sm"

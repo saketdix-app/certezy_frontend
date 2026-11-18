@@ -53,7 +53,7 @@ export default function CrmOverview({ name, leadsPath }) {
     if (!data) {
         return (
             <div className="flex justify-center py-20">
-                <Loader2 className="animate-spin text-slate-400" />
+                <Loader2 className="animate-spin text-slate-500" />
             </div>
         );
     }
@@ -85,7 +85,7 @@ export default function CrmOverview({ name, leadsPath }) {
 
             <p className="mt-5 text-[13px] text-slate-500">
                 Sales and revenue tracking is coming in a later update.{" "}
-                <Link to={leadsPath} className="font-semibold text-[#3282B8]">
+                <Link to={leadsPath} className="font-semibold text-action">
                     Go to my leads →
                 </Link>
             </p>

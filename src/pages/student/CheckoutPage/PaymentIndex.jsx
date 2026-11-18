@@ -36,7 +36,7 @@ export default function CheckoutPage() {
                     <p className="text-[15px] font-semibold text-slate-900 mb-3">{error}</p>
                     <button
                         onClick={() => navigate("/courses")}
-                        className="px-4 py-2 rounded-xl bg-[#3282B8] text-white text-sm font-bold"
+                        className="px-4 py-2 rounded-xl bg-action text-white text-sm font-bold"
                     >
                         Browse Courses
                     </button>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
                         <button
                             onClick={handlePay}
                             disabled={paying || scriptLoading}
-                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-[15px] text-white bg-[#3282B8] hover:bg-[#2a6fa0] disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(50,130,184,0.35)]"
+                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-[15px] text-white bg-action hover:bg-action-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(50,130,184,0.35)]"
                         >
                             {paying || scriptLoading ? (
                                 <>

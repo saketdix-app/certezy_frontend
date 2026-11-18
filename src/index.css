@@ -2,14 +2,39 @@
 @import "tailwindcss";
 
 @theme {
+    /* ── Brand blue scale (500 = the logo blue) ── */
+    --color-brand-50: #eef6fc;
+    --color-brand-100: #d7eaf7;
+    --color-brand-200: #b0d5ef;
+    --color-brand-300: #7fbae3;
+    --color-brand-400: #4e9cd3;
+    --color-brand-500: #3282b8;
+    --color-brand-600: #236a9e;
+    --color-brand-700: #1b5582;
+    --color-brand-800: #164569;
+    --color-brand-900: #123852;
+    --color-brand-950: #0a1628;
+
+    /* ── Actions: buttons, links, focus — brand-600 so small white text
+       passes WCAG AA (5.79 : 1; the logo blue is 4.18) ── */
+    --color-action: #236a9e;
+    --color-action-hover: #1b5582;
+    --color-action-soft: #eef6fc;
+    --color-action-soft-ink: #1b5582;
+
+    /* ── Surfaces (redefined by the admin dark mode) ── */
+    --color-surface: #ffffff;
+
+    /* Logo blue, kept for logos, illustrations and text on the navy website */
     --color-primary: #3282b8;
     --color-primary-hover: #2a6fa0;
     --color-primary-light: #ebf4fb;
-    --color-page: #f8f9fa;
-    --color-border: #e5e7eb;
-    --color-text-primary: #374151;
-    --color-text-secondary: #6b7280;
-    --color-text-muted: #9ca3af;
+    --color-page: #f5f8fb;
+    --color-border: #e2e8f0;
+    --color-text-primary: #334155;
+    --color-text-secondary: #475569;
+    /* was #9ca3af (2.5 : 1 on white); now 5.2 : 1 */
+    --color-text-muted: #5e6e85;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --spacing-navbar: 64px;
     --shadow-drop: 0 8px 30px rgba(0, 0, 0, 0.18);
@@ -23,7 +48,7 @@ body {
 }
 
 body {
-    background: linear-gradient(180deg, #ebf4fb 0%, #f8f9fa 100%);
+    background: var(--color-page);
     min-height: 100vh;
 }
 

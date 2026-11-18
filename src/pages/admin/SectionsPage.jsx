@@ -48,44 +48,44 @@ function SectionForm({ section, onSave, onCancel }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">
                 {section?.id ? "Edit Section" : "Create Section"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Section Title</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Section Title</label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Introduction to React"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Course ID</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Course ID</label>
                         <input
                             type="text"
                             value={formData.courseId}
                             onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="course-123"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Order</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Order</label>
                         <input
                             type="number"
                             value={formData.order}
                             onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="1"
                             min="1"
                             required
@@ -94,12 +94,12 @@ function SectionForm({ section, onSave, onCancel }) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
                     <textarea
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Learn the basics of React..."
                     />
                 </div>
@@ -110,9 +110,9 @@ function SectionForm({ section, onSave, onCancel }) {
                         id="isPublished"
                         checked={formData.isPublished}
                         onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                     />
-                    <label htmlFor="isPublished" className="ml-2 block text-sm text-gray-700">
+                    <label htmlFor="isPublished" className="ml-2 block text-sm text-slate-700">
                         Published
                     </label>
                 </div>
@@ -128,7 +128,7 @@ function SectionForm({ section, onSave, onCancel }) {
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                     >
                         Cancel
                     </button>
@@ -146,17 +146,17 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
         <div className={cn("fixed inset-0 z-50 overflow-hidden", isOpen ? "block" : "hidden")}>
             <div className="absolute inset-0 overflow-hidden">
                 <div
-                    className="absolute inset-0 bg-gray-500/75 transition-opacity"
+                    className="absolute inset-0 bg-slate-500/75 transition-opacity"
                     onClick={onClose}
                 />
                 <section className="absolute inset-y-0 right-0 max-w-full flex">
                     <div className="relative w-screen max-w-md">
                         <div className="h-full flex flex-col bg-white shadow-xl">
                             {/* Header */}
-                            <div className="px-6 py-4 border-b border-gray-200">
+                            <div className="px-6 py-4 border-b border-slate-200">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-gray-900">Section Details</h2>
-                                    <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100">
+                                    <h2 className="text-lg font-semibold text-slate-900">Section Details</h2>
+                                    <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100">
                                         ×
                                     </button>
                                 </div>
@@ -167,30 +167,30 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                                 <div className="space-y-6">
                                     {/* Section Info */}
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                        <h4 className="text-sm font-medium text-slate-700 mb-3">
                                             Section Information
                                         </h4>
                                         <div className="space-y-2">
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Title</span>
-                                                <span className="text-sm font-medium text-gray-900">
+                                                <span className="text-sm text-slate-600">Title</span>
+                                                <span className="text-sm font-medium text-slate-900">
                                                     {section.title}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Course ID</span>
-                                                <span className="text-sm font-medium text-gray-900">
+                                                <span className="text-sm text-slate-600">Course ID</span>
+                                                <span className="text-sm font-medium text-slate-900">
                                                     {section.courseId}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Order</span>
-                                                <span className="text-sm font-medium text-gray-900">
+                                                <span className="text-sm text-slate-600">Order</span>
+                                                <span className="text-sm font-medium text-slate-900">
                                                     {section.order}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Status</span>
+                                                <span className="text-sm text-slate-600">Status</span>
                                                 <span
                                                     className={cn(
                                                         "px-2 py-1 text-xs font-medium rounded-full",
@@ -208,26 +208,26 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                                     {/* Description */}
                                     {section.description && (
                                         <div>
-                                            <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                            <h4 className="text-sm font-medium text-slate-700 mb-3">
                                                 Description
                                             </h4>
-                                            <p className="text-sm text-gray-600">{section.description}</p>
+                                            <p className="text-sm text-slate-600">{section.description}</p>
                                         </div>
                                     )}
 
                                     {/* Statistics */}
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">Statistics</h4>
+                                        <h4 className="text-sm font-medium text-slate-700 mb-3">Statistics</h4>
                                         <div className="space-y-2">
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Lessons Count</span>
-                                                <span className="text-sm font-medium text-gray-900">
+                                                <span className="text-sm text-slate-600">Lessons Count</span>
+                                                <span className="text-sm font-medium text-slate-900">
                                                     {section.lessonsCount || 0}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Total Duration</span>
-                                                <span className="text-sm font-medium text-gray-900">
+                                                <span className="text-sm text-slate-600">Total Duration</span>
+                                                <span className="text-sm font-medium text-slate-900">
                                                     {section.totalDuration || "0 min"}
                                                 </span>
                                             </div>
@@ -259,35 +259,35 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[720px]">
                     <thead>
-                        <tr className="border-b border-gray-200 bg-gray-50">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Section</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Course</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Order</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Lessons</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">
+                        <tr className="border-b border-slate-200 bg-slate-50">
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Section</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Course</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Order</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Lessons</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
                                 Duration
                             </th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Status</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Actions</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Status</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-slate-200">
                         {sections.map((section) => (
-                            <tr key={section.id} className="hover:bg-gray-50">
+                            <tr key={section.id} className="hover:bg-slate-50">
                                 <td className="py-3 px-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
                                             <Layers size={18} className="text-blue-600" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-900">
+                                            <p className="text-sm font-medium text-slate-900">
                                                 {section.title}
                                             </p>
-                                            <p className="text-sm text-gray-600 truncate max-w-xs">
+                                            <p className="text-sm text-slate-600 truncate max-w-xs">
                                                 {section.description}
                                             </p>
                                         </div>
@@ -295,17 +295,17 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
                                 </td>
                                 <td className="py-3 px-4">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 rounded bg-gray-100 flex items-center justify-center">
-                                            <BookOpen size={12} className="text-gray-600" />
+                                        <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center">
+                                            <BookOpen size={12} className="text-slate-600" />
                                         </div>
-                                        <span className="text-sm text-gray-600">{section.courseId}</span>
+                                        <span className="text-sm text-slate-600">{section.courseId}</span>
                                     </div>
                                 </td>
-                                <td className="py-3 px-4 text-sm text-gray-600">#{section.order}</td>
-                                <td className="py-3 px-4 text-sm text-gray-600">
+                                <td className="py-3 px-4 text-sm text-slate-600">#{section.order}</td>
+                                <td className="py-3 px-4 text-sm text-slate-600">
                                     {section.lessonsCount || 0}
                                 </td>
-                                <td className="py-3 px-4 text-sm text-gray-600">
+                                <td className="py-3 px-4 text-sm text-slate-600">
                                     {section.totalDuration || "0 min"}
                                 </td>
                                 <td className="py-3 px-4">{getStatusBadge(section.isPublished)}</td>
@@ -320,7 +320,7 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
                                         </button>
                                         <button
                                             onClick={() => onEdit(section)}
-                                            className="p-1 text-gray-600 hover:bg-gray-50 rounded"
+                                            className="p-1 text-slate-600 hover:bg-slate-50 rounded"
                                             title="Edit Section"
                                         >
                                             <Edit size={16} />
@@ -346,26 +346,26 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
 // Pagination Component
 function Pagination({ currentPage, totalPages, onPageChange }) {
     return (
-        <div className="flex items-center justify-between bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+        <div className="flex items-center justify-between bg-white px-4 py-3 border-t border-slate-200 sm:px-6">
             <div className="flex-1 flex justify-between sm:hidden">
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                    className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50"
                 >
                     Previous
                 </button>
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50"
                 >
                     Next
                 </button>
             </div>
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-slate-700">
                         Showing page <span className="font-medium">{currentPage}</span> of{" "}
                         <span className="font-medium">{totalPages}</span>
                     </p>
@@ -375,14 +375,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
                         <button
                             onClick={() => onPageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronLeft size={16} />
                         </button>
                         <button
                             onClick={() => onPageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -511,8 +511,8 @@ export default function SectionsPage() {
         return (
             <div className="space-y-6">
                 <div className="animate-pulse">
-                    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
-                    <div className="h-64 bg-gray-200 rounded"></div>
+                    <div className="h-8 bg-slate-200 rounded w-48 mb-4"></div>
+                    <div className="h-64 bg-slate-200 rounded"></div>
                 </div>
             </div>
         );
@@ -545,11 +545,11 @@ export default function SectionsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Sections</h1>
-                    <p className="text-gray-600 mt-1">Manage course sections and content organization</p>
+                    <h1 className="text-2xl font-bold text-slate-900">Sections</h1>
+                    <p className="text-slate-600 mt-1">Manage course sections and content organization</p>
                 </div>
                 <div className="mt-4 sm:mt-0 flex gap-3">
-                    <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    <button className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2">
                         <Download size={16} />
                         Export
                     </button>
@@ -564,21 +564,21 @@ export default function SectionsPage() {
             </div>
 
             {/* Search and Filters */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1">
                         <div className="relative">
                             <Search
                                 size={18}
-                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500"
                             />
                             <input
                                 type="text"
                                 placeholder="Search by title, description, or course ID..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                     </div>
@@ -588,7 +588,7 @@ export default function SectionsPage() {
                         <select
                             value={selectedStatus}
                             onChange={(e) => setSelectedStatus(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="all">All Status</option>
                             <option value="published">Published</option>
@@ -598,13 +598,13 @@ export default function SectionsPage() {
                         <select
                             value={selectedCourse}
                             onChange={(e) => setSelectedCourse(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="all">All Courses</option>
                             {/* This would be populated with actual courses */}
                         </select>
 
-                        <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+                        <button className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2">
                             <Filter size={16} />
                             Filters
                         </button>

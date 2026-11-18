@@ -60,7 +60,7 @@ function NavLink({ to, label, isActive, navH }) {
             {label}
             <span
                 className={cn(
-                    "absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-sm",
+                    "absolute bottom-0 left-3 right-3 h-[2px] bg-action rounded-sm",
                     "transition-transform duration-200 origin-left",
                     isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 )}
@@ -88,7 +88,7 @@ function AllCoursesLink({ isOpen, onClick, navH }) {
             />
             <span
                 className={cn(
-                    "absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-sm",
+                    "absolute bottom-0 left-3 right-3 h-[2px] bg-action rounded-sm",
                     "transition-transform duration-200 origin-left",
                     isOpen ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 )}
@@ -119,7 +119,7 @@ function MoreDropdown({ items = [], navH, label = "More" }) {
                         size={13}
                         className="text-text-muted transition-transform duration-200 data-[state=open]:rotate-180"
                     />
-                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-sm scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-action rounded-sm scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                 </button>
             </DropdownMenuTrigger>
 

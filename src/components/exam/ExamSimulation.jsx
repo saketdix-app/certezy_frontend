@@ -134,7 +134,7 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                                     "mt-px w-7 h-7 shrink-0 flex items-center justify-center text-[13px] font-bold border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#3282B8]/40",
                                     single ? "rounded-full" : "rounded-md",
                                     checked
-                                        ? "border-[#3282B8] bg-[#3282B8] text-white"
+                                        ? "border-[#3282B8] bg-action text-white"
                                         : "border-[#CBD5E1] text-[#64748B] bg-white"
                                 )}
                             >
@@ -163,7 +163,7 @@ function BarButton({ onClick, disabled, children, active = false, primary = fals
             className={cn(
                 "flex items-center gap-1.5 h-10 px-3.5 sm:px-4 rounded-lg text-[13.5px] sm:text-[14px] font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
                 primary
-                    ? "bg-[#3282B8] text-white hover:bg-[#2A6FA0]"
+                    ? "bg-action text-white hover:bg-action-hover"
                     : active
                       ? "bg-[#F59E0B]/20 text-[#FCD34D]"
                       : "text-white/90 hover:bg-white/10"
@@ -260,7 +260,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                                 className={cn(
                                     "rounded-lg border px-3.5 py-1.5 font-semibold transition-colors",
                                     filter === key
-                                        ? "border-[#3282B8] bg-[#3282B8] text-white"
+                                        ? "border-[#3282B8] bg-action text-white"
                                         : "border-[#CBD5E1] bg-white text-[#3282B8] hover:bg-[#EBF4FB]"
                                 )}
                             >

@@ -165,7 +165,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                     <>
                         {/* User info pill */}
                         <div className="flex items-center gap-3 px-2 py-3">
-                            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-action flex items-center justify-center shrink-0">
                                 <span className="text-white text-[11px] font-bold">
                                     {user.name
                                         .split(" ")
@@ -243,7 +243,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                             onClick={onClose}
                             className={cn(
                                 "flex-1 text-center py-2.5 rounded",
-                                "bg-primary hover:bg-primary-hover",
+                                "bg-action hover:bg-action-hover",
                                 "text-[14px] font-semibold text-white",
                                 "transition-colors duration-200"
                             )}

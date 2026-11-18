@@ -39,11 +39,11 @@ export default function ConsultantLayout() {
     };
 
     return (
-        <div className="min-h-dvh bg-[#F1F5F9]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <div className="min-h-dvh bg-slate-100" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6">
                 <div className="flex items-center gap-2">
                     <Logo to="/consultant" height={26} />
-                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0C447C]">Sales</span>
+                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-action-soft-ink">Sales</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <NotificationsMenu />
@@ -114,7 +114,7 @@ export default function ConsultantLayout() {
                         to={to}
                         end={end}
                         className={({ isActive }) =>
-                            cn("flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold", isActive ? "text-[#3282B8]" : "text-slate-500")
+                            cn("flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold", isActive ? "text-action" : "text-slate-500")
                         }
                     >
                         <Icon size={20} aria-hidden="true" /> {label}
@@ -126,7 +126,7 @@ export default function ConsultantLayout() {
                     aria-expanded={moreOpen}
                     className={cn(
                         "flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold",
-                        MORE.some((m) => pathname.startsWith(m.to)) ? "text-[#3282B8]" : "text-slate-500"
+                        MORE.some((m) => pathname.startsWith(m.to)) ? "text-action" : "text-slate-500"
                     )}
                 >
                     <MoreHorizontal size={20} aria-hidden="true" /> More

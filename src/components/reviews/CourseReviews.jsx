@@ -259,7 +259,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
                 </p>
                 <button
                     onClick={() => setEditing(true)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover transition-colors"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover transition-colors"
                 >
                     <Star size={15} /> Rate this course
                 </button>
@@ -304,7 +304,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
                 <button
                     type="submit"
                     disabled={saving || !rating}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[13px] font-semibold hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {saving && <Loader2 size={14} className="animate-spin" />}
                     {existing ? "Save changes" : "Submit review"}

@@ -12,6 +12,10 @@ import {
     Clock,
     Globe,
     BarChart3,
+    Phone,
+    Download,
+    Building2,
+    ChevronDown,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -29,7 +33,9 @@ import CourseReviews from "@/components/reviews/CourseReviews";
 import StarRating from "@/components/shared/StarRating";
 import { getPricing, formatCount, formatDuration } from "@/lib/format";
 import { getCourseHighlight } from "@/lib/courseHighlights";
-import { COURSE_INSTRUCTOR } from "@/config/app";
+import { COURSE_INSTRUCTOR, PMI_ATP } from "@/config/app";
+import EnquiryModal from "@/components/enquiry/EnquiryModal";
+import { isPmiCourse, parseFaqs } from "@/lib/courseLeads";
 
 // Public pages show the company as the instructor (not the admin who created the course),
 // so per-person fields from the creator's profile are dropped too.
@@ -55,6 +61,7 @@ export default function CourseDetailIndex() {
     const [error, setError] = useState(null);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [enrolling, setEnrolling] = useState(false);
+    const [enquiry, setEnquiry] = useState(null); // "advisor" | "syllabus" | "team"
 
     // Sticky title bar appears once the hero has scrolled out of view
     const heroRef = useRef(null);
@@ -73,6 +80,7 @@ export default function CourseDetailIndex() {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                setError(null); // a previous course's error mustn't stick
                 const { data: cd } = await courseService.getBySlug(slug);
                 const c = cd?.data?.course;
                 setCourse(withCompanyInstructor(c));
@@ -104,7 +112,9 @@ export default function CourseDetailIndex() {
         const isFree = getPricing(course).isFree;
         const target = isFree ? `/courses/${course.slug}` : `/checkout?course=${course.id}`;
         if (!isLoggedIn) {
-            navigate(`/login?redirect=${encodeURIComponent(target)}`);
+            // New visitors create an account in one step and land back on checkout
+            // (the sign-up page links to log in for existing students)
+            navigate(`/register?redirect=${encodeURIComponent(target)}`);
             return;
         }
         if (!isFree) {
@@ -154,6 +164,8 @@ export default function CourseDetailIndex() {
               .filter(Boolean)
         : [];
     const updated = course.updated_at || course.created_at;
+    const pmi = isPmiCourse(course);
+    const faqs = parseFaqs(course.faqs);
 
     return (
         <div className="min-h-screen bg-[#F1F5F9]">
@@ -214,6 +226,18 @@ export default function CourseDetailIndex() {
                                 {course.title}
                             </span>
                         </div>
+
+                        {/* PMI partner badge — PMI courses only; PMI artwork shown unaltered on white */}
+                        {pmi && (
+                            <div className="mb-4 flex items-center gap-3">
+                                <span className="inline-flex rounded-lg bg-white p-1.5">
+                                    <img src={PMI_ATP.badge} alt={PMI_ATP.alt} className="h-11 w-auto" />
+                                </span>
+                                <span style={{ fontSize: "12.5px", fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>
+                                    PMI® Authorized Training Partner
+                                </span>
+                            </div>
+                        )}
 
                         {/* Category badge */}
                         <span
@@ -331,6 +355,37 @@ export default function CourseDetailIndex() {
                                 </p>
                             </div>
                         )}
+
+                        {/* Two ways in: buy now, or ask first (creates a CRM lead) */}
+                        <div className="mt-7 flex flex-wrap items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={isEnrolled ? () => navigate(`/student/course/${course.id}/learn`) : handleEnroll}
+                                disabled={enrolling}
+                                className="inline-flex items-center gap-2 rounded-[10px] bg-[#236A9E] px-5 py-3 text-[14.5px] font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
+                            >
+                                {isEnrolled ? "Go to course" : getPricing(course).isFree ? "Enroll for free" : "Enroll now"}
+                            </button>
+                            {!isEnrolled && (
+                                <button
+                                    type="button"
+                                    onClick={() => setEnquiry("advisor")}
+                                    className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-5 py-3 text-[14.5px] font-semibold text-white hover:bg-white/10"
+                                >
+                                    <Phone size={15} aria-hidden="true" /> Talk to an advisor
+                                </button>
+                            )}
+                        </div>
+                        {!isEnrolled && (
+                            <button
+                                type="button"
+                                onClick={() => setEnquiry("team")}
+                                className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-white/70 hover:text-white"
+                            >
+                                <Building2 size={14} aria-hidden="true" /> Training a team?{" "}
+                                <span className="font-semibold underline underline-offset-2">Get a quote</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -368,7 +423,20 @@ export default function CourseDetailIndex() {
                         </ContentCard>
 
                         {/* Course content */}
-                        <ContentCard title="Course Content">
+                        <ContentCard
+                            title="Course Content"
+                            action={
+                                sections.length > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setEnquiry("syllabus")}
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12.5px] font-semibold text-[#236A9E] hover:bg-slate-50"
+                                    >
+                                        <Download size={14} aria-hidden="true" /> Download the syllabus
+                                    </button>
+                                )
+                            }
+                        >
                             <CourseCurriculum
                                 sections={sections}
                                 courseId={course.id}
@@ -406,6 +474,48 @@ export default function CourseDetailIndex() {
                                         {course.description}
                                     </p>
                                 </ShowMore>
+                            </ContentCard>
+                        )}
+
+                        {/* Exam & certification — written per course in Admin → Courses */}
+                        {course.exam_info?.trim() && (
+                            <ContentCard title="Exam & Certification">
+                                <p style={{ fontSize: "14px", color: "#334155", lineHeight: 1.75, whiteSpace: "pre-line" }}>
+                                    {course.exam_info}
+                                </p>
+                            </ContentCard>
+                        )}
+
+                        {/* FAQs — written per course in Admin → Courses; also marked up for search results */}
+                        {faqs.length > 0 && (
+                            <ContentCard title="Frequently Asked Questions">
+                                <div className="divide-y divide-slate-200 rounded-xl border border-slate-200">
+                                    {faqs.map((f, i) => (
+                                        <details key={i} className="group px-4 py-3">
+                                            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[14px] font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+                                                {f.q}
+                                                <ChevronDown size={16} className="shrink-0 text-slate-500 transition-transform group-open:rotate-180" aria-hidden="true" />
+                                            </summary>
+                                            <p className="mt-2 text-[13.5px] leading-relaxed text-slate-600" style={{ whiteSpace: "pre-line" }}>
+                                                {f.a}
+                                            </p>
+                                        </details>
+                                    ))}
+                                </div>
+                                <script
+                                    type="application/ld+json"
+                                    dangerouslySetInnerHTML={{
+                                        __html: JSON.stringify({
+                                            "@context": "https://schema.org",
+                                            "@type": "FAQPage",
+                                            mainEntity: faqs.map((f) => ({
+                                                "@type": "Question",
+                                                name: f.q,
+                                                acceptedAnswer: { "@type": "Answer", text: f.a },
+                                            })),
+                                        }).replace(/</g, "\\u003c"),
+                                    }}
+                                />
                             </ContentCard>
                         )}
 
@@ -584,6 +694,34 @@ export default function CourseDetailIndex() {
                             </div>
                         </ContentCard>
 
+                        {/* Still deciding? Another way to raise a hand */}
+                        {!isEnrolled && (
+                            <div className="flex flex-col gap-4 rounded-2xl bg-[#0a1628] p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+                                <div className="min-w-0">
+                                    <h2 className="text-[17px] font-bold">Still have questions?</h2>
+                                    <p className="mt-1 text-[13.5px] text-white/70">
+                                        Talk to an advisor about the course, {pmi ? "the PMP® exam, " : ""}payment options and your study plan.
+                                    </p>
+                                </div>
+                                <div className="flex shrink-0 flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setEnquiry("advisor")}
+                                        className="inline-flex items-center gap-2 rounded-[10px] bg-white px-4 py-2.5 text-[14px] font-bold text-[#0a1628] hover:bg-slate-100"
+                                    >
+                                        <Phone size={15} aria-hidden="true" /> Talk to an advisor
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setEnquiry("team")}
+                                        className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-4 py-2.5 text-[14px] font-semibold text-white hover:bg-white/10"
+                                    >
+                                        <Building2 size={15} aria-hidden="true" /> Team quote
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Reviews */}
                         <ContentCard title="Student Reviews">
                             <CourseReviews
@@ -605,10 +743,13 @@ export default function CourseDetailIndex() {
                             isEnrolled={isEnrolled}
                             onEnroll={handleEnroll}
                             enrolling={enrolling}
+                            onAdvisor={() => setEnquiry("advisor")}
+                            onSyllabus={sections.length > 0 ? () => setEnquiry("syllabus") : null}
                         />
                     </div>
                 </div>
             </div>
+            {enquiry && <EnquiryModal kind={enquiry} course={course} onClose={() => setEnquiry(null)} />}
         </div>
     );
 }
@@ -639,7 +780,7 @@ function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, on
                     onClick={onEnroll}
                     disabled={enrolling}
                     tabIndex={visible ? 0 : -1}
-                    className="shrink-0 rounded-lg bg-primary px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
+                    className="shrink-0 rounded-lg bg-action px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
                 >
                     {isEnrolled ? "Go to course" : "Enroll now"}
                 </button>
@@ -657,15 +798,18 @@ function StatPill({ icon: Icon, label }) {
     );
 }
 
-function ContentCard({ title, children }) {
+function ContentCard({ title, action = null, children }) {
     return (
         <div
             className="bg-white rounded-2xl p-6"
             style={{ border: "1px solid #EEF2F7", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
-            <div className="flex items-center gap-2.5 mb-5">
-                <div className="w-[3px] h-5 rounded-full bg-primary shrink-0" />
-                <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>{title}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2.5 mb-5">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
+                    <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>{title}</h2>
+                </div>
+                {action}
             </div>
             {children}
         </div>

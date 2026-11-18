@@ -54,7 +54,7 @@ const CONTENT_PLACEHOLDER = {
 
 // Icon colours per lesson type in the curriculum list
 const TYPE_STYLES = {
-    video: { color: "#3282B8", bg: "#EBF4FF" },
+    video: { color: "#236A9E", bg: "#EEF6FC" },
     text: { color: "#F97316", bg: "#FFF7ED" },
     article: { color: "#F97316", bg: "#FFF7ED" },
     pdf: { color: "#DC2626", bg: "#FEF2F2" },
@@ -70,7 +70,7 @@ const EMPTY_LESSON = { title: "", type: "video", duration: "", content: "", orde
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 function fmtDuration(seconds) {
     if (!seconds) return null;
@@ -320,7 +320,7 @@ export default function CurriculumPage() {
     return (
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {/* ── Breadcrumb ── */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500">
                 <span
                     className="hover:text-slate-600 cursor-pointer"
                     onClick={() => navigate("/admin/dashboard")}
@@ -343,7 +343,7 @@ export default function CurriculumPage() {
                     {course?.title ?? "..."}
                 </span>
                 <ChevronRight size={11} />
-                <span style={{ color: "#3282B8" }}>Curriculum</span>
+                <span style={{ color: "#236A9E" }}>Curriculum</span>
             </div>
 
             {/* ── Header ── */}
@@ -364,9 +364,9 @@ export default function CurriculumPage() {
                     <button
                         onClick={openCreateSection}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
-                        style={{ background: "#3282B8" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                        style={{ background: "#236A9E" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
                     >
                         <Plus size={15} /> Add Section
                     </button>
@@ -380,8 +380,8 @@ export default function CurriculumPage() {
                         {
                             icon: BookOpen,
                             label: `${sections.length} Sections`,
-                            ibg: "#EBF4FF",
-                            ic: "#3282B8",
+                            ibg: "#EEF6FC",
+                            ic: "#236A9E",
                         },
                         {
                             icon: FileText,
@@ -416,7 +416,7 @@ export default function CurriculumPage() {
             {/* ── Content ── */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 size={28} className="animate-spin" style={{ color: "#3282B8" }} />
+                    <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
                 </div>
             ) : sections.length === 0 ? (
                 <EmptyState onAdd={openCreateSection} />
@@ -453,7 +453,7 @@ export default function CurriculumPage() {
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
                                     {editSection ? "Edit Section" : "Add Section"}
                                 </h3>
-                                <p className="text-[12px] text-slate-400 mt-0.5">
+                                <p className="text-[12px] text-slate-500 mt-0.5">
                                     {editSection
                                         ? "Update section details"
                                         : "Add a new chapter to the course"}
@@ -461,7 +461,7 @@ export default function CurriculumPage() {
                             </div>
                             <button
                                 onClick={() => setShowSectionModal(false)}
-                                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={17} />
                             </button>
@@ -501,12 +501,12 @@ export default function CurriculumPage() {
                                     type="submit"
                                     disabled={savingSection}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#3282B8" }}
+                                    style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
-                                        if (!savingSection) e.currentTarget.style.background = "#2a6fa0";
+                                        if (!savingSection) e.currentTarget.style.background = "#1B5582";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#3282B8";
+                                        e.currentTarget.style.background = "#236A9E";
                                     }}
                                 >
                                     {savingSection ? (
@@ -533,13 +533,13 @@ export default function CurriculumPage() {
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
                                     {editLesson ? "Edit Lesson" : "Add Lesson"}
                                 </h3>
-                                <p className="text-[12px] text-slate-400 mt-0.5">
+                                <p className="text-[12px] text-slate-500 mt-0.5">
                                     Configure your new curriculum item
                                 </p>
                             </div>
                             <button
                                 onClick={() => setShowLessonModal(false)}
-                                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
                             >
                                 <X size={17} />
                             </button>
@@ -660,7 +660,7 @@ export default function CurriculumPage() {
                                                     order_num: Number(e.target.value),
                                                 }))
                                             }
-                                            className="flex-1 min-w-0 w-full py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8]"
+                                            className="flex-1 min-w-0 w-full py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action"
                                         />
                                         <button
                                             type="button"
@@ -676,7 +676,7 @@ export default function CurriculumPage() {
 
                                 {/* Free Preview toggle */}
                                 <div>
-                                    <p className="text-[10.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                                    <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                                         Free Preview
                                     </p>
                                     <label className="flex items-center gap-2.5 cursor-pointer">
@@ -716,12 +716,12 @@ export default function CurriculumPage() {
                                     type="submit"
                                     disabled={savingLesson}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#3282B8" }}
+                                    style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
-                                        if (!savingLesson) e.currentTarget.style.background = "#2a6fa0";
+                                        if (!savingLesson) e.currentTarget.style.background = "#1B5582";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#3282B8";
+                                        e.currentTarget.style.background = "#236A9E";
                                     }}
                                 >
                                     {savingLesson ? (
@@ -774,7 +774,7 @@ function SectionCard({
                 {/* Number badge */}
                 <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-[12px] font-extrabold"
-                    style={{ background: "#3282B8" }}
+                    style={{ background: "#236A9E" }}
                 >
                     §{index + 1}
                 </div>
@@ -783,12 +783,12 @@ function SectionCard({
                 <div className="flex-1 min-w-0 cursor-pointer" onClick={onToggle}>
                     <p className="text-[14.5px] font-bold text-slate-900 truncate">{section.title}</p>
                     <div className="flex items-center gap-3 mt-0.5">
-                        <div className="flex items-center gap-1 text-slate-400">
+                        <div className="flex items-center gap-1 text-slate-500">
                             <PlayCircle size={11} />
                             <span className="text-[11.5px]">{lessons.length} Lessons</span>
                         </div>
                         {durationStr && (
-                            <div className="flex items-center gap-1 text-slate-400">
+                            <div className="flex items-center gap-1 text-slate-500">
                                 <Clock size={11} />
                                 <span className="text-[11.5px]">{durationStr}</span>
                             </div>
@@ -800,20 +800,20 @@ function SectionCard({
                 <div className="flex items-center gap-1 shrink-0">
                     <button
                         onClick={onEdit}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-action hover:bg-action-soft transition-colors"
                     >
                         <Edit2 size={15} />
                     </button>
                     <button
                         onClick={onDelete}
                         disabled={deleting}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
                     >
                         {deleting ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
                     </button>
                     <button
                         onClick={onToggle}
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors ml-1"
+                        className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors ml-1"
                     >
                         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
@@ -824,7 +824,7 @@ function SectionCard({
             {expanded && (
                 <div className="border-t border-slate-100">
                     {lessons.length === 0 ? (
-                        <p className="text-center text-[12.5px] text-slate-400 py-4">
+                        <p className="text-center text-[12.5px] text-slate-500 py-4">
                             No lessons yet — add one below
                         </p>
                     ) : (
@@ -846,7 +846,7 @@ function SectionCard({
                     {/* Add Lesson button */}
                     <button
                         onClick={onAddLesson}
-                        className="w-full flex items-center justify-center gap-2 py-3.5 mx-0 border-t border-dashed border-slate-200 text-[13px] font-semibold text-[#3282B8] hover:bg-[#F0F7FF] transition-colors"
+                        className="w-full flex items-center justify-center gap-2 py-3.5 mx-0 border-t border-dashed border-slate-200 text-[13px] font-semibold text-action hover:bg-action-soft transition-colors"
                     >
                         <Plus size={15} />
                         Add Lesson
@@ -869,7 +869,7 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
             <GripVertical size={14} className="text-slate-200 group-hover:text-slate-300 shrink-0" />
 
             {/* Lesson number */}
-            <span className="text-[12px] font-bold text-slate-400 shrink-0 w-6 text-right">
+            <span className="text-[12px] font-bold text-slate-500 shrink-0 w-6 text-right">
                 {sectionIndex + 1}.{lessonIndex + 1}
             </span>
 
@@ -885,13 +885,13 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
             <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-semibold text-slate-800 truncate">{lesson.title}</p>
                 {lesson.duration > 0 && (
-                    <p className="text-[11px] text-slate-400 mt-0.5">{fmtDuration(lesson.duration)}</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">{fmtDuration(lesson.duration)}</p>
                 )}
             </div>
 
             {/* Free badge */}
             {lesson.is_free === 1 && (
-                <span className="px-2 py-0.5 rounded-lg text-[10.5px] font-bold bg-[#ECFDF5] text-[#16A34A] border border-[#BBF7D0] shrink-0">
+                <span className="px-2 py-0.5 rounded-lg text-[10.5px] font-bold bg-[#ECFDF5] text-emerald-700 border border-emerald-200 shrink-0">
                     FREE
                 </span>
             )}
@@ -900,14 +900,14 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity shrink-0">
                 <button
                     onClick={onEdit}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-action hover:bg-action-soft transition-colors"
                 >
                     <Edit2 size={13} />
                 </button>
                 <button
                     onClick={onDelete}
                     disabled={deleting}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
                 >
                     {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
                 </button>
@@ -924,21 +924,21 @@ function EmptyState({ onAdd }) {
             className="bg-white rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
-            <div className="w-14 h-14 rounded-2xl bg-[#EBF4FF] flex items-center justify-center">
-                <BookOpen size={26} style={{ color: "#3282B8" }} />
+            <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">
+                <BookOpen size={26} style={{ color: "#236A9E" }} />
             </div>
             <div>
                 <p className="text-[15px] font-bold text-slate-800">No sections yet</p>
-                <p className="text-[13px] text-slate-400 mt-1">
+                <p className="text-[13px] text-slate-500 mt-1">
                     Start building your curriculum by adding a section
                 </p>
             </div>
             <button
                 onClick={onAdd}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
-                style={{ background: "#3282B8" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                style={{ background: "#236A9E" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
             >
                 <Plus size={15} /> Add First Section
             </button>
@@ -965,7 +965,7 @@ function Overlay({ onClose, children }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}

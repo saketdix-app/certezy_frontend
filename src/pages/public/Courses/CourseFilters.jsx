@@ -12,7 +12,7 @@ const LEVELS = [
 
 const PRICING = [
     { label: "Free", value: "free", dot: "bg-emerald-500" },
-    { label: "Paid", value: "paid", dot: "bg-primary" },
+    { label: "Paid", value: "paid", dot: "bg-action" },
     { label: "On sale", value: "discounted", dot: "bg-rose-500" },
 ];
 
@@ -41,7 +41,7 @@ export default function CourseFilters({ categories = [] }) {
                         </div>
                         <span className="text-[14px] font-bold text-text-primary">Filters</span>
                         {activeCount > 0 && (
-                            <span className="h-5 min-w-[20px] px-1.5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">
+                            <span className="h-5 min-w-[20px] px-1.5 rounded-full bg-action text-white text-[10px] font-bold flex items-center justify-center">
                                 {activeCount}
                             </span>
                         )}
@@ -162,7 +162,7 @@ function ParentCategory({ parent, activeId, onSelect }) {
                                 <div
                                     className={cn(
                                         "w-1.5 h-1.5 rounded-full shrink-0 transition-colors",
-                                        active ? "bg-primary" : "bg-[#CBD5E1]"
+                                        active ? "bg-action" : "bg-[#CBD5E1]"
                                     )}
                                 />
                                 <span className="text-[12.5px] font-medium truncate">{child.name}</span>
@@ -197,7 +197,7 @@ function OptionGroup({ options, active, onSelect }) {
                         <div
                             className={cn(
                                 "w-[18px] h-[18px] rounded-full border-2 shrink-0 flex items-center justify-center transition-all",
-                                isActive ? "border-primary bg-primary" : "border-[#CBD5E1] bg-white"
+                                isActive ? "border-primary bg-action" : "border-[#CBD5E1] bg-white"
                             )}
                         >
                             {isActive && <div className="w-2 h-2 rounded-full bg-white" />}

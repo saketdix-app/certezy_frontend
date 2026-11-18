@@ -167,7 +167,7 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                                 .getElementById("course-enroll")
                                 ?.scrollIntoView({ behavior: "smooth", block: "center" });
                         }}
-                        className="rounded-lg bg-primary px-3.5 py-1.5 text-[12.5px] font-bold text-white hover:opacity-90"
+                        className="rounded-lg bg-action px-3.5 py-1.5 text-[12.5px] font-bold text-white hover:opacity-90"
                     >
                         View enrollment options
                     </button>

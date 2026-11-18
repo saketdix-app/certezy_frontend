@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 10;
 
 const STATUS = {
-    completed: { label: "Completed", bg: "#EBF4FF", color: "#3282B8", bar: "#3282B8" },
+    completed: { label: "Completed", bg: "#EEF6FC", color: "#236A9E", bar: "#236A9E" },
     in_progress: { label: "In progress", bg: "#F0FDF4", color: "#16A34A", bar: "#22C55E" },
     not_started: { label: "Not started", bg: "#F8FAFC", color: "#64748B", bar: "#CBD5E1" },
 };
@@ -170,16 +170,16 @@ export default function EnrollmentsPage() {
             label: "Enrollments",
             value: totals.total,
             icon: Users,
-            bg: "#EBF4FF",
-            color: "#3282B8",
+            bg: "#EEF6FC",
+            color: "#236A9E",
         },
         {
             key: "completed",
             label: "Completed",
             value: totals.completed,
             icon: CheckCircle2,
-            bg: "#EBF4FF",
-            color: "#3282B8",
+            bg: "#EEF6FC",
+            color: "#236A9E",
         },
         {
             key: "in_progress",
@@ -240,7 +240,7 @@ export default function EnrollmentsPage() {
                             className={cn(
                                 "text-left bg-white rounded-2xl border p-4 transition-all",
                                 active
-                                    ? "border-[#3282B8] ring-2 ring-[#3282B8]/15"
+                                    ? "border-action ring-2 ring-action/15"
                                     : "border-slate-100 hover:border-slate-200"
                             )}
                             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
@@ -253,7 +253,7 @@ export default function EnrollmentsPage() {
                                     <Icon size={18} style={{ color }} />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider leading-tight">
+                                    <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider leading-tight">
                                         {label}
                                     </p>
                                     <p className="text-[24px] font-extrabold text-slate-900 leading-none mt-0.5">
@@ -262,11 +262,11 @@ export default function EnrollmentsPage() {
                                 </div>
                             </div>
                             {key && totals.total ? (
-                                <p className="text-[11.5px] text-slate-400 mt-2">
+                                <p className="text-[11.5px] text-slate-500 mt-2">
                                     {pct(value, totals.total)}% of all
                                 </p>
                             ) : key === "" && stats ? (
-                                <p className="text-[11.5px] text-slate-400 mt-2">
+                                <p className="text-[11.5px] text-slate-500 mt-2">
                                     {totals.students} students · {totals.this_month} this month
                                 </p>
                             ) : null}
@@ -308,7 +308,7 @@ export default function EnrollmentsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div className="relative sm:col-span-2">
                         <Search
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                             size={16}
                         />
                         <input
@@ -386,7 +386,7 @@ export default function EnrollmentsPage() {
                         <button
                             type="button"
                             onClick={clearFilters}
-                            className="inline-flex items-center gap-1 font-semibold text-[#3282B8] hover:underline"
+                            className="inline-flex items-center gap-1 font-semibold text-action hover:underline"
                         >
                             <X size={13} /> Clear filters
                         </button>
@@ -401,7 +401,7 @@ export default function EnrollmentsPage() {
             >
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3282B8]" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-action" />
                     </div>
                 ) : enrollments.length === 0 ? (
                     <div className="text-center py-20">
@@ -451,7 +451,7 @@ export default function EnrollmentsPage() {
                                                                 {e.student_email}
                                                             </p>
                                                             {e.student_mobile && (
-                                                                <p className="text-xs text-slate-400">
+                                                                <p className="text-xs text-slate-500">
                                                                     {e.student_mobile}
                                                                 </p>
                                                             )}
@@ -560,7 +560,7 @@ export default function EnrollmentsPage() {
 }
 
 const inputCls =
-    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white transition-colors";
+    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
 
 // ─── Breakdown: stacked bar per row (completed / in progress / not started) ──
 
@@ -576,7 +576,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
         >
             <div className="flex items-center justify-between gap-3 mb-4">
                 <h2 className="flex items-center gap-2 text-[14px] font-bold text-slate-900">
-                    <Icon size={16} className="text-[#3282B8]" /> {title}
+                    <Icon size={16} className="text-action" /> {title}
                 </h2>
                 <div className="flex items-center gap-3 text-[11px] text-slate-500">
                     {Object.values(STATUS).map((s) => (
@@ -589,7 +589,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
             </div>
 
             {rows.length === 0 ? (
-                <p className="text-[13px] text-slate-400 py-6 text-center">No data yet</p>
+                <p className="text-[13px] text-slate-500 py-6 text-center">No data yet</p>
             ) : (
                 <ul className="space-y-2">
                     {visible.map((r) => {
@@ -603,7 +603,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
                                     title={`${r.completed} completed · ${r.in_progress} in progress · ${r.not_started} not started`}
                                     className={cn(
                                         "w-full text-left rounded-lg px-2 py-1.5 transition-colors",
-                                        active ? "bg-[#EBF4FF]" : "hover:bg-slate-50"
+                                        active ? "bg-action-soft" : "hover:bg-slate-50"
                                     )}
                                 >
                                     <div className="flex items-center justify-between text-[12.5px] mb-1">
@@ -641,12 +641,12 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
             )}
 
             <div className="flex items-center justify-between mt-3">
-                {note ? <p className="text-[11px] text-slate-400">{note}</p> : <span />}
+                {note ? <p className="text-[11px] text-slate-500">{note}</p> : <span />}
                 {rows.length > 8 && (
                     <button
                         type="button"
                         onClick={() => setShowAll((v) => !v)}
-                        className="text-[12px] font-semibold text-[#3282B8] hover:underline shrink-0"
+                        className="text-[12px] font-semibold text-action hover:underline shrink-0"
                     >
                         {showAll ? "Show less" : `Show all ${rows.length}`}
                     </button>

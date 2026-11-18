@@ -461,7 +461,7 @@ function RecentTests({ attempts, enrollments }) {
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-[3px] h-5 rounded-full bg-[#3282B8] shrink-0" />
+                    <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
                     <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>Recent Tests</h2>
                 </div>
                 <Link
@@ -559,7 +559,7 @@ function CertificatesSection({ certificates }) {
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-[3px] h-5 rounded-full bg-[#3282B8] shrink-0" />
+                    <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
                     <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>My Certificates</h2>
                 </div>
                 {certificates.length > 0 && (

@@ -92,7 +92,7 @@ const fmt = (d) =>
         : "—";
 
 const inputCls =
-    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-[#3282B8]";
+    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-action";
 
 function RoleBadge({ role }) {
     return (
@@ -122,7 +122,7 @@ function Modal({ title, onClose, children, wide }) {
             >
                 <div className="mb-4 flex items-start justify-between gap-3">
                     <h2 className="text-[17px] font-bold text-slate-900">{title}</h2>
-                    <button type="button" onClick={onClose} aria-label="Close" className="text-slate-400 hover:text-slate-600">
+                    <button type="button" onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-slate-600">
                         <X size={18} />
                     </button>
                 </div>
@@ -189,7 +189,7 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
                         disabled={busy}
                         className={cn(
                             "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60",
-                            danger ? "bg-red-600 hover:bg-red-700" : "bg-[#3282B8] hover:bg-[#2A6FA0]"
+                            danger ? "bg-red-600 hover:bg-red-700" : "bg-action hover:bg-action-hover"
                         )}
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
@@ -210,7 +210,7 @@ function PermissionChecklist({ keys, value, onChange }) {
                         type="checkbox"
                         checked={Boolean(value[k])}
                         onChange={(e) => onChange({ ...value, [k]: e.target.checked })}
-                        className="mt-0.5 h-4 w-4 accent-[#3282B8]"
+                        className="mt-0.5 h-4 w-4 accent-action"
                     />
                     <span>
                         <span className="block text-[13.5px] font-semibold text-slate-800">{PERMISSION_INFO[k]?.[0] ?? k}</span>
@@ -251,7 +251,7 @@ function PermissionsModal({ member, keys, onClose, onDone }) {
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save permissions
                     </button>
@@ -309,7 +309,7 @@ function AllocationModal({ member, onClose, onDone }) {
                         type="checkbox"
                         checked={form.accepting_leads}
                         onChange={(e) => setForm((f) => ({ ...f, accepting_leads: e.target.checked }))}
-                        className="h-5 w-5 accent-[#3282B8]"
+                        className="h-5 w-5 accent-action"
                     />
                 </label>
                 {!form.accepting_leads && (
@@ -340,7 +340,7 @@ function AllocationModal({ member, onClose, onDone }) {
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save
                     </button>
@@ -441,7 +441,7 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                     <button
                         type="submit"
                         disabled={busy}
-                        className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Send invitation
@@ -505,7 +505,7 @@ function ChangeRoleModal({ member, roles, onClose, onDone }) {
                     <button
                         type="submit"
                         disabled={busy || !role}
-                        className="inline-flex items-center gap-2 rounded-lg bg-[#3282B8] px-4 py-2 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0] disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Change role
@@ -539,7 +539,7 @@ function HistoryModal({ member, onClose }) {
 
             <h3 className="mt-5 mb-2 text-[14px] font-bold text-slate-900">Delegated privileges</h3>
             {!detail ? (
-                <Loader2 size={16} className="animate-spin text-slate-400" />
+                <Loader2 size={16} className="animate-spin text-slate-500" />
             ) : detail.grants?.length ? (
                 <ul className="space-y-1.5 text-[13px]">
                     {detail.grants.map((g) => (
@@ -560,7 +560,7 @@ function HistoryModal({ member, onClose }) {
 }
 
 function AuditTable({ logs, compact }) {
-    if (!logs) return <Loader2 size={16} className="animate-spin text-slate-400" />;
+    if (!logs) return <Loader2 size={16} className="animate-spin text-slate-500" />;
     if (!logs.length) return <p className="text-[13px] text-slate-500">No recorded actions yet.</p>;
     return (
         <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -580,7 +580,7 @@ function AuditTable({ logs, compact }) {
                             <td className="whitespace-nowrap px-3 py-2 text-slate-500">{fmt(l.created_at)}</td>
                             <td className="px-3 py-2">
                                 {l.actor_name ?? "System"}
-                                {l.actor_role && <span className="text-slate-400"> · {ROLE_LABELS[l.actor_role] ?? l.actor_role}</span>}
+                                {l.actor_role && <span className="text-slate-500"> · {ROLE_LABELS[l.actor_role] ?? l.actor_role}</span>}
                             </td>
                             <td className="px-3 py-2">
                                 {ACTION_LABELS[l.action] ?? l.action}
@@ -723,7 +723,7 @@ export default function TeamPage() {
                     <button
                         type="button"
                         onClick={() => setModal({ type: "create" })}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#3282B8] px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0]"
+                        className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-action-hover"
                     >
                         <UserPlus size={16} aria-hidden="true" /> Add team member
                     </button>
@@ -748,7 +748,7 @@ export default function TeamPage() {
                         onClick={() => setTab(key)}
                         className={cn(
                             "-mb-px border-b-2 px-4 py-2 text-[13.5px] font-semibold",
-                            tab === key ? "border-[#3282B8] text-[#3282B8]" : "border-transparent text-slate-500 hover:text-slate-800"
+                            tab === key ? "border-action text-action" : "border-transparent text-slate-500 hover:text-slate-800"
                         )}
                     >
                         {label}
@@ -767,7 +767,7 @@ export default function TeamPage() {
                                 onClick={() => setRole(value)}
                                 className={cn(
                                     "rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
-                                    role === value ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 bg-white text-slate-600"
+                                    role === value ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-white text-slate-600"
                                 )}
                             >
                                 {label}
@@ -784,7 +784,7 @@ export default function TeamPage() {
                             <option value="inactive">Inactive</option>
                         </select>
                         <div className="relative ml-auto w-full sm:w-64">
-                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -797,7 +797,7 @@ export default function TeamPage() {
 
                     {!members ? (
                         <div className="flex justify-center py-16">
-                            <Loader2 className="animate-spin text-slate-400" />
+                            <Loader2 className="animate-spin text-slate-500" />
                         </div>
                     ) : !members.length ? (
                         <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
@@ -822,7 +822,7 @@ export default function TeamPage() {
                                             <td className="px-4 py-3">
                                                 <p className="font-semibold text-slate-900">
                                                     {m.name}
-                                                    {m.id === me?.id && <span className="ml-1.5 text-[11.5px] font-normal text-slate-400">(you)</span>}
+                                                    {m.id === me?.id && <span className="ml-1.5 text-[11.5px] font-normal text-slate-500">(you)</span>}
                                                 </p>
                                                 <p className="text-[12.5px] text-slate-500">{m.email}</p>
                                             </td>
@@ -854,7 +854,7 @@ export default function TeamPage() {
                                                         <b>Allowed</b> · by {m.super_admin_grant.granted_by} · {fmt(m.super_admin_grant.granted_at)}
                                                     </span>
                                                 ) : m.role === "admin" ? (
-                                                    <span className="text-slate-400">Not allowed</span>
+                                                    <span className="text-slate-500">Not allowed</span>
                                                 ) : (
                                                     <span className="text-slate-300">—</span>
                                                 )}

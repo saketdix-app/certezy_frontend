@@ -16,7 +16,7 @@ const COLUMNS = [
     { key: "phone", label: "Phone", cell: (l) => maskPhone(l.phone) || "—" },
     { key: "email", label: "Email", cell: (l) => l.email || "—" },
     { key: "stage", label: "Status", cell: (l) => <StageBadge stage={l.stage} /> },
-    { key: "course", label: "Course", cell: (l) => l.course_title || <span className="text-slate-400">No course</span> },
+    { key: "course", label: "Course", cell: (l) => l.course_title || <span className="text-slate-500">No course</span> },
     { key: "source", label: "Source", cell: (l) => SOURCE_LABEL[l.source] ?? l.source },
     { key: "owner", label: "Owner", admin: true, cell: (l) => l.owner_name ?? <span className="text-amber-700">Unassigned</span> },
     { key: "added", label: "Added", cell: (l) => <span title={fmtDateTime(l.created_at)}>{ageOf(l.created_at)} ago</span> },
@@ -141,7 +141,7 @@ export default function LeadsBoard({ isAdmin }) {
                 <button
                     type="button"
                     onClick={() => setAdding(true)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#3282B8] px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-[#2A6FA0]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-action-hover"
                 >
                     <Plus size={16} aria-hidden="true" /> Add lead
                 </button>
@@ -157,10 +157,10 @@ export default function LeadsBoard({ isAdmin }) {
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
                             "shrink-0 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
-                            stage === k ? "border-[#3282B8] bg-[#EBF4FF] text-[#1A5F8A]" : "border-slate-200 bg-white text-slate-600"
+                            stage === k ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-white text-slate-600"
                         )}
                     >
-                        {l} <span className="ml-0.5 text-slate-400">{n}</span>
+                        {l} <span className="ml-0.5 text-slate-500">{n}</span>
                     </button>
                 ))}
             </div>
@@ -168,7 +168,7 @@ export default function LeadsBoard({ isAdmin }) {
             {/* Filters */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
                 <div className="relative w-full sm:w-72">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
                     <input
                         value={search}
                         onChange={(e) => resetPage(setSearch)(e.target.value)}
@@ -197,7 +197,7 @@ export default function LeadsBoard({ isAdmin }) {
                     </select>
                 )}
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] text-slate-700">
-                    <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-[#3282B8]" />
+                    <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
                     Overdue follow-ups
                 </label>
                 <div className="ml-auto flex items-center gap-2">
@@ -207,13 +207,13 @@ export default function LeadsBoard({ isAdmin }) {
                                 <Columns3 size={14} aria-hidden="true" /> Columns
                             </summary>
                             <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
-                                <p className="px-2 pb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-400">Show in the list</p>
-                                <p className="flex items-center gap-2 px-2 py-1 text-[13px] text-slate-400">
-                                    <input type="checkbox" checked disabled className="accent-[#3282B8]" /> Name (always)
+                                <p className="px-2 pb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Show in the list</p>
+                                <p className="flex items-center gap-2 px-2 py-1 text-[13px] text-slate-500">
+                                    <input type="checkbox" checked disabled className="accent-action" /> Name (always)
                                 </p>
                                 {COLUMNS.filter((c) => !c.admin || isAdmin).map((c) => (
                                     <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-[13px] text-slate-700 hover:bg-slate-50">
-                                        <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-[#3282B8]" />
+                                        <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-action" />
                                         {c.label}
                                     </label>
                                 ))}
@@ -232,7 +232,7 @@ export default function LeadsBoard({ isAdmin }) {
                                 onClick={() => setView(v)}
                                 className={cn(
                                     "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12.5px] font-semibold",
-                                    view === v ? "bg-[#EBF4FF] text-[#1A5F8A]" : "text-slate-500 hover:text-slate-700"
+                                    view === v ? "bg-action-soft text-action-soft-ink" : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
                                 <Icon size={14} aria-hidden="true" /> {label}
@@ -243,8 +243,8 @@ export default function LeadsBoard({ isAdmin }) {
             </div>
 
             {isAdmin && selected.length > 0 && (
-                <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#3282B8] bg-[#EBF4FF] px-4 py-2.5">
-                    <p className="text-[13.5px] font-semibold text-[#1A5F8A]">{selected.length} selected</p>
+                <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-action bg-action-soft px-4 py-2.5">
+                    <p className="text-[13.5px] font-semibold text-action-soft-ink">{selected.length} selected</p>
                     <div className="flex gap-2">
                         <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
                             Clear
@@ -252,7 +252,7 @@ export default function LeadsBoard({ isAdmin }) {
                         <button
                             type="button"
                             onClick={() => setMoving(selected)}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white"
                         >
                             <Shuffle size={13} aria-hidden="true" /> Assign / transfer
                         </button>
@@ -263,7 +263,7 @@ export default function LeadsBoard({ isAdmin }) {
             {/* List */}
             {!data ? (
                 <div className="flex justify-center py-16">
-                    <Loader2 className="animate-spin text-slate-400" />
+                    <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : !data.leads.length ? (
                 <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
@@ -287,7 +287,7 @@ export default function LeadsBoard({ isAdmin }) {
                                                         : sel.filter((id) => !data.leads.some((l) => l.id === id))
                                                 )
                                             }
-                                            className="h-4 w-4 accent-[#3282B8]"
+                                            className="h-4 w-4 accent-action"
                                         />
                                     </th>
                                 )}
@@ -304,7 +304,7 @@ export default function LeadsBoard({ isAdmin }) {
                                 <tr
                                     key={l.id}
                                     onClick={() => setOpenId(l.id)}
-                                    className={cn("cursor-pointer hover:bg-slate-50", selected.includes(l.id) && "bg-[#F5FAFF]")}
+                                    className={cn("cursor-pointer hover:bg-slate-50", selected.includes(l.id) && "bg-action-soft")}
                                 >
                                     {isAdmin && (
                                         <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
@@ -313,7 +313,7 @@ export default function LeadsBoard({ isAdmin }) {
                                                 checked={selected.includes(l.id)}
                                                 onChange={() => toggle(l.id)}
                                                 aria-label={`Select ${l.name}`}
-                                                className="h-4 w-4 accent-[#3282B8]"
+                                                className="h-4 w-4 accent-action"
                                             />
                                         </td>
                                     )}
@@ -324,7 +324,7 @@ export default function LeadsBoard({ isAdmin }) {
                                                 e.stopPropagation();
                                                 setOpenId(l.id);
                                             }}
-                                            className="block max-w-full truncate text-left font-semibold text-slate-900 hover:text-[#3282B8]"
+                                            className="block max-w-full truncate text-left font-semibold text-slate-900 hover:text-action"
                                         >
                                             {l.name}
                                         </button>
@@ -349,16 +349,16 @@ export default function LeadsBoard({ isAdmin }) {
                                     checked={selected.includes(l.id)}
                                     onChange={() => toggle(l.id)}
                                     aria-label={`Select ${l.name}`}
-                                    className="absolute left-3 top-[18px] z-10 h-4 w-4 accent-[#3282B8]"
+                                    className="absolute left-3 top-[18px] z-10 h-4 w-4 accent-action"
                                 />
                             )}
                             <button
                                 type="button"
                                 onClick={() => setOpenId(l.id)}
                                 className={cn(
-                                    "block w-full rounded-xl border bg-white p-4 text-left transition-colors hover:border-[#3282B8]",
+                                    "block w-full rounded-xl border bg-white p-4 text-left transition-colors hover:border-action",
                                     isAdmin && "pl-9",
-                                    selected.includes(l.id) ? "border-[#3282B8]" : "border-slate-200"
+                                    selected.includes(l.id) ? "border-action" : "border-slate-200"
                                 )}
                             >
                                 <div className="flex items-start justify-between gap-2">

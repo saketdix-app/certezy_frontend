@@ -117,7 +117,7 @@ export default function ThumbnailAdjuster({
                         type="button"
                         onClick={onCancel}
                         disabled={busy}
-                        className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                        className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
                         aria-label="Close"
                     >
                         <X size={18} />
@@ -145,7 +145,7 @@ export default function ThumbnailAdjuster({
                                 rounded="rounded-xl"
                             />
                             {/* rule-of-thirds guide */}
-                            <div className="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-primary/70">
+                            <div className="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-action/70">
                                 <div className="absolute inset-y-0 left-1/3 border-l border-white/40" />
                                 <div className="absolute inset-y-0 left-2/3 border-l border-white/40" />
                                 <div className="absolute inset-x-0 top-1/3 border-t border-white/40" />
@@ -168,7 +168,7 @@ export default function ThumbnailAdjuster({
                                         onClick={() => update({ fit: mode, zoom: 1, x: 0, y: 0 })}
                                         className={`px-2.5 py-1 rounded-lg border font-semibold transition-colors ${
                                             settings.fit === mode
-                                                ? "border-primary bg-primary/10 text-primary"
+                                                ? "border-action bg-action/10 text-action"
                                                 : "border-slate-200 text-slate-500 hover:border-slate-300"
                                         }`}
                                     >
@@ -186,7 +186,7 @@ export default function ThumbnailAdjuster({
                                     step={0.01}
                                     value={settings.zoom}
                                     onChange={(e) => update({ zoom: Number(e.target.value) })}
-                                    className="w-full accent-primary"
+                                    className="w-full accent-action"
                                     aria-label="Zoom"
                                 />
                                 <ZoomIn size={15} className="shrink-0" />
@@ -195,14 +195,14 @@ export default function ThumbnailAdjuster({
                             <button
                                 type="button"
                                 onClick={() => setSettings(autoPlace(image, { width, height }))}
-                                className="flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
+                                className="flex items-center gap-1 text-[12px] font-semibold text-action hover:underline"
                             >
                                 <Wand2 size={13} /> Auto
                             </button>
                             <button
                                 type="button"
                                 onClick={() => update({ zoom: 1, x: 0, y: 0 })}
-                                className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-primary"
+                                className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-action"
                             >
                                 <RotateCcw size={13} /> Reset
                             </button>
@@ -218,7 +218,7 @@ export default function ThumbnailAdjuster({
 
                     {/* Screen previews */}
                     <div className="space-y-4">
-                        <p className="text-[11px] font-bold tracking-[0.08em] text-slate-400">
+                        <p className="text-[11px] font-bold tracking-[0.08em] text-slate-500">
                             PREVIEW ON SCREENS
                         </p>
                         <div>
@@ -278,7 +278,7 @@ export default function ThumbnailAdjuster({
                         type="button"
                         onClick={() => onApply?.(settings)}
                         disabled={busy}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-60"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-60"
                     >
                         {busy && <Loader2 size={14} className="animate-spin" />} Save thumbnail
                     </button>
