@@ -20,6 +20,8 @@ const integrationService = {
     retry: (eventId) => api.post(`/integrations/events/${eventId}/retry`),
     retryFailed: (source) => api.post(`/integrations/${source}/retry-failed`),
     syncLinkedIn: () => api.post("/integrations/linkedin/sync"),
+    // { days } (1–90) also imports older leads
+    syncMeta: (days) => api.post("/integrations/meta/sync", days ? { days } : {}),
     saveKeys: (source, values, password) => api.put(`/integrations/${source}/credentials`, { values, password }),
     test: (source) => api.post(`/integrations/${source}/test`),
     connect: (source, password) => api.post(`/integrations/${source}/connect`, { password }),
