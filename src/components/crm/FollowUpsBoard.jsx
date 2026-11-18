@@ -120,7 +120,7 @@ export default function FollowUpsBoard({ isAdmin }) {
                     </button>
                 ))}
             </div>
-            <div className="rounded-xl border border-slate-200 bg-white px-4">
+            <div className="rounded-xl border border-slate-200 bg-surface px-4">
                 {!items ? (
                     <div className="flex justify-center py-10">
                         <Loader2 className="animate-spin text-slate-500" />

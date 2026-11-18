@@ -149,7 +149,7 @@ export default function CategoriesPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
                         <Download size={15} />
                         Export
                     </button>
@@ -168,7 +168,7 @@ export default function CategoriesPage() {
 
             {/* Search + filters */}
             <div
-                className="bg-white rounded-2xl border border-slate-200 px-4 py-3.5 mb-5 flex flex-col sm:flex-row gap-3"
+                className="bg-surface rounded-2xl border border-slate-200 px-4 py-3.5 mb-5 flex flex-col sm:flex-row gap-3"
                 style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
             >
                 <div className="relative flex-1">
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
                                 setStatusFilter(e.target.value);
                                 setPage(1);
                             }}
-                            className="appearance-none pl-4 pr-9 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-white focus:outline-none focus:border-action cursor-pointer"
+                            className="appearance-none pl-4 pr-9 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-surface focus:outline-none focus:border-action cursor-pointer"
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -203,7 +203,7 @@ export default function CategoriesPage() {
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
                         />
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-white hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-surface hover:bg-slate-50 transition-colors">
                         <SlidersHorizontal size={14} />
                         Filters
                     </button>
@@ -212,7 +212,7 @@ export default function CategoriesPage() {
 
             {/* Table */}
             <div
-                className="bg-white rounded-2xl border border-slate-200 overflow-x-auto"
+                className="bg-surface rounded-2xl border border-slate-200 overflow-x-auto"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {/* Table head */}
@@ -443,7 +443,7 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
     return (
         <Overlay onClose={onClose}>
             <div
-                className="bg-white rounded-2xl w-full max-w-[460px] shadow-2xl"
+                className="bg-surface rounded-2xl w-full max-w-[460px] shadow-2xl"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
                 {/* Header */}
@@ -577,7 +577,7 @@ function DeleteModal({ cat, onClose, onConfirm }) {
     return (
         <Overlay onClose={onClose}>
             <div
-                className="bg-white rounded-2xl w-full max-w-[380px] shadow-2xl p-6"
+                className="bg-surface rounded-2xl w-full max-w-[380px] shadow-2xl p-6"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
                 <div className="flex items-center gap-4 mb-5">

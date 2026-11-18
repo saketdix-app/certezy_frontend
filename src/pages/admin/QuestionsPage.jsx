@@ -43,7 +43,7 @@ const optionService = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const DIFFICULTY_STYLE = {
     easy: { label: "EASY", bg: "#F0FDF4", color: "#16A34A" },
@@ -354,7 +354,7 @@ export default function QuestionsPage() {
                 ].map(({ label, value, sub, icon: Icon, ibg, ic }) => (
                     <div
                         key={label}
-                        className="bg-white rounded-2xl border border-slate-100 p-5"
+                        className="bg-surface rounded-2xl border border-slate-100 p-5"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         <div className="flex items-center gap-4">
@@ -407,7 +407,7 @@ export default function QuestionsPage() {
             {/* Question Modal */}
             {showModal && (
                 <Overlay onClose={() => setShowModal(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
+                    <div className="bg-surface rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
@@ -510,7 +510,7 @@ export default function QuestionsPage() {
                                                 "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all",
                                                 opt.is_correct
                                                     ? "border-emerald-500 bg-emerald-50"
-                                                    : "border-slate-200 bg-white"
+                                                    : "border-slate-200 bg-surface"
                                             )}
                                         >
                                             {/* Radio */}
@@ -525,7 +525,7 @@ export default function QuestionsPage() {
                                                 )}
                                             >
                                                 {opt.is_correct && (
-                                                    <div className="w-2 h-2 rounded-full bg-white" />
+                                                    <div className="w-2 h-2 rounded-full bg-surface" />
                                                 )}
                                             </button>
 
@@ -622,7 +622,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
 
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+            className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
             style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
         >
             {/* Header row */}
@@ -714,7 +714,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                                             "flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 transition-all",
                                             opt.is_correct
                                                 ? "border-emerald-500 bg-emerald-50"
-                                                : "border-slate-200 bg-white"
+                                                : "border-slate-200 bg-surface"
                                         )}
                                     >
                                         <span
@@ -772,7 +772,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
 function EmptyState({ onAdd }) {
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
+            className="bg-surface rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">

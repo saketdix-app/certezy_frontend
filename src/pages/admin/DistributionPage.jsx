@@ -40,7 +40,7 @@ function Switch({ checked, onChange, label, disabled }) {
             onClick={() => onChange(!checked)}
             className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50", checked ? "bg-action" : "bg-slate-300")}
         >
-            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
+            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
         </button>
     );
 }
@@ -241,7 +241,7 @@ export default function DistributionPage() {
 
             {/* Switch + queue */}
             <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-5">
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-surface p-5">
                     <div>
                         <p className="text-[15px] font-bold text-slate-900">Round Robin</p>
                         <p className="mt-1 text-[13px] text-slate-500">
@@ -257,7 +257,7 @@ export default function DistributionPage() {
                         onChange={(v) => act(() => crmService.setRoundRobin(v), v ? "Round Robin is on" : "Round Robin is off")}
                     />
                 </div>
-                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-5">
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-surface p-5">
                     <div className="flex items-center gap-3">
                         <Inbox size={22} className="text-slate-500" aria-hidden="true" />
                         <div>
@@ -285,13 +285,13 @@ export default function DistributionPage() {
             <section>
                 <div className="mb-2 flex items-center justify-between">
                     <h2 className="text-[16px] font-bold text-slate-900">Routing pools</h2>
-                    <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-semibold text-slate-700">
+                    <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[13px] font-semibold text-slate-700">
                         <Plus size={14} aria-hidden="true" /> New pool
                     </button>
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
                     {cfg.pools.map((p) => (
-                        <div key={p.id} className={cn("rounded-xl border bg-white p-4", p.enabled ? "border-slate-200" : "border-dashed border-slate-300 opacity-75")}>
+                        <div key={p.id} className={cn("rounded-xl border bg-surface p-4", p.enabled ? "border-slate-200" : "border-dashed border-slate-300 opacity-75")}>
                             <div className="flex items-start justify-between gap-3">
                                 <div>
                                     <p className="font-bold text-slate-900">
@@ -351,7 +351,7 @@ export default function DistributionPage() {
                         ))}
                     </select>
                 </div>
-                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
                     <table className="w-full min-w-[820px] text-left text-[13px]">
                         <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
                             <tr>

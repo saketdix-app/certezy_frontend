@@ -65,7 +65,7 @@ export default function CrmOverview({ name, leadsPath }) {
 
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                 {KPIS.map(([k, label, tone]) => (
-                    <div key={k} className="rounded-xl border border-slate-200 bg-white px-4 py-3">
+                    <div key={k} className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
                         <p className="text-[12px] font-semibold text-slate-500">{label}</p>
                         <p className={cn("mt-1 text-[24px] font-extrabold text-slate-900", data.kpis[k] > 0 && tone)}>{data.kpis[k]}</p>
                     </div>
@@ -73,11 +73,11 @@ export default function CrmOverview({ name, leadsPath }) {
             </div>
 
             <div className="mt-6 grid gap-5 lg:grid-cols-2">
-                <section className="rounded-xl border border-slate-200 bg-white px-4 pt-3">
+                <section className="rounded-xl border border-slate-200 bg-surface px-4 pt-3">
                     <h2 className="text-[15px] font-bold text-slate-900">Due today</h2>
                     <FollowUpList items={data.today} onOpen={setOpenId} onDone={complete} busyId={busyId} />
                 </section>
-                <section className="rounded-xl border border-slate-200 bg-white px-4 pt-3">
+                <section className="rounded-xl border border-slate-200 bg-surface px-4 pt-3">
                     <h2 className="text-[15px] font-bold text-slate-900">Overdue</h2>
                     <FollowUpList items={data.overdue} onOpen={setOpenId} onDone={complete} busyId={busyId} />
                 </section>

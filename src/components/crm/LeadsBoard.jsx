@@ -157,7 +157,7 @@ export default function LeadsBoard({ isAdmin }) {
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
                             "shrink-0 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
-                            stage === k ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-white text-slate-600"
+                            stage === k ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-600"
                         )}
                     >
                         {l} <span className="ml-0.5 text-slate-500">{n}</span>
@@ -196,17 +196,17 @@ export default function LeadsBoard({ isAdmin }) {
                         ))}
                     </select>
                 )}
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] text-slate-700">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] text-slate-700">
                     <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
                     Overdue follow-ups
                 </label>
                 <div className="ml-auto flex items-center gap-2">
                     {view === "list" && (
                         <details className="relative">
-                            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
+                            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
                                 <Columns3 size={14} aria-hidden="true" /> Columns
                             </summary>
-                            <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+                            <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-surface p-2 shadow-lg">
                                 <p className="px-2 pb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Show in the list</p>
                                 <p className="flex items-center gap-2 px-2 py-1 text-[13px] text-slate-500">
                                     <input type="checkbox" checked disabled className="accent-action" /> Name (always)
@@ -220,7 +220,7 @@ export default function LeadsBoard({ isAdmin }) {
                             </div>
                         </details>
                     )}
-                    <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5" role="group" aria-label="View">
+                    <div className="inline-flex rounded-lg border border-slate-200 bg-surface p-0.5" role="group" aria-label="View">
                         {[
                             ["list", "List", List],
                             ["cards", "Cards", LayoutGrid],
@@ -246,7 +246,7 @@ export default function LeadsBoard({ isAdmin }) {
                 <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-action bg-action-soft px-4 py-2.5">
                     <p className="text-[13.5px] font-semibold text-action-soft-ink">{selected.length} selected</p>
                     <div className="flex gap-2">
-                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
+                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
                             Clear
                         </button>
                         <button
@@ -270,7 +270,7 @@ export default function LeadsBoard({ isAdmin }) {
                     {total ? "No leads match these filters." : "No leads yet. Add your first lead to get started."}
                 </p>
             ) : view === "list" ? (
-                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
                     <table className="w-full min-w-[640px] text-left text-[13px]">
                         <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
                             <tr>
@@ -356,7 +356,7 @@ export default function LeadsBoard({ isAdmin }) {
                                 type="button"
                                 onClick={() => setOpenId(l.id)}
                                 className={cn(
-                                    "block w-full rounded-xl border bg-white p-4 text-left transition-colors hover:border-action",
+                                    "block w-full rounded-xl border bg-surface p-4 text-left transition-colors hover:border-action",
                                     isAdmin && "pl-9",
                                     selected.includes(l.id) ? "border-action" : "border-slate-200"
                                 )}
@@ -388,7 +388,7 @@ export default function LeadsBoard({ isAdmin }) {
 
             {data?.pagination?.totalPages > 1 && (
                 <div className="mt-4 flex items-center justify-end gap-2 text-[13px]">
-                    <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border bg-white px-3 py-1.5 disabled:opacity-40">
+                    <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border bg-surface px-3 py-1.5 disabled:opacity-40">
                         Previous
                     </button>
                     <span>
@@ -397,7 +397,7 @@ export default function LeadsBoard({ isAdmin }) {
                     <button
                         disabled={page >= data.pagination.totalPages}
                         onClick={() => setPage((p) => p + 1)}
-                        className="rounded-lg border bg-white px-3 py-1.5 disabled:opacity-40"
+                        className="rounded-lg border bg-surface px-3 py-1.5 disabled:opacity-40"
                     >
                         Next
                     </button>

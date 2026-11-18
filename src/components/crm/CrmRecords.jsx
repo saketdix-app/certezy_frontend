@@ -44,7 +44,7 @@ function Table({ title, intro, head, rows, render, empty }) {
             ) : !rows.length ? (
                 <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">{empty}</p>
             ) : (
-                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
                     <table className="w-full min-w-[720px] text-left text-[13px]">
                         <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
                             <tr>
