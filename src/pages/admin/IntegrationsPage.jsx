@@ -464,12 +464,164 @@ function ConnectResult({ result, onChoose, onClose }) {
     );
 }
 
+const FORM_STATUS_TONE = { active: "bg-emerald-50 text-emerald-700", archived: "bg-slate-100 text-slate-500", draft: "bg-amber-50 text-amber-700", deleted: "bg-red-50 text-red-600" };
+
+/**
+ * Every lead form on the connected Pages / ad accounts, fetched from
+ * Facebook / LinkedIn: tick which to import and pick each form's course.
+ * Falls back to typing form IDs when the list can't be loaded.
+ */
+function LeadForms({ integration, courses, onSave }) {
+    const config = integration.config ?? {};
+    const [list, setList] = useState(null); // { forms, errors } | { failed: message }
+    const [allForms, setAllForms] = useState(!Array.isArray(config.selected_forms));
+    const [picked, setPicked] = useState(Array.isArray(config.selected_forms) ? config.selected_forms.map(String) : []);
+    const [courseOf, setCourseOf] = useState(() => Object.fromEntries(Object.entries(config.form_courses ?? {}).map(([k, v]) => [k, String(v)])));
+    const [fallback, setFallback] = useState(config.default_course_id ? String(config.default_course_id) : "");
+    const [showArchived, setShowArchived] = useState(false);
+
+    const load = useCallback(
+        () =>
+            integrationService
+                .forms(integration.source)
+                .then(({ data: res }) => setList({ forms: res.data?.forms ?? [], errors: res.data?.errors ?? [] }))
+                .catch((err) => setList({ failed: apiMessage(err, "Could not load the forms") })),
+        [integration.source]
+    );
+    useEffect(() => {
+        load();
+    }, [load]);
+
+    if (!list) {
+        return (
+            <p className="mt-3 flex items-center gap-2 rounded-lg bg-slate-50 p-3 text-[12.5px] text-slate-500">
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" /> Loading your lead forms…
+            </p>
+        );
+    }
+    if (list.failed || !list.forms.length) {
+        return (
+            <>
+                <p className="mt-3 rounded-lg bg-amber-50 px-2.5 py-1.5 text-[12px] text-amber-800">
+                    {list.failed ? `${list.failed}. ` : "No lead forms found yet. "}
+                    {list.errors?.length ? `${list.errors.join(" · ")}. ` : ""}You can still type form IDs below.
+                </p>
+                <FormCourses key={JSON.stringify(config)} integration={integration} courses={courses} onSave={onSave} />
+            </>
+        );
+    }
+
+    const active = (f) => f.status !== "archived" && f.status !== "deleted";
+    const shown = list.forms.filter((f) => showArchived || active(f) || picked.includes(f.id) || courseOf[f.id]);
+    const hiddenCount = list.forms.length - shown.length;
+    const groups = [...new Set(shown.map((f) => f.owner_name ?? ""))];
+    const isOn = (id) => allForms || picked.includes(id);
+    const toggle = (id) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+    const courseSelect = (value, onChange, label) => (
+        <select value={value} onChange={(e) => onChange(e.target.value)} className={cn(inputCls, "py-1 text-[12.5px]")} aria-label={label}>
+            <option value="">No course</option>
+            {courses.map((c) => (
+                <option key={c.id} value={c.id}>
+                    {c.title}
+                </option>
+            ))}
+        </select>
+    );
+
+    const save = () => {
+        const listed = new Set(list.forms.map((f) => f.id));
+        // Mappings typed earlier for forms not in the list are kept
+        const kept = Object.fromEntries(Object.entries(config.form_courses ?? {}).filter(([k]) => !listed.has(k)));
+        const chosen = Object.fromEntries(Object.entries(courseOf).filter(([k, v]) => listed.has(k) && v).map(([k, v]) => [k, Number(v)]));
+        onSave({
+            config: {
+                ...config,
+                form_courses: { ...kept, ...chosen },
+                default_course_id: fallback ? Number(fallback) : null,
+                selected_forms: allForms ? null : picked,
+                form_names: { ...(config.form_names ?? {}), ...Object.fromEntries(list.forms.map((f) => [f.id, f.name])) },
+            },
+        });
+    };
+
+    return (
+        <div className="mt-3 rounded-lg bg-slate-50 p-3">
+            <div className="flex items-center justify-between gap-2">
+                <p className="text-[12.5px] font-semibold text-slate-700">Lead forms ({list.forms.length})</p>
+                <button type="button" onClick={load} className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#3282B8]">
+                    <RefreshCw size={12} aria-hidden="true" /> Refresh
+                </button>
+            </div>
+            {list.errors.length > 0 && <p className="mt-1 text-[12px] text-amber-700">Couldn't read: {list.errors.join(" · ")}</p>}
+            <label className="mt-2 flex cursor-pointer items-start gap-2 text-[12.5px] text-slate-700">
+                <input
+                    type="checkbox"
+                    checked={allForms}
+                    onChange={(e) => {
+                        setAllForms(e.target.checked);
+                        if (!e.target.checked && !picked.length) setPicked(list.forms.filter(active).map((f) => f.id));
+                    }}
+                    className="mt-0.5 accent-[#3282B8]"
+                />
+                <span>
+                    <span className="font-semibold">Import from every form</span>, including forms created later. Untick to choose.
+                </span>
+            </label>
+
+            <div className="mt-2 space-y-3">
+                {groups.map((g) => (
+                    <div key={g || "forms"}>
+                        {groups.length > 1 && g && <p className="mb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-400">{g}</p>}
+                        <ul className="space-y-1.5">
+                            {shown
+                                .filter((f) => (f.owner_name ?? "") === g)
+                                .map((f) => (
+                                    <li key={f.id} className={cn("grid items-center gap-2 rounded-lg border bg-white p-2 sm:grid-cols-[1fr_minmax(0,220px)]", isOn(f.id) ? "border-slate-200" : "border-dashed border-slate-200 opacity-70")}>
+                                        <label className="flex min-w-0 cursor-pointer items-start gap-2">
+                                            <input type="checkbox" checked={isOn(f.id)} disabled={allForms} onChange={() => toggle(f.id)} className="mt-0.5 h-4 w-4 accent-[#3282B8]" aria-label={`Import ${f.name}`} />
+                                            <span className="min-w-0">
+                                                <span className="block truncate text-[13px] font-semibold text-slate-800">{f.name}</span>
+                                                <span className="flex flex-wrap items-center gap-x-2 text-[11.5px] text-slate-500">
+                                                    {f.status && <span className={cn("rounded px-1.5 font-semibold capitalize", FORM_STATUS_TONE[f.status] ?? "bg-slate-100 text-slate-500")}>{f.status}</span>}
+                                                    {f.leads_count != null && <span>{f.leads_count} leads</span>}
+                                                    <span>ID {f.id}</span>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        {courseSelect(courseOf[f.id] ?? "", (v) => setCourseOf((m) => ({ ...m, [f.id]: v })), `Course for ${f.name}`)}
+                                    </li>
+                                ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+            {hiddenCount > 0 && (
+                <button type="button" onClick={() => setShowArchived(true)} className="mt-2 text-[12px] font-semibold text-[#3282B8]">
+                    Show {hiddenCount} archived form{hiddenCount === 1 ? "" : "s"}
+                </button>
+            )}
+
+            <div className="mt-3 grid grid-cols-[auto_1fr] items-center gap-2 text-[12.5px] text-slate-600">
+                <span>Any other form:</span>
+                {courseSelect(fallback, setFallback, "Default course")}
+            </div>
+            <div className="mt-2 flex items-center justify-end gap-3">
+                {!allForms && <span className="text-[12px] text-slate-500">{picked.length} form{picked.length === 1 ? "" : "s"} selected</span>}
+                <button type="button" disabled={!allForms && !picked.length} onClick={save} className="rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50">
+                    Save forms
+                </button>
+            </div>
+        </div>
+    );
+}
+
 function FormCourses({ integration, courses, onSave }) {
     const [rows, setRows] = useState(Object.entries(integration.config?.form_courses ?? {}).map(([form, course]) => ({ form, course: String(course) })));
     const [fallback, setFallback] = useState(integration.config?.default_course_id ? String(integration.config.default_course_id) : "");
     const save = () => {
         const form_courses = Object.fromEntries(rows.filter((r) => r.form.trim() && r.course).map((r) => [r.form.trim(), Number(r.course)]));
-        onSave({ config: { form_courses, default_course_id: fallback ? Number(fallback) : null } });
+        // Keep the other settings (form selection, names) — the server replaces the whole config
+        onSave({ config: { ...(integration.config ?? {}), form_courses, default_course_id: fallback ? Number(fallback) : null } });
     };
     const courseSelect = (value, onChange, label) => (
         <select value={value} onChange={(e) => onChange(e.target.value)} className={cn(inputCls, "py-1.5")} aria-label={label}>
@@ -743,14 +895,23 @@ export default function IntegrationsPage() {
                                     <RefreshCw size={13} className={cn(busy === "sync" && "animate-spin")} aria-hidden="true" /> Sync now
                                 </button>
                             )}
-                            {info.formLabel && (
-                                <FormCourses
-                                    key={JSON.stringify(i.config)}
-                                    integration={i}
-                                    courses={courses}
-                                    onSave={(body) => act(i.source, () => integrationService.save(i.source, body), "Saved")}
-                                />
-                            )}
+                            {info.formLabel &&
+                                (i.configured ? (
+                                    // Connected: pick from the real forms
+                                    <LeadForms
+                                        key={`${i.source}-${JSON.stringify(i.config)}`}
+                                        integration={i}
+                                        courses={courses}
+                                        onSave={(body) => act(i.source, () => integrationService.save(i.source, body), "Saved")}
+                                    />
+                                ) : (
+                                    <FormCourses
+                                        key={JSON.stringify(i.config)}
+                                        integration={i}
+                                        courses={courses}
+                                        onSave={(body) => act(i.source, () => integrationService.save(i.source, body), "Saved")}
+                                    />
+                                ))}
                         </section>
                     );
                 })}
