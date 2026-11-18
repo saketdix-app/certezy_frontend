@@ -177,7 +177,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                     )}
 
                     <div className="flex justify-end gap-2">
-                        <button type="button" onClick={() => setOpen(null)} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] font-semibold">
+                        <button type="button" onClick={() => setOpen(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
                             Cancel
                         </button>
                         <button type="button" disabled={busy} onClick={submit} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
@@ -194,7 +194,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                     <button
                         type="button"
                         onClick={() => navigator.clipboard?.writeText(lastLink.offer_url).then(() => toast.success("Link copied"))}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-emerald-300 bg-white px-2 py-0.5 font-semibold"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-emerald-300 bg-surface px-2 py-0.5 font-semibold"
                     >
                         <Copy size={12} aria-hidden="true" /> Copy
                     </button>

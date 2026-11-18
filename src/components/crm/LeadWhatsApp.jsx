@@ -83,7 +83,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                                         <div
                                             className={cn(
                                                 "max-w-[85%] rounded-lg px-2.5 py-1.5 text-[13px] shadow-sm",
-                                                m.direction === "out" ? "bg-[#DCF8C6] text-slate-800" : "bg-white text-slate-800"
+                                                m.direction === "out" ? "bg-[#DCF8C6] text-slate-800" : "bg-surface text-slate-800"
                                             )}
                                         >
                                             <p className="whitespace-pre-wrap break-words">{m.body}</p>
@@ -107,7 +107,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                                 <div ref={endRef} />
                             </div>
 
-                            <div className="border-t border-slate-200 bg-white p-2.5">
+                            <div className="border-t border-slate-200 bg-surface p-2.5">
                                 {data.unavailable ? (
                                     <p className="text-[12.5px] text-slate-500">WhatsApp isn't connected yet (Admin → Integrations).</p>
                                 ) : data.window_open ? (

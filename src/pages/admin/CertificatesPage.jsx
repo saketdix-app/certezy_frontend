@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 10;
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const fmtDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -216,12 +216,12 @@ export default function CertificatesPage() {
                         setPage(1);
                     }}
                     placeholder="Search by student, email, course or certificate number…"
-                    className={cn(inputCls, "pl-10 bg-white")}
+                    className={cn(inputCls, "pl-10 bg-surface")}
                 />
             </div>
 
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading && rows.length === 0 ? (
@@ -390,7 +390,7 @@ export default function CertificatesPage() {
 
             {revokeTarget && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center">
+                    <div className="bg-surface rounded-2xl p-6 max-w-sm w-full text-center">
                         <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <Trash2 size={24} className="text-red-500" />
                         </div>
@@ -508,7 +508,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
+            <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                     <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
                         <Award size={18} className="text-action" /> Issue certificate
@@ -676,7 +676,7 @@ function RegenerateModal({ cert, onClose, onDone }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
+            <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                     <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
                         <RotateCw size={17} className="text-action" /> Regenerate certificate

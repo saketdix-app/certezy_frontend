@@ -103,7 +103,7 @@ export default function ThumbnailAdjuster({
                 role="dialog"
                 aria-modal="true"
                 aria-label="Adjust thumbnail"
-                className="w-full sm:max-w-4xl max-h-[100dvh] sm:max-h-[92vh] overflow-y-auto bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl"
+                className="w-full sm:max-w-4xl max-h-[100dvh] sm:max-h-[92vh] overflow-y-auto bg-surface rounded-t-2xl sm:rounded-2xl shadow-2xl"
             >
                 <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                     <div>
@@ -228,7 +228,7 @@ export default function ThumbnailAdjuster({
                             </p>
                         </div>
                         <div className="flex items-end gap-4">
-                            <div className="w-[120px] rounded-[14px] border-[3px] border-slate-800 p-1 bg-white">
+                            <div className="w-[120px] rounded-[14px] border-[3px] border-slate-800 p-1 bg-surface">
                                 <Framed
                                     img={image}
                                     src={src}
@@ -265,7 +265,7 @@ export default function ThumbnailAdjuster({
                     </div>
                 </div>
 
-                <div className="sticky bottom-0 flex justify-end gap-2 px-5 py-4 border-t border-slate-100 bg-white">
+                <div className="sticky bottom-0 flex justify-end gap-2 px-5 py-4 border-t border-slate-100 bg-surface">
                     <button
                         type="button"
                         onClick={onCancel}

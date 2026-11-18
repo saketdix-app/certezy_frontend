@@ -71,7 +71,7 @@ const apiError = (err, fallback) => err.response?.data?.message || err.message |
 
 function Card({ className, children }) {
     return (
-        <div className={cn("bg-white rounded-2xl border border-slate-200/80 shadow-sm", className)}>
+        <div className={cn("bg-surface rounded-2xl border border-slate-200/80 shadow-sm", className)}>
             {children}
         </div>
     );
@@ -191,7 +191,7 @@ export default function BulkImportPage() {
                             "text-left rounded-2xl border p-4 transition-all",
                             type === t
                                 ? "border-action bg-action/5 ring-2 ring-action/15"
-                                : "border-slate-200 bg-white hover:border-slate-300"
+                                : "border-slate-200 bg-surface hover:border-slate-300"
                         )}
                     >
                         <div className="flex items-center gap-2 mb-1.5">
@@ -424,9 +424,9 @@ function ImportResult({ result }) {
                 </div>
             </div>
             {result.errors.length > 0 && (
-                <div className="max-h-80 overflow-auto border-t border-rose-200 bg-white rounded-b-xl">
+                <div className="max-h-80 overflow-auto border-t border-rose-200 bg-surface rounded-b-xl">
                     <table className="w-full text-[12.5px]">
-                        <thead className="sticky top-0 bg-white">
+                        <thead className="sticky top-0 bg-surface">
                             <tr className="text-left text-slate-500 uppercase tracking-wider text-[10.5px]">
                                 <th className="py-2 px-4 font-bold">Row</th>
                                 <th className="py-2 px-4 font-bold">Column</th>

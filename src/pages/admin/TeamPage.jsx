@@ -92,7 +92,7 @@ const fmt = (d) =>
         : "—";
 
 const inputCls =
-    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-action";
+    "w-full rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[14px] outline-none focus:border-action";
 
 function RoleBadge({ role }) {
     return (
@@ -115,7 +115,7 @@ function Modal({ title, onClose, children, wide }) {
                 aria-modal="true"
                 aria-label={title}
                 className={cn(
-                    "max-h-[90dvh] w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl",
+                    "max-h-[90dvh] w-full overflow-y-auto rounded-2xl bg-surface p-6 shadow-2xl",
                     wide ? "max-w-2xl" : "max-w-md"
                 )}
                 onClick={(e) => e.stopPropagation()}
@@ -767,7 +767,7 @@ export default function TeamPage() {
                                 onClick={() => setRole(value)}
                                 className={cn(
                                     "rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
-                                    role === value ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-white text-slate-600"
+                                    role === value ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-600"
                                 )}
                             >
                                 {label}
@@ -776,7 +776,7 @@ export default function TeamPage() {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12.5px]"
+                            className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px]"
                             aria-label="Filter by status"
                         >
                             <option value="">Any status</option>
@@ -804,7 +804,7 @@ export default function TeamPage() {
                             No team members match these filters.
                         </p>
                     ) : (
-                        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
                             <table className="w-full min-w-[860px] text-left text-[13.5px]">
                                 <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
                                     <tr>

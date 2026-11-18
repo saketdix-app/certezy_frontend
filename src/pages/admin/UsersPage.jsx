@@ -37,7 +37,7 @@ import adminService from "@/services/adminService";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const PER_PAGE = 10;
 
@@ -448,7 +448,7 @@ export default function UsersPage() {
                 ].map(({ label, value, icon: Icon, ibg, ic }) => (
                     <div
                         key={label}
-                        className="bg-white rounded-2xl border border-slate-100 p-4"
+                        className="bg-surface rounded-2xl border border-slate-100 p-4"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         <div className="flex items-center gap-3">
@@ -497,7 +497,7 @@ export default function UsersPage() {
                 <>
                     {/* Search + filter */}
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col sm:flex-row gap-3"
+                        className="bg-surface rounded-2xl border border-slate-100 p-4 flex flex-col sm:flex-row gap-3"
                         style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
                     >
                         <div className="relative flex-1">
@@ -509,13 +509,13 @@ export default function UsersPage() {
                                 value={stuSearch}
                                 onChange={(e) => setStuSearch(e.target.value)}
                                 placeholder="Search by name or email..."
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-slate-50 outline-none focus:border-action focus:bg-white transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
                             />
                         </div>
                         <select
                             value={stuStatus}
                             onChange={(e) => setStuStatus(e.target.value)}
-                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
+                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             <option value="active">Active</option>
@@ -525,7 +525,7 @@ export default function UsersPage() {
 
                     {/* Table */}
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 overflow-x-auto"
+                        className="bg-surface rounded-2xl border border-slate-100 overflow-x-auto"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         {/* Head */}
@@ -695,7 +695,7 @@ export default function UsersPage() {
                     </div>
                 ) : subAdmins.length === 0 ? (
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
+                        className="bg-surface rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         <div className="w-14 h-14 rounded-2xl bg-[#F5F3FF] flex items-center justify-center">
@@ -730,7 +730,7 @@ export default function UsersPage() {
             {tab === "deleted" && (
                 <>
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3"
+                        className="bg-surface rounded-2xl border border-slate-100 p-4 space-y-3"
                         style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
                     >
                         <p className="text-[12.5px] text-slate-500 flex items-start gap-2">
@@ -753,7 +753,7 @@ export default function UsersPage() {
                         </div>
                     </div>
                     <div
-                        className="bg-white rounded-2xl border border-slate-100 overflow-x-auto"
+                        className="bg-surface rounded-2xl border border-slate-100 overflow-x-auto"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         {delLoading ? (
@@ -825,7 +825,7 @@ export default function UsersPage() {
                         setDeleteConfirm("");
                     }}
                 >
-                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
+                    <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
                         <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <Trash2 size={26} className="text-red-500" />
                         </div>
@@ -875,7 +875,7 @@ export default function UsersPage() {
             {/* ── Block / Unblock Modal ── */}
             {blockTarget && (
                 <Overlay onClose={() => setBlockTarget(null)}>
-                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
+                    <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl p-7 text-center">
                         <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <UserX size={28} className="text-red-500" />
                         </div>
@@ -920,7 +920,7 @@ export default function UsersPage() {
             {/* ── Add Sub-Admin Modal ── */}
             {showAddModal && (
                 <Overlay onClose={() => setShowAddModal(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
+                    <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
                         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
                                 <h3 className="text-[17px] font-extrabold text-slate-900">
@@ -1041,7 +1041,7 @@ export default function UsersPage() {
             {/* ── Edit Permissions Modal ── */}
             {showEditModal && (
                 <Overlay onClose={() => setShowEditModal(null)}>
-                    <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
+                    <div className="bg-surface rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100">
                             <div>
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
@@ -1104,7 +1104,7 @@ export default function UsersPage() {
             {/* ── Revoke Modal ── */}
             {showRevoke && (
                 <Overlay onClose={() => setShowRevoke(null)}>
-                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6">
+                    <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl p-6">
                         <div className="flex items-center gap-4 mb-5">
                             <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
                                 <Trash2 size={22} className="text-red-500" />
@@ -1151,7 +1151,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
     const perms = subAdmin.permissions ?? {};
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 p-5"
+            className="bg-surface rounded-2xl border border-slate-100 p-5"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             {/* Avatar + info */}
@@ -1237,7 +1237,7 @@ function PermissionRow({ perm, checked, onChange }) {
             <div
                 className={cn(
                     "w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors",
-                    checked ? "border-action bg-action" : "border-slate-300 bg-white"
+                    checked ? "border-action bg-action" : "border-slate-300 bg-surface"
                 )}
             >
                 {checked && <CheckCircle2 size={12} className="text-white fill-white" />}

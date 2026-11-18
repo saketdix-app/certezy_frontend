@@ -37,7 +37,7 @@ const STATUS = {
 };
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const pct = (base, offer) => {
     const b = Number(base);
@@ -176,7 +176,7 @@ function SendDiscountForm({ onSent }) {
         <>
             {sent && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl p-6 max-w-md w-full text-center">
+                    <div className="bg-surface rounded-2xl p-6 max-w-md w-full text-center">
                         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <CheckCircle className="w-6 h-6 text-green-600" />
                         </div>
@@ -218,7 +218,7 @@ function SendDiscountForm({ onSent }) {
 
             <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-2 gap-8"
+                className="bg-surface rounded-2xl border border-slate-100 p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-2 gap-8"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="space-y-6">
@@ -297,7 +297,7 @@ function SendDiscountForm({ onSent }) {
                                     className={cn(
                                         "flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition-colors",
                                         recipientMode === mode
-                                            ? "bg-white text-action shadow-sm"
+                                            ? "bg-surface text-action shadow-sm"
                                             : "text-slate-500 hover:text-slate-700"
                                     )}
                                 >
@@ -578,7 +578,7 @@ function SentLinks({ refreshKey }) {
                         }}
                         aria-pressed={status === key}
                         className={cn(
-                            "text-left bg-white rounded-2xl border p-4 transition-all flex items-center gap-3",
+                            "text-left bg-surface rounded-2xl border p-4 transition-all flex items-center gap-3",
                             status === key
                                 ? "border-action ring-2 ring-action/15"
                                 : "border-slate-100 hover:border-slate-200"
@@ -612,12 +612,12 @@ function SentLinks({ refreshKey }) {
                         setPage(1);
                     }}
                     placeholder="Search by student, email or course…"
-                    className={cn(inputCls, "pl-10 bg-white")}
+                    className={cn(inputCls, "pl-10 bg-surface")}
                 />
             </div>
 
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading && rows.length === 0 ? (
@@ -791,7 +791,7 @@ function ResendModal({ link, onClose, onDone }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+            <div className="bg-surface rounded-2xl p-6 max-w-md w-full">
                 <h3 className="text-lg font-bold text-slate-900">Resend this offer</h3>
                 <p className="text-sm text-slate-600 mt-1">
                     The same link goes to <b>{link.student_email}</b> for <b>{link.course_title}</b> at{" "}

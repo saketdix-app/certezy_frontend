@@ -267,7 +267,7 @@ export default function ContactPage() {
                     ].map(({ label, value, icon: Icon, bg, color }) => (
                         <div
                             key={label}
-                            className="bg-white rounded-2xl border border-slate-100 p-5"
+                            className="bg-surface rounded-2xl border border-slate-100 p-5"
                             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                         >
                             <div className="flex items-center gap-4">
@@ -293,7 +293,7 @@ export default function ContactPage() {
 
             {/* Filters */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 p-5"
+                className="bg-surface rounded-2xl border border-slate-100 p-5"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -308,7 +308,7 @@ export default function ContactPage() {
                                 placeholder="Search by name, email, or subject..."
                                 value={searchTerm}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                             />
                         </div>
                     </div>
@@ -316,7 +316,7 @@ export default function ContactPage() {
                         <select
                             value={selectedStatus}
                             onChange={(e) => handleStatusFilter(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                         >
                             <option value="">All Status</option>
                             <option value="new">New</option>
@@ -329,7 +329,7 @@ export default function ContactPage() {
 
             {/* Messages Table */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading ? (
@@ -512,7 +512,7 @@ export default function ContactPage() {
             {showMessageModal && selectedMessage && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <div
-                        className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+                        className="bg-surface rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
                         style={{ boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}
                     >
                         {/* Modal Header */}
@@ -590,7 +590,7 @@ export default function ContactPage() {
                                         maxLength={5000}
                                         autoFocus
                                         placeholder={`Hi ${selectedMessage.name?.split(" ")[0] || "there"},`}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-[13.5px] text-slate-800 outline-none focus:border-action resize-y"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13.5px] text-slate-800 outline-none focus:border-action resize-y"
                                     />
                                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[12px] text-slate-500">
                                         <label className="flex items-center gap-2 cursor-pointer">

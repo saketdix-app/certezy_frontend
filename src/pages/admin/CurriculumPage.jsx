@@ -70,7 +70,7 @@ const EMPTY_LESSON = { title: "", type: "video", duration: "", content: "", orde
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 function fmtDuration(seconds) {
     if (!seconds) return null;
@@ -398,7 +398,7 @@ export default function CurriculumPage() {
                     ].map(({ icon: Icon, label, ibg, ic }) => (
                         <div
                             key={label}
-                            className="flex items-center gap-2.5 px-4 py-2 bg-white rounded-xl border border-slate-100"
+                            className="flex items-center gap-2.5 px-4 py-2 bg-surface rounded-xl border border-slate-100"
                             style={{ boxShadow: "0 1px 4px rgba(15,23,42,0.04)" }}
                         >
                             <div
@@ -447,7 +447,7 @@ export default function CurriculumPage() {
             {/* ── Section Modal ── */}
             {showSectionModal && (
                 <Overlay onClose={() => setShowSectionModal(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl">
+                    <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
                             <div>
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
@@ -527,7 +527,7 @@ export default function CurriculumPage() {
             {/* ── Lesson Modal ── */}
             {showLessonModal && (
                 <Overlay onClose={() => setShowLessonModal(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
+                    <div className="bg-surface rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
                             <div>
                                 <h3 className="text-[16px] font-extrabold text-slate-900">
@@ -691,7 +691,7 @@ export default function CurriculumPage() {
                                         >
                                             <div
                                                 className={cn(
-                                                    "absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200",
+                                                    "absolute top-0.5 w-5 h-5 bg-surface rounded-full shadow transition-all duration-200",
                                                     lessonForm.is_free ? "left-5" : "left-0.5"
                                                 )}
                                             />
@@ -763,7 +763,7 @@ function SectionCard({
 
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+            className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             {/* Section header */}
@@ -921,7 +921,7 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
 function EmptyState({ onAdd }) {
     return (
         <div
-            className="bg-white rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
+            className="bg-surface rounded-2xl border border-slate-100 py-20 flex flex-col items-center gap-4 text-center"
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">

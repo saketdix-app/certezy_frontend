@@ -474,7 +474,7 @@ export default function CoursesPage() {
                 ].map(({ label, value, sub, subColor, icon: Icon, ibg, ic }) => (
                     <div
                         key={label}
-                        className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5"
+                        className="bg-surface rounded-2xl border border-slate-100 p-4 sm:p-5"
                         style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                     >
                         <div className="flex items-start justify-between gap-2">
@@ -498,7 +498,7 @@ export default function CoursesPage() {
 
             {/* ── Search + Filters ── */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 p-4"
+                className="bg-surface rounded-2xl border border-slate-100 p-4"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="flex flex-col gap-3">
@@ -513,7 +513,7 @@ export default function CoursesPage() {
                             placeholder="Search by course title, instructor..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 bg-slate-50 outline-none focus:border-action focus:bg-white transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
                         />
                     </div>
                     {/* Filters row */}
@@ -521,7 +521,7 @@ export default function CoursesPage() {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             {STATUSES.map((s) => (
@@ -533,7 +533,7 @@ export default function CoursesPage() {
                         <select
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Levels</option>
                             {LEVELS.map((l) => (
@@ -549,7 +549,7 @@ export default function CoursesPage() {
                                 setSelectedParent(e.target.value);
                                 setCatId("");
                             }}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Categories</option>
                             {categories
@@ -565,7 +565,7 @@ export default function CoursesPage() {
                             <select
                                 value={catId}
                                 onChange={(e) => setCatId(e.target.value)}
-                                className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white outline-none focus:border-action cursor-pointer"
+                                className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                             >
                                 <option value="">All Sub-Categories</option>
                                 {getChildCategories(selectedParent).map((c) => (
@@ -581,7 +581,7 @@ export default function CoursesPage() {
 
             {/* ── Table ── */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading ? (
@@ -840,7 +840,7 @@ export default function CoursesPage() {
                     className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
-                    <div className="bg-white rounded-2xl w-full max-w-2xl mx-4 shadow-2xl max-h-[90vh] flex flex-col">
+                    <div className="bg-surface rounded-2xl w-full max-w-2xl mx-4 shadow-2xl max-h-[90vh] flex flex-col">
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
@@ -1280,7 +1280,7 @@ export default function CoursesPage() {
             {/* ── Status Modal ── */}
             {showStatusModal && selectedCourse && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-sm mx-4 shadow-2xl">
+                    <div className="bg-surface rounded-2xl w-full max-w-sm mx-4 shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                             <h3 className="text-[15px] font-extrabold text-slate-900">Change Status</h3>
                             <button
@@ -1334,7 +1334,7 @@ export default function CoursesPage() {
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 function Field({ label, children }) {
     return (
@@ -1359,7 +1359,7 @@ function Toggle({ label, checked, onChange }) {
             >
                 <div
                     className={cn(
-                        "absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200",
+                        "absolute top-0.5 w-4 h-4 bg-surface rounded-full shadow transition-all duration-200",
                         checked ? "left-5" : "left-0.5"
                     )}
                 />

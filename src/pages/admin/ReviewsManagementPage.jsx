@@ -47,7 +47,7 @@ const SOURCE_OPTIONS = [
 ];
 
 const fieldCls =
-    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-700 bg-white outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
+    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-700 bg-surface outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
 
 const apiError = (err, fallback) =>
     err.response?.data?.errors?.[0] || err.response?.data?.message || err.message || fallback;
@@ -145,7 +145,7 @@ export default function ReviewsManagementPage() {
                 <div className="flex gap-2">
                     <Link
                         to="/admin/import"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action"
                     >
                         <FileUp size={15} /> Import CSV
                     </Link>
@@ -160,7 +160,7 @@ export default function ReviewsManagementPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col md:flex-row gap-3">
+            <div className="bg-surface rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col md:flex-row gap-3">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                     <input
@@ -196,7 +196,7 @@ export default function ReviewsManagementPage() {
             </div>
 
             {/* List */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
+            <div className="bg-surface rounded-2xl border border-slate-200/80 overflow-hidden">
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
                         <Loader2 className="w-7 h-7 text-action animate-spin" />
@@ -241,7 +241,7 @@ export default function ReviewsManagementPage() {
                             onClick={() => setPage((p) => p - 1)}
                             disabled={page <= 1}
                             aria-label="Previous page"
-                            className="p-2 rounded-lg border border-slate-200 bg-white text-slate-500 disabled:opacity-40"
+                            className="p-2 rounded-lg border border-slate-200 bg-surface text-slate-500 disabled:opacity-40"
                         >
                             <ChevronLeft size={16} />
                         </button>
@@ -253,7 +253,7 @@ export default function ReviewsManagementPage() {
                             onClick={() => setPage((p) => p + 1)}
                             disabled={page >= pagination.totalPages}
                             aria-label="Next page"
-                            className="p-2 rounded-lg border border-slate-200 bg-white text-slate-500 disabled:opacity-40"
+                            className="p-2 rounded-lg border border-slate-200 bg-surface text-slate-500 disabled:opacity-40"
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -455,9 +455,9 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="review-form-title"
-                className="bg-white w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl shadow-xl"
+                className="bg-surface w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl shadow-xl"
             >
-                <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                <div className="sticky top-0 bg-surface flex items-center justify-between px-5 py-4 border-b border-slate-100">
                     <h2 id="review-form-title" className="text-[16px] font-extrabold text-slate-900">
                         {isEdit ? "Edit review" : "Add a review"}
                     </h2>
@@ -585,7 +585,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                     )}
                 </div>
 
-                <div className="sticky bottom-0 bg-white flex flex-col-reverse sm:flex-row sm:justify-end gap-2 px-5 py-4 border-t border-slate-100">
+                <div className="sticky bottom-0 bg-surface flex flex-col-reverse sm:flex-row sm:justify-end gap-2 px-5 py-4 border-t border-slate-100">
                     <button
                         type="button"
                         onClick={onClose}

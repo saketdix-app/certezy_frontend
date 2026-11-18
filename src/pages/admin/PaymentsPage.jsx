@@ -226,7 +226,7 @@ export default function PaymentsPage() {
                     ].map(({ label, value, icon: Icon, bg, color }) => (
                         <div
                             key={label}
-                            className="bg-white rounded-2xl border border-slate-100 p-5"
+                            className="bg-surface rounded-2xl border border-slate-100 p-5"
                             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
                         >
                             <div className="flex items-center gap-4">
@@ -252,7 +252,7 @@ export default function PaymentsPage() {
 
             {/* Filters */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 p-5"
+                className="bg-surface rounded-2xl border border-slate-100 p-5"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -266,13 +266,13 @@ export default function PaymentsPage() {
                             placeholder="Search by student or course..."
                             value={searchTerm}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                         />
                     </div>
                     <select
                         value={selectedStatus}
                         onChange={(e) => handleStatusFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Status</option>
                         <option value="success">Success</option>
@@ -282,7 +282,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedMethod}
                         onChange={(e) => handleMethodFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Methods</option>
                         <option value="razorpay">Razorpay</option>
@@ -292,7 +292,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedCurrency}
                         onChange={(e) => handleCurrencyFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-white transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Currencies</option>
                         <option value="INR">INR</option>
@@ -304,7 +304,7 @@ export default function PaymentsPage() {
 
             {/* Payments Table */}
             <div
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-2xl border border-slate-100 overflow-hidden"
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 {loading ? (

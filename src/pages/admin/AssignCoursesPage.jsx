@@ -40,7 +40,7 @@ function Avatar({ name }) {
 function Card({ className, children }) {
     return (
         <div
-            className={cn("bg-white rounded-2xl border border-slate-100", className)}
+            className={cn("bg-surface rounded-2xl border border-slate-100", className)}
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             {children}
@@ -99,7 +99,7 @@ function StudentList({ selectedId, onSelect }) {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by name or email"
-                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-surface"
                     />
                 </div>
             </div>
@@ -231,7 +231,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search courses"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-surface"
                 />
             </div>
 
@@ -293,7 +293,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                 onChange={(e) => setNote(e.target.value)}
                 maxLength={255}
                 placeholder="Note (optional) — e.g. scholarship, corporate batch, support goodwill"
-                className="w-full mt-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-white"
+                className="w-full mt-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] outline-none focus:border-action focus:bg-surface"
             />
 
             <button
@@ -409,7 +409,7 @@ function UserCourses({ user, enrollments, loading, onRevoke }) {
                     onClick={() => !busy && setConfirm(null)}
                 >
                     <div
-                        className="bg-white rounded-2xl p-6 w-full max-w-sm"
+                        className="bg-surface rounded-2xl p-6 w-full max-w-sm"
                         onClick={(ev) => ev.stopPropagation()}
                     >
                         <div className="flex items-start justify-between mb-3">

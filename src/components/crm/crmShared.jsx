@@ -23,7 +23,7 @@ export function CrmModal({ title, onClose, children, wide }) {
                 aria-modal="true"
                 aria-label={title}
                 className={cn(
-                    "max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl bg-white p-5 shadow-2xl sm:rounded-2xl sm:p-6",
+                    "max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl bg-surface p-5 shadow-2xl sm:rounded-2xl sm:p-6",
                     wide ? "sm:max-w-2xl" : "sm:max-w-md"
                 )}
                 onClick={(e) => e.stopPropagation()}
