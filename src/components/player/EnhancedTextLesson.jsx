@@ -23,6 +23,7 @@ export function EnhancedTextLesson({
     onNext,
     hasNext,
     hasPrevious,
+    plain = false, // just the text: the course player shows the title and zoom itself
 }) {
     const [fontSize, setFontSize] = useState("medium");
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -101,6 +102,8 @@ export function EnhancedTextLesson({
             />
         );
     };
+
+    if (plain) return <div className="text-slate-800">{renderContent()}</div>;
 
     const content = (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
