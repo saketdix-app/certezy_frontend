@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import teamService from "@/services/teamService";
+import HandoverDialog from "@/components/team/HandoverDialog";
 import { selectUser } from "@/features/auth/authSlice";
 import { ROLE_LABELS } from "@/config/app";
 import { cn } from "@/lib/utils";
@@ -52,8 +53,9 @@ const ACTION_LABELS = {
     "super_admin.create": "Created Super Admin",
     "super_admin.promote": "Made Super Admin",
     "user.role_change": "Changed role",
-    "user.activate": "Activated account",
-    "user.deactivate": "Deactivated account",
+    "user.activate": "Unblocked account",
+    "user.deactivate": "Blocked account",
+    "user.delete": "Deleted account",
     "user.invite_resend": "Resent invitation",
     "privilege.grant": "Granted Super Admin creation",
     "privilege.revoke": "Revoked Super Admin creation",
@@ -268,6 +270,7 @@ function AllocationModal({ member, onClose, onDone }) {
     const [form, setForm] = useState({
         accepting_leads: a.accepting_leads ?? true,
         paused_reason: a.paused_reason ?? "",
+        on_leave_from: a.on_leave_from ? String(a.on_leave_from).slice(0, 10) : "",
         on_leave_until: a.on_leave_until ? String(a.on_leave_until).slice(0, 10) : "",
         daily_limit: a.daily_limit ?? "",
         open_limit: a.open_limit ?? "",
@@ -283,6 +286,7 @@ function AllocationModal({ member, onClose, onDone }) {
             await teamService.setAllocation(member.id, {
                 accepting_leads: form.accepting_leads,
                 paused_reason: form.accepting_leads ? null : form.paused_reason,
+                on_leave_from: form.on_leave_until ? form.on_leave_from || null : null,
                 on_leave_until: form.on_leave_until || null,
                 daily_limit: num(form.daily_limit),
                 open_limit: num(form.open_limit),
@@ -320,11 +324,27 @@ function AllocationModal({ member, onClose, onDone }) {
                         <input value={form.paused_reason} onChange={set("paused_reason")} placeholder="Training week" className={inputCls} />
                     </label>
                 )}
-                <label className="block">
-                    <span className="mb-1 block text-ui font-semibold text-slate-700">On leave until (optional)</span>
-                    <input type="date" value={form.on_leave_until} onChange={set("on_leave_until")} className={inputCls} />
-                    <span className="mt-1 block text-small text-slate-500">Skipped for new leads up to and including this date.</span>
-                </label>
+                <fieldset>
+                    <legend className="mb-1 text-ui font-semibold text-slate-700">Leave (optional)</legend>
+                    <div className="grid grid-cols-2 gap-3">
+                        <label className="block">
+                            <span className="mb-1 block text-small text-slate-500">From</span>
+                            <input type="date" value={form.on_leave_from} onChange={set("on_leave_from")} className={inputCls} />
+                        </label>
+                        <label className="block">
+                            <span className="mb-1 block text-small text-slate-500">Until</span>
+                            <input type="date" value={form.on_leave_until} min={form.on_leave_from || undefined} onChange={set("on_leave_until")} className={inputCls} />
+                        </label>
+                    </div>
+                    <span className="mt-1 block text-small text-slate-500">
+                        No new leads go to them from the first to the last day (both included). Leave "From" empty to start today. Their existing leads stay with them; use Hand over to move them.
+                    </span>
+                    {(form.on_leave_from || form.on_leave_until) && (
+                        <button type="button" onClick={() => setForm((f) => ({ ...f, on_leave_from: "", on_leave_until: "" }))} className="mt-1 text-small font-semibold text-action hover:underline">
+                            Clear leave
+                        </button>
+                    )}
+                </fieldset>
                 <div className="grid grid-cols-2 gap-3">
                     <label className="block">
                         <span className="mb-1 block text-ui font-semibold text-slate-700">New leads per day</span>
@@ -335,9 +355,7 @@ function AllocationModal({ member, onClose, onDone }) {
                         <input type="number" min="0" value={form.open_limit} onChange={set("open_limit")} placeholder="No limit" className={inputCls} />
                     </label>
                 </div>
-                <p className="text-small text-slate-500">
-                    Automatic distribution (Round Robin) arrives in a later phase and will follow these settings.
-                </p>
+                <p className="text-small text-slate-500">Round Robin and new-lead routing follow these settings.</p>
                 <div className="flex justify-end gap-2">
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
@@ -534,7 +552,7 @@ function HistoryModal({ member, onClose }) {
             <div className="grid gap-x-6 gap-y-2 text-ui sm:grid-cols-2">
                 <p><span className="text-slate-500">Email:</span> {member.email}</p>
                 <p><span className="text-slate-500">Role:</span> <RoleBadge role={member.role} /></p>
-                <p><span className="text-slate-500">Status:</span> {member.is_active ? "Active" : "Inactive"}</p>
+                <p><span className="text-slate-500">Status:</span> {member.is_active ? "Active" : "Blocked"}</p>
                 <p><span className="text-slate-500">Last active:</span> {fmt(member.last_active_at)}</p>
                 <p><span className="text-slate-500">Added:</span> {fmt(member.created_at)}</p>
             </div>
@@ -783,7 +801,7 @@ export default function TeamPage() {
                         >
                             <option value="">Any status</option>
                             <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="inactive">Blocked</option>
                         </select>
                         <div className="relative ml-auto w-full sm:w-64">
                             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
@@ -839,12 +857,22 @@ export default function TeamPage() {
                                                         <CheckCircle2 size={13} aria-hidden="true" /> Active
                                                     </span>
                                                 ) : (
-                                                    <span className="text-small font-semibold text-slate-500">Inactive</span>
+                                                    <span className="text-small font-semibold text-red-700">Blocked</span>
                                                 )}
                                                 {m.allocation && m.is_active && (
                                                     <span className={cn("mt-0.5 block text-label font-semibold", ALLOCATION_BADGE[m.allocation.state]?.[1])}>
                                                         {ALLOCATION_BADGE[m.allocation.state]?.[0]}
                                                         {m.allocation.state === "on_leave" && ` until ${fmt(m.allocation.on_leave_until).split(",")[0]}`}
+                                                    </span>
+                                                )}
+                                                {m.allocation?.leave_planned && (
+                                                    <span className="block text-label font-semibold text-slate-500">
+                                                        Leave {fmt(m.allocation.on_leave_from).split(",")[0]} – {fmt(m.allocation.on_leave_until).split(",")[0]}
+                                                    </span>
+                                                )}
+                                                {(m.open_leads > 0 || m.open_exams > 0) && (
+                                                    <span className={cn("block text-label", m.is_active ? "text-slate-500" : "font-semibold text-amber-700")}>
+                                                        {[m.open_leads && `${m.open_leads} open leads`, m.open_exams && `${m.open_exams} open exams`].filter(Boolean).join(" · ")}
                                                     </span>
                                                 )}
                                             </td>
@@ -892,11 +920,15 @@ export default function TeamPage() {
                                                                 />
                                                             )}
                                                             <ActionBtn label="Change role" onClick={() => setModal({ type: "role", member: m })} />
+                                                            {(m.open_leads > 0 || m.open_exams > 0) && (
+                                                                <ActionBtn label="Hand over" onClick={() => setModal({ type: "handover", member: m })} />
+                                                            )}
                                                             <ActionBtn
-                                                                label={m.is_active ? "Deactivate" : "Activate"}
+                                                                label={m.is_active ? "Block" : "Unblock"}
                                                                 danger={m.is_active}
-                                                                onClick={() => setModal({ type: "status", member: m })}
+                                                                onClick={() => setModal({ type: m.is_active ? "block" : "status", member: m })}
                                                             />
+                                                            <ActionBtn label="Delete" danger onClick={() => setModal({ type: "delete", member: m })} />
                                                         </>
                                                     )}
                                                 </div>
@@ -967,19 +999,22 @@ export default function TeamPage() {
                     onClose={close}
                 />
             )}
+            {["block", "delete", "handover"].includes(modal?.type) && (
+                <HandoverDialog member={modal.member} purpose={modal.type} onClose={close} onDone={load} />
+            )}
             {modal?.type === "status" && (
                 <ConfirmModal
-                    title={modal.member.is_active ? `Deactivate ${modal.member.name}?` : `Activate ${modal.member.name}?`}
+                    title={modal.member.is_active ? `Block ${modal.member.name}?` : `Unblock ${modal.member.name}?`}
                     warning={
                         modal.member.is_active
                             ? "They'll be signed out everywhere and can't sign in until reactivated. Their records stay."
                             : "They'll be able to sign in again with their existing password."
                     }
-                    confirmLabel={modal.member.is_active ? "Deactivate" : "Activate"}
+                    confirmLabel={modal.member.is_active ? "Block" : "Unblock"}
                     danger={modal.member.is_active}
                     onConfirm={async () => {
                         await teamService.setStatus(modal.member.id, !modal.member.is_active);
-                        toast.success(modal.member.is_active ? "Account deactivated" : "Account activated");
+                        toast.success(modal.member.is_active ? "Account blocked" : "Account unblocked");
                         load();
                     }}
                     onClose={close}

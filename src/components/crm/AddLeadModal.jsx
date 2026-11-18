@@ -167,7 +167,7 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                             {owners.map((o) => (
                                 <option key={o.id} value={o.id}>
                                     {o.name}
-                                    {o.role !== "consultant" ? " (Admin)" : o.accepting_leads === 0 ? " (paused)" : ""}
+                                    {o.role !== "consultant" ? " (Admin)" : o.on_leave ? " (on leave)" : o.accepting_leads === 0 ? " (paused)" : ""}
                                 </option>
                             ))}
                         </select>

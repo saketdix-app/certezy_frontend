@@ -149,6 +149,17 @@ export default function CrmOverview({ name, leadsPath }) {
                     <Kpi key={k} label={label} value={exams[k] ?? 0} tone={tone} />
                 ))}
             </div>
+            {data.ticket_revenue?.length > 0 && (
+                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-ui">
+                    <span className="font-semibold text-emerald-800">Revenue by ticket size (paid or Course Done)</span>
+                    {data.ticket_revenue.map((t) => (
+                        <span key={t.currency} className="text-slate-900">
+                            <b className="text-body font-extrabold">{fmtMoney(t.amount, t.currency)}</b>{" "}
+                            <span className="text-small text-slate-600">{fmtMoney(t.this_month, t.currency)} this month</span>
+                        </span>
+                    ))}
+                </div>
+            )}
             {data.pipeline?.length > 0 && (
                 <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl border border-slate-200 bg-surface px-4 py-3 text-ui">
                     <span className="font-semibold text-slate-500">Open applications (ticket size)</span>

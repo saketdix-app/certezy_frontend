@@ -20,7 +20,7 @@ const PRESETS = [
 ];
 const dayStr = (d) => new Date(d).toISOString().slice(0, 10);
 const money = (obj) =>
-    Object.entries(obj ?? {}).filter(([, v]) => v).length
+    obj && Object.entries(obj).filter(([, v]) => v).length
         ? Object.entries(obj)
               .filter(([, v]) => v)
               .map(([cur, v]) => new Intl.NumberFormat(cur === "INR" ? "en-IN" : "en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(v))
@@ -192,6 +192,28 @@ export default function CrmReportsPage() {
                         <Kpi label="Overdue follow-ups" value={data.operations.overdue_follow_ups} tone={data.operations.overdue_follow_ups ? "text-red-600" : ""} />
                     </div>
 
+                    {data.money_visible && (
+                        <Panel title="Revenue by ticket size (paid or Course Done, in this period)">
+                            {data.ticket_revenue?.length ? (
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    {data.ticket_revenue.map((t) => (
+                                        <Kpi
+                                            key={t.currency}
+                                            label={t.currency === "INR" ? "₹ INR" : "$ USD"}
+                                            value={money({ [t.currency]: t.amount })}
+                                            sub={`${t.leads} lead${t.leads === 1 ? "" : "s"} · ${t.paid_leads} paid · ${t.course_done_leads} Course Done`}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-ui text-slate-500">No lead with a ticket size was paid or reached Course Done in this period.</p>
+                            )}
+                            <p className="mt-2 text-small text-slate-500">
+                                Counts each lead's ticket size once, on the day it was paid or reached Course Done (whichever came first).
+                            </p>
+                        </Panel>
+                    )}
+
                     <Panel title={`Lead volume by ${data.period.group}`}>
                         <VolumeChart series={data.series} />
                     </Panel>
@@ -229,16 +251,17 @@ export default function CrmReportsPage() {
                                     <th className="py-2 pr-3 text-right">Follow-ups done / missed</th>
                                     <th className="py-2 pr-3 text-right">Overdue now</th>
                                     <th className="py-2 pr-3 text-right">Applications</th>
-                                    <th className="py-2 pr-3 text-right">Ticket size</th>
+                                    {data.money_visible && <th className="py-2 pr-3 text-right">Ticket size</th>}
                                     <th className="py-2 pr-3 text-right">Converted</th>
-                                    <th className="py-2 pr-3 text-right">Revenue</th>
+                                    {data.money_visible && <th className="py-2 pr-3 text-right">Revenue</th>}
+                                    {data.money_visible && <th className="py-2 pr-3 text-right">Ticket revenue</th>}
                                     <th className="py-2 text-right">1st contact</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {!data.consultants.length && (
                                     <tr>
-                                        <td colSpan={10} className="py-6 text-center text-slate-500">No consultants yet.</td>
+                                        <td colSpan={12} className="py-6 text-center text-slate-500">No consultants yet.</td>
                                     </tr>
                                 )}
                                 {data.consultants.map((c) => (
@@ -249,9 +272,10 @@ export default function CrmReportsPage() {
                                         <td className="py-2 pr-3 text-right">{c.follow_ups_done} / {c.follow_ups_missed}</td>
                                         <td className={cn("py-2 pr-3 text-right", c.follow_ups_overdue > 0 && "font-semibold text-red-600")}>{c.follow_ups_overdue}</td>
                                         <td className="py-2 pr-3 text-right">{c.applications}</td>
-                                        <td className="py-2 pr-3 text-right">{money(c.ticket_size)}</td>
+                                        {data.money_visible && <td className="py-2 pr-3 text-right">{money(c.ticket_size)}</td>}
                                         <td className="py-2 pr-3 text-right">{c.conversions} <span className="text-slate-500">({c.conversion_rate}%)</span></td>
-                                        <td className="py-2 pr-3 text-right">{money(c.revenue)}</td>
+                                        {data.money_visible && <td className="py-2 pr-3 text-right">{money(c.revenue)}</td>}
+                                        {data.money_visible && <td className="py-2 pr-3 text-right">{money(c.ticket_revenue)}</td>}
                                         <td className="py-2 text-right">{c.avg_first_contact_hours == null ? "—" : `${c.avg_first_contact_hours} h`}</td>
                                     </tr>
                                 ))}
@@ -267,7 +291,9 @@ export default function CrmReportsPage() {
                                 <Kpi label="Passed" value={data.exams.passed} sub={data.exams.passed + data.exams.failed ? `${data.exams.pass_rate}% of known results` : undefined} />
                                 <Kpi label="Awaiting Course Done" value={data.exams.awaiting_course_done} tone={data.exams.awaiting_course_done ? "text-amber-600" : ""} />
                                 <Kpi label="Applications without coordinator" value={data.exams.applications_without_coordinator} tone={data.exams.applications_without_coordinator ? "text-amber-600" : ""} />
-                                <Kpi label="Open applications" value={money(Object.fromEntries((data.pipeline ?? []).map((x) => [x.currency, x.amount])))} sub={`${(data.pipeline ?? []).reduce((n, x) => n + x.leads, 0)} with a ticket size`} />
+                                {data.money_visible && (
+                                    <Kpi label="Open applications" value={money(Object.fromEntries((data.pipeline ?? []).map((x) => [x.currency, x.amount])))} sub={`${(data.pipeline ?? []).reduce((n, x) => n + x.leads, 0)} with a ticket size`} />
+                                )}
                             </div>
                             <table className="mt-4 w-full min-w-[640px] text-left text-ui">
                                 <thead className="text-label uppercase tracking-wide text-slate-500">
@@ -335,8 +361,12 @@ export default function CrmReportsPage() {
                                 <dd className="text-right font-semibold">{data.lms.course_done}</dd>
                                 <dt className="text-slate-500">Discount links paid</dt>
                                 <dd className="text-right font-semibold">{data.discount_links.redeemed} / {data.discount_links.generated} <span className="font-normal text-slate-500">({data.discount_links.redemption_rate}%)</span></dd>
-                                <dt className="text-slate-500">Revenue from discount links</dt>
-                                <dd className="text-right font-semibold">{money(data.discount_links.revenue)}</dd>
+                                {data.money_visible && (
+                                    <>
+                                        <dt className="text-slate-500">Revenue from discount links</dt>
+                                        <dd className="text-right font-semibold">{money(data.discount_links.revenue)}</dd>
+                                    </>
+                                )}
                                 <dt className="text-slate-500">Transfers</dt>
                                 <dd className="text-right font-semibold">{data.operations.transfers}</dd>
                                 <dt className="text-slate-500">Round Robin balance</dt>

@@ -288,7 +288,9 @@ function QuickActions() {
 }
 
 export default function AdminDashboard() {
-    const canSeeCrm = TEAM_MANAGER_ROLES.includes(useSelector(selectUser)?.role);
+    const myRole = useSelector(selectUser)?.role;
+    const canSeeCrm = TEAM_MANAGER_ROLES.includes(myRole);
+    const isSuper = myRole === "super_admin"; // revenue is for Super Admins only
     const [stats, setStats] = useState({
         totalUsers: 0,
         activeUsers: 0,
@@ -328,11 +330,13 @@ export default function AdminDashboard() {
 
                 // 2. Load revenue data
                 let revenueData = {};
-                try {
-                    const revenueResponse = await paymentService.getRevenueStats();
-                    revenueData = revenueResponse.data?.data || revenueResponse.data || {};
-                } catch (revErr) {
-                    console.warn("Revenue stats not available:", revErr);
+                if (isSuper) {
+                    try {
+                        const revenueResponse = await paymentService.getRevenueStats();
+                        revenueData = revenueResponse.data?.data || revenueResponse.data || {};
+                    } catch (revErr) {
+                        console.warn("Revenue stats not available:", revErr);
+                    }
                 }
 
                 // If primary stats endpoint returned 404 and no data was resolved, show friendly message
@@ -458,7 +462,7 @@ export default function AdminDashboard() {
         };
 
         loadDashboardData();
-    }, []);
+    }, [isSuper]);
 
     if (loading) {
         return (
@@ -523,16 +527,18 @@ export default function AdminDashboard() {
                     icon={UserCheck}
                     color="green"
                 />
-                <AnalyticsCard
-                    title="Total Revenue"
-                    value={new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                    }).format(stats.totalRevenue)}
-                    change={stats.revenueGrowth || null}
-                    icon={DollarSign}
-                    color="purple"
-                />
+                {isSuper && (
+                    <AnalyticsCard
+                        title="Total Revenue"
+                        value={new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                        }).format(stats.totalRevenue)}
+                        change={stats.revenueGrowth || null}
+                        icon={DollarSign}
+                        color="purple"
+                    />
+                )}
                 <AnalyticsCard
                     title="Published Courses"
                     value={stats.publishedCourses}
@@ -548,7 +554,13 @@ export default function AdminDashboard() {
             {/* Charts and Tables */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
-                    <RevenueChart data={revenueData} />
+                    {isSuper ? (
+                        <RevenueChart data={revenueData} />
+                    ) : (
+                        <div className="flex h-full min-h-[160px] items-center justify-center rounded-xl border border-dashed border-slate-300 p-6 text-center text-ui text-slate-500">
+                            Revenue is visible to Super Admins only.
+                        </div>
+                    )}
                 </div>
                 <div>
                     <QuickActions />
@@ -557,7 +569,7 @@ export default function AdminDashboard() {
 
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RecentPaymentsTable payments={recentPayments} />
+                {isSuper && <RecentPaymentsTable payments={recentPayments} />}
                 <PendingReviews reviews={pendingReviews} />
             </div>
         </div>
