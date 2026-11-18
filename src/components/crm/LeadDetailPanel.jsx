@@ -21,7 +21,7 @@ import LeadStudentActions from "./LeadStudentActions";
 import LeadWhatsApp from "./LeadWhatsApp";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
-import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, apiMessage, fmtDateTime, inputCls, isOverdue, waLink } from "@/lib/crm";
+import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, waLink } from "@/lib/crm";
 
 /** Any course, or none — change it whenever the lead's interest changes. */
 function CourseSelect({ lead, disabled, onChange }) {
@@ -77,7 +77,8 @@ const ACTIVITY_TEXT = {
     sale: (m) => `Sale: ${m?.currency ?? ""} ${Number(m?.amount ?? 0).toFixed(2)}`,
     whatsapp_in: () => "WhatsApp received",
     checkout_abandoned: (m) => `Started checkout for ${m?.course ?? "a course"} but didn't pay`,
-    repeat_enquiry: (m) => `Enquired again via ${m?.source ?? "a form"}${m?.campaign ? ` (${m.campaign})` : ""}`,
+    repeat_enquiry: (m) =>
+        `Enquired again via ${formLabel(m?.form) ?? SOURCE_LABEL[m?.source] ?? m?.source ?? "a form"}${m?.campaign ? ` (${m.campaign})` : ""}`,
 };
 
 const QUICK_LOG = [
@@ -251,6 +252,17 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             <dd className="text-slate-900">{lead.source_meta.campaign}</dd>
                                         </>
                                     )}
+                                    {formLabel(lead.source_meta?.form_name ?? lead.source_meta?.form) && (
+                                        <>
+                                            <dt className="text-slate-500">Form</dt>
+                                            <dd className="text-slate-900">
+                                                {formLabel(lead.source_meta.form_name ?? lead.source_meta.form)}
+                                                {typeof lead.source_meta.page === "string" && lead.source_meta.page.startsWith("/") && (
+                                                    <span className="text-slate-500"> · {lead.source_meta.page}</span>
+                                                )}
+                                            </dd>
+                                        </>
+                                    )}
                                     <dt className="text-slate-500">Student</dt>
                                     <dd className="text-slate-900">
                                         {lead.user_id ? (
@@ -269,6 +281,19 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         </>
                                     )}
                                 </dl>
+                                {answerEntries(lead.source_meta?.answers).length > 0 && (
+                                    <div className="mt-4 rounded-lg border border-action/20 bg-action-soft/50 p-3">
+                                        <h3 className="mb-2 text-label font-bold uppercase tracking-wide text-action-soft-ink">What they told us</h3>
+                                        <dl className="space-y-2 text-ui">
+                                            {answerEntries(lead.source_meta.answers).map(([label, value]) => (
+                                                <div key={label}>
+                                                    <dt className="text-small font-semibold text-slate-500">{label}</dt>
+                                                    <dd className="whitespace-pre-wrap break-words text-slate-900">{value}</dd>
+                                                </div>
+                                            ))}
+                                        </dl>
+                                    </div>
+                                )}
                             </section>
 
                             {/* Status */}
@@ -458,6 +483,12 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             <span className="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-slate-300" aria-hidden="true" />
                                             <p className="font-semibold text-slate-800">{(ACTIVITY_TEXT[a.type] ?? (() => a.type))(a.meta)}</p>
                                             {a.body && <p className="whitespace-pre-wrap text-slate-600">{a.body}</p>}
+                                            {a.type === "repeat_enquiry" &&
+                                                answerEntries(a.meta?.answers).map(([label, value]) => (
+                                                    <p key={label} className="whitespace-pre-wrap break-words text-slate-600">
+                                                        <span className="font-semibold text-slate-700">{label}:</span> {value}
+                                                    </p>
+                                                ))}
                                             <p className="text-label text-slate-500">
                                                 {a.actor_name ?? "System"} · {fmtDateTime(a.created_at)}
                                             </p>

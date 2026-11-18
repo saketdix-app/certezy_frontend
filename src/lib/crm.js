@@ -83,3 +83,32 @@ export const apiMessage = (err, fallback) => err?.response?.data?.message || fal
 export const inputCls =
     "w-full rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui outline-none focus:border-action";
 
+
+// ── What the person told us on the form (source_meta.answers) ──
+const ANSWER_LABEL = {
+    preferred_time: "Best time to call",
+    message: "Message",
+    company: "Company",
+    team_size: "Team size",
+    subject: "Subject",
+};
+
+/** "what_is_your_budget?" → "What is your budget" */
+export const answerLabel = (key) => {
+    if (ANSWER_LABEL[key]) return ANSWER_LABEL[key];
+    const text = String(key ?? "").replace(/[_]+/g, " ").replace(/[?:]+$/, "").trim();
+    return text ? text.charAt(0).toUpperCase() + text.slice(1) : "Answer";
+};
+
+/** Answers as [label, value] pairs, best time and message first, empty ones left out. */
+export const answerEntries = (answers) => {
+    if (!answers || typeof answers !== "object") return [];
+    const order = ["preferred_time", "message"];
+    return Object.entries(answers)
+        .filter(([, v]) => v !== null && v !== undefined && String(v).trim() !== "")
+        .sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
+        .map(([k, v]) => [answerLabel(k), String(v)]);
+};
+
+/** Form name for people: "contact" → "Contact form". */
+export const formLabel = (form) => (form === "contact" ? "Contact form" : form || null);
