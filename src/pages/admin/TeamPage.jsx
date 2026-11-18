@@ -35,6 +35,7 @@ const ROLE_FILTERS = [
     ["admin", "Admins"],
     ["sub_admin", "Sub-Admins"],
     ["consultant", "Consultants"],
+    ["exam_coordinator", "Exam Coordinators"],
 ];
 
 const ROLE_BADGE = {
@@ -42,6 +43,7 @@ const ROLE_BADGE = {
     admin: "bg-blue-50 text-blue-700 border-blue-200",
     sub_admin: "bg-sky-50 text-sky-700 border-sky-200",
     consultant: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    exam_coordinator: "bg-amber-50 text-amber-800 border-amber-200",
     student: "bg-slate-50 text-slate-600 border-slate-200",
 };
 
@@ -708,7 +710,7 @@ export default function TeamPage() {
     const close = () => setModal(null);
 
     const canManage = (m) =>
-        m.id !== me?.id && (isSuper || ["sub_admin", "consultant"].includes(m.role));
+        m.id !== me?.id && (isSuper || ["sub_admin", "consultant", "exam_coordinator"].includes(m.role));
 
     return (
         <div className="mx-auto max-w-[1300px]">
@@ -716,7 +718,7 @@ export default function TeamPage() {
                 <div>
                     <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">Team</h1>
                     <p className="mt-1 text-ui text-slate-500">
-                        Super Admins, Admins, Sub-Admins and Consultants. Every change is recorded in the audit log.
+                        Super Admins, Admins, Sub-Admins, Consultants and Exam Coordinators. Every change is recorded in the audit log.
                     </p>
                 </div>
                 {canCreate && (

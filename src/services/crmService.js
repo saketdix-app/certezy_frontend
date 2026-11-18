@@ -15,6 +15,7 @@ import api from "./api";
  *   GET   /follow-ups                → (?when=today|overdue|upcoming&owner_id)
  *   PATCH /follow-ups/:id            → { status: done|missed|cancelled, outcome? }
  *   GET   /owners                    → people a lead can be assigned to (admins)
+ *   GET   /exam-coordinators         → active Exam Coordinators;  PUT /leads/:id/exam-coordinator, PUT /leads/:id/exam
  *   POST  /leads/:id/student-account | assign-course | discount-link | certificate   (phase 5)
  *   GET   /sales, /discounts, /assignments, /certificates;  GET/PUT /settings
  *   POST  /leads/assign(/preview)    → { lead_ids, owner_id, reason?, mode? } assign / transfer / rebalance
@@ -27,7 +28,12 @@ const crmService = {
     get: (id) => api.get(`/crm/leads/${id}`),
     create: (data) => api.post("/crm/leads", data),
     update: (id, data) => api.patch(`/crm/leads/${id}`, data),
-    changeStage: (id, stage, reason) => api.post(`/crm/leads/${id}/stage`, { stage, reason }),
+    // { stage, reason?, ticket_size?, ticket_currency? } — Application needs the ticket size
+    changeStage: (id, stage, reason, ticket) => api.post(`/crm/leads/${id}/stage`, { stage, reason, ...(ticket ?? {}) }),
+    examCoordinators: () => api.get("/crm/exam-coordinators"),
+    setExamCoordinator: (id, exam_coordinator_id) => api.put(`/crm/leads/${id}/exam-coordinator`, { exam_coordinator_id }),
+    // { status: not_scheduled|scheduled|completed, scheduled_at?, completed_at?, result?, note? }
+    updateExam: (id, data) => api.put(`/crm/leads/${id}/exam`, data),
     logActivity: (id, data) => api.post(`/crm/leads/${id}/activities`, data),
     scheduleFollowUp: (id, data) => api.post(`/crm/leads/${id}/follow-ups`, data),
     followUps: (params) => api.get("/crm/follow-ups", { params }),

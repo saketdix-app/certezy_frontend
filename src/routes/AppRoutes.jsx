@@ -5,7 +5,7 @@ import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router
 import NavBarIndex from "@/components/layout/Navbar/NavBarIndex";
 import Footer from "@/components/layout/Footer";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
-import { ADMIN_ROLES, LEARNER_ROLES, ROUTES, TEAM_MANAGER_ROLES } from "@/config/app";
+import { ADMIN_ROLES, CRM_WORKSPACE_ROLES, LEARNER_ROLES, ROUTES, TEAM_MANAGER_ROLES } from "@/config/app";
 
 // ── Pages (code-split per route) ─────────────────────────
 // Public
@@ -227,7 +227,7 @@ export default function AppRoutes() {
                 <Route
                     path={ROUTES.CONSULTANT_HOME}
                     element={
-                        <ProtectedRoute allowedRoles={["consultant"]}>
+                        <ProtectedRoute allowedRoles={CRM_WORKSPACE_ROLES}>
                             <ConsultantLayout />
                         </ProtectedRoute>
                     }

@@ -19,9 +19,10 @@ import crmService from "@/services/crmService";
 import courseService from "@/services/courseService";
 import LeadStudentActions from "./LeadStudentActions";
 import LeadWhatsApp from "./LeadWhatsApp";
+import LeadExamSection, { TicketInputs, TicketSizeField } from "./LeadExamSection";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
-import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, waLink } from "@/lib/crm";
+import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, EXAM_RESULT_LABEL, apiMessage, fmtDate, fmtDateTime, fmtMoney, formLabel, inputCls, isOverdue, waLink } from "@/lib/crm";
 
 /** Any course, or none — change it whenever the lead's interest changes. */
 function CourseSelect({ lead, disabled, onChange }) {
@@ -53,13 +54,26 @@ function CourseSelect({ lead, disabled, onChange }) {
     );
 }
 
-const FIELD_LABEL = { course_id: "course", preferred_schedule: "schedule" };
+const FIELD_LABEL = {
+    course_id: "course",
+    preferred_schedule: "schedule",
+    ticket_size: "ticket size",
+    ticket_currency: "ticket currency",
+};
 
 const ACTIVITY_TEXT = {
     created: () => "Lead created",
     assignment: () => "Lead assigned",
     updated: (m) => `Details updated (${(m?.fields ?? []).map((f) => FIELD_LABEL[f] ?? f).join(", ")})`,
-    status_change: (m) => `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation ? " (automatic)" : ""}`,
+    status_change: (m) =>
+        `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation ? " (automatic)" : ""}${
+            m?.ticket_size ? ` · ticket size ${fmtMoney(m.ticket_size, m.ticket_currency)}` : ""
+        }`,
+    exam_coordinator: (m) => (m?.to ? "Exam coordinator assigned" : "Exam coordinator removed"),
+    exam_scheduled: (m) => `Exam scheduled for ${fmtDateTime(m?.scheduled_at)}`,
+    exam_completed: (m) =>
+        `Exam completed${m?.completed_at ? ` on ${fmtDate(m.completed_at)}` : ""}${m?.result ? ` · ${EXAM_RESULT_LABEL[m.result]}` : ""}`,
+    exam_cleared: () => "Exam reset to not scheduled",
     note: () => "Note",
     call: () => "Call",
     message: () => "Message",
@@ -97,6 +111,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
     const [showFollowUp, setShowFollowUp] = useState(false);
     const [fu, setFu] = useState({ due_at: "", type: "call", note: "" });
     const [busy, setBusy] = useState(false);
+    const [ticket, setTicket] = useState({ amount: "", currency: "INR" });
 
     const load = useCallback(
         () =>
@@ -133,7 +148,10 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
     const moveStage = async () => {
         const needsReason = REASON_STAGES.includes(stageTarget) || CLOSED_STAGES.includes(lead.stage);
         if (needsReason && !reason.trim()) return toast.error("Add a reason");
-        if (await run(() => crmService.changeStage(lead.id, stageTarget, reason.trim() || undefined), `Moved to ${STAGE_LABEL[stageTarget]}`)) {
+        const toApplication = stageTarget === "application";
+        if (toApplication && !(Number(ticket.amount) > 0)) return toast.error("Enter the ticket size");
+        const ticketBody = toApplication ? { ticket_size: Number(ticket.amount), ticket_currency: ticket.currency } : undefined;
+        if (await run(() => crmService.changeStage(lead.id, stageTarget, reason.trim() || undefined, ticketBody), `Moved to ${STAGE_LABEL[stageTarget]}`)) {
             setStageTarget(null);
             setReason("");
         }
@@ -163,6 +181,9 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
             setFu({ due_at: "", type: "call", note: "" });
         }
     };
+
+    // What this person may do (from the API; older servers send nothing → full access)
+    const access = { edit: true, follow_ups: true, student_actions: true, ...(lead?.access ?? {}) };
 
     return (
         <div className="fixed inset-0 z-40 flex justify-end bg-black/40" onClick={onClose}>
@@ -232,7 +253,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     <dd className="text-slate-900">
                                         <CourseSelect
                                             lead={lead}
-                                            disabled={busy}
+                                            disabled={busy || !access.edit}
                                             onChange={(course_id) => run(() => crmService.update(lead.id, { course_id }), course_id ? "Course updated" : "Course removed")}
                                         />
                                     </dd>
@@ -244,6 +265,14 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     )}
                                     <dt className="text-slate-500">Owner</dt>
                                     <dd className="text-slate-900">{lead.owner_name || "Unassigned"}</dd>
+                                    {(lead.ticket_size != null || ["application", "course_done"].includes(lead.stage)) && (
+                                        <>
+                                            <dt className="text-slate-500">Ticket size</dt>
+                                            <dd className="text-slate-900">
+                                                <TicketSizeField lead={lead} canEdit={access.edit} busy={busy} run={run} />
+                                            </dd>
+                                        </>
+                                    )}
                                     <dt className="text-slate-500">Added</dt>
                                     <dd className="text-slate-900">{fmtDateTime(lead.created_at)}</dd>
                                     {lead.source_meta?.campaign && (
@@ -296,7 +325,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                 )}
                             </section>
 
-                            {/* Status */}
+                            {/* Status (Exam Coordinators: only Course Done, from the Exam section) */}
                             <section>
                                 <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Update status</h3>
                                 {lead.allowed_next_stages?.length ? (
@@ -308,6 +337,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                 onClick={() => {
                                                     setStageTarget(s);
                                                     setReason("");
+                                                    if (s === "application") setTicket({ amount: lead.ticket_size ?? "", currency: lead.ticket_currency ?? "INR" });
                                                 }}
                                                 className={cn(
                                                     "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-small font-semibold",
@@ -322,7 +352,9 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     <p className="text-ui text-slate-500">
                                         {CLOSED_STAGES.includes(lead.stage)
                                             ? "Closed. Only an Admin can reopen it."
-                                            : "No further status changes."}
+                                            : !access.edit && lead.stage !== "course_done"
+                                              ? "The consultant manages the status. Once the exam is completed you can mark Course Done below."
+                                              : "No further status changes."}
                                     </p>
                                 )}
                                 {stageTarget && (
@@ -336,9 +368,23 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                 autoFocus
                                             />
                                         )}
+                                        {stageTarget === "application" && (
+                                            <div className="mb-2">
+                                                <p className="mb-1.5 text-small font-semibold text-slate-600">Ticket size (required)</p>
+                                                <TicketInputs
+                                                    amount={ticket.amount}
+                                                    currency={ticket.currency}
+                                                    onAmount={(amount) => setTicket((t) => ({ ...t, amount }))}
+                                                    onCurrency={(currency) => setTicket((t) => ({ ...t, currency }))}
+                                                    autoFocus
+                                                />
+                                            </div>
+                                        )}
                                         {stageTarget === "course_done" && (
                                             <p className="mb-2 text-small text-slate-500">
-                                                Marks this lead as done. It doesn't check the student's course progress.
+                                                {lead.exam_status === "completed"
+                                                    ? `Exam completed${lead.exam_result ? ` (${EXAM_RESULT_LABEL[lead.exam_result]})` : ""}. Marks this lead as done.`
+                                                    : "Marks this lead as done. It doesn't check the student's course progress."}
                                             </p>
                                         )}
                                         <div className="flex justify-end gap-2">
@@ -370,7 +416,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             <Icon size={13} aria-hidden="true" /> {label}
                                         </button>
                                     ))}
-                                    {!CLOSED_STAGES.includes(lead.stage) && (
+                                    {access.follow_ups && !CLOSED_STAGES.includes(lead.stage) && (
                                         <button
                                             type="button"
                                             onClick={() => setShowFollowUp((v) => !v)}
@@ -428,12 +474,16 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                 )}
                             </section>
 
+                            <LeadExamSection lead={lead} busy={busy} run={run} />
+
                             {lead.phone && <LeadWhatsApp leadId={lead.id} onSent={onChanged} />}
 
-                            <LeadStudentActions key={`${lead.id}-${lead.course_id ?? "none"}`} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
-                                setLead(l);
-                                onChanged?.();
-                            }} />
+                            {access.student_actions && (
+                                <LeadStudentActions key={`${lead.id}-${lead.course_id ?? "none"}`} lead={lead} isAdmin={isAdmin} onLeadChanged={(l) => {
+                                    setLead(l);
+                                    onChanged?.();
+                                }} />
+                            )}
 
                             {/* Follow-ups */}
                             {lead.follow_ups?.length > 0 && (
@@ -448,7 +498,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                     {f.status !== "pending" && <span className="ml-1.5 capitalize text-slate-500">· {f.status}</span>}
                                                     {f.note && <span className="block text-small text-slate-500">{f.note}</span>}
                                                 </span>
-                                                {f.status === "pending" && (
+                                                {f.status === "pending" && access.follow_ups && (
                                                     <span className="flex gap-1">
                                                         <button
                                                             type="button"

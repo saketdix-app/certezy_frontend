@@ -86,10 +86,14 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                         <ul className="mt-2 space-y-1.5">
                             {duplicates.map((d, i) => (
                                 <li key={d.id ?? i} className="flex flex-wrap items-center justify-between gap-2">
-                                    <span>
-                                        <b>{d.name}</b> · {STAGE_LABEL[d.stage] ?? d.stage}
-                                        {d.owner_name ? ` · ${d.owner_name}` : " · unassigned"}
-                                    </span>
+                                    {d.other_owner ? (
+                                        <span>Already a lead with another consultant. Ask an Admin if you need it.</span>
+                                    ) : (
+                                        <span>
+                                            <b>{d.name}</b> · {STAGE_LABEL[d.stage] ?? d.stage}
+                                            {d.owner_name ? ` · ${d.owner_name}` : " · unassigned"}
+                                        </span>
+                                    )}
                                     {d.id ? (
                                         <button
                                             type="button"
