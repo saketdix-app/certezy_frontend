@@ -15,7 +15,7 @@ const TEXT = {
     },
     delete: {
         title: (n) => `Delete ${n}?`,
-        intro: "They can't sign in again and disappear from the team, pickers and Round Robin. Their name stays on past activity and reports. This can't be undone from the app.",
+        intro: "They can't sign in and disappear from the team, pickers and Round Robin. You can restore them from Users → Deleted for 30 days, or erase them there straight away.",
         confirm: "Delete",
     },
     handover: {
