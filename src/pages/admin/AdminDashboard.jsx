@@ -16,6 +16,10 @@ import { cn } from "@/lib/utils";
 import adminService from "@/services/adminService";
 import paymentService from "@/services/paymentService";
 import reviewService from "@/services/reviewService";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/features/auth/authSlice";
+import { TEAM_MANAGER_ROLES } from "@/config/app";
+import ExamPipelineCard from "@/components/crm/ExamPipelineCard";
 
 // Analytics Card Component
 function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
@@ -284,6 +288,7 @@ function QuickActions() {
 }
 
 export default function AdminDashboard() {
+    const canSeeCrm = TEAM_MANAGER_ROLES.includes(useSelector(selectUser)?.role);
     const [stats, setStats] = useState({
         totalUsers: 0,
         activeUsers: 0,
@@ -536,6 +541,9 @@ export default function AdminDashboard() {
                     color="orange"
                 />
             </div>
+
+            {/* Exams and open applications (Admins: the CRM) */}
+            {canSeeCrm && <ExamPipelineCard />}
 
             {/* Charts and Tables */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

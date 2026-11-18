@@ -102,11 +102,15 @@ export const ROLE_LABELS = {
     admin: "Admin",
     sub_admin: "Sub-Admin",
     consultant: "Consultant",
+    exam_coordinator: "Exam Coordinator",
     student: "Student",
 };
 
 /** Roles that manage staff accounts (Admin → Team). */
 export const TEAM_MANAGER_ROLES = ["super_admin", "admin"];
+
+/** Roles that use the CRM workspace (/consultant). Exam Coordinators see only their exam students. */
+export const CRM_WORKSPACE_ROLES = ["consultant", "exam_coordinator"];
 
 /** Roles that can use learner pages (My Learning, checkout, course player…).
  *  Admins and sub-admins too, so they can try everything a student sees. */
@@ -118,7 +122,7 @@ export const isAdminRole = (role) => ADMIN_ROLES.includes(role);
 export const homeForRole = (role) =>
     ADMIN_ROLES.includes(role)
         ? ROUTES.ADMIN_DASHBOARD
-        : role === "consultant"
+        : role === "consultant" || role === "exam_coordinator"
           ? ROUTES.CONSULTANT_HOME
           : ROUTES.STUDENT_DASHBOARD;
 

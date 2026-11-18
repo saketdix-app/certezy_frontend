@@ -229,6 +229,7 @@ export default function CrmReportsPage() {
                                     <th className="py-2 pr-3 text-right">Follow-ups done / missed</th>
                                     <th className="py-2 pr-3 text-right">Overdue now</th>
                                     <th className="py-2 pr-3 text-right">Applications</th>
+                                    <th className="py-2 pr-3 text-right">Ticket size</th>
                                     <th className="py-2 pr-3 text-right">Converted</th>
                                     <th className="py-2 pr-3 text-right">Revenue</th>
                                     <th className="py-2 text-right">1st contact</th>
@@ -237,7 +238,7 @@ export default function CrmReportsPage() {
                             <tbody className="divide-y divide-slate-100">
                                 {!data.consultants.length && (
                                     <tr>
-                                        <td colSpan={9} className="py-6 text-center text-slate-500">No consultants yet.</td>
+                                        <td colSpan={10} className="py-6 text-center text-slate-500">No consultants yet.</td>
                                     </tr>
                                 )}
                                 {data.consultants.map((c) => (
@@ -248,6 +249,7 @@ export default function CrmReportsPage() {
                                         <td className="py-2 pr-3 text-right">{c.follow_ups_done} / {c.follow_ups_missed}</td>
                                         <td className={cn("py-2 pr-3 text-right", c.follow_ups_overdue > 0 && "font-semibold text-red-600")}>{c.follow_ups_overdue}</td>
                                         <td className="py-2 pr-3 text-right">{c.applications}</td>
+                                        <td className="py-2 pr-3 text-right">{money(c.ticket_size)}</td>
                                         <td className="py-2 pr-3 text-right">{c.conversions} <span className="text-slate-500">({c.conversion_rate}%)</span></td>
                                         <td className="py-2 pr-3 text-right">{money(c.revenue)}</td>
                                         <td className="py-2 text-right">{c.avg_first_contact_hours == null ? "—" : `${c.avg_first_contact_hours} h`}</td>
@@ -256,6 +258,48 @@ export default function CrmReportsPage() {
                             </tbody>
                         </table>
                     </Panel>
+
+                    {data.exams && (
+                        <Panel title="Exams" className="overflow-x-auto">
+                            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+                                <Kpi label="Scheduled now" value={data.exams.scheduled_now} sub={data.exams.scheduled_overdue ? `${data.exams.scheduled_overdue} past their date` : undefined} tone={data.exams.scheduled_overdue ? "text-amber-600" : ""} />
+                                <Kpi label="Completed in period" value={data.exams.completed} />
+                                <Kpi label="Passed" value={data.exams.passed} sub={data.exams.passed + data.exams.failed ? `${data.exams.pass_rate}% of known results` : undefined} />
+                                <Kpi label="Awaiting Course Done" value={data.exams.awaiting_course_done} tone={data.exams.awaiting_course_done ? "text-amber-600" : ""} />
+                                <Kpi label="Applications without coordinator" value={data.exams.applications_without_coordinator} tone={data.exams.applications_without_coordinator ? "text-amber-600" : ""} />
+                                <Kpi label="Open applications" value={money(Object.fromEntries((data.pipeline ?? []).map((x) => [x.currency, x.amount])))} sub={`${(data.pipeline ?? []).reduce((n, x) => n + x.leads, 0)} with a ticket size`} />
+                            </div>
+                            <table className="mt-4 w-full min-w-[640px] text-left text-ui">
+                                <thead className="text-label uppercase tracking-wide text-slate-500">
+                                    <tr>
+                                        <th className="py-2 pr-3">Exam coordinator</th>
+                                        <th className="py-2 pr-3 text-right">Students</th>
+                                        <th className="py-2 pr-3 text-right">Scheduled now</th>
+                                        <th className="py-2 pr-3 text-right">Completed in period</th>
+                                        <th className="py-2 pr-3 text-right">Passed</th>
+                                        <th className="py-2 text-right">Course Done</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {!data.exams.coordinators.length && (
+                                        <tr>
+                                            <td colSpan={6} className="py-6 text-center text-slate-500">No exam coordinators yet. Add one in Admin → Team.</td>
+                                        </tr>
+                                    )}
+                                    {data.exams.coordinators.map((c) => (
+                                        <tr key={c.id} className={cn(!c.active && "text-slate-500")}>
+                                            <td className="py-2 pr-3 font-semibold">{c.name}{!c.active && " (inactive)"}</td>
+                                            <td className="py-2 pr-3 text-right">{c.assigned}</td>
+                                            <td className="py-2 pr-3 text-right">{c.scheduled}</td>
+                                            <td className="py-2 pr-3 text-right">{c.completed}</td>
+                                            <td className="py-2 pr-3 text-right">{c.passed}</td>
+                                            <td className="py-2 text-right">{c.course_done}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </Panel>
+                    )}
 
                     <div className="grid gap-5 lg:grid-cols-2">
                         <Panel title="Open leads by age">

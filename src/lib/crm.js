@@ -40,6 +40,31 @@ export const FOLLOW_UP_TYPES = [
     ["other", "Other"],
 ];
 
+/** Exam progress on a lead (worked by the Exam Coordinator). */
+export const EXAM_STATUS = {
+    not_scheduled: ["Not scheduled", "bg-slate-100 text-slate-600 border-slate-200"],
+    scheduled: ["Scheduled", "bg-amber-50 text-amber-800 border-amber-200"],
+    completed: ["Completed", "bg-emerald-50 text-emerald-700 border-emerald-200"],
+};
+export const EXAM_RESULT_LABEL = { passed: "Passed", failed: "Not passed" };
+
+export const TICKET_CURRENCIES = ["INR", "USD"];
+/** 49999.5 + "INR" → "₹49,999.50"; USD → "$1,200" */
+export const fmtMoney = (amount, currency) => {
+    if (amount == null || amount === "") return null;
+    const n = Number(amount);
+    if (!Number.isFinite(n)) return null;
+    try {
+        return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
+            style: "currency",
+            currency: currency || "INR",
+            maximumFractionDigits: Number.isInteger(n) ? 0 : 2,
+        }).format(n);
+    } catch {
+        return `${currency ?? ""} ${n}`;
+    }
+};
+
 export const ENROLLMENT_LABEL = {
     none: "Not enrolled",
     application: "Application",
@@ -66,6 +91,10 @@ export const fmtDateTime = (d) =>
               minute: "2-digit",
           })
         : "—";
+
+/** Date only ("Nov 18, 2026") — for things recorded by day, like an exam taken. */
+export const fmtDate = (d) =>
+    d ? new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }) : "—";
 
 /** "3d", "5h", "just now" since a date. */
 export const ageOf = (d) => {

@@ -20,8 +20,11 @@ const NAV = [
     { to: "/consultant/course-assignments", label: "Course Assignments", icon: BookOpenCheck },
     { to: "/consultant/certificates", label: "Certificates", icon: Award },
 ];
-const TABS = NAV.slice(0, 4);
-const MORE = NAV.slice(4);
+// Exam Coordinators: only the students assigned to them for the exam
+const EXAM_NAV = [
+    { to: "/consultant", label: "Overview", icon: LayoutDashboard, end: true },
+    { to: "/consultant/leads", label: "Exam Students", icon: Users },
+];
 
 /**
  * Consultant sales workspace (2.0, PRD §4.1). Left navigation on desktop,
@@ -33,6 +36,10 @@ export default function ConsultantLayout() {
     const { pathname } = useLocation();
     const [moreOpen, setMoreOpen] = useState(false);
     const [theme, setTheme] = usePortalTheme();
+    const isCoordinator = user?.role === "exam_coordinator";
+    const NAV_ITEMS = isCoordinator ? EXAM_NAV : NAV;
+    const TABS = NAV_ITEMS.slice(0, 4);
+    const MORE = NAV_ITEMS.slice(4);
     const logout = async () => {
         try {
             await dispatch(logoutUser());
@@ -46,7 +53,7 @@ export default function ConsultantLayout() {
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-surface px-4 lg:px-6">
                 <div className="flex items-center gap-2">
                     <Logo to="/consultant" height={26} />
-                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">Sales</span>
+                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">{isCoordinator ? "Exams" : "Sales"}</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <ThemeToggle mode={theme} onChange={setTheme} />
@@ -65,7 +72,7 @@ export default function ConsultantLayout() {
             <div className="flex">
                 <nav aria-label="Sales workspace" className="sticky top-14 hidden h-[calc(100dvh-56px)] w-56 shrink-0 border-r border-slate-200 bg-surface p-3 lg:block">
                     <ul className="space-y-1">
-                        {NAV.map(({ to, label, icon: Icon, end }) => (
+                        {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
                             <li key={to}>
                                 <NavLink
                                     to={to}
@@ -111,7 +118,11 @@ export default function ConsultantLayout() {
                     </ul>
                 </div>
             )}
-            <nav aria-label="Sales workspace" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-surface lg:hidden">
+            <nav
+                aria-label="Sales workspace"
+                className="fixed inset-x-0 bottom-0 z-30 grid border-t border-slate-200 bg-surface lg:hidden"
+                style={{ gridTemplateColumns: `repeat(${TABS.length + (MORE.length ? 1 : 0)}, minmax(0, 1fr))` }}
+            >
                 {TABS.map(({ to, label, icon: Icon, end }) => (
                     <NavLink
                         key={to}
@@ -124,6 +135,7 @@ export default function ConsultantLayout() {
                         <Icon size={20} aria-hidden="true" /> {label}
                     </NavLink>
                 ))}
+                {MORE.length > 0 && (
                 <button
                     type="button"
                     onClick={() => setMoreOpen((v) => !v)}
@@ -135,6 +147,7 @@ export default function ConsultantLayout() {
                 >
                     <MoreHorizontal size={20} aria-hidden="true" /> More
                 </button>
+                )}
             </nav>
         </div>
     );

@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/features/auth/authSlice";
+import { ExamStatusBadge } from "./LeadExamSection";
 import toast from "react-hot-toast";
 import { CalendarClock, Columns3, LayoutGrid, List, Loader2, Plus, Search, Shuffle } from "lucide-react";
 
@@ -9,7 +12,7 @@ import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
-import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, maskPhone } from "@/lib/crm";
+import { EXAM_RESULT_LABEL, EXAM_STATUS, SOURCES, SOURCE_LABEL, STAGES, ageOf, fmtMoney, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, maskPhone } from "@/lib/crm";
 
 // ── List view: columns people can show or hide (remembered per browser) ──
 const COLUMNS = [
@@ -53,11 +56,36 @@ const COLUMNS = [
             ),
     },
     { key: "form", label: "Form", cell: (l) => formLabel(l.form) ?? "—" },
+    {
+        key: "exam",
+        label: "Exam",
+        cell: (l) => (
+            <span className="inline-flex flex-col items-start gap-0.5">
+                <ExamStatusBadge status={l.exam_status} />
+                {l.exam_status === "scheduled" && l.exam_scheduled_at && (
+                    <span className="text-label text-slate-500">{fmtDateTime(l.exam_scheduled_at)}</span>
+                )}
+                {l.exam_status === "completed" && l.exam_result && (
+                    <span className="text-label text-slate-500">{EXAM_RESULT_LABEL[l.exam_result]}</span>
+                )}
+            </span>
+        ),
+    },
+    { key: "exam_coordinator", label: "Exam coordinator", cell: (l) => l.exam_coordinator_name ?? <span className="text-slate-500">—</span> },
+    {
+        key: "ticket",
+        label: "Ticket size",
+        cell: (l) => (l.ticket_size != null ? <span className="font-semibold tabular-nums">{fmtMoney(l.ticket_size, l.ticket_currency)}</span> : "—"),
+    },
     { key: "enrolled", label: "Enrolled", cell: (l) => (l.enrolled ? <span className="font-semibold text-emerald-700">Yes</span> : "—") },
 ];
-const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "enquiry", "owner", "added", "follow_up"];
+const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "enquiry", "exam", "ticket", "owner", "added", "follow_up"];
 // Columns added later, switched on once for people who already saved a choice
-const NEW_COLUMNS = [["enquiry", "crm.leads.columns.enquiry"]];
+const NEW_COLUMNS = [
+    ["enquiry", "crm.leads.columns.enquiry"],
+    ["exam", "crm.leads.columns.exam"],
+    ["ticket", "crm.leads.columns.ticket"],
+];
 
 // Browser storage can be blocked (private mode); the page still works without it
 const readPref = (key, fallback) => {
@@ -81,6 +109,7 @@ const writePref = (key, value) => {
  * own leads; Admins get everyone's, plus an owner filter.
  */
 export default function LeadsBoard({ isAdmin }) {
+    const isCoordinator = useSelector(selectUser)?.role === "exam_coordinator";
     // Deep links from notifications: ?lead=123 opens it, ?owner=unassigned filters
     const [params] = useSearchParams();
     const [stage, setStage] = useState("");
@@ -91,6 +120,7 @@ export default function LeadsBoard({ isAdmin }) {
     const [moving, setMoving] = useState(null); // lead ids
     const [panelKey, setPanelKey] = useState(0);
     const [overdueOnly, setOverdueOnly] = useState(false);
+    const [exam, setExam] = useState("");
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [owners, setOwners] = useState([]);
@@ -128,6 +158,7 @@ export default function LeadsBoard({ isAdmin }) {
                 source: source || undefined,
                 owner_id: ownerId || undefined,
                 follow_up: overdueOnly ? "overdue" : undefined,
+                exam: exam || undefined,
                 page,
                 limit: 25,
             });
@@ -136,7 +167,7 @@ export default function LeadsBoard({ isAdmin }) {
             toast.error(apiMessage(err, "Could not load leads"));
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
-    }, [stage, search, source, ownerId, overdueOnly, page]);
+    }, [stage, search, source, ownerId, overdueOnly, exam, page]);
 
     useEffect(() => {
         const t = setTimeout(load, search ? 300 : 0);
@@ -164,18 +195,26 @@ export default function LeadsBoard({ isAdmin }) {
         <div>
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">{isAdmin ? "Leads" : "My Leads"}</h1>
+                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">
+                        {isAdmin ? "Leads" : isCoordinator ? "Exam Students" : "My Leads"}
+                    </h1>
                     <p className="mt-1 text-ui text-slate-500">
-                        {isAdmin ? "Every lead across the team." : "Leads assigned to you."} Open a lead to call, log notes, update its status or schedule a follow-up.
+                        {isAdmin
+                            ? "Every lead across the team. Open a lead to call, log notes, update its status or schedule a follow-up."
+                            : isCoordinator
+                              ? "Students assigned to you for the exam. Open one to schedule the exam, mark it completed and then mark Course Done."
+                              : "Leads assigned to you. Open a lead to call, log notes, update its status or schedule a follow-up."}
                     </p>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => setAdding(true)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
-                >
-                    <Plus size={16} aria-hidden="true" /> Add lead
-                </button>
+                {!isCoordinator && (
+                    <button
+                        type="button"
+                        onClick={() => setAdding(true)}
+                        className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
+                    >
+                        <Plus size={16} aria-hidden="true" /> Add lead
+                    </button>
+                )}
             </div>
 
             {/* Status tabs */}
@@ -227,10 +266,20 @@ export default function LeadsBoard({ isAdmin }) {
                         ))}
                     </select>
                 )}
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui text-slate-700">
-                    <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
-                    Overdue follow-ups
-                </label>
+                <select value={exam} onChange={(e) => resetPage(setExam)(e.target.value)} className={cn(inputCls, "w-auto")} aria-label="Exam">
+                    <option value="">Any exam status</option>
+                    {Object.entries(EXAM_STATUS).map(([v, [l]]) => (
+                        <option key={v} value={v}>
+                            Exam: {l}
+                        </option>
+                    ))}
+                </select>
+                {!isCoordinator && (
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui text-slate-700">
+                        <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
+                        Overdue follow-ups
+                    </label>
+                )}
                 <div className="ml-auto flex items-center gap-2">
                     {view === "list" && (
                         <details className="relative">
@@ -415,6 +464,8 @@ export default function LeadsBoard({ isAdmin }) {
                                         </span>
                                     )}
                                     {l.enrolled && <span className="font-semibold text-emerald-700">Enrolled</span>}
+                                    {l.exam_status && l.exam_status !== "not_scheduled" && <ExamStatusBadge status={l.exam_status} />}
+                                    {l.ticket_size != null && <span className="font-semibold text-slate-700">{fmtMoney(l.ticket_size, l.ticket_currency)}</span>}
                                     {isAdmin && <span className="ml-auto">{l.owner_name ?? "Unassigned"}</span>}
                                 </div>
                             </button>
