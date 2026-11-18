@@ -9,7 +9,7 @@ import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
-import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, inputCls, isOverdue, maskPhone } from "@/lib/crm";
+import { SOURCES, SOURCE_LABEL, STAGES, ageOf, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, maskPhone } from "@/lib/crm";
 
 // ── List view: columns people can show or hide (remembered per browser) ──
 const COLUMNS = [
@@ -31,9 +31,33 @@ const COLUMNS = [
             ),
     },
     { key: "stage_changed", label: "Status changed", cell: (l) => <span title={fmtDateTime(l.stage_changed_at)}>{ageOf(l.stage_changed_at)} ago</span> },
+    {
+        key: "enquiry",
+        label: "Enquiry",
+        cell: (l) =>
+            l.preferred_time || l.enquiry_message ? (
+                <span className="block w-[240px] whitespace-normal">
+                    {l.preferred_time && (
+                        <span className="mr-1.5 inline-block rounded bg-action-soft px-1.5 py-0.5 text-label font-semibold text-action-soft-ink">
+                            Call: {l.preferred_time}
+                        </span>
+                    )}
+                    {l.enquiry_message && (
+                        <span className="line-clamp-2 text-slate-700" title={l.enquiry_message}>
+                            {l.enquiry_message}
+                        </span>
+                    )}
+                </span>
+            ) : (
+                "—"
+            ),
+    },
+    { key: "form", label: "Form", cell: (l) => formLabel(l.form) ?? "—" },
     { key: "enrolled", label: "Enrolled", cell: (l) => (l.enrolled ? <span className="font-semibold text-emerald-700">Yes</span> : "—") },
 ];
-const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "owner", "added", "follow_up"];
+const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "enquiry", "owner", "added", "follow_up"];
+// Columns added later, switched on once for people who already saved a choice
+const NEW_COLUMNS = [["enquiry", "crm.leads.columns.enquiry"]];
 
 // Browser storage can be blocked (private mode); the page still works without it
 const readPref = (key, fallback) => {
@@ -75,7 +99,14 @@ export default function LeadsBoard({ isAdmin }) {
     const [view, setViewState] = useState(() => (readPref("crm.leads.view", "list") === "cards" ? "cards" : "list"));
     const [columns, setColumnsState] = useState(() => {
         const saved = readPref("crm.leads.columns", DEFAULT_COLUMNS);
-        return Array.isArray(saved) ? saved.filter((k) => COLUMNS.some((c) => c.key === k)) : DEFAULT_COLUMNS;
+        let cols = Array.isArray(saved) ? saved.filter((k) => COLUMNS.some((c) => c.key === k)) : DEFAULT_COLUMNS;
+        for (const [key, flag] of NEW_COLUMNS) {
+            if (readPref(flag, false)) continue;
+            if (!cols.includes(key)) cols = COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
+            writePref(flag, true);
+            writePref("crm.leads.columns", cols);
+        }
+        return cols;
     });
     const setView = (v) => {
         setViewState(v);
@@ -369,6 +400,12 @@ export default function LeadsBoard({ isAdmin }) {
                                     {maskPhone(l.phone) || l.email}
                                     {l.course_title && ` · ${l.course_title}`}
                                 </p>
+                                {(l.preferred_time || l.enquiry_message) && (
+                                    <p className="mt-1.5 line-clamp-2 text-small text-slate-700">
+                                        {l.preferred_time && <span className="font-semibold text-action-soft-ink">Call: {l.preferred_time}. </span>}
+                                        {l.enquiry_message}
+                                    </p>
+                                )}
                                 <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-label text-slate-500">
                                     <span className="rounded bg-slate-100 px-1.5 py-0.5 font-semibold text-slate-600">{SOURCE_LABEL[l.source] ?? l.source}</span>
                                     <span>{ageOf(l.created_at)} old</span>
