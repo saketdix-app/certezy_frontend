@@ -188,8 +188,7 @@ function OfferShell({ children }) {
             <div className="mx-auto max-w-3xl">
                 {children}
                 <p className="mt-5 flex items-center justify-center gap-1.5 text-small text-slate-500">
-                    <ShieldCheck size={14} className="text-[#2563EB]" /> Secure checkout by CERTEZY E-Learning
-                    Pvt. Ltd.
+                    <ShieldCheck size={14} className="text-[#2563EB]" /> Secure checkout by CERTEZY E-LEARNING PVT LTD
                 </p>
             </div>
         </div>
