@@ -1,4 +1,4 @@
-import { ExternalLink, Headphones, Link2, ClipboardList, FileText, PlayCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardList, Clock, ExternalLink, FileText, Headphones, Link2, ListChecks, PlayCircle, Target } from "lucide-react";
 import { getVideoEmbedUrl, getEmbedUrl, isHttpUrl, hostnameOf } from "@/lib/media";
 
 /**
@@ -141,36 +141,78 @@ export function AudioLesson({ lesson, onEnded }) {
     );
 }
 
-/** content holds the quiz (test) id or its exact title */
-export function QuizLesson({ lesson, exams = [], onStart }) {
+/** content holds the quiz (test) id or its exact title. Light card, same words for every quiz. */
+export function QuizLesson({ lesson, exams = [], onStart, passedExamIds }) {
     const ref = String(lesson.content || "").trim();
     const exam = exams.find((e) => String(e.id) === ref) || exams.find((e) => e.title?.trim() === ref);
+    const passed = Boolean(exam && passedExamIds?.has?.(exam.id));
+    const questions = exam?.total_questions ?? exam?.questions_count;
+    const minutes = exam?.duration ?? exam?.duration_minutes;
+    const facts = exam
+        ? [
+              questions && { icon: ListChecks, text: `${questions} questions` },
+              minutes && { icon: Clock, text: `${minutes} minutes` },
+              exam.pass_percentage && { icon: Target, text: `Pass mark ${exam.pass_percentage}%` },
+          ].filter(Boolean)
+        : [];
+
     return (
-        <div className="p-4 sm:p-8">
-            <div className={panel}>
-                <div className="w-16 h-16 rounded-2xl bg-amber-500/15 flex items-center justify-center mb-4">
-                    <ClipboardList size={30} className="text-amber-300" />
-                </div>
-                <p className="text-white font-bold text-body mb-1">{exam?.title || lesson.title}</p>
-                {exam ? (
-                    <>
-                        <p className="text-small mb-6 text-white/50">
-                            {[
-                                exam.total_questions && `${exam.total_questions} questions`,
-                                exam.duration && `${exam.duration} min`,
-                                exam.pass_percentage && `pass mark ${exam.pass_percentage}%`,
-                            ]
-                                .filter(Boolean)
-                                .join(" · ")}
-                        </p>
-                        <button type="button" onClick={() => onStart?.(exam)} className={primaryBtn}>
-                            Start quiz
-                        </button>
-                    </>
-                ) : (
-                    <p className="text-ui text-white/50 mt-2">This quiz isn&apos;t available yet.</p>
-                )}
+        <div className="rounded-[24px] border border-slate-200 bg-gradient-to-b from-brand-50/70 to-white px-5 py-8 text-center sm:px-10 sm:py-10">
+            <div
+                className={
+                    passed
+                        ? "mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700"
+                        : "mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm ring-1 ring-brand-100"
+                }
+            >
+                {passed ? <CheckCircle2 size={28} /> : <ClipboardList size={28} />}
             </div>
+
+            {exam ? (
+                <>
+                    <h2 className="text-h3 font-extrabold text-slate-900">
+                        {passed ? "You passed this quiz" : "Ready to test what you've learned?"}
+                    </h2>
+                    <p className="mx-auto mt-1.5 max-w-md text-ui leading-relaxed text-slate-600">
+                        {passed
+                            ? "Nice work. You can take it again any time to refresh what you know."
+                            : "Answer each question, then submit to see your score. The timer starts when you begin."}
+                    </p>
+
+                    {facts.length > 0 && (
+                        <ul className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                            {facts.map(({ icon: Icon, text }) => (
+                                <li
+                                    key={text}
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-small font-medium text-slate-700"
+                                >
+                                    <Icon size={14} className="text-slate-500" aria-hidden="true" />
+                                    {text}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    <button
+                        type="button"
+                        onClick={() => onStart?.(exam)}
+                        className={
+                            passed
+                                ? // after passing, moving on is the main step — this one steps back
+                                  "mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2.5 text-ui font-semibold text-slate-700 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 sm:w-auto"
+                                : "mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-600 px-7 py-3 text-body font-bold text-white shadow-[0_8px_20px_-6px_rgba(35,106,158,0.55)] transition-all hover:-translate-y-px hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:w-auto"
+                        }
+                    >
+                        {passed ? "Take it again" : "Start quiz"}
+                        <ArrowRight size={18} aria-hidden="true" />
+                    </button>
+                </>
+            ) : (
+                <>
+                    <h2 className="text-h3 font-extrabold text-slate-900">Quiz coming soon</h2>
+                    <p className="mt-1.5 text-ui text-slate-600">This quiz isn&apos;t available yet.</p>
+                </>
+            )}
         </div>
     );
 }
