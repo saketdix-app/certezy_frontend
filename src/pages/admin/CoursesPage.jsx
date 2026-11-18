@@ -28,6 +28,7 @@ import FileUpload from "@/components/admin/FileUpload";
 import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import PriceTag from "@/components/shared/PriceTag";
 import { formatCount } from "@/lib/format";
+import { parseFaqs } from "@/lib/courseLeads";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,9 @@ const EMPTY_FORM = {
     requirements: "",
     what_you_learn: "",
     certificate_eligible: 0,
+    // Course page: Exam & certification text and FAQs (empty = section hidden)
+    exam_info: "",
+    faqs: [],
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -97,6 +101,9 @@ export default function CoursesPage() {
     const [editCourse, setEditCourse] = useState(null);
     const [saving, setSaving] = useState(false);
     const [form, setForm] = useState(EMPTY_FORM);
+    // Exam info / FAQs aren't in the list rows: loaded when editing, and only
+    // sent back once loaded, so a failed load can never wipe them
+    const [pageContent, setPageContent] = useState("ready"); // "loading" | "ready" | "failed"
     const [formParent, setFormParent] = useState("");
     const [formChild, setFormChild] = useState("");
 
@@ -195,6 +202,7 @@ export default function CoursesPage() {
     // ── Modal helpers ─────────────────────────────────────────────────────────
     const openCreate = () => {
         setEditCourse(null);
+        setPageContent("ready");
         setForm(EMPTY_FORM);
         setFormParent("");
         setFormChild("");
@@ -225,9 +233,20 @@ export default function CoursesPage() {
             requirements: course.requirements ?? "",
             what_you_learn: course.what_you_learn ?? "",
             certificate_eligible: course.certificate_eligible ?? 0,
+            exam_info: "",
+            faqs: [],
         });
         populateFormCategories(course);
         setShowModal(true);
+        setPageContent("loading");
+        courseService
+            .getBySlug(course.id)
+            .then(({ data }) => {
+                const full = data?.data?.course ?? {};
+                setForm((f) => ({ ...f, exam_info: full.exam_info ?? "", faqs: parseFaqs(full.faqs) }));
+                setPageContent("ready");
+            })
+            .catch(() => setPageContent("failed"));
     };
 
     const setF = (k, v) => setForm((p) => ({ ...p, [k]: v }));
@@ -294,6 +313,12 @@ export default function CoursesPage() {
                 requirements: form.requirements?.trim() ?? "",
                 what_you_learn: form.what_you_learn?.trim() ?? "",
                 certificate_eligible: Number(form.certificate_eligible) || 0,
+                ...(pageContent === "ready" && {
+                    exam_info: form.exam_info?.trim() ?? "",
+                    faqs: form.faqs
+                        .map((f) => ({ q: f.q.trim(), a: f.a.trim() }))
+                        .filter((f) => f.q && f.a),
+                }),
             };
 
             if (editCourse) {
@@ -1124,6 +1149,80 @@ export default function CoursesPage() {
                                         placeholder="Learning outcomes..."
                                     />
                                 </Field>
+                            </div>
+
+                            {/* Course page: exam details + FAQs (help visitors decide, and rank in search) */}
+                            <div className="rounded-xl border border-slate-200 p-4 space-y-4">
+                                <div>
+                                    <p className="text-[13px] font-bold text-slate-800">Course page content</p>
+                                    <p className="text-[12px] text-slate-500">
+                                        Shown on the course page. Leave empty to hide a section. Check exam facts against the
+                                        official source before publishing.
+                                    </p>
+                                </div>
+                                {pageContent === "loading" ? (
+                                    <p className="text-[12.5px] text-slate-500">Loading…</p>
+                                ) : pageContent === "failed" ? (
+                                    <p className="text-[12.5px] text-amber-700">
+                                        Couldn't load this course's exam info and FAQs, so they won't be changed. Close and open the
+                                        course again to edit them.
+                                    </p>
+                                ) : (
+                                    <>
+                                        <Field label="EXAM & CERTIFICATION">
+                                            <textarea
+                                                value={form.exam_info}
+                                                rows={4}
+                                                onChange={(e) => setF("exam_info", e.target.value)}
+                                                className={inputCls}
+                                                placeholder="Eligibility, exam format, duration, fee, how to book…"
+                                            />
+                                        </Field>
+                                        <div className="space-y-2">
+                                            <p className="text-[11px] font-bold tracking-wider text-slate-500">FAQS ({form.faqs.length})</p>
+                                            {form.faqs.map((f, i) => (
+                                                <div key={i} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <input
+                                                            value={f.q}
+                                                            onChange={(e) =>
+                                                                setF("faqs", form.faqs.map((x, j) => (j === i ? { ...x, q: e.target.value } : x)))
+                                                            }
+                                                            className={inputCls}
+                                                            placeholder="Question"
+                                                            aria-label={`Question ${i + 1}`}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setF("faqs", form.faqs.filter((_, j) => j !== i))}
+                                                            className="shrink-0 rounded-lg px-2 py-1 text-[12px] font-semibold text-red-600 hover:bg-red-50"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                    <textarea
+                                                        value={f.a}
+                                                        rows={2}
+                                                        onChange={(e) =>
+                                                            setF("faqs", form.faqs.map((x, j) => (j === i ? { ...x, a: e.target.value } : x)))
+                                                        }
+                                                        className={inputCls}
+                                                        placeholder="Answer"
+                                                        aria-label={`Answer ${i + 1}`}
+                                                    />
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                disabled={form.faqs.length >= 40}
+                                                onClick={() => setF("faqs", [...form.faqs, { q: "", a: "" }])}
+                                                className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-[12.5px] font-semibold text-[#236A9E] hover:bg-slate-50 disabled:opacity-50"
+                                            >
+                                                + Add a question
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             {/* Toggles */}
