@@ -212,7 +212,15 @@ function IntegrationKeys({ integration, canEdit, onSaved }) {
                                 disabled={Boolean(remove[f.name])}
                                 value={values[f.name] ?? ""}
                                 onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                                placeholder={f.from === "admin" ? "Saved — type to replace" : f.from === "server" ? "Set in server .env — type to override" : "Paste here"}
+                                placeholder={
+                                    f.name === "ad_account_id"
+                                        ? "One or more, comma-separated — e.g. 512345678, 498765432"
+                                        : f.from === "admin"
+                                          ? "Saved — type to replace"
+                                          : f.from === "server"
+                                            ? "Set in server .env — type to override"
+                                            : "Paste here"
+                                }
                                 className={cn(inputCls, "mt-1 py-1.5 font-mono text-[12.5px] disabled:opacity-50")}
                             />
                         </div>
@@ -253,7 +261,13 @@ function copy(text) {
 function ConnectionLine({ source, connection }) {
     if (!connection) return null;
     const when = connection.connected_at ? new Date(connection.connected_at).toLocaleDateString() : null;
-    const what = source === "meta" ? `Page "${connection.page_name}"` : connection.account_name ? `"${connection.account_name}"` : "LinkedIn";
+    const list = source === "meta" ? (connection.pages ?? (connection.page_name ? [{ name: connection.page_name }] : [])) : (connection.accounts ?? (connection.account_name ? [{ name: connection.account_name }] : []));
+    const quoted = list.map((x) => `"${x.name}"`).join(", ");
+    const what = !list.length
+        ? source === "meta" ? "Facebook" : "LinkedIn"
+        : source === "meta"
+          ? `${list.length > 1 ? `${list.length} Pages` : "Page"} ${quoted}`
+          : `${list.length > 1 ? `${list.length} ad accounts` : "ad account"} ${quoted}`;
     const renew =
         source === "linkedin" && connection.expires_at
             ? connection.auto_renew
@@ -354,8 +368,54 @@ function ConnectButton({ integration }) {
 }
 
 /** Shown after Facebook / LinkedIn send the Super Admin back: progress, picker, result. */
+/** Tick one or more Pages / ad accounts (those connected before start ticked). */
+function ChooseMany({ result, onChoose }) {
+    const [picked, setPicked] = useState(() => result.options.filter((o) => o.selected !== false).map((o) => o.id));
+    const [busy, setBusy] = useState(false);
+    const meta = result.source === "meta";
+    const toggle = (id) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+    return (
+        <>
+            <h2 className="text-[14.5px] font-bold text-slate-900">
+                {meta ? "Which Facebook Pages run your lead ads?" : "Which LinkedIn ad accounts run your lead ads?"}
+            </h2>
+            <p className="mt-0.5 text-[12.5px] text-slate-500">Tick every one whose leads should come into CERTEZY. You can change this later with Reconnect.</p>
+            <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                {result.options.map((o) => (
+                    <li key={o.id}>
+                        <label
+                            className={cn(
+                                "flex cursor-pointer items-center gap-2.5 rounded-lg border bg-white px-3 py-2 text-[13px] font-semibold text-slate-800",
+                                picked.includes(o.id) ? "border-[#3282B8]" : "border-slate-200"
+                            )}
+                        >
+                            <input type="checkbox" checked={picked.includes(o.id)} onChange={() => toggle(o.id)} className="h-4 w-4 accent-[#3282B8]" />
+                            <span className="min-w-0 flex-1 truncate">{o.name}</span>
+                            <span className="text-[11.5px] font-normal text-slate-400">{o.id}</span>
+                        </label>
+                    </li>
+                ))}
+            </ul>
+            <div className="mt-3 flex items-center justify-end gap-3">
+                <span className="text-[12.5px] text-slate-500">{picked.length} selected</span>
+                <button
+                    type="button"
+                    disabled={!picked.length || busy}
+                    onClick={async () => {
+                        setBusy(true);
+                        await onChoose(picked);
+                        setBusy(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#3282B8] px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                >
+                    {busy && <Loader2 size={13} className="animate-spin" aria-hidden="true" />} Connect selected
+                </button>
+            </div>
+        </>
+    );
+}
+
 function ConnectResult({ result, onChoose, onClose }) {
-    const [choosing, setChoosing] = useState(null);
     if (!result) return null;
     const name = PLATFORM[result.source];
     return (
@@ -366,30 +426,7 @@ function ConnectResult({ result, onChoose, onClose }) {
                 </p>
             )}
             {result.status === "choose" && (
-                <>
-                    <h2 className="text-[14.5px] font-bold text-slate-900">
-                        {result.source === "meta" ? "Which Facebook Page runs your lead ads?" : "Which LinkedIn ad account runs your lead ads?"}
-                    </h2>
-                    <ul className="mt-2 grid gap-2 sm:grid-cols-2">
-                        {result.options.map((o) => (
-                            <li key={o.id}>
-                                <button
-                                    type="button"
-                                    disabled={Boolean(choosing)}
-                                    onClick={async () => {
-                                        setChoosing(o.id);
-                                        await onChoose(o.id);
-                                        setChoosing(null);
-                                    }}
-                                    className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left text-[13px] font-semibold text-slate-800 hover:border-[#3282B8] disabled:opacity-60"
-                                >
-                                    <span className="min-w-0 truncate">{o.name}</span>
-                                    {choosing === o.id ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <span className="text-[11.5px] font-normal text-slate-400">{o.id}</span>}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </>
+                <ChooseMany result={result} onChoose={onChoose} />
             )}
             {result.status === "done" && (
                 <>
@@ -532,9 +569,9 @@ export default function IntegrationsPage() {
             .finally(() => navigate("/admin/integrations", { replace: true }));
     }, [returnedFrom, oauthState, params, navigate, load]);
 
-    const chooseConnect = async (id) => {
+    const chooseConnect = async (ids) => {
         try {
-            const { data: res } = await integrationService.chooseConnect(connectResult.source, { selection: connectResult.selection, id });
+            const { data: res } = await integrationService.chooseConnect(connectResult.source, { selection: connectResult.selection, ids });
             setConnectResult({ source: connectResult.source, ...res.data });
             await load();
         } catch (err) {
