@@ -40,7 +40,7 @@ function TypeChip({ type }) {
     return (
         <span
             className={cn(
-                "inline-flex items-center justify-center gap-1 w-[92px] shrink-0 rounded-md border px-2 py-1 text-[11px] font-bold uppercase tracking-wide",
+                "inline-flex items-center justify-center gap-1 w-[92px] shrink-0 rounded-md border px-2 py-1 text-label font-bold uppercase tracking-wide",
                 chip
             )}
         >
@@ -71,7 +71,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
                 canPreview && "cursor-pointer group transition-colors duration-150 hover:bg-[#F5F9FF]"
             )}
         >
-            <span className="w-6 shrink-0 text-right text-[11.5px] font-semibold text-slate-500 tabular-nums">
+            <span className="w-6 shrink-0 text-right text-label font-semibold text-slate-500 tabular-nums">
                 {index + 1}
             </span>
 
@@ -81,7 +81,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
 
             <span
                 className={cn(
-                    "flex-1 min-w-0 truncate text-[13.5px] leading-snug",
+                    "flex-1 min-w-0 truncate text-ui leading-snug",
                     isLocked ? "text-slate-500" : "text-slate-900 font-medium",
                     canPreview && "group-hover:text-[#1D4ED8]"
                 )}
@@ -90,7 +90,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
             </span>
 
             {canPreview ? (
-                <span className="flex items-center gap-1 shrink-0 rounded-full bg-[#2563EB] px-2.5 py-1 text-[11px] font-bold text-white">
+                <span className="flex items-center gap-1 shrink-0 rounded-full bg-[#2563EB] px-2.5 py-1 text-label font-bold text-white">
                     <Eye size={11} /> Preview
                 </span>
             ) : isLocked ? (
@@ -98,7 +98,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
             ) : null}
 
             {duration && (
-                <span className="w-14 shrink-0 text-right text-[12px] text-slate-500 tabular-nums">
+                <span className="w-14 shrink-0 text-right text-small text-slate-500 tabular-nums">
                     {duration}
                 </span>
             )}
@@ -170,7 +170,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
             >
                 <span
                     className={cn(
-                        "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-[13px] font-extrabold",
+                        "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-ui font-extrabold",
                         open ? "bg-[#2563EB] text-white" : "bg-[#EFF6FF] text-[#2563EB]"
                     )}
                 >
@@ -178,19 +178,19 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                 </span>
 
                 <div className="flex-1 min-w-0">
-                    <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-action">
+                    <p className="text-label font-bold uppercase tracking-[0.12em] text-action">
                         Section {index + 1}
                     </p>
                     <p
                         className={cn(
-                            "truncate text-[14.5px] font-bold leading-snug",
+                            "truncate text-body font-bold leading-snug",
                             open ? "text-[#1E3A8A]" : "text-slate-900"
                         )}
                     >
                         {section.title}
                     </p>
                     {(lessons.length > 0 || loading) && (
-                        <p className="mt-0.5 text-[12px] text-slate-600 truncate">
+                        <p className="mt-0.5 text-small text-slate-600 truncate">
                             {loading
                                 ? "Loading..."
                                 : `${lessons.length} lesson${lessons.length !== 1 ? "s" : ""}${duration ? ` · ${duration}` : ""}${typeSummary ? ` · ${typeSummary}` : ""}`}
@@ -234,7 +234,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                             />
                         ))
                     ) : (
-                        <p className="px-5 py-4 text-[13px] italic text-slate-400">No lessons yet</p>
+                        <p className="px-5 py-4 text-ui italic text-slate-400">No lessons yet</p>
                     )}
                 </div>
             )}
@@ -255,7 +255,7 @@ export default function CourseCurriculum({
 
     if (sections.length === 0) {
         return (
-            <p style={{ fontSize: "13px", color: "#94A3B8", fontStyle: "italic", padding: "8px 0" }}>
+            <p style={{ fontSize: "13.5px", color: "#94A3B8", fontStyle: "italic", padding: "8px 0" }}>
                 Curriculum not available yet.
             </p>
         );
@@ -266,7 +266,7 @@ export default function CourseCurriculum({
     return (
         <div className="space-y-2.5">
             <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
-                <p className="text-[13px] text-slate-500">
+                <p className="text-ui text-slate-500">
                     {sections.length} sections
                     {totalLessons > 0 && ` • ${totalLessons} lessons`}
                     {length && ` • ${length} total length`}
@@ -274,7 +274,7 @@ export default function CourseCurriculum({
                 <button
                     type="button"
                     onClick={() => setExpandAll((v) => !v)}
-                    className="text-[13px] font-bold text-primary hover:underline"
+                    className="text-ui font-bold text-primary hover:underline"
                 >
                     {expandAll ? "Collapse all sections" : "Expand all sections"}
                 </button>

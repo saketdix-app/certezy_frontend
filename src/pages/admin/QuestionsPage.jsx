@@ -43,7 +43,7 @@ const optionService = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const DIFFICULTY_STYLE = {
     easy: { label: "EASY", bg: "#F0FDF4", color: "#16A34A" },
@@ -274,7 +274,7 @@ export default function QuestionsPage() {
     return (
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-wrap">
+            <div className="flex items-center gap-1.5 text-label font-bold uppercase tracking-widest text-slate-500 flex-wrap">
                 <span
                     className="hover:text-slate-600 cursor-pointer"
                     onClick={() => navigate("/admin/dashboard")}
@@ -306,16 +306,16 @@ export default function QuestionsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">
                         Questions Manager
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Manage and refine assessment content for {test?.title ?? "this test"}.
                     </p>
                 </div>
                 <button
                     onClick={openCreate}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white shrink-0 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
                     style={{ background: "#236A9E" }}
                     onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -365,14 +365,14 @@ export default function QuestionsPage() {
                                 <Icon size={20} style={{ color: ic }} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                     {label}
                                 </p>
                                 <div className="flex items-baseline gap-1.5">
-                                    <p className="text-[26px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                    <p className="text-h1 font-extrabold text-slate-900 leading-none mt-0.5">
                                         {value}
                                     </p>
-                                    <p className="text-[12px] text-slate-500 font-medium">{sub}</p>
+                                    <p className="text-small text-slate-500 font-medium">{sub}</p>
                                 </div>
                             </div>
                         </div>
@@ -411,10 +411,10 @@ export default function QuestionsPage() {
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
-                                <h3 className="text-[16px] font-extrabold text-slate-900">
+                                <h3 className="text-body font-extrabold text-slate-900">
                                     {editQ ? "Edit Question" : "Add Question"}
                                 </h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     Configure question and answer options
                                 </p>
                             </div>
@@ -493,10 +493,10 @@ export default function QuestionsPage() {
                             <div>
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-widest">
+                                        <p className="text-label font-bold text-slate-500 uppercase tracking-widest">
                                             Answer Options
                                         </p>
-                                        <p className="text-[11.5px] text-slate-500 mt-0.5">
+                                        <p className="text-label text-slate-500 mt-0.5">
                                             Click the radio to mark the correct answer
                                         </p>
                                     </div>
@@ -532,7 +532,7 @@ export default function QuestionsPage() {
                                             {/* Letter */}
                                             <span
                                                 className={cn(
-                                                    "w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-extrabold shrink-0",
+                                                    "w-6 h-6 rounded-lg flex items-center justify-center text-label font-extrabold shrink-0",
                                                     opt.is_correct
                                                         ? "bg-emerald-500 text-white"
                                                         : "bg-slate-100 text-slate-500"
@@ -547,7 +547,7 @@ export default function QuestionsPage() {
                                                 value={opt.option_text}
                                                 onChange={(e) => setOptionText(i, e.target.value)}
                                                 placeholder={`Option ${OPTION_LETTERS[i]}`}
-                                                className="flex-1 bg-transparent outline-none text-[13.5px] text-slate-800 placeholder-slate-400"
+                                                className="flex-1 bg-transparent outline-none text-ui text-slate-800 placeholder-slate-400"
                                             />
 
                                             {/* Remove */}
@@ -569,7 +569,7 @@ export default function QuestionsPage() {
                                     <button
                                         type="button"
                                         onClick={addOption}
-                                        className="mt-3 w-full py-2.5 rounded-xl border-2 border-dashed border-brand-200 text-[13px] font-semibold text-action hover:bg-action-soft transition-colors flex items-center justify-center gap-2"
+                                        className="mt-3 w-full py-2.5 rounded-xl border-2 border-dashed border-brand-200 text-ui font-semibold text-action hover:bg-action-soft transition-colors flex items-center justify-center gap-2"
                                     >
                                         <Plus size={14} /> Add Option
                                     </button>
@@ -582,14 +582,14 @@ export default function QuestionsPage() {
                             <button
                                 type="button"
                                 onClick={() => setShowModal(false)}
-                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleSaveQuestion}
                                 disabled={savingQ}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                 style={{ background: "#236A9E" }}
                                 onMouseEnter={(e) => {
                                     if (!savingQ) e.currentTarget.style.background = "#1B5582";
@@ -630,7 +630,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                 {/* Q number */}
                 <div
                     className={cn(
-                        "w-8 h-8 rounded-xl flex items-center justify-center text-[13px] font-extrabold shrink-0",
+                        "w-8 h-8 rounded-xl flex items-center justify-center text-ui font-extrabold shrink-0",
                         expanded ? "text-white" : "bg-slate-100 text-slate-600"
                     )}
                     style={expanded ? { background: "#236A9E" } : {}}
@@ -641,13 +641,13 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                 {/* Badges */}
                 <div className="flex items-center gap-2 flex-wrap">
                     <span
-                        className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider"
+                        className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider"
                         style={{ background: diff.bg, color: diff.color }}
                     >
                         {diff.label}
                     </span>
                     {question.topic_tag && (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider border border-brand-200 text-action bg-action-soft">
+                        <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider border border-brand-200 text-action bg-action-soft">
                             {question.topic_tag}
                         </span>
                     )}
@@ -656,7 +656,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                 {/* Question text — collapsed shows truncated */}
                 {!expanded && (
                     <p
-                        className="flex-1 text-[13.5px] font-semibold text-slate-800 truncate min-w-0 cursor-pointer"
+                        className="flex-1 text-ui font-semibold text-slate-800 truncate min-w-0 cursor-pointer"
                         onClick={onToggle}
                     >
                         {question.question}
@@ -694,10 +694,10 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                 <div className="border-t border-slate-100 px-5 py-4 space-y-4 bg-slate-50/50">
                     {/* Question content label */}
                     <div>
-                        <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-2">
+                        <p className="text-label font-bold text-slate-500 uppercase tracking-widest mb-2">
                             Question Content
                         </p>
-                        <p className="text-[14.5px] font-bold text-slate-900 leading-relaxed">
+                        <p className="text-body font-bold text-slate-900 leading-relaxed">
                             {question.question}
                         </p>
                     </div>
@@ -719,7 +719,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                                     >
                                         <span
                                             className={cn(
-                                                "w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-extrabold shrink-0",
+                                                "w-6 h-6 rounded-lg flex items-center justify-center text-label font-extrabold shrink-0",
                                                 opt.is_correct
                                                     ? "bg-emerald-500 text-white"
                                                     : "bg-slate-100 text-slate-500"
@@ -729,7 +729,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                                         </span>
                                         <span
                                             className={cn(
-                                                "text-[13px] flex-1 truncate",
+                                                "text-ui flex-1 truncate",
                                                 opt.is_correct
                                                     ? "font-semibold text-emerald-700"
                                                     : "text-slate-700"
@@ -752,10 +752,10 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                         <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200">
                             <Info size={15} className="text-amber-600 mt-0.5 shrink-0" />
                             <div>
-                                <p className="text-[10.5px] font-bold text-amber-700 uppercase tracking-widest mb-1">
+                                <p className="text-label font-bold text-amber-700 uppercase tracking-widest mb-1">
                                     Expert Explanation
                                 </p>
-                                <p className="text-[13px] text-amber-800 leading-relaxed italic">
+                                <p className="text-ui text-amber-800 leading-relaxed italic">
                                     {question.explanation}
                                 </p>
                             </div>
@@ -779,12 +779,12 @@ function EmptyState({ onAdd }) {
                 <ClipboardList size={26} style={{ color: "#236A9E" }} />
             </div>
             <div>
-                <p className="text-[15px] font-bold text-slate-800">No questions yet</p>
-                <p className="text-[13px] text-slate-500 mt-1">Add your first question to this test</p>
+                <p className="text-body font-bold text-slate-800">No questions yet</p>
+                <p className="text-ui text-slate-500 mt-1">Add your first question to this test</p>
             </div>
             <button
                 onClick={onAdd}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
                 style={{ background: "#236A9E" }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -814,7 +814,7 @@ function Overlay({ onClose, children }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}

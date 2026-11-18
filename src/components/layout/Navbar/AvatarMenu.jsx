@@ -62,12 +62,12 @@ export default function AvatarMenu({ user }) {
                 )}
             >
                 {/* Initials circle */}
-                <div className="w-[30px] h-[30px] rounded-full shrink-0 bg-action flex items-center justify-center text-white text-[11.5px] font-bold">
+                <div className="w-[30px] h-[30px] rounded-full shrink-0 bg-action flex items-center justify-center text-white text-label font-bold">
                     {initials}
                 </div>
 
                 {/* First name — hidden on small screens */}
-                <span className="hidden sm:block text-[13.5px] font-semibold text-text-primary max-w-[80px] truncate">
+                <span className="hidden sm:block text-ui font-semibold text-text-primary max-w-[80px] truncate">
                     {user.name.split(" ")[0]}
                 </span>
 
@@ -85,15 +85,15 @@ export default function AvatarMenu({ user }) {
             >
                 {/* User info */}
                 <div className="px-3 py-2.5 border-b border-border mb-1">
-                    <p className="text-[13.5px] font-semibold text-text-primary truncate flex items-center gap-1.5">
+                    <p className="text-ui font-semibold text-text-primary truncate flex items-center gap-1.5">
                         <span className="truncate">{user.name}</span>
                         {isAdmin && (
-                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-action rounded px-1.5 py-0.5">
+                            <span className="shrink-0 text-label font-bold uppercase tracking-wide text-white bg-action rounded px-1.5 py-0.5">
                                 {ROLE_LABELS[user.role] ?? "Admin"}
                             </span>
                         )}
                     </p>
-                    <p className="text-[12px] text-text-muted truncate">{user.email}</p>
+                    <p className="text-small text-text-muted truncate">{user.email}</p>
                 </div>
 
                 {/* Menu items */}
@@ -105,7 +105,7 @@ export default function AvatarMenu({ user }) {
                         <DropdownMenuItem
                             key={i}
                             onClick={handleLogout}
-                            className="text-[13.5px] font-medium text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer rounded"
+                            className="text-ui font-medium text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer rounded"
                         >
                             {item.label}
                         </DropdownMenuItem>
@@ -114,7 +114,7 @@ export default function AvatarMenu({ user }) {
                             <Link
                                 to={item.to}
                                 className={cn(
-                                    "text-[13.5px] font-medium cursor-pointer w-full rounded",
+                                    "text-ui font-medium cursor-pointer w-full rounded",
                                     item.admin
                                         ? "text-primary font-semibold flex items-center gap-2"
                                         : "text-text-primary"

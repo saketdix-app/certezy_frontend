@@ -32,7 +32,7 @@ const testService = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const EMPTY_FORM = {
     title: "",
@@ -171,7 +171,7 @@ export default function TestsPage() {
     return (
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-wrap">
+            <div className="flex items-center gap-1.5 text-label font-bold uppercase tracking-widest text-slate-500 flex-wrap">
                 <span
                     className="hover:text-slate-600 cursor-pointer"
                     onClick={() => navigate("/admin/dashboard")}
@@ -200,16 +200,16 @@ export default function TestsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">
                         {course?.title ?? "Loading..."}
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Manage the tests and quizzes for this course.
                     </p>
                 </div>
                 <button
                     onClick={openCreate}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white shrink-0 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
                     style={{ background: "#236A9E" }}
                     onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -259,10 +259,10 @@ export default function TestsPage() {
                                 <Icon size={20} style={{ color: ic }} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                     {label}
                                 </p>
-                                <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                <p className="text-h1 font-extrabold text-slate-900 leading-none mt-0.5">
                                     {value}
                                 </p>
                             </div>
@@ -299,10 +299,10 @@ export default function TestsPage() {
                     <div className="bg-surface rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
                             <div>
-                                <h3 className="text-[16px] font-extrabold text-slate-900">
+                                <h3 className="text-body font-extrabold text-slate-900">
                                     {editTest ? "Edit Test" : "Create Test"}
                                 </h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     {editTest ? "Update test configuration" : "Add a new test to this course"}
                                 </p>
                             </div>
@@ -372,14 +372,14 @@ export default function TestsPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60"
                                     style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
                                         if (!saving) e.currentTarget.style.background = "#1B5582";
@@ -419,7 +419,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
         >
             {/* Icon placeholder */}
             <div
-                className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center text-white text-[20px] font-extrabold"
+                className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center text-white text-h2 font-extrabold"
                 style={{ background: "linear-gradient(135deg, #0a1628, #162d5a)" }}
             >
                 {test.title?.slice(0, 2).toUpperCase()}
@@ -428,9 +428,9 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
             {/* Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <h3 className="text-[15px] font-extrabold text-slate-900">{test.title}</h3>
+                    <h3 className="text-body font-extrabold text-slate-900">{test.title}</h3>
                     <span
-                        className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider"
+                        className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider"
                         style={{ background: typeStyle.bg, color: typeStyle.color }}
                     >
                         {typeStyle.label}
@@ -444,7 +444,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
                         />
                         <span
                             className={cn(
-                                "text-[11.5px] font-bold uppercase tracking-wider",
+                                "text-label font-bold uppercase tracking-wider",
                                 isActive ? "text-green-600" : "text-slate-500"
                             )}
                         >
@@ -464,7 +464,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
             <div className="flex items-center gap-2 shrink-0">
                 <button
                     onClick={onManage}
-                    className="px-4 py-2 rounded-xl border border-slate-200 text-[12.5px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap"
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-small font-semibold text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap"
                 >
                     Manage Questions
                 </button>
@@ -490,7 +490,7 @@ function StatChip({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-1.5 text-slate-500">
             <Icon size={13} />
-            <span className="text-[12.5px]">{label}</span>
+            <span className="text-small">{label}</span>
         </div>
     );
 }
@@ -507,12 +507,12 @@ function EmptyState({ onAdd }) {
                 <ClipboardList size={26} style={{ color: "#236A9E" }} />
             </div>
             <div>
-                <p className="text-[15px] font-bold text-slate-800">No tests yet</p>
-                <p className="text-[13px] text-slate-500 mt-1">Create your first test for this course</p>
+                <p className="text-body font-bold text-slate-800">No tests yet</p>
+                <p className="text-ui text-slate-500 mt-1">Create your first test for this course</p>
             </div>
             <button
                 onClick={onAdd}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
                 style={{ background: "#236A9E" }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -542,7 +542,7 @@ function Overlay({ onClose, children }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}

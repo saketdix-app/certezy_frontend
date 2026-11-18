@@ -48,7 +48,7 @@ function CoursePanel({ category, courses, activeChild, setActiveChild, onNavigat
                     onMouseEnter={() => setActiveChild(null)}
                     onFocus={() => setActiveChild(null)}
                     className={cn(
-                        "w-full text-left px-5 py-2.5 text-[13.5px] font-semibold transition-colors",
+                        "w-full text-left px-5 py-2.5 text-ui font-semibold transition-colors",
                         !activeChild ? "text-primary bg-white" : "text-slate-700 hover:text-primary"
                     )}
                 >
@@ -62,7 +62,7 @@ function CoursePanel({ category, courses, activeChild, setActiveChild, onNavigat
                         onMouseEnter={() => setActiveChild(child)}
                         onFocus={() => setActiveChild(child)}
                         className={cn(
-                            "flex items-center justify-between px-5 py-2.5 text-[13.5px] font-medium no-underline transition-colors",
+                            "flex items-center justify-between px-5 py-2.5 text-ui font-medium no-underline transition-colors",
                             activeChild?.id === child.id
                                 ? "text-primary bg-white"
                                 : "text-slate-600 hover:text-primary"
@@ -77,19 +77,19 @@ function CoursePanel({ category, courses, activeChild, setActiveChild, onNavigat
             {/* Courses */}
             <div className="p-5">
                 <div className="flex items-center justify-between mb-3">
-                    <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-slate-400">
+                    <p className="text-small font-bold uppercase tracking-[0.08em] text-slate-400">
                         {scope.name} courses
                     </p>
                     <Link
                         to={`/courses?category=${scope.slug}`}
                         onClick={onNavigate}
-                        className="flex items-center gap-1 text-[13px] font-semibold text-primary no-underline hover:underline"
+                        className="flex items-center gap-1 text-ui font-semibold text-primary no-underline hover:underline"
                     >
                         View all <ArrowRight size={13} />
                     </Link>
                 </div>
                 {list.length === 0 ? (
-                    <p className="text-[13.5px] text-slate-500 py-10 text-center">
+                    <p className="text-ui text-slate-500 py-10 text-center">
                         New {scope.name} courses are coming soon.
                     </p>
                 ) : (
@@ -109,7 +109,7 @@ function CoursePanel({ category, courses, activeChild, setActiveChild, onNavigat
                                     compact
                                 />
                                 <div className="min-w-0">
-                                    <p className="text-[13px] font-semibold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary">
+                                    <p className="text-ui font-semibold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary">
                                         {course.title}
                                     </p>
                                     <PriceTag course={course} size="sm" className="mt-1" />
@@ -187,7 +187,7 @@ export default function CategoryTabs() {
                                 onClick={close}
                                 aria-expanded={isOpen}
                                 className={cn(
-                                    "flex items-center gap-1.5 h-11 px-3.5 text-[13px] font-semibold no-underline whitespace-nowrap border-b-2 transition-colors",
+                                    "flex items-center gap-1.5 h-11 px-3.5 text-ui font-semibold no-underline whitespace-nowrap border-b-2 transition-colors",
                                     isOpen
                                         ? "text-white border-[#60A5FA] bg-white/5"
                                         : "text-white/80 border-transparent hover:text-white"

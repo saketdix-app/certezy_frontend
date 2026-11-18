@@ -133,15 +133,15 @@ export default function LeadsBoard({ isAdmin }) {
         <div>
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">{isAdmin ? "Leads" : "My Leads"}</h1>
-                    <p className="mt-1 text-[13px] text-slate-500">
+                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">{isAdmin ? "Leads" : "My Leads"}</h1>
+                    <p className="mt-1 text-ui text-slate-500">
                         {isAdmin ? "Every lead across the team." : "Leads assigned to you."} Open a lead to call, log notes, update its status or schedule a follow-up.
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={() => setAdding(true)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-action-hover"
+                    className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
                 >
                     <Plus size={16} aria-hidden="true" /> Add lead
                 </button>
@@ -156,7 +156,7 @@ export default function LeadsBoard({ isAdmin }) {
                         aria-selected={stage === k}
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
-                            "shrink-0 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
+                            "shrink-0 rounded-full border px-3 py-1.5 text-small font-semibold",
                             stage === k ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-600"
                         )}
                     >
@@ -196,23 +196,23 @@ export default function LeadsBoard({ isAdmin }) {
                         ))}
                     </select>
                 )}
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] text-slate-700">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui text-slate-700">
                     <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
                     Overdue follow-ups
                 </label>
                 <div className="ml-auto flex items-center gap-2">
                     {view === "list" && (
                         <details className="relative">
-                            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
+                            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
                                 <Columns3 size={14} aria-hidden="true" /> Columns
                             </summary>
                             <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-surface p-2 shadow-lg">
-                                <p className="px-2 pb-1 text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Show in the list</p>
-                                <p className="flex items-center gap-2 px-2 py-1 text-[13px] text-slate-500">
+                                <p className="px-2 pb-1 text-label font-semibold uppercase tracking-wide text-slate-500">Show in the list</p>
+                                <p className="flex items-center gap-2 px-2 py-1 text-ui text-slate-500">
                                     <input type="checkbox" checked disabled className="accent-action" /> Name (always)
                                 </p>
                                 {COLUMNS.filter((c) => !c.admin || isAdmin).map((c) => (
-                                    <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-[13px] text-slate-700 hover:bg-slate-50">
+                                    <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-ui text-slate-700 hover:bg-slate-50">
                                         <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-action" />
                                         {c.label}
                                     </label>
@@ -231,7 +231,7 @@ export default function LeadsBoard({ isAdmin }) {
                                 aria-pressed={view === v}
                                 onClick={() => setView(v)}
                                 className={cn(
-                                    "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12.5px] font-semibold",
+                                    "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small font-semibold",
                                     view === v ? "bg-action-soft text-action-soft-ink" : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
@@ -244,15 +244,15 @@ export default function LeadsBoard({ isAdmin }) {
 
             {isAdmin && selected.length > 0 && (
                 <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-action bg-action-soft px-4 py-2.5">
-                    <p className="text-[13.5px] font-semibold text-action-soft-ink">{selected.length} selected</p>
+                    <p className="text-ui font-semibold text-action-soft-ink">{selected.length} selected</p>
                     <div className="flex gap-2">
-                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
+                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
                             Clear
                         </button>
                         <button
                             type="button"
                             onClick={() => setMoving(selected)}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white"
                         >
                             <Shuffle size={13} aria-hidden="true" /> Assign / transfer
                         </button>
@@ -266,13 +266,13 @@ export default function LeadsBoard({ isAdmin }) {
                     <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : !data.leads.length ? (
-                <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
+                <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-ui text-slate-500">
                     {total ? "No leads match these filters." : "No leads yet. Add your first lead to get started."}
                 </p>
             ) : view === "list" ? (
                 <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
-                    <table className="w-full min-w-[640px] text-left text-[13px]">
-                        <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                    <table className="w-full min-w-[640px] text-left text-ui">
+                        <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                             <tr>
                                 {isAdmin && (
                                     <th className="w-10 px-3 py-2.5">
@@ -362,14 +362,14 @@ export default function LeadsBoard({ isAdmin }) {
                                 )}
                             >
                                 <div className="flex items-start justify-between gap-2">
-                                    <p className="truncate text-[15px] font-bold text-slate-900">{l.name}</p>
+                                    <p className="truncate text-body font-bold text-slate-900">{l.name}</p>
                                     <StageBadge stage={l.stage} />
                                 </div>
-                                <p className="mt-0.5 truncate text-[12.5px] text-slate-500">
+                                <p className="mt-0.5 truncate text-small text-slate-500">
                                     {maskPhone(l.phone) || l.email}
                                     {l.course_title && ` · ${l.course_title}`}
                                 </p>
-                                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-slate-500">
+                                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-label text-slate-500">
                                     <span className="rounded bg-slate-100 px-1.5 py-0.5 font-semibold text-slate-600">{SOURCE_LABEL[l.source] ?? l.source}</span>
                                     <span>{ageOf(l.created_at)} old</span>
                                     {l.next_follow_up_at && (
@@ -387,7 +387,7 @@ export default function LeadsBoard({ isAdmin }) {
             )}
 
             {data?.pagination?.totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-end gap-2 text-[13px]">
+                <div className="mt-4 flex items-center justify-end gap-2 text-ui">
                     <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border bg-surface px-3 py-1.5 disabled:opacity-40">
                         Previous
                     </button>

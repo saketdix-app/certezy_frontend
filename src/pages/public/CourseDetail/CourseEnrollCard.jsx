@@ -26,7 +26,7 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
         color: "#fff",
         border: "none",
         borderRadius: "12px",
-        fontSize: "14px",
+        fontSize: "13.5px",
         fontWeight: 700,
         cursor: "pointer",
         transition: "background 0.15s",
@@ -143,20 +143,20 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                             <button
                                 type="button"
                                 onClick={onAdvisor}
-                                className="w-full rounded-[10px] border border-slate-200 px-4 py-2.5 text-[13.5px] font-semibold text-slate-800 hover:bg-slate-50"
+                                className="w-full rounded-[10px] border border-slate-200 px-4 py-2.5 text-ui font-semibold text-slate-800 hover:bg-slate-50"
                             >
                                 Talk to an advisor
                             </button>
                         )}
                         {onSyllabus && (
-                            <button type="button" onClick={onSyllabus} className="text-[13px] font-semibold text-[#236A9E] hover:underline">
+                            <button type="button" onClick={onSyllabus} className="text-ui font-semibold text-[#236A9E] hover:underline">
                                 Download the syllabus
                             </button>
                         )}
                     </div>
                 )}
                 {!isLoggedIn && !isEnrolled && (
-                    <p className="mt-2 text-center text-[12px] text-slate-500">Create your account in the next step.</p>
+                    <p className="mt-2 text-center text-small text-slate-500">Create your account in the next step.</p>
                 )}
 
                 {/* Guarantee (paid courses only) */}

@@ -178,12 +178,12 @@ function SampleCertificateModal({ onClose }) {
                     className="w-full h-auto rounded-lg"
                 />
                 <div className="flex flex-wrap items-center justify-between gap-3 px-1 pt-3">
-                    <p className="text-[13px] text-slate-500">
+                    <p className="text-ui text-slate-500">
                         Every certificate has a unique number and a public verification link.
                     </p>
                     <Link
                         to="/courses"
-                        className="rounded-lg bg-action px-4 py-2 text-[13px] font-bold text-white no-underline hover:opacity-90"
+                        className="rounded-lg bg-action px-4 py-2 text-ui font-bold text-white no-underline hover:opacity-90"
                     >
                         Start earning yours
                     </Link>
@@ -218,7 +218,7 @@ export default function HowItWorks() {
                     <div className="hiw-f0" style={{ textAlign: "center", marginBottom: "56px" }}>
                         <p
                             style={{
-                                fontSize: "11px",
+                                fontSize: "11.5px",
                                 fontWeight: 700,
                                 letterSpacing: "0.16em",
                                 textTransform: "uppercase",
@@ -255,7 +255,7 @@ export default function HowItWorks() {
 
                         <p
                             style={{
-                                fontSize: "15.5px",
+                                fontSize: "15px",
                                 color: "#94A3B8",
                                 lineHeight: 1.7,
                                 maxWidth: "520px",
@@ -315,7 +315,7 @@ export default function HowItWorks() {
                                                 {/* Title */}
                                                 <h3
                                                     style={{
-                                                        fontSize: "20px",
+                                                        fontSize: "22px",
                                                         fontWeight: 800,
                                                         color: "#F1F5F9",
                                                         lineHeight: 1.3,
@@ -350,7 +350,7 @@ export default function HowItWorks() {
                                                 {/* Bottom tag */}
                                                 <p
                                                     style={{
-                                                        fontSize: "11px",
+                                                        fontSize: "11.5px",
                                                         fontWeight: 700,
                                                         color: "#4E9CD3",
                                                         letterSpacing: "0.1em",

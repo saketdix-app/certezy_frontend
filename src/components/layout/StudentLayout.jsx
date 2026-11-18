@@ -139,19 +139,19 @@ export default function StudentLayout() {
                     {user && (
                         <div className="flex items-center gap-3 px-1">
                             <div
-                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[13px] font-bold shrink-0"
+                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-ui font-bold shrink-0"
                                 style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
                             >
                                 {user.name?.charAt(0).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p
-                                    style={{ fontSize: "13px", fontWeight: 700, color: "#0F172A" }}
+                                    style={{ fontSize: "13.5px", fontWeight: 700, color: "#0F172A" }}
                                     className="truncate"
                                 >
                                     {user.name}
                                 </p>
-                                <p style={{ fontSize: "11px", color: "#94A3B8" }} className="truncate">
+                                <p style={{ fontSize: "11.5px", color: "#94A3B8" }} className="truncate">
                                     {user.email}
                                 </p>
                             </div>

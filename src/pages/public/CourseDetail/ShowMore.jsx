@@ -27,7 +27,7 @@ export default function ShowMore({ children, maxHeight = 220 }) {
                 <button
                     type="button"
                     onClick={() => setOpen((o) => !o)}
-                    className="mt-2 flex items-center gap-1 text-[13px] font-bold text-primary hover:underline"
+                    className="mt-2 flex items-center gap-1 text-ui font-bold text-primary hover:underline"
                 >
                     {open ? "Show less" : "Show more"}
                     {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}

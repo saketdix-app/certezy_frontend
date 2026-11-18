@@ -92,13 +92,13 @@ const fmt = (d) =>
         : "—";
 
 const inputCls =
-    "w-full rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[14px] outline-none focus:border-action";
+    "w-full rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui outline-none focus:border-action";
 
 function RoleBadge({ role }) {
     return (
         <span
             className={cn(
-                "inline-flex rounded-md border px-2 py-0.5 text-[11.5px] font-semibold",
+                "inline-flex rounded-md border px-2 py-0.5 text-label font-semibold",
                 ROLE_BADGE[role] ?? ROLE_BADGE.student
             )}
         >
@@ -121,7 +121,7 @@ function Modal({ title, onClose, children, wide }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="mb-4 flex items-start justify-between gap-3">
-                    <h2 className="text-[17px] font-bold text-slate-900">{title}</h2>
+                    <h2 className="text-h3 font-bold text-slate-900">{title}</h2>
                     <button type="button" onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-slate-600">
                         <X size={18} />
                     </button>
@@ -135,7 +135,7 @@ function Modal({ title, onClose, children, wide }) {
 function PasswordField({ value, onChange }) {
     return (
         <label className="mt-4 block">
-            <span className="mb-1 block text-[13px] font-semibold text-slate-700">Confirm with your password</span>
+            <span className="mb-1 block text-ui font-semibold text-slate-700">Confirm with your password</span>
             <input
                 type="password"
                 autoComplete="current-password"
@@ -143,7 +143,7 @@ function PasswordField({ value, onChange }) {
                 onChange={(e) => onChange(e.target.value)}
                 className={inputCls}
             />
-            <span className="mt-1 block text-[12px] text-slate-500">
+            <span className="mt-1 block text-small text-slate-500">
                 Sensitive changes need your password again, so nobody can make them from an unattended session.
             </span>
         </label>
@@ -172,7 +172,7 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
             <form onSubmit={submit}>
                 <div
                     className={cn(
-                        "flex gap-2.5 rounded-xl border p-3 text-[13.5px] leading-relaxed",
+                        "flex gap-2.5 rounded-xl border p-3 text-ui leading-relaxed",
                         danger ? "border-red-200 bg-red-50 text-red-900" : "border-amber-200 bg-amber-50 text-amber-900"
                     )}
                 >
@@ -181,14 +181,14 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
                 </div>
                 {needsPassword && <PasswordField value={password} onChange={setPassword} />}
                 <div className="mt-5 flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={busy}
                         className={cn(
-                            "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60",
+                            "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-ui font-bold text-white disabled:opacity-60",
                             danger ? "bg-red-600 hover:bg-red-700" : "bg-action hover:bg-action-hover"
                         )}
                     >
@@ -213,8 +213,8 @@ function PermissionChecklist({ keys, value, onChange }) {
                         className="mt-0.5 h-4 w-4 accent-action"
                     />
                     <span>
-                        <span className="block text-[13.5px] font-semibold text-slate-800">{PERMISSION_INFO[k]?.[0] ?? k}</span>
-                        <span className="block text-[12px] text-slate-500">{PERMISSION_INFO[k]?.[1]}</span>
+                        <span className="block text-ui font-semibold text-slate-800">{PERMISSION_INFO[k]?.[0] ?? k}</span>
+                        <span className="block text-small text-slate-500">{PERMISSION_INFO[k]?.[1]}</span>
                     </span>
                 </label>
             ))}
@@ -242,16 +242,16 @@ function PermissionsModal({ member, keys, onClose, onDone }) {
     return (
         <Modal title={`Permissions — ${member.name}`} onClose={onClose}>
             <form onSubmit={submit}>
-                <p className="mb-3 text-[13px] text-slate-500">
+                <p className="mb-3 text-ui text-slate-500">
                     What this {ROLE_LABELS[member.role]} can do. Changes apply on their next action and are recorded
                     in the audit log.
                 </p>
                 <PermissionChecklist keys={keys} value={value} onChange={setValue} />
                 <div className="mt-5 flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save permissions
                     </button>
@@ -300,8 +300,8 @@ function AllocationModal({ member, onClose, onDone }) {
             <form onSubmit={submit} className="space-y-4">
                 <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3">
                     <span>
-                        <span className="block text-[14px] font-semibold text-slate-800">Receive new leads</span>
-                        <span className="block text-[12px] text-slate-500">
+                        <span className="block text-ui font-semibold text-slate-800">Receive new leads</span>
+                        <span className="block text-small text-slate-500">
                             Off = skipped by automatic distribution. Existing leads stay with them.
                         </span>
                     </span>
@@ -314,33 +314,33 @@ function AllocationModal({ member, onClose, onDone }) {
                 </label>
                 {!form.accepting_leads && (
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Reason (optional)</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Reason (optional)</span>
                         <input value={form.paused_reason} onChange={set("paused_reason")} placeholder="Training week" className={inputCls} />
                     </label>
                 )}
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">On leave until (optional)</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">On leave until (optional)</span>
                     <input type="date" value={form.on_leave_until} onChange={set("on_leave_until")} className={inputCls} />
-                    <span className="mt-1 block text-[12px] text-slate-500">Skipped for new leads up to and including this date.</span>
+                    <span className="mt-1 block text-small text-slate-500">Skipped for new leads up to and including this date.</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">New leads per day</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">New leads per day</span>
                         <input type="number" min="0" value={form.daily_limit} onChange={set("daily_limit")} placeholder="No limit" className={inputCls} />
                     </label>
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Max open leads</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Max open leads</span>
                         <input type="number" min="0" value={form.open_limit} onChange={set("open_limit")} placeholder="No limit" className={inputCls} />
                     </label>
                 </div>
-                <p className="text-[12px] text-slate-500">
+                <p className="text-small text-slate-500">
                     Automatic distribution (Round Robin) arrives in a later phase and will follow these settings.
                 </p>
                 <div className="flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save
                     </button>
@@ -389,19 +389,19 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
         <Modal title="Add team member" onClose={onClose}>
             <form onSubmit={submit} className="space-y-3">
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Full name</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Full name</span>
                     <input value={form.name} onChange={set("name")} className={inputCls} autoFocus />
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Email</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Email</span>
                     <input type="email" value={form.email} onChange={set("email")} className={inputCls} />
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Phone (optional)</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Phone (optional)</span>
                     <input value={form.mobile} onChange={set("mobile")} placeholder="+91 98765 43210" className={inputCls} />
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Role</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Role</span>
                     <select value={form.role} onChange={set("role")} className={inputCls}>
                         {roles.map((r) => (
                             <option key={r} value={r}>
@@ -412,7 +412,7 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                 </label>
                 {hasPermissions && (
                     <div>
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Permissions</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Permissions</span>
                         <PermissionChecklist
                             keys={permissionKeys}
                             value={shownPerms}
@@ -422,7 +422,7 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                 )}
                 {isSuper && (
                     <>
-                        <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900">
+                        <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-ui text-amber-900">
                             <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
                             Super Admins can do everything, including managing other Super Admins. All Super
                             Admins are notified by email.
@@ -430,18 +430,18 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                         <PasswordField value={password} onChange={setPassword} />
                     </>
                 )}
-                <p className="text-[12.5px] text-slate-500">
+                <p className="text-small text-slate-500">
                     They'll get an email invitation to set their own password (valid 72 hours). No password is
                     sent by email.
                 </p>
                 <div className="flex justify-end gap-2 pt-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={busy}
-                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Send invitation
@@ -479,11 +479,11 @@ function ChangeRoleModal({ member, roles, onClose, onDone }) {
     return (
         <Modal title={`Change role — ${member.name}`} onClose={onClose}>
             <form onSubmit={submit}>
-                <p className="text-[13.5px] text-slate-600">
+                <p className="text-ui text-slate-600">
                     Current role: <RoleBadge role={member.role} />
                 </p>
                 <label className="mt-4 block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">New role</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">New role</span>
                     <select value={role} onChange={(e) => setRole(e.target.value)} className={inputCls}>
                         {options.map((r) => (
                             <option key={r} value={r}>
@@ -493,19 +493,19 @@ function ChangeRoleModal({ member, roles, onClose, onDone }) {
                     </select>
                 </label>
                 {member.role === "admin" && member.super_admin_grant && (
-                    <p className="mt-2 text-[12.5px] text-amber-700">
+                    <p className="mt-2 text-small text-amber-700">
                         Their "May create Super Admin accounts" privilege will be revoked.
                     </p>
                 )}
                 {sensitive && <PasswordField value={password} onChange={setPassword} />}
                 <div className="mt-5 flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={busy || !role}
-                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Change role
@@ -529,7 +529,7 @@ function HistoryModal({ member, onClose }) {
 
     return (
         <Modal title={`${member.name} — history`} onClose={onClose} wide>
-            <div className="grid gap-x-6 gap-y-2 text-[13.5px] sm:grid-cols-2">
+            <div className="grid gap-x-6 gap-y-2 text-ui sm:grid-cols-2">
                 <p><span className="text-slate-500">Email:</span> {member.email}</p>
                 <p><span className="text-slate-500">Role:</span> <RoleBadge role={member.role} /></p>
                 <p><span className="text-slate-500">Status:</span> {member.is_active ? "Active" : "Inactive"}</p>
@@ -537,11 +537,11 @@ function HistoryModal({ member, onClose }) {
                 <p><span className="text-slate-500">Added:</span> {fmt(member.created_at)}</p>
             </div>
 
-            <h3 className="mt-5 mb-2 text-[14px] font-bold text-slate-900">Delegated privileges</h3>
+            <h3 className="mt-5 mb-2 text-ui font-bold text-slate-900">Delegated privileges</h3>
             {!detail ? (
                 <Loader2 size={16} className="animate-spin text-slate-500" />
             ) : detail.grants?.length ? (
-                <ul className="space-y-1.5 text-[13px]">
+                <ul className="space-y-1.5 text-ui">
                     {detail.grants.map((g) => (
                         <li key={g.id} className="rounded-lg border border-slate-200 px-3 py-2">
                             <b>May create Super Admin accounts</b> — granted by {g.granted_by ?? "—"} on {fmt(g.granted_at)}
@@ -550,10 +550,10 @@ function HistoryModal({ member, onClose }) {
                     ))}
                 </ul>
             ) : (
-                <p className="text-[13px] text-slate-500">None.</p>
+                <p className="text-ui text-slate-500">None.</p>
             )}
 
-            <h3 className="mt-5 mb-2 text-[14px] font-bold text-slate-900">Account activity</h3>
+            <h3 className="mt-5 mb-2 text-ui font-bold text-slate-900">Account activity</h3>
             <AuditTable logs={logs} compact />
         </Modal>
     );
@@ -561,11 +561,11 @@ function HistoryModal({ member, onClose }) {
 
 function AuditTable({ logs, compact }) {
     if (!logs) return <Loader2 size={16} className="animate-spin text-slate-500" />;
-    if (!logs.length) return <p className="text-[13px] text-slate-500">No recorded actions yet.</p>;
+    if (!logs.length) return <p className="text-ui text-slate-500">No recorded actions yet.</p>;
     return (
         <div className="overflow-x-auto rounded-xl border border-slate-200">
-            <table className="w-full min-w-[640px] text-left text-[13px]">
-                <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+            <table className="w-full min-w-[640px] text-left text-ui">
+                <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                     <tr>
                         <th className="px-3 py-2">When</th>
                         <th className="px-3 py-2">Who</th>
@@ -590,14 +590,14 @@ function AuditTable({ logs, compact }) {
                                     </span>
                                 )}
                                 {l.result !== "success" && l.details?.reason && (
-                                    <span className="block text-[12px] text-slate-500">{l.details.reason}</span>
+                                    <span className="block text-small text-slate-500">{l.details.reason}</span>
                                 )}
                             </td>
                             {!compact && <td className="px-3 py-2">{l.target_name ?? l.details?.email ?? "—"}</td>}
                             <td className="px-3 py-2">
                                 <span
                                     className={cn(
-                                        "rounded-md px-2 py-0.5 text-[11.5px] font-semibold",
+                                        "rounded-md px-2 py-0.5 text-label font-semibold",
                                         l.result === "success" && "bg-emerald-50 text-emerald-700",
                                         l.result === "denied" && "bg-red-50 text-red-700",
                                         l.result === "failed" && "bg-amber-50 text-amber-700"
@@ -647,13 +647,13 @@ function AuditLogTab() {
                         </option>
                     ))}
                 </select>
-                <p className="text-[12.5px] text-slate-500">
+                <p className="text-small text-slate-500">
                     Entries can't be edited or deleted. Refused attempts are recorded too.
                 </p>
             </div>
             <AuditTable logs={data?.logs} />
             {data?.pagination?.totalPages > 1 && (
-                <div className="mt-3 flex items-center justify-end gap-2 text-[13px]">
+                <div className="mt-3 flex items-center justify-end gap-2 text-ui">
                     <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border px-3 py-1.5 disabled:opacity-40">
                         Previous
                     </button>
@@ -714,8 +714,8 @@ export default function TeamPage() {
         <div className="mx-auto max-w-[1300px]">
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Team</h1>
-                    <p className="mt-1 text-[13px] text-slate-500">
+                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">Team</h1>
+                    <p className="mt-1 text-ui text-slate-500">
                         Super Admins, Admins, Sub-Admins and Consultants. Every change is recorded in the audit log.
                     </p>
                 </div>
@@ -723,7 +723,7 @@ export default function TeamPage() {
                     <button
                         type="button"
                         onClick={() => setModal({ type: "create" })}
-                        className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-[13.5px] font-bold text-white hover:bg-action-hover"
+                        className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
                     >
                         <UserPlus size={16} aria-hidden="true" /> Add team member
                     </button>
@@ -731,7 +731,7 @@ export default function TeamPage() {
             </div>
 
             {caps?.role === "admin" && caps?.can_create_roles?.includes("super_admin") && (
-                <p className="mb-4 flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-[13px] text-violet-800">
+                <p className="mb-4 flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-ui text-violet-800">
                     <KeyRound size={15} aria-hidden="true" /> A Super Admin has allowed you to create Super Admin accounts.
                 </p>
             )}
@@ -747,7 +747,7 @@ export default function TeamPage() {
                         aria-selected={tab === key}
                         onClick={() => setTab(key)}
                         className={cn(
-                            "-mb-px border-b-2 px-4 py-2 text-[13.5px] font-semibold",
+                            "-mb-px border-b-2 px-4 py-2 text-ui font-semibold",
                             tab === key ? "border-action text-action" : "border-transparent text-slate-500 hover:text-slate-800"
                         )}
                     >
@@ -766,7 +766,7 @@ export default function TeamPage() {
                                 key={value || "all"}
                                 onClick={() => setRole(value)}
                                 className={cn(
-                                    "rounded-full border px-3 py-1.5 text-[12.5px] font-semibold",
+                                    "rounded-full border px-3 py-1.5 text-small font-semibold",
                                     role === value ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-600"
                                 )}
                             >
@@ -776,7 +776,7 @@ export default function TeamPage() {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px]"
+                            className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-small"
                             aria-label="Filter by status"
                         >
                             <option value="">Any status</option>
@@ -800,13 +800,13 @@ export default function TeamPage() {
                             <Loader2 className="animate-spin text-slate-500" />
                         </div>
                     ) : !members.length ? (
-                        <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">
+                        <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-ui text-slate-500">
                             No team members match these filters.
                         </p>
                     ) : (
                         <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
-                            <table className="w-full min-w-[860px] text-left text-[13.5px]">
-                                <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                            <table className="w-full min-w-[860px] text-left text-ui">
+                                <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                                     <tr>
                                         <th className="px-4 py-3">Member</th>
                                         <th className="px-4 py-3">Role</th>
@@ -822,31 +822,31 @@ export default function TeamPage() {
                                             <td className="px-4 py-3">
                                                 <p className="font-semibold text-slate-900">
                                                     {m.name}
-                                                    {m.id === me?.id && <span className="ml-1.5 text-[11.5px] font-normal text-slate-500">(you)</span>}
+                                                    {m.id === me?.id && <span className="ml-1.5 text-label font-normal text-slate-500">(you)</span>}
                                                 </p>
-                                                <p className="text-[12.5px] text-slate-500">{m.email}</p>
+                                                <p className="text-small text-slate-500">{m.email}</p>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <RoleBadge role={m.role} />
                                             </td>
                                             <td className="px-4 py-3">
                                                 {m.invite_pending ? (
-                                                    <span className="text-[12.5px] font-semibold text-amber-700">Invitation sent</span>
+                                                    <span className="text-small font-semibold text-amber-700">Invitation sent</span>
                                                 ) : m.is_active ? (
-                                                    <span className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-emerald-700">
+                                                    <span className="inline-flex items-center gap-1 text-small font-semibold text-emerald-700">
                                                         <CheckCircle2 size={13} aria-hidden="true" /> Active
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[12.5px] font-semibold text-slate-500">Inactive</span>
+                                                    <span className="text-small font-semibold text-slate-500">Inactive</span>
                                                 )}
                                                 {m.allocation && m.is_active && (
-                                                    <span className={cn("mt-0.5 block text-[11.5px] font-semibold", ALLOCATION_BADGE[m.allocation.state]?.[1])}>
+                                                    <span className={cn("mt-0.5 block text-label font-semibold", ALLOCATION_BADGE[m.allocation.state]?.[1])}>
                                                         {ALLOCATION_BADGE[m.allocation.state]?.[0]}
                                                         {m.allocation.state === "on_leave" && ` until ${fmt(m.allocation.on_leave_until).split(",")[0]}`}
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="px-4 py-3 text-[12.5px]">
+                                            <td className="px-4 py-3 text-small">
                                                 {m.role === "super_admin" ? (
                                                     <span className="text-slate-500">Yes (Super Admin)</span>
                                                 ) : m.super_admin_grant ? (
@@ -859,7 +859,7 @@ export default function TeamPage() {
                                                     <span className="text-slate-300">—</span>
                                                 )}
                                             </td>
-                                            <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-500">{fmt(m.last_active_at)}</td>
+                                            <td className="whitespace-nowrap px-4 py-3 text-small text-slate-500">{fmt(m.last_active_at)}</td>
                                             <td className="px-4 py-3">
                                                 <div className="flex flex-wrap justify-end gap-1.5">
                                                     <ActionBtn icon={History} label="History" onClick={() => setModal({ type: "history", member: m })} />
@@ -1005,7 +1005,7 @@ function ActionBtn({ icon: Icon, label, onClick, danger }) {
             type="button"
             onClick={onClick}
             className={cn(
-                "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[12px] font-semibold transition-colors",
+                "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-small font-semibold transition-colors",
                 danger
                     ? "border-red-200 text-red-600 hover:bg-red-50"
                     : "border-slate-200 text-slate-700 hover:bg-slate-50"

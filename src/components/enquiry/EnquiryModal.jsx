@@ -27,12 +27,12 @@ const COPY = {
 };
 
 const fieldCls =
-    "w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-400 focus:border-[#236A9E] focus:outline-none focus:ring-2 focus:ring-[#236A9E]/20";
+    "w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-ui text-slate-900 placeholder:text-slate-400 focus:border-[#236A9E] focus:outline-none focus:ring-2 focus:ring-[#236A9E]/20";
 
 function Field({ id, label, optional, children }) {
     return (
         <label htmlFor={id} className="block">
-            <span className="mb-1 block text-[12.5px] font-semibold text-slate-700">
+            <span className="mb-1 block text-small font-semibold text-slate-700">
                 {label}
                 {optional && <span className="font-normal text-slate-500"> (optional)</span>}
             </span>
@@ -110,10 +110,10 @@ export default function EnquiryModal({ kind, course, onClose }) {
             >
                 <div className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
                     <div className="min-w-0">
-                        <h2 id="enquiry-title" className="text-[18px] font-bold text-slate-900">
+                        <h2 id="enquiry-title" className="text-h3 font-bold text-slate-900">
                             {copy.title}
                         </h2>
-                        {course?.title && <p className="mt-0.5 truncate text-[12.5px] text-slate-500">{course.title}</p>}
+                        {course?.title && <p className="mt-0.5 truncate text-small text-slate-500">{course.title}</p>}
                     </div>
                     <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-500 hover:bg-slate-100">
                         <X size={20} />
@@ -122,7 +122,7 @@ export default function EnquiryModal({ kind, course, onClose }) {
 
                 {done ? (
                     <div className="px-5 py-5">
-                        <div className="flex items-start gap-2.5 rounded-xl bg-emerald-50 px-3.5 py-3 text-[13.5px] text-emerald-800">
+                        <div className="flex items-start gap-2.5 rounded-xl bg-emerald-50 px-3.5 py-3 text-ui text-emerald-800">
                             <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
                             <p>
                                 {kind === "syllabus"
@@ -137,11 +137,11 @@ export default function EnquiryModal({ kind, course, onClose }) {
                                 <ol className="mt-4 space-y-3">
                                     {done.syllabus.map((s, i) => (
                                         <li key={i}>
-                                            <p className="text-[13.5px] font-bold text-slate-900">
+                                            <p className="text-ui font-bold text-slate-900">
                                                 {i + 1}. {s.title}
                                             </p>
                                             {s.lessons.length > 0 && (
-                                                <ul className="mt-1 list-disc space-y-0.5 pl-5 text-[13px] text-slate-600">
+                                                <ul className="mt-1 list-disc space-y-0.5 pl-5 text-ui text-slate-600">
                                                     {s.lessons.map((l, j) => (
                                                         <li key={j}>{l}</li>
                                                     ))}
@@ -153,19 +153,19 @@ export default function EnquiryModal({ kind, course, onClose }) {
                                 <button
                                     type="button"
                                     onClick={() => printSyllabus(course.title, done.syllabus)}
-                                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-2.5 text-[14px] font-bold text-white hover:bg-[#1B5582]"
+                                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-2.5 text-ui font-bold text-white hover:bg-[#1B5582]"
                                 >
                                     <Download size={16} aria-hidden="true" /> Save as PDF
                                 </button>
                             </>
                         )}
-                        <button type="button" onClick={onClose} className="mt-3 w-full rounded-[10px] border border-slate-200 px-4 py-2.5 text-[14px] font-semibold text-slate-700">
+                        <button type="button" onClick={onClose} className="mt-3 w-full rounded-[10px] border border-slate-200 px-4 py-2.5 text-ui font-semibold text-slate-700">
                             Close
                         </button>
                     </div>
                 ) : (
                     <form onSubmit={submit} className="space-y-3.5 px-5 py-4" noValidate>
-                        <p className="text-[13.5px] leading-relaxed text-slate-600">{copy.intro}</p>
+                        <p className="text-ui leading-relaxed text-slate-600">{copy.intro}</p>
                         <Field id="enq-name" label="Full name">
                             <input id="enq-name" ref={first} required autoComplete="name" value={form.name} onChange={set("name")} className={fieldCls} />
                         </Field>
@@ -219,7 +219,7 @@ export default function EnquiryModal({ kind, course, onClose }) {
                         )}
                         {/* Honeypot: hidden from people, filled in by bots */}
                         <input type="text" name="website" value={form.website} onChange={set("website")} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 opacity-0" />
-                        <label className="flex cursor-pointer items-start gap-2.5 text-[12.5px] leading-relaxed text-slate-600">
+                        <label className="flex cursor-pointer items-start gap-2.5 text-small leading-relaxed text-slate-600">
                             <input type="checkbox" checked={form.consent} onChange={set("consent")} className="mt-0.5 h-4 w-4 shrink-0 accent-[#236A9E]" />
                             <span>
                                 I agree that CERTEZY may contact me about this course by phone, email or WhatsApp. See our{" "}
@@ -230,14 +230,14 @@ export default function EnquiryModal({ kind, course, onClose }) {
                             </span>
                         </label>
                         {error && (
-                            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-[13px] text-red-700">
+                            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-ui text-red-700">
                                 {error}
                             </p>
                         )}
                         <button
                             type="submit"
                             disabled={busy}
-                            className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-3 text-[14.5px] font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-3 text-body font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
                         >
                             {busy && <Loader2 size={16} className="animate-spin" aria-hidden="true" />} {copy.submit}
                         </button>

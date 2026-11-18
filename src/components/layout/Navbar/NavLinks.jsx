@@ -53,7 +53,7 @@ function NavLink({ to, label, isActive, navH }) {
             className={cn(
                 "relative flex items-center px-3",
                 navH,
-                "text-[13.5px] font-semibold transition-colors duration-200 group whitespace-nowrap",
+                "text-ui font-semibold transition-colors duration-200 group whitespace-nowrap",
                 isActive ? "text-primary" : "text-text-secondary hover:text-primary"
             )}
         >
@@ -77,7 +77,7 @@ function AllCoursesLink({ isOpen, onClick, navH }) {
             className={cn(
                 "relative flex items-center gap-1 px-3 outline-none",
                 navH,
-                "text-[13.5px] font-semibold transition-colors duration-200 group whitespace-nowrap",
+                "text-ui font-semibold transition-colors duration-200 group whitespace-nowrap",
                 isOpen ? "text-primary" : "text-text-secondary hover:text-primary"
             )}
         >
@@ -110,7 +110,7 @@ function MoreDropdown({ items = [], navH, label = "More" }) {
                     className={cn(
                         "relative flex items-center gap-1 px-3 outline-none",
                         navH,
-                        "text-[13.5px] font-semibold transition-colors duration-200 group whitespace-nowrap",
+                        "text-ui font-semibold transition-colors duration-200 group whitespace-nowrap",
                         "text-text-secondary hover:text-primary data-[state=open]:text-primary"
                     )}
                 >
@@ -148,10 +148,10 @@ function MoreDropdown({ items = [], navH, label = "More" }) {
                                     />
                                 </div>
                                 <div>
-                                    <p className="text-[13.5px] font-semibold text-text-primary group-hover:text-primary transition-colors">
+                                    <p className="text-ui font-semibold text-text-primary group-hover:text-primary transition-colors">
                                         {item.label}
                                     </p>
-                                    <p className="text-[12px] text-text-muted mt-0.5 leading-tight">
+                                    <p className="text-small text-text-muted mt-0.5 leading-tight">
                                         {item.desc}
                                     </p>
                                 </div>

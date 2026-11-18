@@ -143,10 +143,10 @@ export default function CourseDetailIndex() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9]">
                 <div className="text-center px-4">
-                    <p className="text-[16px] font-semibold text-text-primary mb-3">{error}</p>
+                    <p className="text-body font-semibold text-text-primary mb-3">{error}</p>
                     <button
                         onClick={() => navigate("/courses")}
-                        className="text-[14px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                        className="text-ui font-semibold text-primary hover:text-primary-hover transition-colors"
                     >
                         ← Back to courses
                     </button>
@@ -203,7 +203,7 @@ export default function CourseDetailIndex() {
                         {/* Breadcrumb */}
                         <div
                             className="flex items-center gap-1.5 mb-5 flex-wrap"
-                            style={{ color: "rgba(255,255,255,0.65)", fontSize: "12px" }}
+                            style={{ color: "rgba(255,255,255,0.65)", fontSize: "12.5px" }}
                         >
                             <span
                                 className="hover:text-white cursor-pointer transition-colors"
@@ -241,7 +241,7 @@ export default function CourseDetailIndex() {
 
                         {/* Category badge */}
                         <span
-                            className="inline-flex items-center text-[11px] font-bold uppercase tracking-wider mb-4 px-3 py-1.5 rounded-full"
+                            className="inline-flex items-center text-label font-bold uppercase tracking-wider mb-4 px-3 py-1.5 rounded-full"
                             style={{
                                 background: "rgba(255,255,255,0.10)",
                                 color: "#60A5FA",
@@ -347,7 +347,7 @@ export default function CourseDetailIndex() {
                                     alt=""
                                     className="w-8 h-8 rounded-full shrink-0 bg-white"
                                 />
-                                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>
+                                <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.55)" }}>
                                     Instructor:{" "}
                                     <span style={{ color: "#fff", fontWeight: 600 }}>
                                         {course.instructor_name}
@@ -362,7 +362,7 @@ export default function CourseDetailIndex() {
                                 type="button"
                                 onClick={isEnrolled ? () => navigate(`/student/course/${course.id}/learn`) : handleEnroll}
                                 disabled={enrolling}
-                                className="inline-flex items-center gap-2 rounded-[10px] bg-[#236A9E] px-5 py-3 text-[14.5px] font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
+                                className="inline-flex items-center gap-2 rounded-[10px] bg-[#236A9E] px-5 py-3 text-body font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
                             >
                                 {isEnrolled ? "Go to course" : getPricing(course).isFree ? "Enroll for free" : "Enroll now"}
                             </button>
@@ -370,7 +370,7 @@ export default function CourseDetailIndex() {
                                 <button
                                     type="button"
                                     onClick={() => setEnquiry("advisor")}
-                                    className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-5 py-3 text-[14.5px] font-semibold text-white hover:bg-white/10"
+                                    className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-5 py-3 text-body font-semibold text-white hover:bg-white/10"
                                 >
                                     <Phone size={15} aria-hidden="true" /> Talk to an advisor
                                 </button>
@@ -380,7 +380,7 @@ export default function CourseDetailIndex() {
                             <button
                                 type="button"
                                 onClick={() => setEnquiry("team")}
-                                className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-white/70 hover:text-white"
+                                className="mt-3 inline-flex items-center gap-1.5 text-ui text-white/70 hover:text-white"
                             >
                                 <Building2 size={14} aria-hidden="true" /> Training a team?{" "}
                                 <span className="font-semibold underline underline-offset-2">Get a quote</span>
@@ -430,7 +430,7 @@ export default function CourseDetailIndex() {
                                     <button
                                         type="button"
                                         onClick={() => setEnquiry("syllabus")}
-                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12.5px] font-semibold text-[#236A9E] hover:bg-slate-50"
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-small font-semibold text-[#236A9E] hover:bg-slate-50"
                                     >
                                         <Download size={14} aria-hidden="true" /> Download the syllabus
                                     </button>
@@ -451,7 +451,7 @@ export default function CourseDetailIndex() {
                             <ContentCard title="Requirements">
                                 <ul className="space-y-2 list-disc pl-5 marker:text-slate-400">
                                     {requirements.map((r) => (
-                                        <li key={r} className="text-[14px] text-slate-600 leading-relaxed">
+                                        <li key={r} className="text-ui text-slate-600 leading-relaxed">
                                             {r}
                                         </li>
                                     ))}
@@ -465,7 +465,7 @@ export default function CourseDetailIndex() {
                                 <ShowMore>
                                     <p
                                         style={{
-                                            fontSize: "14px",
+                                            fontSize: "13.5px",
                                             color: "#475569",
                                             lineHeight: 1.75,
                                             whiteSpace: "pre-line",
@@ -480,7 +480,7 @@ export default function CourseDetailIndex() {
                         {/* Exam & certification — written per course in Admin → Courses */}
                         {course.exam_info?.trim() && (
                             <ContentCard title="Exam & Certification">
-                                <p style={{ fontSize: "14px", color: "#334155", lineHeight: 1.75, whiteSpace: "pre-line" }}>
+                                <p style={{ fontSize: "13.5px", color: "#334155", lineHeight: 1.75, whiteSpace: "pre-line" }}>
                                     {course.exam_info}
                                 </p>
                             </ContentCard>
@@ -492,11 +492,11 @@ export default function CourseDetailIndex() {
                                 <div className="divide-y divide-slate-200 rounded-xl border border-slate-200">
                                     {faqs.map((f, i) => (
                                         <details key={i} className="group px-4 py-3">
-                                            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[14px] font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+                                            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-ui font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
                                                 {f.q}
                                                 <ChevronDown size={16} className="shrink-0 text-slate-500 transition-transform group-open:rotate-180" aria-hidden="true" />
                                             </summary>
-                                            <p className="mt-2 text-[13.5px] leading-relaxed text-slate-600" style={{ whiteSpace: "pre-line" }}>
+                                            <p className="mt-2 text-ui leading-relaxed text-slate-600" style={{ whiteSpace: "pre-line" }}>
                                                 {f.a}
                                             </p>
                                         </details>
@@ -539,7 +539,7 @@ export default function CourseDetailIndex() {
                                         />
                                     ) : (
                                         <div
-                                            className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 text-white font-bold text-[18px]"
+                                            className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 text-white font-bold text-h3"
                                             style={{
                                                 background: "linear-gradient(135deg, #3282B8, #0a1628)",
                                             }}
@@ -552,7 +552,7 @@ export default function CourseDetailIndex() {
                                         {/* Name */}
                                         <p
                                             style={{
-                                                fontSize: "16px",
+                                                fontSize: "15px",
                                                 fontWeight: 700,
                                                 color: "#0F172A",
                                                 marginBottom: "4px",
@@ -565,7 +565,7 @@ export default function CourseDetailIndex() {
                                         {course.instructor_title && (
                                             <p
                                                 style={{
-                                                    fontSize: "13px",
+                                                    fontSize: "13.5px",
                                                     color: "#236A9E",
                                                     fontWeight: 500,
                                                     marginBottom: "10px",
@@ -669,7 +669,7 @@ export default function CourseDetailIndex() {
                                     >
                                         <p
                                             style={{
-                                                fontSize: "10.5px",
+                                                fontSize: "11.5px",
                                                 fontWeight: 700,
                                                 color: "#64748B",
                                                 textTransform: "uppercase",
@@ -698,8 +698,8 @@ export default function CourseDetailIndex() {
                         {!isEnrolled && (
                             <div className="flex flex-col gap-4 rounded-2xl bg-[#0a1628] p-6 text-white sm:flex-row sm:items-center sm:justify-between">
                                 <div className="min-w-0">
-                                    <h2 className="text-[17px] font-bold">Still have questions?</h2>
-                                    <p className="mt-1 text-[13.5px] text-white/70">
+                                    <h2 className="text-h3 font-bold">Still have questions?</h2>
+                                    <p className="mt-1 text-ui text-white/70">
                                         Talk to an advisor about the course, {pmi ? "the PMP® exam, " : ""}payment options and your study plan.
                                     </p>
                                 </div>
@@ -707,14 +707,14 @@ export default function CourseDetailIndex() {
                                     <button
                                         type="button"
                                         onClick={() => setEnquiry("advisor")}
-                                        className="inline-flex items-center gap-2 rounded-[10px] bg-white px-4 py-2.5 text-[14px] font-bold text-[#0a1628] hover:bg-slate-100"
+                                        className="inline-flex items-center gap-2 rounded-[10px] bg-white px-4 py-2.5 text-ui font-bold text-[#0a1628] hover:bg-slate-100"
                                     >
                                         <Phone size={15} aria-hidden="true" /> Talk to an advisor
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setEnquiry("team")}
-                                        className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-4 py-2.5 text-[14px] font-semibold text-white hover:bg-white/10"
+                                        className="inline-flex items-center gap-2 rounded-[10px] border border-white/40 px-4 py-2.5 text-ui font-semibold text-white hover:bg-white/10"
                                     >
                                         <Building2 size={15} aria-hidden="true" /> Team quote
                                     </button>
@@ -765,7 +765,7 @@ function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, on
         >
             <div className="max-w-screen-2xl mx-auto px-6 h-[60px] flex items-center gap-6">
                 <div className="min-w-0 flex-1">
-                    <p className="text-[14.5px] font-bold truncate">{course.title}</p>
+                    <p className="text-body font-bold truncate">{course.title}</p>
                     <StarRating
                         value={highlight ? highlight.rating : course.rating_avg}
                         count={highlight ? undefined : course.rating_count}
@@ -780,7 +780,7 @@ function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, on
                     onClick={onEnroll}
                     disabled={enrolling}
                     tabIndex={visible ? 0 : -1}
-                    className="shrink-0 rounded-lg bg-action px-5 py-2 text-[13px] font-bold text-white hover:opacity-90 disabled:opacity-60"
+                    className="shrink-0 rounded-lg bg-action px-5 py-2 text-ui font-bold text-white hover:opacity-90 disabled:opacity-60"
                 >
                     {isEnrolled ? "Go to course" : "Enroll now"}
                 </button>
@@ -793,7 +793,7 @@ function StatPill({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-1.5" style={{ color: "rgba(255,255,255,0.58)" }}>
             <Icon size={13} />
-            <span style={{ fontSize: "13px" }}>{label}</span>
+            <span style={{ fontSize: "13.5px" }}>{label}</span>
         </div>
     );
 }
@@ -807,7 +807,7 @@ function ContentCard({ title, action = null, children }) {
             <div className="flex flex-wrap items-center justify-between gap-2.5 mb-5">
                 <div className="flex items-center gap-2.5">
                     <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
-                    <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>{title}</h2>
+                    <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>{title}</h2>
                 </div>
                 {action}
             </div>

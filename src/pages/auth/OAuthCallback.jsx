@@ -52,7 +52,7 @@ export default function OAuthCallback() {
                         animation: "spin 0.7s linear infinite",
                     }}
                 />
-                <p style={{ fontSize: "14px", color: "#64748B", fontWeight: 500 }}>Signing you in...</p>
+                <p style={{ fontSize: "13.5px", color: "#64748B", fontWeight: 500 }}>Signing you in...</p>
             </div>
 
             <style>{`

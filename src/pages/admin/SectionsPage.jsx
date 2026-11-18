@@ -49,14 +49,14 @@ function SectionForm({ section, onSave, onCancel }) {
 
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">
+            <h3 className="text-h3 font-semibold text-slate-900 mb-4">
                 {section?.id ? "Edit Section" : "Create Section"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Section Title</label>
+                        <label className="block text-ui font-medium text-slate-700 mb-2">Section Title</label>
                         <input
                             type="text"
                             value={formData.title}
@@ -68,7 +68,7 @@ function SectionForm({ section, onSave, onCancel }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Course ID</label>
+                        <label className="block text-ui font-medium text-slate-700 mb-2">Course ID</label>
                         <input
                             type="text"
                             value={formData.courseId}
@@ -80,7 +80,7 @@ function SectionForm({ section, onSave, onCancel }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Order</label>
+                        <label className="block text-ui font-medium text-slate-700 mb-2">Order</label>
                         <input
                             type="number"
                             value={formData.order}
@@ -94,7 +94,7 @@ function SectionForm({ section, onSave, onCancel }) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                    <label className="block text-ui font-medium text-slate-700 mb-2">Description</label>
                     <textarea
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -112,7 +112,7 @@ function SectionForm({ section, onSave, onCancel }) {
                         onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                     />
-                    <label htmlFor="isPublished" className="ml-2 block text-sm text-slate-700">
+                    <label htmlFor="isPublished" className="ml-2 block text-ui text-slate-700">
                         Published
                     </label>
                 </div>
@@ -155,7 +155,7 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                             {/* Header */}
                             <div className="px-6 py-4 border-b border-slate-200">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-slate-900">Section Details</h2>
+                                    <h2 className="text-h3 font-semibold text-slate-900">Section Details</h2>
                                     <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100">
                                         ×
                                     </button>
@@ -167,33 +167,33 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                                 <div className="space-y-6">
                                     {/* Section Info */}
                                     <div>
-                                        <h4 className="text-sm font-medium text-slate-700 mb-3">
+                                        <h4 className="text-ui font-medium text-slate-700 mb-3">
                                             Section Information
                                         </h4>
                                         <div className="space-y-2">
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Title</span>
-                                                <span className="text-sm font-medium text-slate-900">
+                                                <span className="text-ui text-slate-600">Title</span>
+                                                <span className="text-ui font-medium text-slate-900">
                                                     {section.title}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Course ID</span>
-                                                <span className="text-sm font-medium text-slate-900">
+                                                <span className="text-ui text-slate-600">Course ID</span>
+                                                <span className="text-ui font-medium text-slate-900">
                                                     {section.courseId}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Order</span>
-                                                <span className="text-sm font-medium text-slate-900">
+                                                <span className="text-ui text-slate-600">Order</span>
+                                                <span className="text-ui font-medium text-slate-900">
                                                     {section.order}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Status</span>
+                                                <span className="text-ui text-slate-600">Status</span>
                                                 <span
                                                     className={cn(
-                                                        "px-2 py-1 text-xs font-medium rounded-full",
+                                                        "px-2 py-1 text-small font-medium rounded-full",
                                                         section.isPublished
                                                             ? "bg-green-100 text-green-800"
                                                             : "bg-yellow-100 text-yellow-800"
@@ -208,26 +208,26 @@ function SectionDetailsModal({ section, isOpen, onClose }) {
                                     {/* Description */}
                                     {section.description && (
                                         <div>
-                                            <h4 className="text-sm font-medium text-slate-700 mb-3">
+                                            <h4 className="text-ui font-medium text-slate-700 mb-3">
                                                 Description
                                             </h4>
-                                            <p className="text-sm text-slate-600">{section.description}</p>
+                                            <p className="text-ui text-slate-600">{section.description}</p>
                                         </div>
                                     )}
 
                                     {/* Statistics */}
                                     <div>
-                                        <h4 className="text-sm font-medium text-slate-700 mb-3">Statistics</h4>
+                                        <h4 className="text-ui font-medium text-slate-700 mb-3">Statistics</h4>
                                         <div className="space-y-2">
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Lessons Count</span>
-                                                <span className="text-sm font-medium text-slate-900">
+                                                <span className="text-ui text-slate-600">Lessons Count</span>
+                                                <span className="text-ui font-medium text-slate-900">
                                                     {section.lessonsCount || 0}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-slate-600">Total Duration</span>
-                                                <span className="text-sm font-medium text-slate-900">
+                                                <span className="text-ui text-slate-600">Total Duration</span>
+                                                <span className="text-ui font-medium text-slate-900">
                                                     {section.totalDuration || "0 min"}
                                                 </span>
                                             </div>
@@ -249,7 +249,7 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
         return (
             <span
                 className={cn(
-                    "px-2 py-1 text-xs font-medium rounded-full",
+                    "px-2 py-1 text-small font-medium rounded-full",
                     isPublished ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                 )}
             >
@@ -264,15 +264,15 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
                 <table className="w-full min-w-[720px]">
                     <thead>
                         <tr className="border-b border-slate-200 bg-slate-50">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Section</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Course</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Order</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Lessons</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Section</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Course</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Order</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Lessons</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">
                                 Duration
                             </th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Status</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Actions</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Status</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
@@ -284,10 +284,10 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
                                             <Layers size={18} className="text-blue-600" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-slate-900">
+                                            <p className="text-ui font-medium text-slate-900">
                                                 {section.title}
                                             </p>
-                                            <p className="text-sm text-slate-600 truncate max-w-xs">
+                                            <p className="text-ui text-slate-600 truncate max-w-xs">
                                                 {section.description}
                                             </p>
                                         </div>
@@ -298,14 +298,14 @@ function SectionsTable({ sections, onViewDetails, onEdit, onDelete }) {
                                         <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center">
                                             <BookOpen size={12} className="text-slate-600" />
                                         </div>
-                                        <span className="text-sm text-slate-600">{section.courseId}</span>
+                                        <span className="text-ui text-slate-600">{section.courseId}</span>
                                     </div>
                                 </td>
-                                <td className="py-3 px-4 text-sm text-slate-600">#{section.order}</td>
-                                <td className="py-3 px-4 text-sm text-slate-600">
+                                <td className="py-3 px-4 text-ui text-slate-600">#{section.order}</td>
+                                <td className="py-3 px-4 text-ui text-slate-600">
                                     {section.lessonsCount || 0}
                                 </td>
-                                <td className="py-3 px-4 text-sm text-slate-600">
+                                <td className="py-3 px-4 text-ui text-slate-600">
                                     {section.totalDuration || "0 min"}
                                 </td>
                                 <td className="py-3 px-4">{getStatusBadge(section.isPublished)}</td>
@@ -351,21 +351,21 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
+                    className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-ui font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
                 >
                     Previous
                 </button>
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-ui font-medium rounded-md text-slate-700 bg-surface hover:bg-slate-50"
                 >
                     Next
                 </button>
             </div>
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <p className="text-sm text-slate-700">
+                    <p className="text-ui text-slate-700">
                         Showing page <span className="font-medium">{currentPage}</span> of{" "}
                         <span className="font-medium">{totalPages}</span>
                     </p>
@@ -375,14 +375,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
                         <button
                             onClick={() => onPageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-surface text-sm font-medium text-slate-500 hover:bg-slate-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-surface text-ui font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronLeft size={16} />
                         </button>
                         <button
                             onClick={() => onPageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-surface text-sm font-medium text-slate-500 hover:bg-slate-50"
+                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-surface text-ui font-medium text-slate-500 hover:bg-slate-50"
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -525,7 +525,7 @@ export default function SectionsPage() {
                     <div className="flex items-center gap-3">
                         <AlertCircle size={20} className="text-red-600" />
                         <div>
-                            <h3 className="text-lg font-medium text-red-900">Error Loading Sections</h3>
+                            <h3 className="text-h3 font-medium text-red-900">Error Loading Sections</h3>
                             <p className="text-red-700">{error}</p>
                         </div>
                     </div>
@@ -545,7 +545,7 @@ export default function SectionsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Sections</h1>
+                    <h1 className="text-h2 font-bold text-slate-900">Sections</h1>
                     <p className="text-slate-600 mt-1">Manage course sections and content organization</p>
                 </div>
                 <div className="mt-4 sm:mt-0 flex gap-3">

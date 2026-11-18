@@ -22,6 +22,19 @@
     --color-action-soft: #eef6fc;
     --color-action-soft-ink: #1b5582;
 
+    /* ── Type scale: eight sizes (class text-<name>) ── */
+    --text-label: 11.5px; /* uppercase labels, badges, table headers */
+    --text-small: 12.5px; /* meta lines, captions, hints */
+    --text-ui: 13.5px; /* buttons, menus, table text, form fields */
+    --text-body: 15px; /* running text */
+    --text-h3: 17px; /* card titles */
+    --text-h2: 22px; /* section titles */
+    --text-h1: 30px; /* page titles */
+    --text-display: 44px; /* website hero */
+    --text-h2--line-height: 1.25;
+    --text-h1--line-height: 1.2;
+    --text-display--line-height: 1.1;
+
     /* ── Surfaces (redefined by the admin dark mode) ── */
     --color-surface: #ffffff;
 

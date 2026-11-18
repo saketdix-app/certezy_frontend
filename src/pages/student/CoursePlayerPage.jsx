@@ -384,7 +384,7 @@ export default function CoursePlayerPage() {
                     <p className="text-white font-semibold mb-3">{error}</p>
                     <button
                         onClick={() => navigate("/student/my-courses")}
-                        className="px-4 py-2 rounded-xl bg-action text-white text-sm font-bold"
+                        className="px-4 py-2 rounded-xl bg-action text-white text-ui font-bold"
                     >
                         ← My Courses
                     </button>
@@ -483,7 +483,7 @@ export default function CoursePlayerPage() {
                                                         size={48}
                                                         className="mx-auto mb-3 text-white/20"
                                                     />
-                                                    <p className="text-white/40 text-[14px]">
+                                                    <p className="text-white/40 text-ui">
                                                         No content available
                                                     </p>
                                                 </div>
@@ -501,7 +501,7 @@ export default function CoursePlayerPage() {
                                         <div>
                                             <p
                                                 style={{
-                                                    fontSize: "11px",
+                                                    fontSize: "11.5px",
                                                     fontWeight: 700,
                                                     color: "#2563EB",
                                                     textTransform: "uppercase",
@@ -513,7 +513,7 @@ export default function CoursePlayerPage() {
                                             </p>
                                             <h1
                                                 style={{
-                                                    fontSize: "20px",
+                                                    fontSize: "22px",
                                                     fontWeight: 800,
                                                     color: "#0F172A",
                                                     lineHeight: 1.3,
@@ -531,7 +531,7 @@ export default function CoursePlayerPage() {
                                                 style={{
                                                     background: "#2563EB",
                                                     color: "#fff",
-                                                    fontSize: "13px",
+                                                    fontSize: "13.5px",
                                                     fontWeight: 700,
                                                     boxShadow: "0 6px 16px rgba(37,99,235,0.25)",
                                                 }}
@@ -546,7 +546,7 @@ export default function CoursePlayerPage() {
                                                     background: "#EFF6FF",
                                                     border: "1px solid #BFDBFE",
                                                     color: "#1D4ED8",
-                                                    fontSize: "13px",
+                                                    fontSize: "13.5px",
                                                     fontWeight: 700,
                                                 }}
                                             >
@@ -602,7 +602,7 @@ export default function CoursePlayerPage() {
                                                 background: "#fff",
                                                 border: "1px solid #CBD5E1",
                                                 color: "#334155",
-                                                fontSize: "13px",
+                                                fontSize: "13.5px",
                                                 fontWeight: 600,
                                             }}
                                         >
@@ -616,7 +616,7 @@ export default function CoursePlayerPage() {
                                             style={{
                                                 background: isLastLesson ? "#1D4ED8" : "#2563EB",
                                                 color: "#fff",
-                                                fontSize: "13px",
+                                                fontSize: "13.5px",
                                                 fontWeight: 700,
                                             }}
                                         >
@@ -707,7 +707,7 @@ function TopBar({
             <button
                 onClick={() => navigate("/student/my-courses")}
                 className="flex items-center gap-1.5 shrink-0"
-                style={{ color: "rgba(255,255,255,0.55)", fontSize: "13px", fontWeight: 600 }}
+                style={{ color: "rgba(255,255,255,0.55)", fontSize: "13.5px", fontWeight: 600 }}
             >
                 <ChevronLeft size={16} />
                 <span className="hidden sm:block">My Courses</span>
@@ -734,7 +734,7 @@ function TopBar({
                 </div>
                 <span
                     style={{
-                        fontSize: "12px",
+                        fontSize: "12.5px",
                         fontWeight: 700,
                         color: "rgba(255,255,255,0.55)",
                         whiteSpace: "nowrap",
@@ -748,7 +748,7 @@ function TopBar({
                 <button
                     onClick={onGetCertificate}
                     className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 text-amber-950 hover:bg-amber-300 transition-colors"
-                    style={{ fontSize: "12px", fontWeight: 700 }}
+                    style={{ fontSize: "12.5px", fontWeight: 700 }}
                 >
                     <Award size={14} />
                     <span className="hidden sm:block">Get certificate</span>
@@ -762,7 +762,7 @@ function TopBar({
                 style={{
                     background: sidebarOpen ? "rgba(50,130,184,0.2)" : "rgba(255,255,255,0.06)",
                     color: sidebarOpen ? "#3282B8" : "rgba(255,255,255,0.55)",
-                    fontSize: "12px",
+                    fontSize: "12.5px",
                     fontWeight: 600,
                 }}
             >
@@ -800,8 +800,8 @@ function CourseSidebar({
         <aside className="fixed inset-y-0 right-0 z-40 w-[86vw] max-w-[360px] lg:static lg:z-auto lg:w-[320px] lg:max-w-none xl:w-[350px] shrink-0 flex flex-col overflow-hidden bg-white border-l border-[#E2E8F0] shadow-[-8px_0_24px_rgba(15,23,42,0.06)] lg:shadow-none">
             {/* Header + overall progress */}
             <div className="px-5 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
-                <p className="text-[15px] font-extrabold text-slate-900">Course Content</p>
-                <p className="mt-0.5 text-[12px] text-slate-500">
+                <p className="text-body font-extrabold text-slate-900">Course Content</p>
+                <p className="mt-0.5 text-small text-slate-500">
                     {sections.length} sections · {totalLessons} lessons · {totalDone} completed
                 </p>
                 <div className="mt-3 flex items-center gap-3">
@@ -811,7 +811,7 @@ function CourseSidebar({
                             style={{ width: `${pct}%` }}
                         />
                     </div>
-                    <span className="text-[12px] font-bold text-[#2563EB] tabular-nums">{pct}%</span>
+                    <span className="text-small font-bold text-[#2563EB] tabular-nums">{pct}%</span>
                 </div>
             </div>
 
@@ -838,7 +838,7 @@ function CourseSidebar({
                             >
                                 <span
                                     className={cn(
-                                        "w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-[12px] font-extrabold",
+                                        "w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-small font-extrabold",
                                         secDone
                                             ? "bg-[#2563EB] text-white"
                                             : hasActive || isExpanded
@@ -849,10 +849,10 @@ function CourseSidebar({
                                     {secDone ? <CheckCircle2 size={15} /> : String(sIdx + 1).padStart(2, "0")}
                                 </span>
                                 <div className="flex-1 min-w-0">
-                                    <p className="truncate text-[13px] font-bold leading-snug text-slate-900">
+                                    <p className="truncate text-ui font-bold leading-snug text-slate-900">
                                         {section.title}
                                     </p>
-                                    <p className="mt-0.5 text-[11.5px] text-slate-500">
+                                    <p className="mt-0.5 text-label text-slate-500">
                                         {secCompleted}/{section.lessons.length} completed
                                     </p>
                                 </div>
@@ -897,7 +897,7 @@ function CourseSidebar({
                                                     ) : isActive ? (
                                                         <PlayCircle size={18} className="text-white" />
                                                     ) : (
-                                                        <span className="w-[18px] h-[18px] rounded-full border-2 border-[#CBD5E1] group-hover:border-[#93C5FD] flex items-center justify-center text-[9px] font-bold text-slate-400">
+                                                        <span className="w-[18px] h-[18px] rounded-full border-2 border-[#CBD5E1] group-hover:border-[#93C5FD] flex items-center justify-center text-label font-bold text-slate-400">
                                                             {lIdx + 1}
                                                         </span>
                                                     )}
@@ -907,7 +907,7 @@ function CourseSidebar({
                                                 <span className="flex-1 min-w-0">
                                                     <span
                                                         className={cn(
-                                                            "block truncate text-[13px] leading-snug",
+                                                            "block truncate text-ui leading-snug",
                                                             isActive
                                                                 ? "font-bold text-white"
                                                                 : isCompleted
@@ -919,7 +919,7 @@ function CourseSidebar({
                                                     </span>
                                                     <span
                                                         className={cn(
-                                                            "mt-0.5 flex items-center gap-1.5 text-[11px]",
+                                                            "mt-0.5 flex items-center gap-1.5 text-label",
                                                             isActive ? "text-blue-100" : "text-slate-400"
                                                         )}
                                                     >
@@ -938,7 +938,7 @@ function CourseSidebar({
                                                         {lesson.is_free === 1 && (
                                                             <span
                                                                 className={cn(
-                                                                    "rounded px-1.5 py-px text-[9px] font-bold",
+                                                                    "rounded px-1.5 py-px text-label font-bold",
                                                                     isActive
                                                                         ? "bg-white/20 text-white"
                                                                         : "bg-[#DBEAFE] text-[#1D4ED8]"
@@ -963,12 +963,12 @@ function CourseSidebar({
             {courseExams.length > 0 && (
                 <div className="shrink-0 border-t border-[#E2E8F0] bg-white">
                     <div className="px-5 pt-4 pb-2">
-                        <p className="text-[13.5px] font-extrabold text-slate-900">Course Exams</p>
-                        <p className="mt-0.5 text-[11.5px] text-slate-500">
+                        <p className="text-ui font-extrabold text-slate-900">Course Exams</p>
+                        <p className="mt-0.5 text-label text-slate-500">
                             {examsPassed} of {courseExams.length} passed
                         </p>
                         {!canGetCertificate && (
-                            <p className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1.5 text-[11.5px] text-amber-900">
+                            <p className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1.5 text-label text-amber-900">
                                 {lessonsDone
                                     ? "Pass every exam to get your certificate."
                                     : "Complete all lessons and pass every exam to get your certificate."}
@@ -994,10 +994,10 @@ function CourseSidebar({
                                     )}
                                 </span>
                                 <span className="flex-1 min-w-0">
-                                    <span className="block truncate text-[13px] font-semibold text-slate-900">
+                                    <span className="block truncate text-ui font-semibold text-slate-900">
                                         {exam.title}
                                     </span>
-                                    <span className="mt-0.5 block text-[11px] text-slate-500">
+                                    <span className="mt-0.5 block text-label text-slate-500">
                                         {passedExamIds.has(exam.id) ? (
                                             <span className="font-semibold text-green-700">Passed · </span>
                                         ) : null}
@@ -1021,23 +1021,23 @@ function NotEnrolledState({ navigate }) {
         <div className="min-h-screen flex items-center justify-center bg-[#0a1628]">
             <div className="text-center px-6">
                 <Lock size={48} style={{ color: "rgba(255,255,255,0.2)" }} className="mx-auto mb-4" />
-                <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#fff", marginBottom: "8px" }}>
+                <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", marginBottom: "8px" }}>
                     You're not enrolled
                 </h2>
-                <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", marginBottom: "24px" }}>
+                <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.5)", marginBottom: "24px" }}>
                     Enroll in this course to access the lessons.
                 </p>
                 <div className="flex items-center gap-3 justify-center">
                     <button
                         onClick={() => navigate("/courses")}
-                        className="px-5 py-2.5 rounded-xl text-white font-bold text-sm"
+                        className="px-5 py-2.5 rounded-xl text-white font-bold text-ui"
                         style={{ background: "#3282B8" }}
                     >
                         View Course
                     </button>
                     <button
                         onClick={() => navigate("/student/my-courses")}
-                        className="px-5 py-2.5 rounded-xl font-bold text-sm"
+                        className="px-5 py-2.5 rounded-xl font-bold text-ui"
                         style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}
                     >
                         My Courses

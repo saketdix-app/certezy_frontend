@@ -212,15 +212,15 @@ export default function EnrollmentsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">Enrollments</h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">Enrollments</h1>
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Track who enrolled, where they are from and how far they have got.
                     </p>
                 </div>
                 <button
                     onClick={handleExport}
                     disabled={exporting}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
                 >
                     {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
                     Export CSV{hasFilters ? " (filtered)" : ""}
@@ -253,20 +253,20 @@ export default function EnrollmentsPage() {
                                     <Icon size={18} style={{ color }} />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider leading-tight">
+                                    <p className="text-label font-bold text-slate-500 uppercase tracking-wider leading-tight">
                                         {label}
                                     </p>
-                                    <p className="text-[24px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                    <p className="text-h2 font-extrabold text-slate-900 leading-none mt-0.5">
                                         {value ?? "—"}
                                     </p>
                                 </div>
                             </div>
                             {key && totals.total ? (
-                                <p className="text-[11.5px] text-slate-500 mt-2">
+                                <p className="text-label text-slate-500 mt-2">
                                     {pct(value, totals.total)}% of all
                                 </p>
                             ) : key === "" && stats ? (
-                                <p className="text-[11.5px] text-slate-500 mt-2">
+                                <p className="text-label text-slate-500 mt-2">
                                     {totals.students} students · {totals.this_month} this month
                                 </p>
                             ) : null}
@@ -379,7 +379,7 @@ export default function EnrollmentsPage() {
                     </div>
                 </div>
                 {hasFilters && (
-                    <div className="flex items-center justify-between mt-3 text-[12.5px]">
+                    <div className="flex items-center justify-between mt-3 text-small">
                         <span className="text-slate-500">
                             {totalCount} matching enrollment{totalCount === 1 ? "" : "s"}
                         </span>
@@ -406,8 +406,8 @@ export default function EnrollmentsPage() {
                 ) : enrollments.length === 0 ? (
                     <div className="text-center py-20">
                         <Users className="mx-auto text-slate-300 mb-4" size={48} />
-                        <p className="text-lg font-semibold text-slate-900">No enrollments found</p>
-                        <p className="text-sm text-slate-600 mt-1">Try changing your search or filters.</p>
+                        <p className="text-h3 font-semibold text-slate-900">No enrollments found</p>
+                        <p className="text-ui text-slate-600 mt-1">Try changing your search or filters.</p>
                     </div>
                 ) : (
                     <>
@@ -426,7 +426,7 @@ export default function EnrollmentsPage() {
                                         ].map((h) => (
                                             <th
                                                 key={h}
-                                                className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-600"
+                                                className="text-left px-5 py-3.5 text-label font-bold uppercase tracking-wider text-slate-600"
                                             >
                                                 {h}
                                             </th>
@@ -440,34 +440,34 @@ export default function EnrollmentsPage() {
                                             <tr key={e.id} className="hover:bg-slate-50 transition-colors">
                                                 <td className="px-5 py-3.5">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-sm font-semibold shrink-0">
+                                                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-ui font-semibold shrink-0">
                                                             {e.student_name?.charAt(0)?.toUpperCase()}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="text-sm font-semibold text-slate-900 truncate">
+                                                            <p className="text-ui font-semibold text-slate-900 truncate">
                                                                 {e.student_name}
                                                             </p>
-                                                            <p className="text-xs text-slate-500 truncate">
+                                                            <p className="text-small text-slate-500 truncate">
                                                                 {e.student_email}
                                                             </p>
                                                             {e.student_mobile && (
-                                                                <p className="text-xs text-slate-500">
+                                                                <p className="text-small text-slate-500">
                                                                     {e.student_mobile}
                                                                 </p>
                                                             )}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                                                <td className="px-5 py-3.5 text-ui text-slate-700 whitespace-nowrap">
                                                     {e.student_country
                                                         ? `${flag(e.student_country)} ${countryName(e.student_country)}`
                                                         : "—"}
                                                 </td>
                                                 <td className="px-5 py-3.5">
-                                                    <p className="text-sm font-semibold text-slate-900">
+                                                    <p className="text-ui font-semibold text-slate-900">
                                                         {e.course_title}
                                                     </p>
-                                                    <p className="text-xs text-slate-500 capitalize">
+                                                    <p className="text-small text-slate-500 capitalize">
                                                         {e.source === "purchase"
                                                             ? `Paid${e.payment_id ? ` · payment #${e.payment_id}` : ""}`
                                                             : e.source === "admin"
@@ -478,7 +478,7 @@ export default function EnrollmentsPage() {
                                                 <td className="px-5 py-3.5">
                                                     <div className="flex items-center gap-2 text-slate-600 whitespace-nowrap">
                                                         <Calendar size={14} />
-                                                        <span className="text-sm">
+                                                        <span className="text-ui">
                                                             {formatDate(e.enrolled_at)}
                                                         </span>
                                                     </div>
@@ -494,23 +494,23 @@ export default function EnrollmentsPage() {
                                                                 }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs font-semibold text-slate-600 w-9 text-right">
+                                                        <span className="text-small font-semibold text-slate-600 w-9 text-right">
                                                             {e.progress ?? 0}%
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td className="px-5 py-3.5 text-sm text-slate-600 whitespace-nowrap">
+                                                <td className="px-5 py-3.5 text-ui text-slate-600 whitespace-nowrap">
                                                     {formatDate(e.last_activity)}
                                                 </td>
                                                 <td className="px-5 py-3.5">
                                                     <span
-                                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap"
+                                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-semibold whitespace-nowrap"
                                                         style={{ background: st.bg, color: st.color }}
                                                     >
                                                         {st.label}
                                                     </span>
                                                     {e.is_inactive && (
-                                                        <span className="block mt-1 text-[11px] font-semibold text-amber-600">
+                                                        <span className="block mt-1 text-label font-semibold text-amber-600">
                                                             Idle 14+ days
                                                         </span>
                                                     )}
@@ -525,7 +525,7 @@ export default function EnrollmentsPage() {
                         {/* Pagination */}
                         {totalPages > 1 && (
                             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-                                <p className="text-sm text-slate-600">
+                                <p className="text-ui text-slate-600">
                                     Showing {(currentPage - 1) * PER_PAGE + 1}–
                                     {Math.min(currentPage * PER_PAGE, totalCount)} of {totalCount}
                                 </p>
@@ -538,7 +538,7 @@ export default function EnrollmentsPage() {
                                     >
                                         <ChevronLeft size={16} />
                                     </button>
-                                    <span className="px-3 py-1 text-sm text-slate-600">
+                                    <span className="px-3 py-1 text-ui text-slate-600">
                                         Page {currentPage} of {totalPages}
                                     </span>
                                     <button
@@ -560,7 +560,7 @@ export default function EnrollmentsPage() {
 }
 
 const inputCls =
-    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 // ─── Breakdown: stacked bar per row (completed / in progress / not started) ──
 
@@ -575,10 +575,10 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="flex items-center justify-between gap-3 mb-4">
-                <h2 className="flex items-center gap-2 text-[14px] font-bold text-slate-900">
+                <h2 className="flex items-center gap-2 text-ui font-bold text-slate-900">
                     <Icon size={16} className="text-action" /> {title}
                 </h2>
-                <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                <div className="flex items-center gap-3 text-label text-slate-500">
                     {Object.values(STATUS).map((s) => (
                         <span key={s.label} className="inline-flex items-center gap-1">
                             <span className="w-2.5 h-2.5 rounded-sm" style={{ background: s.bar }} />
@@ -589,7 +589,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
             </div>
 
             {rows.length === 0 ? (
-                <p className="text-[13px] text-slate-500 py-6 text-center">No data yet</p>
+                <p className="text-ui text-slate-500 py-6 text-center">No data yet</p>
             ) : (
                 <ul className="space-y-2">
                     {visible.map((r) => {
@@ -606,7 +606,7 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
                                         active ? "bg-action-soft" : "hover:bg-slate-50"
                                     )}
                                 >
-                                    <div className="flex items-center justify-between text-[12.5px] mb-1">
+                                    <div className="flex items-center justify-between text-small mb-1">
                                         <span className="font-semibold text-slate-700 truncate pr-2">
                                             {r.label}
                                         </span>
@@ -641,12 +641,12 @@ function Breakdown({ title, icon: Icon, rows, selected, onSelect, note }) {
             )}
 
             <div className="flex items-center justify-between mt-3">
-                {note ? <p className="text-[11px] text-slate-500">{note}</p> : <span />}
+                {note ? <p className="text-label text-slate-500">{note}</p> : <span />}
                 {rows.length > 8 && (
                     <button
                         type="button"
                         onClick={() => setShowAll((v) => !v)}
-                        className="text-[12px] font-semibold text-action hover:underline shrink-0"
+                        className="text-small font-semibold text-action hover:underline shrink-0"
                     >
                         {showAll ? "Show less" : `Show all ${rows.length}`}
                     </button>

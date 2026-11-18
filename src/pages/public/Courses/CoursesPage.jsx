@@ -157,7 +157,7 @@ export default function CoursesPage() {
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                                 <span
                                     style={{
-                                        fontSize: "12px",
+                                        fontSize: "12.5px",
                                         fontWeight: 600,
                                         color: "rgba(255,255,255,0.65)",
                                     }}
@@ -231,7 +231,7 @@ export default function CoursesPage() {
                                             outline: "none",
                                             background: "transparent",
                                             padding: "14px 0",
-                                            fontSize: "14px",
+                                            fontSize: "13.5px",
                                             fontWeight: 500,
                                             color: "#0F172A",
                                         }}
@@ -247,7 +247,7 @@ export default function CoursesPage() {
                                             color: "#fff",
                                             border: "none",
                                             borderRadius: "10px",
-                                            fontSize: "14px",
+                                            fontSize: "13.5px",
                                             fontWeight: 700,
                                             cursor: "pointer",
                                             transition: "background 0.15s",
@@ -266,7 +266,7 @@ export default function CoursesPage() {
                         <div className="flex items-center gap-2 mt-4 flex-wrap">
                             <span
                                 style={{
-                                    fontSize: "12px",
+                                    fontSize: "12.5px",
                                     fontWeight: 500,
                                     color: "rgba(255,255,255,0.62)",
                                     flexShrink: 0,
@@ -284,7 +284,7 @@ export default function CoursesPage() {
                                         border: "1px solid rgba(255,255,255,0.12)",
                                         background: "rgba(255,255,255,0.06)",
                                         color: "rgba(255,255,255,0.58)",
-                                        fontSize: "12px",
+                                        fontSize: "12.5px",
                                         fontWeight: 600,
                                         cursor: "pointer",
                                         transition: "all 0.15s",
@@ -315,7 +315,7 @@ export default function CoursesPage() {
                 {/* Active search pill */}
                 {filters.search && (
                     <div className="mb-4 flex items-center gap-2">
-                        <span style={{ fontSize: "13px", color: "#64748B" }}>Results for</span>
+                        <span style={{ fontSize: "13.5px", color: "#64748B" }}>Results for</span>
                         <span
                             className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1 rounded-full"
                             style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}
@@ -345,7 +345,7 @@ export default function CoursesPage() {
                     <button
                         onClick={() => setMobileFilterOpen(true)}
                         className={cn(
-                            "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13.5px] font-semibold transition-all",
+                            "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-ui font-semibold transition-all",
                             activeFilterCount > 0
                                 ? "bg-action text-white border-primary"
                                 : "bg-white border-border text-text-primary hover:border-primary hover:text-primary"
@@ -355,7 +355,7 @@ export default function CoursesPage() {
                         <SlidersHorizontal size={15} />
                         Filters
                         {activeFilterCount > 0 && (
-                            <span className="w-5 h-5 rounded-full bg-white/25 text-white text-[10px] font-bold flex items-center justify-center">
+                            <span className="w-5 h-5 rounded-full bg-white/25 text-white text-label font-bold flex items-center justify-center">
                                 {activeFilterCount}
                             </span>
                         )}
@@ -378,10 +378,10 @@ export default function CoursesPage() {
                                 className="bg-white rounded-xl p-6 sm:p-8 text-center"
                                 style={{ border: "1px solid #E8ECF4" }}
                             >
-                                <p className="text-[13.5px] text-red-500 mb-2">{error}</p>
+                                <p className="text-ui text-red-500 mb-2">{error}</p>
                                 <button
                                     onClick={() => dispatch(fetchCourses({}))}
-                                    className="text-[13px] font-semibold text-primary"
+                                    className="text-ui font-semibold text-primary"
                                 >
                                     Try again
                                 </button>
@@ -407,17 +407,17 @@ export default function CoursesPage() {
                                     className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#F8FAFC] flex items-center justify-center mx-auto mb-4"
                                     style={{ border: "1px solid #E8ECF4" }}
                                 >
-                                    <Search size={18} className="sm:text-[22px] text-text-muted" />
+                                    <Search size={18} className="sm:text-h2 text-text-muted" />
                                 </div>
-                                <p className="text-[14px] sm:text-[15px] font-bold text-text-primary mb-2">
+                                <p className="text-ui sm:text-body font-bold text-text-primary mb-2">
                                     No courses found
                                 </p>
-                                <p className="text-[12px] sm:text-[13px] text-text-muted mb-4">
+                                <p className="text-small sm:text-ui text-text-muted mb-4">
                                     Try different filters or another search term.
                                 </p>
                                 <button
                                     onClick={() => dispatch(setFilter({ key: "search", value: null }))}
-                                    className="text-[12px] sm:text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                                    className="text-small sm:text-ui font-semibold text-primary hover:text-primary-hover transition-colors"
                                 >
                                     Clear filters →
                                 </button>
@@ -460,7 +460,7 @@ export default function CoursesPage() {
                             <div className="w-10 h-1 rounded-full bg-[#CBD5E1]" />
                         </div>
                         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                            <p className="text-[15px] font-bold text-text-primary">Filters</p>
+                            <p className="text-body font-bold text-text-primary">Filters</p>
                             <button
                                 onClick={() => setMobileFilterOpen(false)}
                                 className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-page transition-colors"
@@ -477,7 +477,7 @@ export default function CoursesPage() {
                         <div className="px-5 py-4 border-t border-border">
                             <button
                                 onClick={() => setMobileFilterOpen(false)}
-                                className="w-full h-12 rounded-xl bg-action text-white text-[14px] font-bold hover:bg-action-hover transition-colors"
+                                className="w-full h-12 rounded-xl bg-action text-white text-ui font-bold hover:bg-action-hover transition-colors"
                                 style={{ boxShadow: "0 2px 8px rgba(37,99,235,0.3)" }}
                             >
                                 {activeFilterCount > 0
@@ -522,7 +522,7 @@ function Pagination({ pagination, onPageChange }) {
                     key={p}
                     onClick={() => onPageChange(p)}
                     className={cn(
-                        "w-9 h-9 rounded-lg text-[13px] font-semibold transition-all",
+                        "w-9 h-9 rounded-lg text-ui font-semibold transition-all",
                         p === page
                             ? "bg-action text-white shadow-sm"
                             : "bg-white border border-border text-text-secondary hover:border-primary hover:text-primary"

@@ -30,9 +30,9 @@ const money = (obj) =>
 function Kpi({ label, value, sub, tone }) {
     return (
         <div className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
-            <p className="text-[12px] font-semibold text-slate-500">{label}</p>
-            <p className={cn("mt-1 text-[22px] font-extrabold text-slate-900", tone)}>{value}</p>
-            {sub && <p className="text-[12px] text-slate-500">{sub}</p>}
+            <p className="text-small font-semibold text-slate-500">{label}</p>
+            <p className={cn("mt-1 text-h2 font-extrabold text-slate-900", tone)}>{value}</p>
+            {sub && <p className="text-small text-slate-500">{sub}</p>}
         </div>
     );
 }
@@ -40,7 +40,7 @@ function Kpi({ label, value, sub, tone }) {
 function Panel({ title, children, className }) {
     return (
         <section className={cn("rounded-xl border border-slate-200 bg-surface p-4", className)}>
-            <h2 className="mb-3 text-[15px] font-bold text-slate-900">{title}</h2>
+            <h2 className="mb-3 text-body font-bold text-slate-900">{title}</h2>
             {children}
         </section>
     );
@@ -48,7 +48,7 @@ function Panel({ title, children, className }) {
 
 /** Leads per period (bar) with converted leads (darker part). */
 function VolumeChart({ series }) {
-    if (!series.length) return <p className="py-8 text-center text-[13px] text-slate-500">No leads in this period.</p>;
+    if (!series.length) return <p className="py-8 text-center text-ui text-slate-500">No leads in this period.</p>;
     const max = Math.max(...series.map((s) => s.leads), 1);
     const label = (p) => (p.length === 7 ? p : p.slice(5));
     return (
@@ -59,17 +59,17 @@ function VolumeChart({ series }) {
                         <div className="flex w-full flex-col justify-end rounded-t bg-brand-100" style={{ height: `${(s.leads / max) * 100}%` }}>
                             <div className="w-full rounded-t bg-action" style={{ height: s.leads ? `${(s.converted / s.leads) * 100}%` : 0 }} />
                         </div>
-                        <span className="pointer-events-none absolute -top-7 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[11px] text-white group-hover:block">
+                        <span className="pointer-events-none absolute -top-7 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-label text-white group-hover:block">
                             {s.period}: {s.leads} leads, {s.converted} converted
                         </span>
                     </div>
                 ))}
             </div>
-            <div className="mt-1 flex justify-between text-[11px] text-slate-500">
+            <div className="mt-1 flex justify-between text-label text-slate-500">
                 <span>{label(series[0].period)}</span>
                 <span>{label(series[series.length - 1].period)}</span>
             </div>
-            <p className="mt-2 flex gap-4 text-[12px] text-slate-500">
+            <p className="mt-2 flex gap-4 text-small text-slate-500">
                 <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-brand-100" /> Leads</span>
                 <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-action" /> Converted (paid)</span>
             </p>
@@ -79,12 +79,12 @@ function VolumeChart({ series }) {
 
 /** Rows with a proportional bar, count and conversion rate. */
 function Breakdown({ rows, labelOf }) {
-    if (!rows.length) return <p className="text-[13px] text-slate-500">No leads in this period.</p>;
+    if (!rows.length) return <p className="text-ui text-slate-500">No leads in this period.</p>;
     const max = Math.max(...rows.map((r) => r.leads), 1);
     return (
         <ul className="space-y-2">
             {rows.map((r) => (
-                <li key={r.key ?? "none"} className="text-[13px]">
+                <li key={r.key ?? "none"} className="text-ui">
                     <div className="flex justify-between gap-3">
                         <span className="truncate text-slate-800">{labelOf(r.key)}</span>
                         <span className="shrink-0 text-slate-600">
@@ -144,14 +144,14 @@ export default function CrmReportsPage() {
         <div className="mx-auto max-w-[1300px] space-y-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">CRM reports</h1>
-                    <p className="mt-1 text-[13px] text-slate-500">
+                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">CRM reports</h1>
+                    <p className="mt-1 text-ui text-slate-500">
                         Converted = the lead ended in a confirmed payment. Days follow {data?.period.timezone ?? "the business timezone"}.
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     {PRESETS.map(([d, l]) => (
-                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 hover:border-action">
+                        <button key={d} type="button" onClick={() => preset(d)} className="rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold text-slate-600 hover:border-action">
                             {l}
                         </button>
                     ))}
@@ -166,7 +166,7 @@ export default function CrmReportsPage() {
                         type="button"
                         onClick={exportCsv}
                         disabled={exporting}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-[13px] font-semibold text-slate-700 disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui font-semibold text-slate-700 disabled:opacity-60"
                     >
                         {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} aria-hidden="true" />} Export leads (CSV)
                     </button>
@@ -212,16 +212,16 @@ export default function CrmReportsPage() {
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
                             {data.by_status.map((s) => (
                                 <div key={s.key} className="rounded-lg bg-slate-50 px-3 py-2">
-                                    <p className="text-[11.5px] font-semibold text-slate-500">{STAGE_LABEL[s.key]}</p>
-                                    <p className="text-[18px] font-extrabold text-slate-900">{s.leads}</p>
+                                    <p className="text-label font-semibold text-slate-500">{STAGE_LABEL[s.key]}</p>
+                                    <p className="text-h3 font-extrabold text-slate-900">{s.leads}</p>
                                 </div>
                             ))}
                         </div>
                     </Panel>
 
                     <Panel title="Consultants" className="overflow-x-auto">
-                        <table className="w-full min-w-[980px] text-left text-[13px]">
-                            <thead className="text-[11.5px] uppercase tracking-wide text-slate-500">
+                        <table className="w-full min-w-[980px] text-left text-ui">
+                            <thead className="text-label uppercase tracking-wide text-slate-500">
                                 <tr>
                                     <th className="py-2 pr-3">Consultant</th>
                                     <th className="py-2 pr-3 text-right">Leads</th>
@@ -262,7 +262,7 @@ export default function CrmReportsPage() {
                             {(() => {
                                 const max = Math.max(...data.ageing.buckets.map((b) => b.count), 1);
                                 return (
-                                    <ul className="space-y-2 text-[13px]">
+                                    <ul className="space-y-2 text-ui">
                                         {data.ageing.buckets.map((b, i) => (
                                             <li key={b.label} className="grid grid-cols-[96px_1fr_40px] items-center gap-3">
                                                 <span className="text-slate-600">{b.label}</span>
@@ -275,12 +275,12 @@ export default function CrmReportsPage() {
                                     </ul>
                                 );
                             })()}
-                            <p className="mt-3 text-[12px] text-slate-500">
+                            <p className="mt-3 text-small text-slate-500">
                                 First contact: {data.first_contact.within_1h_pct}% within 1 hour, {data.first_contact.within_24h_pct}% within 24 hours ({data.first_contact.contacted} contacted).
                             </p>
                         </Panel>
                         <Panel title="Students and operations">
-                            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-ui">
                                 <dt className="text-slate-500">Enrollments</dt>
                                 <dd className="text-right font-semibold">{data.lms.enrollments}</dd>
                                 <dt className="text-slate-500">Free course assignments</dt>

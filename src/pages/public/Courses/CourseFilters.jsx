@@ -39,9 +39,9 @@ export default function CourseFilters({ categories = [] }) {
                         <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
                             <SlidersHorizontal size={13} className="text-primary" />
                         </div>
-                        <span className="text-[14px] font-bold text-text-primary">Filters</span>
+                        <span className="text-ui font-bold text-text-primary">Filters</span>
                         {activeCount > 0 && (
-                            <span className="h-5 min-w-[20px] px-1.5 rounded-full bg-action text-white text-[10px] font-bold flex items-center justify-center">
+                            <span className="h-5 min-w-[20px] px-1.5 rounded-full bg-action text-white text-label font-bold flex items-center justify-center">
                                 {activeCount}
                             </span>
                         )}
@@ -49,7 +49,7 @@ export default function CourseFilters({ categories = [] }) {
                     {activeCount > 0 && (
                         <button
                             onClick={() => dispatch(clearFilters())}
-                            className="text-[12px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                            className="text-small font-semibold text-primary hover:text-primary-hover transition-colors"
                         >
                             Clear all
                         </button>
@@ -107,7 +107,7 @@ function FilterSection({ title, children, isLast = false }) {
                 onClick={() => setOpen(!open)}
                 className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[#FAFBFF] transition-colors"
             >
-                <span className="text-[11px] font-bold text-text-secondary uppercase tracking-widest">
+                <span className="text-label font-bold text-text-secondary uppercase tracking-widest">
                     {title}
                 </span>
                 {open ? (
@@ -135,7 +135,7 @@ function ParentCategory({ parent, activeId, onSelect }) {
                     isChildActive ? "bg-primary-light text-primary" : "text-text-primary hover:bg-page"
                 )}
             >
-                <span className="text-[13px] font-semibold truncate">{parent.name}</span>
+                <span className="text-ui font-semibold truncate">{parent.name}</span>
                 {hasChildren &&
                     (expanded ? (
                         <ChevronUp size={12} className="text-text-muted shrink-0 ml-1" />
@@ -165,7 +165,7 @@ function ParentCategory({ parent, activeId, onSelect }) {
                                         active ? "bg-action" : "bg-[#CBD5E1]"
                                     )}
                                 />
-                                <span className="text-[12.5px] font-medium truncate">{child.name}</span>
+                                <span className="text-small font-medium truncate">{child.name}</span>
                             </button>
                         );
                     })}
@@ -206,7 +206,7 @@ function OptionGroup({ options, active, onSelect }) {
                             <div className={cn("w-2 h-2 rounded-full shrink-0", opt.dot)} />
                             <span
                                 className={cn(
-                                    "text-[13px] font-semibold transition-colors",
+                                    "text-ui font-semibold transition-colors",
                                     isActive ? "text-primary" : "text-text-primary"
                                 )}
                             >

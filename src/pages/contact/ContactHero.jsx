@@ -71,17 +71,17 @@ export default function ContactHero() {
                 {/* ── Hero Text ── */}
                 <div className="text-center mb-14 animate-[fadeUp_0.6s_ease_both]">
                     <span
-                        className="inline-block text-xs font-bold uppercase tracking-[0.14em] mb-4"
+                        className="inline-block text-small font-bold uppercase tracking-[0.14em] mb-4"
                         style={{ color: "#4E9CD3" }}
                     >
                         Contact Us
                     </span>
 
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-100 leading-tight mb-4">
+                    <h1 className="text-h1 md:text-display lg:text-6xl font-extrabold text-slate-100 leading-tight mb-4">
                         Get in <span style={{ color: "#4E9CD3" }}>Touch</span>
                     </h1>
 
-                    <p className="text-base text-slate-400 max-w-lg mx-auto leading-relaxed">
+                    <p className="text-body text-slate-400 max-w-lg mx-auto leading-relaxed">
                         We're here to help with your learning journey. Reach out for technical support,
                         partnerships or any other question.
                     </p>
@@ -124,8 +124,8 @@ export default function ContactHero() {
 
                             {/* Body */}
                             <div className="flex flex-col max-md:flex-1">
-                                <p className="text-sm font-bold text-white mb-1">{card.title}</p>
-                                <p className="text-xs text-slate-400 mb-2.5 leading-relaxed">{card.sub}</p>
+                                <p className="text-ui font-bold text-white mb-1">{card.title}</p>
+                                <p className="text-small text-slate-400 mb-2.5 leading-relaxed">{card.sub}</p>
                                 <div className="flex flex-col gap-1">
                                     {card.values.map((v) =>
                                         v.href ? (
@@ -133,7 +133,7 @@ export default function ContactHero() {
                                                 key={v.text}
                                                 href={v.href}
                                                 {...(v.external && { target: "_blank", rel: "noreferrer" })}
-                                                className="text-sm font-semibold text-white transition-colors duration-200 hover:opacity-70"
+                                                className="text-ui font-semibold text-white transition-colors duration-200 hover:opacity-70"
                                             >
                                                 {v.prefix && (
                                                     <span className="text-slate-400 font-medium">
@@ -143,7 +143,7 @@ export default function ContactHero() {
                                                 {v.text}
                                             </a>
                                         ) : (
-                                            <span key={v.text} className="text-sm font-semibold text-white">
+                                            <span key={v.text} className="text-ui font-semibold text-white">
                                                 {v.text}
                                             </span>
                                         )

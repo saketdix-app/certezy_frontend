@@ -90,13 +90,13 @@ export default function CourseThumbnail({
                     <span
                         className={cn(
                             "relative font-extrabold text-white/90 tracking-tight",
-                            compact ? "text-[13px]" : "text-[30px]"
+                            compact ? "text-ui" : "text-h1"
                         )}
                     >
                         {getInitials(title) || "C"}
                     </span>
                     {!compact && category && (
-                        <span className="relative mt-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white/60 line-clamp-1">
+                        <span className="relative mt-1.5 text-label font-bold uppercase tracking-[0.1em] text-white/60 line-clamp-1">
                             {category}
                         </span>
                     )}

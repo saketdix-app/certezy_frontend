@@ -29,17 +29,17 @@ const loadFreeLessons = (courseId) => {
 };
 
 function TextPreview({ content }) {
-    if (!content) return <p className="p-8 text-center text-slate-500 text-[14px]">No content available.</p>;
+    if (!content) return <p className="p-8 text-center text-slate-500 text-ui">No content available.</p>;
     const isHtml = /^\s*<[a-z!]/i.test(content);
     return (
         <div className="max-h-[70vh] overflow-y-auto bg-white p-5 sm:p-8">
             {isHtml ? (
                 <div
-                    className="lesson-html max-w-none text-[15px] leading-relaxed text-gray-800"
+                    className="lesson-html max-w-none text-body leading-relaxed text-gray-800"
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
                 />
             ) : (
-                <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-gray-800">{content}</p>
+                <p className="whitespace-pre-wrap text-body leading-relaxed text-gray-800">{content}</p>
             )}
         </div>
     );
@@ -131,10 +131,10 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                 className="w-full max-w-4xl overflow-hidden rounded-2xl bg-[#0F172A] shadow-2xl"
             >
                 <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-white/10">
-                    <span className="flex items-center gap-1 shrink-0 rounded-full bg-blue-500/15 px-2 py-0.5 text-[11px] font-semibold text-blue-300">
+                    <span className="flex items-center gap-1 shrink-0 rounded-full bg-blue-500/15 px-2 py-0.5 text-label font-semibold text-blue-300">
                         <Eye size={11} /> Free preview
                     </span>
-                    <h3 className="flex-1 min-w-0 truncate text-[14px] font-semibold text-white">
+                    <h3 className="flex-1 min-w-0 truncate text-ui font-semibold text-white">
                         {lesson.title}
                     </h3>
                     <button
@@ -148,17 +148,17 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                 </div>
 
                 {loading ? (
-                    <div className="flex items-center justify-center gap-2 py-24 text-white/60 text-[14px]">
+                    <div className="flex items-center justify-center gap-2 py-24 text-white/60 text-ui">
                         <Loader2 size={18} className="animate-spin" /> Loading preview…
                     </div>
                 ) : state.error ? (
-                    <p className="py-20 px-6 text-center text-white/60 text-[14px]">{state.error}</p>
+                    <p className="py-20 px-6 text-center text-white/60 text-ui">{state.error}</p>
                 ) : (
                     <LessonBody lesson={state.full} />
                 )}
 
                 <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-5 py-3 border-t border-white/10">
-                    <p className="text-[12.5px] text-white/50">Enjoying it? Enroll to unlock every lesson.</p>
+                    <p className="text-small text-white/50">Enjoying it? Enroll to unlock every lesson.</p>
                     <button
                         type="button"
                         onClick={() => {
@@ -167,7 +167,7 @@ export default function LessonPreviewModal({ lesson, courseId, onClose }) {
                                 .getElementById("course-enroll")
                                 ?.scrollIntoView({ behavior: "smooth", block: "center" });
                         }}
-                        className="rounded-lg bg-action px-3.5 py-1.5 text-[12.5px] font-bold text-white hover:opacity-90"
+                        className="rounded-lg bg-action px-3.5 py-1.5 text-small font-bold text-white hover:opacity-90"
                     >
                         View enrollment options
                     </button>

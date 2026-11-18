@@ -68,7 +68,7 @@ export default function CourseCard({ course }) {
                 {badge && (
                     <span
                         className={cn(
-                            "absolute top-3 left-3 text-[10.5px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full",
+                            "absolute top-3 left-3 text-label font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full",
                             badge.style
                         )}
                     >
@@ -76,12 +76,12 @@ export default function CourseCard({ course }) {
                     </span>
                 )}
                 {certificate_eligible === 1 && (
-                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-[10px] font-semibold text-white px-2 py-0.5 rounded-full bg-[rgba(35,106,158,0.92)] backdrop-blur-sm">
+                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-label font-semibold text-white px-2 py-0.5 rounded-full bg-[rgba(35,106,158,0.92)] backdrop-blur-sm">
                         <Award size={10} /> Certificate
                     </span>
                 )}
                 {category_name && (
-                    <span className="absolute bottom-3 left-3 max-w-[85%] truncate text-[10.5px] font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-sm">
+                    <span className="absolute bottom-3 left-3 max-w-[85%] truncate text-label font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-sm">
                         {category_name}
                     </span>
                 )}
@@ -89,11 +89,11 @@ export default function CourseCard({ course }) {
 
             {/* ── Content ──────────────────────────────────────── */}
             <div className="p-4 flex flex-col flex-1">
-                <h3 className="line-clamp-2 text-[14px] font-bold text-slate-900 leading-snug mb-1.5 group-hover:text-primary transition-colors">
+                <h3 className="line-clamp-2 text-ui font-bold text-slate-900 leading-snug mb-1.5 group-hover:text-primary transition-colors">
                     {title}
                 </h3>
 
-                <p className="text-[11.5px] text-slate-500 truncate mb-2.5">{COURSE_INSTRUCTOR.name}</p>
+                <p className="text-label text-slate-500 truncate mb-2.5">{COURSE_INSTRUCTOR.name}</p>
 
                 <div className="flex items-center gap-2 flex-wrap mb-3">
                     <StarRating
@@ -103,7 +103,7 @@ export default function CourseCard({ course }) {
                         showValue
                     />
                     {highlight && (
-                        <span className="text-[11.5px] text-slate-500">
+                        <span className="text-label text-slate-500">
                             Taken by {highlight.learners} learners
                         </span>
                     )}
@@ -115,7 +115,7 @@ export default function CourseCard({ course }) {
                     <div className="mb-3">
                         <span
                             className={cn(
-                                "inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border capitalize",
+                                "inline-flex items-center gap-1.5 text-label font-semibold px-2.5 py-1 rounded-full border capitalize",
                                 LEVEL_STYLES[level]
                             )}
                         >
@@ -128,7 +128,7 @@ export default function CourseCard({ course }) {
                 <div className="h-px bg-slate-100 mb-3" />
 
                 <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-3 text-slate-500 text-[12px] min-w-0">
+                    <div className="flex items-center gap-3 text-slate-500 text-small min-w-0">
                         {duration && (
                             <span className="inline-flex items-center gap-1">
                                 <Clock size={12} /> {duration}

@@ -39,7 +39,7 @@ function CourseSelect({ lead, disabled, onChange }) {
             disabled={disabled || !courses}
             onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}
             aria-label="Course"
-            className={cn(inputCls, "py-1 text-[13px]")}
+            className={cn(inputCls, "py-1 text-ui")}
         >
             <option value="">No course</option>
             {/* keep the current one listed even if it's unpublished / not in the first page */}
@@ -181,8 +181,8 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                         {/* Header */}
                         <div className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
                             <div className="min-w-0">
-                                <h2 className="truncate text-[18px] font-extrabold text-slate-900">{lead.name}</h2>
-                                <div className="mt-1 flex flex-wrap items-center gap-2 text-[12.5px] text-slate-500">
+                                <h2 className="truncate text-h3 font-extrabold text-slate-900">{lead.name}</h2>
+                                <div className="mt-1 flex flex-wrap items-center gap-2 text-small text-slate-500">
                                     <StageBadge stage={lead.stage} />
                                     <span>Lead #{lead.id}</span>
                                     <span>· {SOURCE_LABEL[lead.source] ?? lead.source}</span>
@@ -199,10 +199,10 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                 <div className="flex flex-wrap gap-2">
                                     {lead.phone && (
                                         <>
-                                            <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-[13px] font-bold text-white">
+                                            <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-ui font-bold text-white">
                                                 <Phone size={14} aria-hidden="true" /> Call
                                             </a>
-                                            <a href={waLink(lead.phone)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[13px] font-bold text-emerald-700">
+                                            <a href={waLink(lead.phone)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-ui font-bold text-emerald-700">
                                                 <MessageCircle size={14} aria-hidden="true" /> WhatsApp
                                             </a>
                                         </>
@@ -211,18 +211,18 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         <button
                                             type="button"
                                             onClick={() => onMove(lead.id)}
-                                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-bold text-slate-700"
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-ui font-bold text-slate-700"
                                         >
                                             <Shuffle size={14} aria-hidden="true" /> {lead.owner_id ? "Transfer" : "Assign"}
                                         </button>
                                     )}
                                     {lead.email && (
-                                        <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-bold text-slate-700">
+                                        <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-ui font-bold text-slate-700">
                                             <Mail size={14} aria-hidden="true" /> Email
                                         </a>
                                     )}
                                 </div>
-                                <dl className="mt-3 grid grid-cols-[110px_1fr] gap-x-3 gap-y-1.5 text-[13.5px]">
+                                <dl className="mt-3 grid grid-cols-[110px_1fr] gap-x-3 gap-y-1.5 text-ui">
                                     <dt className="text-slate-500">Phone</dt>
                                     <dd className="text-slate-900">{lead.phone || "—"}</dd>
                                     <dt className="text-slate-500">Email</dt>
@@ -273,7 +273,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
 
                             {/* Status */}
                             <section>
-                                <h3 className="mb-2 text-[13px] font-bold uppercase tracking-wide text-slate-500">Update status</h3>
+                                <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Update status</h3>
                                 {lead.allowed_next_stages?.length ? (
                                     <div className="flex flex-wrap gap-1.5">
                                         {lead.allowed_next_stages.map((s) => (
@@ -285,7 +285,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                     setReason("");
                                                 }}
                                                 className={cn(
-                                                    "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
+                                                    "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-small font-semibold",
                                                     stageTarget === s ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                                 )}
                                             >
@@ -294,7 +294,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-[13px] text-slate-500">
+                                    <p className="text-ui text-slate-500">
                                         {CLOSED_STAGES.includes(lead.stage)
                                             ? "Closed. Only an Admin can reopen it."
                                             : "No further status changes."}
@@ -312,15 +312,15 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             />
                                         )}
                                         {stageTarget === "course_done" && (
-                                            <p className="mb-2 text-[12px] text-slate-500">
+                                            <p className="mb-2 text-small text-slate-500">
                                                 Marks this lead as done. It doesn't check the student's course progress.
                                             </p>
                                         )}
                                         <div className="flex justify-end gap-2">
-                                            <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
+                                            <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
                                                 Cancel
                                             </button>
-                                            <button type="button" disabled={busy} onClick={moveStage} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={moveStage} className="rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-60">
                                                 Move to {STAGE_LABEL[stageTarget]}
                                             </button>
                                         </div>
@@ -330,7 +330,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
 
                             {/* Log activity + follow-up */}
                             <section>
-                                <h3 className="mb-2 text-[13px] font-bold uppercase tracking-wide text-slate-500">Log & schedule</h3>
+                                <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Log & schedule</h3>
                                 <div className="flex flex-wrap gap-1.5">
                                     {QUICK_LOG.map(([type, label, Icon]) => (
                                         <button
@@ -338,7 +338,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             type="button"
                                             onClick={() => setLogType(logType === type ? null : type)}
                                             className={cn(
-                                                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
+                                                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-small font-semibold",
                                                 logType === type ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                             )}
                                         >
@@ -350,7 +350,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             type="button"
                                             onClick={() => setShowFollowUp((v) => !v)}
                                             className={cn(
-                                                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold",
+                                                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-small font-semibold",
                                                 showFollowUp ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                                             )}
                                         >
@@ -369,7 +369,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             autoFocus
                                         />
                                         <div className="mt-2 flex justify-end">
-                                            <button type="button" disabled={busy} onClick={saveLog} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={saveLog} className="rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-60">
                                                 Save
                                             </button>
                                         </div>
@@ -395,7 +395,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         </div>
                                         <input value={fu.note} onChange={(e) => setFu((f) => ({ ...f, note: e.target.value }))} placeholder="Note (optional)" className={inputCls} />
                                         <div className="flex justify-end">
-                                            <button type="button" disabled={busy} onClick={saveFollowUp} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                                            <button type="button" disabled={busy} onClick={saveFollowUp} className="rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-60">
                                                 Schedule
                                             </button>
                                         </div>
@@ -413,15 +413,15 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                             {/* Follow-ups */}
                             {lead.follow_ups?.length > 0 && (
                                 <section>
-                                    <h3 className="mb-2 text-[13px] font-bold uppercase tracking-wide text-slate-500">Follow-ups</h3>
+                                    <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Follow-ups</h3>
                                     <ul className="space-y-1.5">
                                         {lead.follow_ups.map((f) => (
-                                            <li key={f.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px]">
+                                            <li key={f.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-ui">
                                                 <span>
                                                     <b className="capitalize">{f.type}</b> · {fmtDateTime(f.due_at)}
                                                     {f.status === "pending" && isOverdue(f.due_at) && <span className="ml-1.5 font-semibold text-red-600">Overdue</span>}
                                                     {f.status !== "pending" && <span className="ml-1.5 capitalize text-slate-500">· {f.status}</span>}
-                                                    {f.note && <span className="block text-[12px] text-slate-500">{f.note}</span>}
+                                                    {f.note && <span className="block text-small text-slate-500">{f.note}</span>}
                                                 </span>
                                                 {f.status === "pending" && (
                                                     <span className="flex gap-1">
@@ -429,7 +429,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                             type="button"
                                                             disabled={busy}
                                                             onClick={() => run(() => crmService.completeFollowUp(f.id, "done"), "Marked done")}
-                                                            className="inline-flex items-center gap-1 rounded-md border border-emerald-200 px-2 py-1 text-[12px] font-semibold text-emerald-700"
+                                                            className="inline-flex items-center gap-1 rounded-md border border-emerald-200 px-2 py-1 text-small font-semibold text-emerald-700"
                                                         >
                                                             <CheckCircle2 size={12} aria-hidden="true" /> Done
                                                         </button>
@@ -437,7 +437,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                             type="button"
                                                             disabled={busy}
                                                             onClick={() => run(() => crmService.completeFollowUp(f.id, "missed"), "Marked missed")}
-                                                            className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-[12px] font-semibold text-slate-600"
+                                                            className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-small font-semibold text-slate-600"
                                                         >
                                                             <XCircle size={12} aria-hidden="true" /> Missed
                                                         </button>
@@ -451,14 +451,14 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
 
                             {/* Timeline */}
                             <section>
-                                <h3 className="mb-2 text-[13px] font-bold uppercase tracking-wide text-slate-500">Activity</h3>
+                                <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Activity</h3>
                                 <ol className="relative space-y-3 border-l border-slate-200 pl-4">
                                     {lead.activities.map((a) => (
-                                        <li key={a.id} className="text-[13px]">
+                                        <li key={a.id} className="text-ui">
                                             <span className="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-slate-300" aria-hidden="true" />
                                             <p className="font-semibold text-slate-800">{(ACTIVITY_TEXT[a.type] ?? (() => a.type))(a.meta)}</p>
                                             {a.body && <p className="whitespace-pre-wrap text-slate-600">{a.body}</p>}
-                                            <p className="text-[11.5px] text-slate-500">
+                                            <p className="text-label text-slate-500">
                                                 {a.actor_name ?? "System"} · {fmtDateTime(a.created_at)}
                                             </p>
                                         </li>

@@ -23,10 +23,10 @@ const fmtDay = (d) =>
 function Row({ label, value }) {
     return (
         <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-4 py-3 border-b border-slate-100 last:border-0">
-            <dt className="sm:w-40 shrink-0 text-[12px] font-bold uppercase tracking-wider text-slate-400">
+            <dt className="sm:w-40 shrink-0 text-small font-bold uppercase tracking-wider text-slate-400">
                 {label}
             </dt>
-            <dd className="text-[15px] font-semibold text-slate-900 break-words">{value}</dd>
+            <dd className="text-body font-semibold text-slate-900 break-words">{value}</dd>
         </div>
     );
 }
@@ -81,10 +81,10 @@ export default function VerifyCertificatePage() {
                     <div className="inline-flex w-12 h-12 rounded-full bg-action/10 text-primary items-center justify-center mb-3">
                         <Award size={22} />
                     </div>
-                    <h1 className="text-[26px] sm:text-[30px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 sm:text-h1 font-extrabold text-slate-900 tracking-tight">
                         Verify a certificate
                     </h1>
-                    <p className="text-[14px] text-slate-500 mt-1">
+                    <p className="text-ui text-slate-500 mt-1">
                         Check that a certificate was issued by CERTEZY E-Learning Pvt. Ltd.
                     </p>
                 </div>
@@ -94,12 +94,12 @@ export default function VerifyCertificatePage() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Certificate number, e.g. CERT-2026-8F3A1C9B2E"
-                        className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-slate-200 bg-white text-[14px] font-mono uppercase outline-none focus:border-primary"
+                        className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-slate-200 bg-white text-ui font-mono uppercase outline-none focus:border-primary"
                         aria-label="Certificate number"
                     />
                     <button
                         type="submit"
-                        className="flex items-center gap-2 px-4 sm:px-5 rounded-xl bg-action text-white text-[14px] font-bold hover:opacity-90"
+                        className="flex items-center gap-2 px-4 sm:px-5 rounded-xl bg-action text-white text-ui font-bold hover:opacity-90"
                     >
                         <Search size={16} />
                         <span className="hidden sm:inline">Verify</span>
@@ -107,7 +107,7 @@ export default function VerifyCertificatePage() {
                 </form>
 
                 {loading && (
-                    <div className="flex items-center justify-center gap-2 py-12 text-slate-500 text-[14px]">
+                    <div className="flex items-center justify-center gap-2 py-12 text-slate-500 text-ui">
                         <Loader2 size={18} className="animate-spin" /> Checking…
                     </div>
                 )}
@@ -116,8 +116,8 @@ export default function VerifyCertificatePage() {
                     <div className="rounded-2xl bg-white border border-rose-200 p-6 flex gap-4">
                         <ShieldAlert className="text-rose-500 shrink-0" size={28} />
                         <div>
-                            <p className="text-[16px] font-bold text-slate-900">Not verified</p>
-                            <p className="text-[14px] text-slate-500 mt-1">{error}</p>
+                            <p className="text-body font-bold text-slate-900">Not verified</p>
+                            <p className="text-ui text-slate-500 mt-1">{error}</p>
                         </div>
                     </div>
                 )}
@@ -127,8 +127,8 @@ export default function VerifyCertificatePage() {
                         <div className="flex items-center gap-3 px-6 py-4 bg-emerald-50 border-b border-emerald-100">
                             <ShieldCheck className="text-emerald-600 shrink-0" size={26} />
                             <div>
-                                <p className="text-[16px] font-bold text-emerald-800">Valid certificate</p>
-                                <p className="text-[12.5px] text-emerald-700">Issued by {cert.issuer}</p>
+                                <p className="text-body font-bold text-emerald-800">Valid certificate</p>
+                                <p className="text-small text-emerald-700">Issued by {cert.issuer}</p>
                             </div>
                         </div>
                         <dl className="px-6 py-2">
@@ -181,7 +181,7 @@ export default function VerifyCertificatePage() {
                                     href={cert.pdf_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-[13px] font-bold no-underline hover:opacity-90"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-ui font-bold no-underline hover:opacity-90"
                                 >
                                     <Download size={15} /> View certificate PDF
                                 </a>

@@ -15,7 +15,7 @@ export default function ImpactNumbers() {
         >
             <div className="max-w-[1200px] mx-auto px-6">
                 {/* Heading */}
-                <h2 className="text-center text-white font-black text-4xl lg:text-5xl tracking-tight mb-16">
+                <h2 className="text-center text-white font-black text-h1 lg:text-display tracking-tight mb-16">
                     CERTEZY at a Glance
                 </h2>
 
@@ -29,7 +29,7 @@ export default function ImpactNumbers() {
                             >
                                 {value}
                             </span>
-                            <span className="text-[#94A3B8] text-xs font-bold tracking-[0.14em]">
+                            <span className="text-[#94A3B8] text-small font-bold tracking-[0.14em]">
                                 {label}
                             </span>
                         </div>

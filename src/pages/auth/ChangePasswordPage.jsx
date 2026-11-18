@@ -69,8 +69,8 @@ export default function ChangePasswordPage() {
                 <div className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center mb-4">
                     <Lock size={20} className="text-primary" />
                 </div>
-                <h1 className="text-[22px] font-extrabold text-slate-900 mb-1">Change your password</h1>
-                <p className="text-[13.5px] text-text-secondary mb-6">
+                <h1 className="text-h2 font-extrabold text-slate-900 mb-1">Change your password</h1>
+                <p className="text-ui text-text-secondary mb-6">
                     {isFirstLogin
                         ? "For security, please set a new password before continuing."
                         : "Choose a strong password you don't use elsewhere."}
@@ -78,7 +78,7 @@ export default function ChangePasswordPage() {
 
                 {FIELDS.map(({ name, label }) => (
                     <label key={name} className="block mb-4">
-                        <span className="block text-[13px] font-semibold text-slate-700 mb-1.5">{label}</span>
+                        <span className="block text-ui font-semibold text-slate-700 mb-1.5">{label}</span>
                         <input
                             type="password"
                             name={name}
@@ -86,7 +86,7 @@ export default function ChangePasswordPage() {
                             onChange={handleChange}
                             required
                             autoComplete={name === "currentPassword" ? "current-password" : "new-password"}
-                            className="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-[14px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                            className="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-ui outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                         />
                     </label>
                 ))}
@@ -94,7 +94,7 @@ export default function ChangePasswordPage() {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full h-11 mt-2 rounded-xl bg-action hover:bg-action-hover text-white font-bold text-[14px] transition-colors disabled:opacity-60"
+                    className="w-full h-11 mt-2 rounded-xl bg-action hover:bg-action-hover text-white font-bold text-ui transition-colors disabled:opacity-60"
                 >
                     {submitting ? "Updating…" : "Update password"}
                 </button>

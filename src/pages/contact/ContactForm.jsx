@@ -18,7 +18,7 @@ const SUBJECTS = [
 
 function FieldError({ message }) {
     if (!message) return null;
-    return <p className="text-xs text-red-400 mt-0.5">{message}</p>;
+    return <p className="text-small text-red-400 mt-0.5">{message}</p>;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,7 +85,7 @@ export default function ContactForm() {
 
     // Shared input/textarea/select base classes
     const inputCls = [
-        "w-full rounded-xl px-4 py-3 text-sm text-slate-200",
+        "w-full rounded-xl px-4 py-3 text-ui text-slate-200",
         "bg-white/5 border border-white/10",
         "placeholder:text-slate-400",
         "focus:outline-none focus:border-[#3282B8] focus:bg-[#3282B8]/5",
@@ -109,25 +109,25 @@ export default function ContactForm() {
                     {submittedName !== null ? (
                         <div className="flex flex-col items-center text-center py-10" role="status">
                             <CheckCircle2 size={52} className="text-green-400 mb-5" />
-                            <h2 className="text-xl font-bold text-slate-100 mb-2">
+                            <h2 className="text-h2 font-bold text-slate-100 mb-2">
                                 {submittedName ? `Thank you, ${submittedName}!` : CONFIRMATION_TITLE}
                             </h2>
-                            <p className="text-sm text-slate-400 max-w-sm mb-8">{CONFIRMATION_TEXT}</p>
+                            <p className="text-ui text-slate-400 max-w-sm mb-8">{CONFIRMATION_TEXT}</p>
                             <button
                                 type="button"
                                 onClick={() => setSubmittedName(null)}
-                                className="text-sm font-semibold text-[#7FBAE3] hover:brightness-125"
+                                className="text-ui font-semibold text-[#7FBAE3] hover:brightness-125"
                             >
                                 Send another message
                             </button>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} noValidate>
-                            <h2 className="text-xl font-bold text-slate-100 mb-7">Contact Us</h2>
+                            <h2 className="text-h2 font-bold text-slate-100 mb-7">Contact Us</h2>
 
                             {/* Autofill badge */}
                             {isLoggedIn && (
-                                <div className="inline-flex items-center gap-1.5 text-xs text-green-400 bg-green-400/10 border border-green-400/20 rounded-full px-3 py-1 mb-6">
+                                <div className="inline-flex items-center gap-1.5 text-small text-green-400 bg-green-400/10 border border-green-400/20 rounded-full px-3 py-1 mb-6">
                                     <svg
                                         width="12"
                                         height="12"
@@ -145,7 +145,7 @@ export default function ContactForm() {
                             {/* Name + Email */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white">
+                                    <label className="text-small font-bold uppercase tracking-widest text-white">
                                         Full Name
                                     </label>
                                     <input
@@ -161,7 +161,7 @@ export default function ContactForm() {
                                     <FieldError message={errors.name} />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white">
+                                    <label className="text-small font-bold uppercase tracking-widest text-white">
                                         Email Address
                                     </label>
                                     <input
@@ -181,7 +181,7 @@ export default function ContactForm() {
 
                             {/* Phone */}
                             <div className="flex flex-col gap-1.5 mb-4">
-                                <label className="text-xs font-bold uppercase tracking-widest text-white">
+                                <label className="text-small font-bold uppercase tracking-widest text-white">
                                     Phone{" "}
                                     <span className="text-slate-400 normal-case font-normal tracking-normal">
                                         (Optional)
@@ -199,7 +199,7 @@ export default function ContactForm() {
 
                             {/* Subject */}
                             <div className="flex flex-col gap-1.5 mb-4">
-                                <label className="text-xs font-bold uppercase tracking-widest text-white">
+                                <label className="text-small font-bold uppercase tracking-widest text-white">
                                     Subject
                                 </label>
                                 <select
@@ -229,7 +229,7 @@ export default function ContactForm() {
 
                             {/* Message */}
                             <div className="flex flex-col gap-1.5 mb-6">
-                                <label className="text-xs font-bold uppercase tracking-widest text-white">
+                                <label className="text-small font-bold uppercase tracking-widest text-white">
                                     Message
                                 </label>
                                 <textarea
@@ -250,7 +250,7 @@ export default function ContactForm() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide transition-all duration-200 hover:brightness-90 active:scale-[0.99]"
+                                className="w-full py-3.5 rounded-xl text-white font-bold text-ui tracking-wide transition-all duration-200 hover:brightness-90 active:scale-[0.99]"
                                 style={{
                                     background: "#236A9E",
                                     opacity: loading ? 0.7 : 1,
@@ -284,9 +284,9 @@ export default function ContactForm() {
                             >
                                 <MapPin size={17} color="#fff" />
                             </span>
-                            <h3 className="text-base font-bold text-slate-100">Our Office</h3>
+                            <h3 className="text-body font-bold text-slate-100">Our Office</h3>
                         </div>
-                        <address className="not-italic text-sm leading-relaxed">
+                        <address className="not-italic text-ui leading-relaxed">
                             <span className="block font-semibold text-white">{COMPANY.legalName}</span>
                             {COMPANY.addressLines.map((line) => (
                                 <span key={line} className="block text-slate-400">
@@ -309,9 +309,9 @@ export default function ContactForm() {
                                 className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-pulse"
                                 style={{ boxShadow: "0 0 0 3px rgba(37,211,102,0.25)" }}
                             />
-                            <h3 className="text-base font-bold text-slate-100">WhatsApp Chat · 24 × 7</h3>
+                            <h3 className="text-body font-bold text-slate-100">WhatsApp Chat · 24 × 7</h3>
                         </div>
-                        <p className="text-sm text-slate-400 leading-relaxed mb-5">
+                        <p className="text-ui text-slate-400 leading-relaxed mb-5">
                             Prefer chatting? Message us on WhatsApp any time — every day of the year.
                         </p>
                         <div className="flex flex-col gap-2.5">
@@ -321,7 +321,7 @@ export default function ContactForm() {
                                     href={p.href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 bg-[#25D366] text-[#053B1E] font-bold text-sm no-underline transition hover:brightness-105 hover:-translate-y-0.5"
+                                    className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 bg-[#25D366] text-[#053B1E] font-bold text-ui no-underline transition hover:brightness-105 hover:-translate-y-0.5"
                                 >
                                     <span className="flex items-center gap-2">
                                         <MessageCircle size={17} />
@@ -331,7 +331,7 @@ export default function ContactForm() {
                                 </a>
                             ))}
                         </div>
-                        <p className="mt-4 text-xs text-slate-400 leading-relaxed">
+                        <p className="mt-4 text-small text-slate-400 leading-relaxed">
                             Or call us:{" "}
                             {SUPPORT_PHONES.map((p, i) => (
                                 <span key={p.region}>

@@ -107,8 +107,8 @@ export default function ThumbnailAdjuster({
             >
                 <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                     <div>
-                        <h3 className="text-[15px] font-bold text-slate-900">Adjust thumbnail</h3>
-                        <p className="text-[12px] text-slate-500">
+                        <h3 className="text-body font-bold text-slate-900">Adjust thumbnail</h3>
+                        <p className="text-small text-slate-500">
                             Auto-adjusted — drag to reposition, zoom to crop. Saved as {width}×{height} (16:9)
                             for every screen.
                         </p>
@@ -151,13 +151,13 @@ export default function ThumbnailAdjuster({
                                 <div className="absolute inset-x-0 top-1/3 border-t border-white/40" />
                                 <div className="absolute inset-x-0 top-2/3 border-t border-white/40" />
                             </div>
-                            <span className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-black/55 px-2 py-1 text-[11px] font-semibold text-white">
+                            <span className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-black/55 px-2 py-1 text-label font-semibold text-white">
                                 <Move size={12} /> Drag to move
                             </span>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-                            <div className="flex items-center gap-1.5 text-[12px]">
+                            <div className="flex items-center gap-1.5 text-small">
                                 {[
                                     ["cover", "Crop to fill"],
                                     ["contain", "Fit whole image"],
@@ -195,21 +195,21 @@ export default function ThumbnailAdjuster({
                             <button
                                 type="button"
                                 onClick={() => setSettings(autoPlace(image, { width, height }))}
-                                className="flex items-center gap-1 text-[12px] font-semibold text-action hover:underline"
+                                className="flex items-center gap-1 text-small font-semibold text-action hover:underline"
                             >
                                 <Wand2 size={13} /> Auto
                             </button>
                             <button
                                 type="button"
                                 onClick={() => update({ zoom: 1, x: 0, y: 0 })}
-                                className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-action"
+                                className="flex items-center gap-1 text-small font-semibold text-slate-500 hover:text-action"
                             >
                                 <RotateCcw size={13} /> Reset
                             </button>
                         </div>
 
                         {lowRes && (
-                            <p className="text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                            <p className="text-small text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                                 This image is {image.naturalWidth}×{image.naturalHeight}. It may look soft on
                                 large screens — {width}×{height} or bigger works best.
                             </p>
@@ -218,12 +218,12 @@ export default function ThumbnailAdjuster({
 
                     {/* Screen previews */}
                     <div className="space-y-4">
-                        <p className="text-[11px] font-bold tracking-[0.08em] text-slate-500">
+                        <p className="text-label font-bold tracking-[0.08em] text-slate-500">
                             PREVIEW ON SCREENS
                         </p>
                         <div>
                             <Framed img={image} src={src} settings={settings} width={width} height={height} />
-                            <p className="mt-1.5 text-[11.5px] font-semibold text-slate-500">
+                            <p className="mt-1.5 text-label font-semibold text-slate-500">
                                 Course card · desktop
                             </p>
                         </div>
@@ -259,7 +259,7 @@ export default function ThumbnailAdjuster({
                                 </div>
                             </div>
                         </div>
-                        <p className="text-[11.5px] font-semibold text-slate-500 -mt-2">
+                        <p className="text-label font-semibold text-slate-500 -mt-2">
                             Mobile · Checkout &amp; tables
                         </p>
                     </div>
@@ -270,7 +270,7 @@ export default function ThumbnailAdjuster({
                         type="button"
                         onClick={onCancel}
                         disabled={busy}
-                        className="px-4 py-2 rounded-xl text-[13px] font-semibold text-slate-600 hover:bg-slate-100"
+                        className="px-4 py-2 rounded-xl text-ui font-semibold text-slate-600 hover:bg-slate-100"
                     >
                         Cancel
                     </button>
@@ -278,7 +278,7 @@ export default function ThumbnailAdjuster({
                         type="button"
                         onClick={() => onApply?.(settings)}
                         disabled={busy}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-60"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-ui font-semibold hover:opacity-90 disabled:opacity-60"
                     >
                         {busy && <Loader2 size={14} className="animate-spin" />} Save thumbnail
                     </button>

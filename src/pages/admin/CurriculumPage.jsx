@@ -70,7 +70,7 @@ const EMPTY_LESSON = { title: "", type: "video", duration: "", content: "", orde
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 function fmtDuration(seconds) {
     if (!seconds) return null;
@@ -320,7 +320,7 @@ export default function CurriculumPage() {
     return (
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {/* ── Breadcrumb ── */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+            <div className="flex items-center gap-1.5 text-label font-bold uppercase tracking-widest text-slate-500">
                 <span
                     className="hover:text-slate-600 cursor-pointer"
                     onClick={() => navigate("/admin/dashboard")}
@@ -349,21 +349,21 @@ export default function CurriculumPage() {
             {/* ── Header ── */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">
                         Curriculum Builder
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">{course?.title ?? "Loading..."}</p>
+                    <p className="text-ui text-slate-500 mt-0.5">{course?.title ?? "Loading..."}</p>
                 </div>
                 <div className="flex gap-3 shrink-0">
                     <button
                         onClick={() => navigate(`/courses/${course?.slug}`)}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
                     >
                         Preview Course
                     </button>
                     <button
                         onClick={openCreateSection}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
                         style={{ background: "#236A9E" }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -407,7 +407,7 @@ export default function CurriculumPage() {
                             >
                                 <Icon size={14} style={{ color: ic }} />
                             </div>
-                            <span className="text-[13px] font-semibold text-slate-700">{label}</span>
+                            <span className="text-ui font-semibold text-slate-700">{label}</span>
                         </div>
                     ))}
                 </div>
@@ -450,10 +450,10 @@ export default function CurriculumPage() {
                     <div className="bg-surface rounded-2xl w-full max-w-sm shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
                             <div>
-                                <h3 className="text-[16px] font-extrabold text-slate-900">
+                                <h3 className="text-body font-extrabold text-slate-900">
                                     {editSection ? "Edit Section" : "Add Section"}
                                 </h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     {editSection
                                         ? "Update section details"
                                         : "Add a new chapter to the course"}
@@ -493,14 +493,14 @@ export default function CurriculumPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowSectionModal(false)}
-                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={savingSection}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                     style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
                                         if (!savingSection) e.currentTarget.style.background = "#1B5582";
@@ -530,10 +530,10 @@ export default function CurriculumPage() {
                     <div className="bg-surface rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
                             <div>
-                                <h3 className="text-[16px] font-extrabold text-slate-900">
+                                <h3 className="text-body font-extrabold text-slate-900">
                                     {editLesson ? "Edit Lesson" : "Add Lesson"}
                                 </h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     Configure your new curriculum item
                                 </p>
                             </div>
@@ -646,7 +646,7 @@ export default function CurriculumPage() {
                                                     order_num: Math.max(1, p.order_num - 1),
                                                 }))
                                             }
-                                            className="w-9 h-10 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors text-lg font-bold shrink-0"
+                                            className="w-9 h-10 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors text-h3 font-bold shrink-0"
                                         >
                                             −
                                         </button>
@@ -660,14 +660,14 @@ export default function CurriculumPage() {
                                                     order_num: Number(e.target.value),
                                                 }))
                                             }
-                                            className="flex-1 min-w-0 w-full py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action"
+                                            className="flex-1 min-w-0 w-full py-2.5 text-center rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action"
                                         />
                                         <button
                                             type="button"
                                             onClick={() =>
                                                 setLessonForm((p) => ({ ...p, order_num: p.order_num + 1 }))
                                             }
-                                            className="w-9 h-10 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors text-lg font-bold shrink-0"
+                                            className="w-9 h-10 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors text-h3 font-bold shrink-0"
                                         >
                                             +
                                         </button>
@@ -676,7 +676,7 @@ export default function CurriculumPage() {
 
                                 {/* Free Preview toggle */}
                                 <div>
-                                    <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                                    <p className="text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                                         Free Preview
                                     </p>
                                     <label className="flex items-center gap-2.5 cursor-pointer">
@@ -696,7 +696,7 @@ export default function CurriculumPage() {
                                                 )}
                                             />
                                         </div>
-                                        <span className="text-[13px] font-medium text-slate-700">
+                                        <span className="text-ui font-medium text-slate-700">
                                             {lessonForm.is_free ? "Enabled" : "Disabled"}
                                         </span>
                                     </label>
@@ -708,14 +708,14 @@ export default function CurriculumPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowLessonModal(false)}
-                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={savingLesson}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                     style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
                                         if (!savingLesson) e.currentTarget.style.background = "#1B5582";
@@ -773,7 +773,7 @@ function SectionCard({
 
                 {/* Number badge */}
                 <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-[12px] font-extrabold"
+                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-small font-extrabold"
                     style={{ background: "#236A9E" }}
                 >
                     §{index + 1}
@@ -781,16 +781,16 @@ function SectionCard({
 
                 {/* Info */}
                 <div className="flex-1 min-w-0 cursor-pointer" onClick={onToggle}>
-                    <p className="text-[14.5px] font-bold text-slate-900 truncate">{section.title}</p>
+                    <p className="text-body font-bold text-slate-900 truncate">{section.title}</p>
                     <div className="flex items-center gap-3 mt-0.5">
                         <div className="flex items-center gap-1 text-slate-500">
                             <PlayCircle size={11} />
-                            <span className="text-[11.5px]">{lessons.length} Lessons</span>
+                            <span className="text-label">{lessons.length} Lessons</span>
                         </div>
                         {durationStr && (
                             <div className="flex items-center gap-1 text-slate-500">
                                 <Clock size={11} />
-                                <span className="text-[11.5px]">{durationStr}</span>
+                                <span className="text-label">{durationStr}</span>
                             </div>
                         )}
                     </div>
@@ -824,7 +824,7 @@ function SectionCard({
             {expanded && (
                 <div className="border-t border-slate-100">
                     {lessons.length === 0 ? (
-                        <p className="text-center text-[12.5px] text-slate-500 py-4">
+                        <p className="text-center text-small text-slate-500 py-4">
                             No lessons yet — add one below
                         </p>
                     ) : (
@@ -846,7 +846,7 @@ function SectionCard({
                     {/* Add Lesson button */}
                     <button
                         onClick={onAddLesson}
-                        className="w-full flex items-center justify-center gap-2 py-3.5 mx-0 border-t border-dashed border-slate-200 text-[13px] font-semibold text-action hover:bg-action-soft transition-colors"
+                        className="w-full flex items-center justify-center gap-2 py-3.5 mx-0 border-t border-dashed border-slate-200 text-ui font-semibold text-action hover:bg-action-soft transition-colors"
                     >
                         <Plus size={15} />
                         Add Lesson
@@ -869,7 +869,7 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
             <GripVertical size={14} className="text-slate-200 group-hover:text-slate-300 shrink-0" />
 
             {/* Lesson number */}
-            <span className="text-[12px] font-bold text-slate-500 shrink-0 w-6 text-right">
+            <span className="text-small font-bold text-slate-500 shrink-0 w-6 text-right">
                 {sectionIndex + 1}.{lessonIndex + 1}
             </span>
 
@@ -883,15 +883,15 @@ function LessonRow({ lesson, sectionIndex, lessonIndex, onEdit, onDelete, deleti
 
             {/* Title + duration */}
             <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-slate-800 truncate">{lesson.title}</p>
+                <p className="text-ui font-semibold text-slate-800 truncate">{lesson.title}</p>
                 {lesson.duration > 0 && (
-                    <p className="text-[11px] text-slate-500 mt-0.5">{fmtDuration(lesson.duration)}</p>
+                    <p className="text-label text-slate-500 mt-0.5">{fmtDuration(lesson.duration)}</p>
                 )}
             </div>
 
             {/* Free badge */}
             {lesson.is_free === 1 && (
-                <span className="px-2 py-0.5 rounded-lg text-[10.5px] font-bold bg-[#ECFDF5] text-emerald-700 border border-emerald-200 shrink-0">
+                <span className="px-2 py-0.5 rounded-lg text-label font-bold bg-[#ECFDF5] text-emerald-700 border border-emerald-200 shrink-0">
                     FREE
                 </span>
             )}
@@ -928,14 +928,14 @@ function EmptyState({ onAdd }) {
                 <BookOpen size={26} style={{ color: "#236A9E" }} />
             </div>
             <div>
-                <p className="text-[15px] font-bold text-slate-800">No sections yet</p>
-                <p className="text-[13px] text-slate-500 mt-1">
+                <p className="text-body font-bold text-slate-800">No sections yet</p>
+                <p className="text-ui text-slate-500 mt-1">
                     Start building your curriculum by adding a section
                 </p>
             </div>
             <button
                 onClick={onAdd}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
                 style={{ background: "#236A9E" }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -965,7 +965,7 @@ function Overlay({ onClose, children }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}

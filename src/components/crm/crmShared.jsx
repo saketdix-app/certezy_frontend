@@ -5,7 +5,7 @@ export function StageBadge({ stage, className }) {
     return (
         <span
             className={cn(
-                "inline-flex whitespace-nowrap rounded-md border px-2 py-0.5 text-[11.5px] font-semibold",
+                "inline-flex whitespace-nowrap rounded-md border px-2 py-0.5 text-label font-semibold",
                 STAGE_CLASS[stage],
                 className
             )}
@@ -29,8 +29,8 @@ export function CrmModal({ title, onClose, children, wide }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="mb-4 flex items-start justify-between gap-3">
-                    <h2 className="text-[17px] font-bold text-slate-900">{title}</h2>
-                    <button type="button" onClick={onClose} aria-label="Close" className="px-1 text-[20px] leading-none text-slate-500 hover:text-slate-600">
+                    <h2 className="text-h3 font-bold text-slate-900">{title}</h2>
+                    <button type="button" onClick={onClose} aria-label="Close" className="px-1 text-h2 leading-none text-slate-500 hover:text-slate-600">
                         ×
                     </button>
                 </div>

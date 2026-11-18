@@ -37,12 +37,12 @@ function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-slate-600">{title}</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+                    <p className="text-ui font-medium text-slate-600">{title}</p>
+                    <p className="text-h2 font-bold text-slate-900 mt-1">{value}</p>
                     {change && (
                         <p
                             className={cn(
-                                "text-sm font-medium mt-2",
+                                "text-ui font-medium mt-2",
                                 change > 0 ? "text-green-600" : "text-red-600"
                             )}
                         >
@@ -67,7 +67,7 @@ function RevenueChart({ data }) {
 
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Revenue Overview</h3>
+            <h3 className="text-h3 font-semibold text-slate-900 mb-4">Revenue Overview</h3>
             <div className="h-64 flex items-end justify-between gap-2">
                 {data.map((item) => (
                     <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
@@ -79,9 +79,9 @@ function RevenueChart({ data }) {
                                     minHeight: "20px",
                                 }}
                             />
-                            <span className="text-xs text-slate-600 mt-2">{item.month}</span>
+                            <span className="text-small text-slate-600 mt-2">{item.month}</span>
                         </div>
-                        <span className="text-xs font-medium text-slate-900">
+                        <span className="text-small font-medium text-slate-900">
                             ${item.revenue.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                         </span>
                     </div>
@@ -105,7 +105,7 @@ function RecentPaymentsTable({ payments }) {
         return (
             <span
                 className={cn(
-                    "px-2 py-1 text-xs font-medium rounded-full",
+                    "px-2 py-1 text-small font-medium rounded-full",
                     styles[status] || "bg-slate-100 text-slate-800"
                 )}
             >
@@ -117,10 +117,10 @@ function RecentPaymentsTable({ payments }) {
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">Recent Payments</h3>
+                <h3 className="text-h3 font-semibold text-slate-900">Recent Payments</h3>
                 <button
                     onClick={() => navigate("payments")}
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-ui text-blue-600 hover:text-blue-700 font-medium"
                 >
                     View All
                 </button>
@@ -129,23 +129,23 @@ function RecentPaymentsTable({ payments }) {
                 <table className="w-full min-w-[720px]">
                     <thead>
                         <tr className="border-b border-slate-200">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">User</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Course</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Amount</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Status</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">Date</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">User</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Course</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Amount</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Status</th>
+                            <th className="text-left py-3 px-4 text-ui font-medium text-slate-700">Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         {payments.map((payment) => (
                             <tr key={payment.id} className="border-b border-slate-100 hover:bg-slate-50">
-                                <td className="py-3 px-4 text-sm text-slate-900">{payment.user}</td>
-                                <td className="py-3 px-4 text-sm text-slate-900">{payment.course}</td>
-                                <td className="py-3 px-4 text-sm font-medium text-slate-900">
+                                <td className="py-3 px-4 text-ui text-slate-900">{payment.user}</td>
+                                <td className="py-3 px-4 text-ui text-slate-900">{payment.course}</td>
+                                <td className="py-3 px-4 text-ui font-medium text-slate-900">
                                     ${payment.amount}
                                 </td>
                                 <td className="py-3 px-4">{getStatusBadge(payment.status)}</td>
-                                <td className="py-3 px-4 text-sm text-slate-600">{payment.date}</td>
+                                <td className="py-3 px-4 text-ui text-slate-600">{payment.date}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -192,10 +192,10 @@ function PendingReviews({ reviews }) {
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">Pending Reviews</h3>
+                <h3 className="text-h3 font-semibold text-slate-900">Pending Reviews</h3>
                 <button
                     onClick={() => navigate("/admin/reviews")}
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-ui text-blue-600 hover:text-blue-700 font-medium"
                 >
                     View All
                 </button>
@@ -206,13 +206,13 @@ function PendingReviews({ reviews }) {
                         <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm font-medium text-slate-900">{review.user}</span>
+                                    <span className="text-ui font-medium text-slate-900">{review.user}</span>
                                     <div className="flex items-center gap-1">
                                         {renderStars(review.rating)}
                                     </div>
                                 </div>
-                                <p className="text-sm text-slate-600 mb-1">{review.course}</p>
-                                <p className="text-sm text-slate-700">{review.comment}</p>
+                                <p className="text-ui text-slate-600 mb-1">{review.course}</p>
+                                <p className="text-ui text-slate-700">{review.comment}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
@@ -231,7 +231,7 @@ function PendingReviews({ reviews }) {
                                 </button>
                             </div>
                         </div>
-                        <p className="text-xs text-slate-500 mt-2">{review.date}</p>
+                        <p className="text-small text-slate-500 mt-2">{review.date}</p>
                     </div>
                 ))}
             </div>
@@ -262,7 +262,7 @@ function QuickActions() {
 
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h3>
+            <h3 className="text-h3 font-semibold text-slate-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 gap-4">
                 {actions.map((action) => (
                     <button
@@ -275,7 +275,7 @@ function QuickActions() {
                         >
                             <action.icon className="w-5 h-5" />
                         </div>
-                        <span className="text-sm font-medium text-slate-900">{action.title}</span>
+                        <span className="text-ui font-medium text-slate-900">{action.title}</span>
                     </button>
                 ))}
             </div>
@@ -477,7 +477,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-3">
                         <AlertCircle size={20} className="text-red-600" />
                         <div>
-                            <h3 className="text-lg font-medium text-red-900">Error Loading Dashboard</h3>
+                            <h3 className="text-h3 font-medium text-red-900">Error Loading Dashboard</h3>
                             <p className="text-red-700">{error}</p>
                         </div>
                     </div>
@@ -496,7 +496,7 @@ export default function AdminDashboard() {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+                <h1 className="text-h2 font-bold text-slate-900">Dashboard</h1>
                 <p className="text-slate-600 mt-1">
                     Welcome back! Here's what's happening with your platform today.
                 </p>

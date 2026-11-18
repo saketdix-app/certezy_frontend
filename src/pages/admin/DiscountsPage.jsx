@@ -37,7 +37,7 @@ const STATUS = {
 };
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const pct = (base, offer) => {
     const b = Number(base);
@@ -68,8 +68,8 @@ export default function DiscountsPage() {
         <div className="min-h-screen bg-slate-50 p-4 sm:p-6">
             <div className="max-w-6xl mx-auto space-y-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 mb-1">Discount Links</h1>
-                    <p className="text-slate-600 text-sm">
+                    <h1 className="text-h2 font-bold text-slate-900 mb-1">Discount Links</h1>
+                    <p className="text-slate-600 text-ui">
                         Send a personal offer by email, then track which links were used, are still active or
                         have expired.
                     </p>
@@ -180,8 +180,8 @@ function SendDiscountForm({ onSent }) {
                         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <CheckCircle className="w-6 h-6 text-green-600" />
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Discount link sent</h3>
-                        <p className="text-slate-600 text-sm mb-4">
+                        <h3 className="text-h3 font-semibold text-slate-900 mb-2">Discount link sent</h3>
+                        <p className="text-slate-600 text-ui mb-4">
                             Emailed to <strong>{sent.email}</strong>.{" "}
                             {sent.isRegistered === false
                                 ? "They don't have an account yet — the link lets them sign up with this email and pay the discounted price."
@@ -194,7 +194,7 @@ function SendDiscountForm({ onSent }) {
                                     type="text"
                                     value={sent.link}
                                     readOnly
-                                    className="flex-1 bg-transparent text-xs text-slate-700 outline-none"
+                                    className="flex-1 bg-transparent text-small text-slate-700 outline-none"
                                 />
                                 <button
                                     type="button"
@@ -208,7 +208,7 @@ function SendDiscountForm({ onSent }) {
                         )}
                         <button
                             onClick={() => setSent(null)}
-                            className="w-full py-2.5 rounded-xl text-[13px] font-semibold text-white bg-action"
+                            className="w-full py-2.5 rounded-xl text-ui font-semibold text-white bg-action"
                         >
                             Done
                         </button>
@@ -222,13 +222,13 @@ function SendDiscountForm({ onSent }) {
                 style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
             >
                 <div className="space-y-6">
-                    <h2 className="text-[15px] font-bold text-slate-900 flex items-center gap-2">
+                    <h2 className="text-body font-bold text-slate-900 flex items-center gap-2">
                         <Send className="w-4 h-4 text-action" /> Send a new discount link
                     </h2>
 
                     {/* Course */}
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Course</label>
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">Course</label>
                         {selectedCourse ? (
                             <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex gap-3 items-center">
                                 <CourseThumbnail
@@ -238,10 +238,10 @@ function SendDiscountForm({ onSent }) {
                                     compact
                                 />
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-slate-900 text-sm truncate">
+                                    <p className="font-semibold text-slate-900 text-ui truncate">
                                         {selectedCourse.title}
                                     </p>
-                                    <p className="text-xs text-slate-500 mt-0.5">
+                                    <p className="text-small text-slate-500 mt-0.5">
                                         {formatMoney(usdBase, "USD")}
                                         {inrBase > 0 && ` · ${formatMoney(inrBase, "INR")} in India`}
                                     </p>
@@ -268,10 +268,10 @@ function SendDiscountForm({ onSent }) {
                                 emptyText="No paid courses match"
                                 renderItem={(c) => (
                                     <div className="flex items-center justify-between gap-3">
-                                        <span className="text-[13px] font-medium text-slate-800 truncate">
+                                        <span className="text-ui font-medium text-slate-800 truncate">
                                             {c.title}
                                         </span>
-                                        <span className="text-[12px] text-slate-500 shrink-0">
+                                        <span className="text-small text-slate-500 shrink-0">
                                             {formatMoney(c.price, "USD")}
                                             {Number(c.price_inr) > 0 &&
                                                 ` · ${formatMoney(c.price_inr, "INR")}`}
@@ -284,8 +284,8 @@ function SendDiscountForm({ onSent }) {
 
                     {/* Recipient */}
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Send to</label>
-                        <div className="mb-3 inline-flex rounded-xl bg-slate-100 p-1 text-[12.5px] font-semibold">
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">Send to</label>
+                        <div className="mb-3 inline-flex rounded-xl bg-slate-100 p-1 text-small font-semibold">
                             {[
                                 ["student", "Registered student", Users],
                                 ["email", "Any email address", Mail],
@@ -318,7 +318,7 @@ function SendDiscountForm({ onSent }) {
                                         className={cn(inputCls, "pl-10")}
                                     />
                                 </div>
-                                <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+                                <p className="mt-2 text-small text-slate-500 leading-relaxed">
                                     Works for people without an account. We email them a link; they sign up
                                     (or sign in) with this email and pay the discounted price. Only this email
                                     address can use the offer.
@@ -326,14 +326,14 @@ function SendDiscountForm({ onSent }) {
                             </div>
                         ) : selectedStudent ? (
                             <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-[#0a1628] flex items-center justify-center text-white text-sm font-bold shrink-0">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-[#0a1628] flex items-center justify-center text-white text-ui font-bold shrink-0">
                                     {selectedStudent.name?.charAt(0)?.toUpperCase()}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-slate-900 text-sm truncate">
+                                    <p className="font-semibold text-slate-900 text-ui truncate">
                                         {selectedStudent.name}
                                     </p>
-                                    <p className="text-slate-500 text-xs truncate">{selectedStudent.email}</p>
+                                    <p className="text-slate-500 text-small truncate">{selectedStudent.email}</p>
                                 </div>
                                 <button
                                     type="button"
@@ -353,10 +353,10 @@ function SendDiscountForm({ onSent }) {
                                 emptyText="No students match — try “Any email address”"
                                 renderItem={(s) => (
                                     <div className="min-w-0">
-                                        <p className="text-[13px] font-medium text-slate-800 truncate">
+                                        <p className="text-ui font-medium text-slate-800 truncate">
                                             {s.name}
                                         </p>
-                                        <p className="text-[12px] text-slate-500 truncate">{s.email}</p>
+                                        <p className="text-small text-slate-500 truncate">{s.email}</p>
                                     </div>
                                 )}
                             />
@@ -367,7 +367,7 @@ function SendDiscountForm({ onSent }) {
                 <div className="space-y-6">
                     {/* Pricing: US$ for everyone outside India, ₹ for India */}
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">
                             Discounted price
                         </label>
                         <div className={cn("grid grid-cols-1 gap-3", sellsInr && "sm:grid-cols-2")}>
@@ -400,7 +400,7 @@ function SendDiscountForm({ onSent }) {
                                 />
                             )}
                         </div>
-                        <p className="mt-2 text-[11.5px] text-slate-500">
+                        <p className="mt-2 text-label text-slate-500">
                             {sellsInr
                                 ? "Visitors from India see and pay the ₹ price (Razorpay); everyone else pays the US$ price (PayPal)."
                                 : "This course is sold in US$ to everyone (PayPal)."}
@@ -409,7 +409,7 @@ function SendDiscountForm({ onSent }) {
 
                     {/* Expiry */}
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">
                             Link expires in
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -419,7 +419,7 @@ function SendDiscountForm({ onSent }) {
                                     type="button"
                                     onClick={() => setExpiryHours(hours)}
                                     className={cn(
-                                        "py-2 px-3 rounded-xl text-xs font-medium transition-colors",
+                                        "py-2 px-3 rounded-xl text-small font-medium transition-colors",
                                         expiryHours === hours
                                             ? "bg-action text-white"
                                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
@@ -439,7 +439,7 @@ function SendDiscountForm({ onSent }) {
                                 className={cn(inputCls, "w-28")}
                                 aria-label="Custom expiry in hours"
                             />
-                            <span className="text-[12.5px] text-slate-500">hours (custom)</span>
+                            <span className="text-small text-slate-500">hours (custom)</span>
                         </div>
                     </div>
 
@@ -447,14 +447,14 @@ function SendDiscountForm({ onSent }) {
                         <button
                             type="button"
                             onClick={reset}
-                            className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                            className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                         >
                             Clear
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action disabled:opacity-60"
+                            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-action disabled:opacity-60"
                         >
                             {loading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -477,8 +477,8 @@ function PriceField({ label, symbol, base, currency, value, onChange, disabled, 
     return (
         <div>
             <div className="flex items-baseline justify-between mb-1">
-                <span className="text-xs font-semibold text-slate-600">{label}</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-small font-semibold text-slate-600">{label}</span>
+                <span className="text-label text-slate-500">
                     was {base > 0 ? formatMoney(base, currency) : "—"}
                 </span>
             </div>
@@ -503,17 +503,17 @@ function PriceField({ label, symbol, base, currency, value, onChange, disabled, 
                     className="flex-1 min-w-0 bg-transparent outline-none"
                 />
                 {off > 0 && (
-                    <span className="text-[11px] font-bold text-green-700 bg-green-50 rounded-md px-1.5 py-0.5 shrink-0">
+                    <span className="text-label font-bold text-green-700 bg-green-50 rounded-md px-1.5 py-0.5 shrink-0">
                         {off}% off
                     </span>
                 )}
             </div>
             {tooHigh ? (
-                <p className="mt-1 text-[11px] text-red-600">
+                <p className="mt-1 text-label text-red-600">
                     Must be lower than {formatMoney(base, currency)}
                 </p>
             ) : hint ? (
-                <p className="mt-1 text-[11px] text-slate-500">{hint}</p>
+                <p className="mt-1 text-label text-slate-500">{hint}</p>
             ) : null}
         </div>
     );
@@ -565,7 +565,7 @@ function SentLinks({ refreshKey }) {
 
     return (
         <section className="space-y-4">
-            <h2 className="text-[17px] font-bold text-slate-900">Sent discount links</h2>
+            <h2 className="text-h3 font-bold text-slate-900">Sent discount links</h2>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {cards.map(({ key, label, value, icon: Icon, color, bg }) => (
@@ -591,10 +591,10 @@ function SentLinks({ refreshKey }) {
                             <Icon className="w-[18px] h-[18px]" style={{ color }} />
                         </span>
                         <span className="min-w-0">
-                            <span className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 leading-tight">
+                            <span className="block text-label font-bold uppercase tracking-wider text-slate-500 leading-tight">
                                 {label}
                             </span>
-                            <span className="block text-[22px] font-extrabold text-slate-900 leading-tight">
+                            <span className="block text-h2 font-extrabold text-slate-900 leading-tight">
                                 {value ?? "—"}
                             </span>
                         </span>
@@ -625,7 +625,7 @@ function SentLinks({ refreshKey }) {
                         <Loader2 className="w-6 h-6 animate-spin text-action" />
                     </div>
                 ) : rows.length === 0 ? (
-                    <p className="text-center py-14 text-sm text-slate-500">No discount links found.</p>
+                    <p className="text-center py-14 text-ui text-slate-500">No discount links found.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[820px]">
@@ -634,7 +634,7 @@ function SentLinks({ refreshKey }) {
                                     {["Sent to", "Course", "Offer price", "Status", "Sent", ""].map((h) => (
                                         <th
                                             key={h}
-                                            className="text-left px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-600"
+                                            className="text-left px-4 py-3 text-label font-bold uppercase tracking-wider text-slate-600"
                                         >
                                             {h}
                                         </th>
@@ -647,50 +647,50 @@ function SentLinks({ refreshKey }) {
                                     return (
                                         <tr key={d.id} className="hover:bg-slate-50">
                                             <td className="px-4 py-3">
-                                                <p className="text-sm font-semibold text-slate-900">
+                                                <p className="text-ui font-semibold text-slate-900">
                                                     {d.is_email_only ? "Not registered yet" : d.student_name}
                                                 </p>
-                                                <p className="text-xs text-slate-500">{d.student_email}</p>
+                                                <p className="text-small text-slate-500">{d.student_email}</p>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-slate-800 max-w-[220px]">
+                                            <td className="px-4 py-3 text-ui text-slate-800 max-w-[220px]">
                                                 <p className="truncate">{d.course_title}</p>
                                             </td>
-                                            <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                            <td className="px-4 py-3 text-ui whitespace-nowrap">
                                                 <p className="font-semibold text-slate-900">
                                                     {formatMoney(d.discount_price, "USD")}{" "}
-                                                    <span className="text-xs font-normal text-slate-500 line-through">
+                                                    <span className="text-small font-normal text-slate-500 line-through">
                                                         {formatMoney(d.original_price, "USD")}
                                                     </span>
                                                 </p>
                                                 {d.discount_price_inr != null && (
-                                                    <p className="text-xs text-slate-600">
+                                                    <p className="text-small text-slate-600">
                                                         {formatMoney(d.discount_price_inr, "INR")} in India
                                                     </p>
                                                 )}
                                             </td>
                                             <td className="px-4 py-3 whitespace-nowrap">
                                                 <span
-                                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-semibold"
                                                     style={{ background: st.bg, color: st.color }}
                                                 >
                                                     {st.label}
                                                 </span>
-                                                <p className="text-[11px] text-slate-500 mt-1">
+                                                <p className="text-label text-slate-500 mt-1">
                                                     {d.status === "used"
                                                         ? `on ${formatDateTime(d.used_at)}`
                                                         : `${d.status === "expired" ? "ended" : "until"} ${formatDateTime(d.expires_at)}`}
                                                 </p>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-small text-slate-500 whitespace-nowrap">
                                                 {formatDateTime(d.created_at)}
                                                 {d.sent_count > 1 && (
-                                                    <p className="text-[11px] text-slate-500">
+                                                    <p className="text-label text-slate-500">
                                                         sent {d.sent_count}× · last{" "}
                                                         {formatDateTime(d.last_sent_at)}
                                                     </p>
                                                 )}
                                                 {d.created_by_name && (
-                                                    <p className="text-[11px] text-slate-500">
+                                                    <p className="text-label text-slate-500">
                                                         by {d.created_by_name}
                                                     </p>
                                                 )}
@@ -709,7 +709,7 @@ function SentLinks({ refreshKey }) {
                                                         <button
                                                             type="button"
                                                             onClick={() => setResendTarget(d)}
-                                                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-[12px] font-semibold text-action hover:bg-action-soft"
+                                                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-small font-semibold text-action hover:bg-action-soft"
                                                         >
                                                             <RotateCw className="w-3.5 h-3.5" /> Resend
                                                         </button>
@@ -726,7 +726,7 @@ function SentLinks({ refreshKey }) {
 
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-                        <p className="text-sm text-slate-600">
+                        <p className="text-ui text-slate-600">
                             {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, total)} of {total}
                         </p>
                         <div className="flex items-center gap-2">
@@ -738,7 +738,7 @@ function SentLinks({ refreshKey }) {
                             >
                                 <ChevronLeft size={16} />
                             </button>
-                            <span className="text-sm text-slate-600">
+                            <span className="text-ui text-slate-600">
                                 Page {page} of {totalPages}
                             </span>
                             <button
@@ -792,14 +792,14 @@ function ResendModal({ link, onClose, onDone }) {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-surface rounded-2xl p-6 max-w-md w-full">
-                <h3 className="text-lg font-bold text-slate-900">Resend this offer</h3>
-                <p className="text-sm text-slate-600 mt-1">
+                <h3 className="text-h3 font-bold text-slate-900">Resend this offer</h3>
+                <p className="text-ui text-slate-600 mt-1">
                     The same link goes to <b>{link.student_email}</b> for <b>{link.course_title}</b> at{" "}
                     {formatMoney(link.discount_price, "USD")}
                     {link.discount_price_inr != null && ` / ${formatMoney(link.discount_price_inr, "INR")}`}.
                 </p>
 
-                <p className="text-[13px] font-semibold text-slate-700 mt-5 mb-2">
+                <p className="text-ui font-semibold text-slate-700 mt-5 mb-2">
                     {expired ? "This link has expired. New expiry:" : "Expiry"}
                 </p>
                 <div className="grid grid-cols-3 gap-2">
@@ -809,7 +809,7 @@ function ResendModal({ link, onClose, onDone }) {
                             type="button"
                             onClick={() => setHours(h)}
                             className={cn(
-                                "py-2 rounded-xl text-xs font-medium",
+                                "py-2 rounded-xl text-small font-medium",
                                 hours === h
                                     ? "bg-action text-white"
                                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
@@ -820,7 +820,7 @@ function ResendModal({ link, onClose, onDone }) {
                     ))}
                 </div>
                 {!expired && hours === 0 && (
-                    <p className="text-[11.5px] text-slate-500 mt-2">
+                    <p className="text-label text-slate-500 mt-2">
                         Valid until {formatDateTime(link.expires_at)}
                     </p>
                 )}
@@ -829,7 +829,7 @@ function ResendModal({ link, onClose, onDone }) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50"
                     >
                         Cancel
                     </button>
@@ -837,7 +837,7 @@ function ResendModal({ link, onClose, onDone }) {
                         type="button"
                         onClick={send}
                         disabled={busy}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action disabled:opacity-60"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-action disabled:opacity-60"
                     >
                         {busy ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

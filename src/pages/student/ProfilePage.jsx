@@ -95,8 +95,8 @@ export default function ProfilePage() {
         >
             {/* Page heading */}
             <div>
-                <h1 className="text-[22px] font-extrabold text-slate-900 tracking-tight">My Profile</h1>
-                <p className="text-[13.5px] text-slate-500 mt-1">
+                <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">My Profile</h1>
+                <p className="text-ui text-slate-500 mt-1">
                     Manage your account settings and preferences.
                 </p>
             </div>
@@ -109,7 +109,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col sm:flex-row gap-6 items-start">
                     {/* Avatar — square rounded-2xl + initials */}
                     <div
-                        className="w-[88px] h-[88px] rounded-2xl shrink-0 flex items-center justify-center text-white text-[32px] font-extrabold overflow-hidden"
+                        className="w-[88px] h-[88px] rounded-2xl shrink-0 flex items-center justify-center text-white text-h1 font-extrabold overflow-hidden"
                         style={{ background: "linear-gradient(135deg, #3282B8 0%, #0a1628 100%)" }}
                     >
                         {user?.avatar ? (
@@ -123,10 +123,10 @@ export default function ProfilePage() {
                     <div className="flex-1 min-w-0">
                         {/* Name + STUDENT badge */}
                         <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                            <h2 className="text-[19px] font-extrabold text-slate-900 tracking-tight">
+                            <h2 className="text-h3 font-extrabold text-slate-900 tracking-tight">
                                 {user?.name}
                             </h2>
-                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#EBF4FF] text-[#3282B8] border border-[#BFDBFE]">
+                            <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider bg-[#EBF4FF] text-[#3282B8] border border-[#BFDBFE]">
                                 {user?.role ?? "student"}
                             </span>
                         </div>
@@ -135,23 +135,23 @@ export default function ProfilePage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-8">
                             <div className="flex items-center gap-2.5">
                                 <Mail size={14} className="text-slate-400 shrink-0" />
-                                <span className="text-[13px] text-slate-600">{user?.email}</span>
+                                <span className="text-ui text-slate-600">{user?.email}</span>
                             </div>
                             <div className="flex items-center gap-2.5">
                                 <Phone size={14} className="text-slate-400 shrink-0" />
-                                <span className="text-[13px] text-slate-600">
+                                <span className="text-ui text-slate-600">
                                     {user?.mobile || "Not added"}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2.5">
                                 <User size={14} className="text-slate-400 shrink-0" />
-                                <span className="text-[13px] text-slate-600 capitalize">
+                                <span className="text-ui text-slate-600 capitalize">
                                     {user?.gender || "Not specified"}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2.5">
                                 <Calendar size={14} className="text-slate-400 shrink-0" />
-                                <span className="text-[13px] text-slate-600">
+                                <span className="text-ui text-slate-600">
                                     Joined {fmtDate(user?.created_at)}
                                 </span>
                             </div>
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                     <div className="flex sm:flex-col gap-3 w-full sm:w-auto shrink-0">
                         <button
                             onClick={() => setShowEditModal(true)}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
                             style={{ background: "#3282B8" }}
                             onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
                             onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                         </button>
                         <button
                             onClick={() => setShowPasswordModal(true)}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold border-2 border-[#3282B8] text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold border-2 border-[#3282B8] text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
                         >
                             <Shield size={14} /> Change Password
                         </button>
@@ -227,17 +227,17 @@ export default function ProfilePage() {
                                 <Icon size={18} style={{ color: ic }} />
                             </div>
                             <span
-                                className="text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-md"
+                                className="text-label font-bold tracking-widest uppercase px-2 py-0.5 rounded-md"
                                 style={{ color: tagColor, background: tagBg }}
                             >
                                 {tag}
                             </span>
                         </div>
                         {/* Big number */}
-                        <p className="text-[36px] font-extrabold text-slate-900 leading-none mb-1">
+                        <p className="text-h1 font-extrabold text-slate-900 leading-none mb-1">
                             {String(value).padStart(2, "0")}
                         </p>
-                        <p className="text-[12.5px] text-slate-500 font-medium">{label}</p>
+                        <p className="text-small text-slate-500 font-medium">{label}</p>
                     </div>
                 ))}
             </div>
@@ -313,7 +313,7 @@ function EditModal({ user, onClose, onSaved }) {
                 {/* Avatar centered */}
                 <div className="flex flex-col items-center gap-2.5 pb-2">
                     <div
-                        className="w-[76px] h-[76px] rounded-2xl flex items-center justify-center text-white text-[26px] font-extrabold overflow-hidden"
+                        className="w-[76px] h-[76px] rounded-2xl flex items-center justify-center text-white text-h1 font-extrabold overflow-hidden"
                         style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
                     >
                         {form.avatar ? (
@@ -337,7 +337,7 @@ function EditModal({ user, onClose, onSaved }) {
                             type="button"
                             onClick={() => fileRef.current?.click()}
                             disabled={uploading}
-                            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-[#E2E8F0] text-small font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60"
                         >
                             <Camera size={12} />{" "}
                             {uploading ? "Uploading…" : form.avatar ? "Change Photo" : "Upload Photo"}
@@ -346,13 +346,13 @@ function EditModal({ user, onClose, onSaved }) {
                             <button
                                 type="button"
                                 onClick={() => setForm((f) => ({ ...f, avatar: null }))}
-                                className="px-3 py-1.5 rounded-lg text-[12px] font-semibold text-red-500 hover:bg-red-50"
+                                className="px-3 py-1.5 rounded-lg text-small font-semibold text-red-500 hover:bg-red-50"
                             >
                                 Remove
                             </button>
                         )}
                     </div>
-                    <p className="text-[11px] text-slate-400">JPG, PNG or WebP · up to 3 MB</p>
+                    <p className="text-label text-slate-400">JPG, PNG or WebP · up to 3 MB</p>
                 </div>
 
                 {/* FULL NAME */}
@@ -449,7 +449,7 @@ function PasswordModal({ user, onClose }) {
             {oauth && (
                 <div className="mb-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5">
                     <Shield size={15} className="text-amber-600 shrink-0 mt-0.5" />
-                    <p className="text-[12px] text-amber-800 leading-relaxed">
+                    <p className="text-small text-amber-800 leading-relaxed">
                         You sign in with Google or GitHub. To also sign in with your email and a password, use
                         &ldquo;Forgot password?&rdquo; on the sign-in page to set one.
                     </p>
@@ -503,7 +503,7 @@ function PasswordModal({ user, onClose }) {
                                 ))}
                             </div>
                             <p
-                                className="text-[10.5px] font-bold uppercase tracking-widest"
+                                className="text-label font-bold uppercase tracking-widest"
                                 style={{ color: meta.color }}
                             >
                                 Strength: {meta.label}
@@ -528,10 +528,10 @@ function PasswordModal({ user, onClose }) {
 
                 {/* Info box bottom */}
                 <div className="flex items-start gap-2.5 px-3.5 py-3 rounded-xl bg-slate-50 border border-[#E2E8F0]">
-                    <div className="w-4 h-4 rounded-full bg-slate-300 flex items-center justify-center shrink-0 mt-0.5 text-white text-[9px] font-extrabold">
+                    <div className="w-4 h-4 rounded-full bg-slate-300 flex items-center justify-center shrink-0 mt-0.5 text-white text-label font-extrabold">
                         i
                     </div>
-                    <p className="text-[12px] text-slate-500 leading-relaxed">
+                    <p className="text-small text-slate-500 leading-relaxed">
                         You sign in with Google or GitHub. To also sign in with your email and a password, use
                         &ldquo;Forgot password?&rdquo; on the sign-in page to set one.
                     </p>
@@ -551,12 +551,12 @@ function PasswordModal({ user, onClose }) {
 // ─── Shared Components ────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-[13.5px] text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white focus:ring-2 focus:ring-[#3282B8]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+    "w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-ui text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white focus:ring-2 focus:ring-[#3282B8]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
 
 function FieldGroup({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}
@@ -573,9 +573,9 @@ function ModalShell({ title, subtitle, onClose, children }) {
             <div className="bg-white rounded-2xl w-full max-w-[440px] shadow-2xl">
                 <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-[#EEF2F7]">
                     <div>
-                        <h3 className="text-[17px] font-extrabold text-slate-900">{title}</h3>
+                        <h3 className="text-h3 font-extrabold text-slate-900">{title}</h3>
                         {subtitle && (
-                            <p className="text-[12.5px] text-slate-500 mt-1 leading-relaxed">{subtitle}</p>
+                            <p className="text-small text-slate-500 mt-1 leading-relaxed">{subtitle}</p>
                         )}
                     </div>
                     <button
@@ -597,14 +597,14 @@ function ModalFooter({ onCancel, loading, disabled, label }) {
             <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 px-4 py-3 rounded-xl border border-[#E2E8F0] text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                className="flex-1 px-4 py-3 rounded-xl border border-[#E2E8F0] text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
             >
                 Cancel
             </button>
             <button
                 type="submit"
                 disabled={loading || disabled}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[13px] font-bold text-white disabled:opacity-50 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-ui font-bold text-white disabled:opacity-50 transition-colors"
                 style={{ background: "#3282B8" }}
                 onMouseEnter={(e) => {
                     if (!loading && !disabled) e.currentTarget.style.background = "#2a6fa0";

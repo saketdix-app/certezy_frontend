@@ -203,7 +203,7 @@ export default function CTABanner() {
                             <div>
                                 <div
                                     style={{
-                                        fontSize: "9.5px",
+                                        fontSize: "11.5px",
                                         fontWeight: 700,
                                         color: "#94A3B8",
                                         letterSpacing: "0.1em",
@@ -212,7 +212,7 @@ export default function CTABanner() {
                                 >
                                     PMP® exam preparation
                                 </div>
-                                <div style={{ fontSize: "13px", fontWeight: 800, color: "#F1F5F9" }}>
+                                <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#F1F5F9" }}>
                                     35 Contact Hours
                                 </div>
                             </div>
@@ -225,7 +225,7 @@ export default function CTABanner() {
                                 <p
                                     className="cta-f0"
                                     style={{
-                                        fontSize: "11px",
+                                        fontSize: "11.5px",
                                         fontWeight: 700,
                                         letterSpacing: "0.14em",
                                         textTransform: "uppercase",
@@ -254,7 +254,7 @@ export default function CTABanner() {
                                 <p
                                     className="cta-f2"
                                     style={{
-                                        fontSize: "16px",
+                                        fontSize: "15px",
                                         color: "#94A3B8",
                                         lineHeight: 1.7,
                                         marginBottom: "28px",
@@ -310,7 +310,7 @@ export default function CTABanner() {
                                     style={{
                                         textAlign: "center",
                                         marginTop: "14px",
-                                        fontSize: "12px",
+                                        fontSize: "12.5px",
                                         color: "#94A3B8",
                                         fontWeight: 500,
                                     }}

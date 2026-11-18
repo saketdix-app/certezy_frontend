@@ -96,7 +96,7 @@ export default function CourseReviews({ courseId, isEnrolled = false, onStatsCha
             {isEnrolled && <MyReviewForm courseId={courseId} existing={myReview} onSaved={handleSaved} />}
 
             {starFilter && (
-                <div className="flex items-center gap-2 text-[13px] text-slate-500">
+                <div className="flex items-center gap-2 text-ui text-slate-500">
                     Showing {starFilter}-star reviews
                     <button
                         onClick={() => setStarFilter(null)}
@@ -114,7 +114,7 @@ export default function CourseReviews({ courseId, isEnrolled = false, onStatsCha
                     <button
                         onClick={() => load(page + 1)}
                         disabled={loadingMore}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
                     >
                         {loadingMore && <Loader2 size={14} className="animate-spin" />}
                         Show more reviews
@@ -136,12 +136,12 @@ function RatingSummary({ data, loading, activeStar, onStarClick }) {
     return (
         <div className="flex flex-col sm:flex-row gap-6 sm:items-center">
             <div className="flex sm:flex-col items-center gap-3 sm:gap-1 sm:w-[150px] shrink-0 sm:text-center">
-                <div className="text-[44px] font-extrabold text-slate-900 leading-none tracking-tight">
+                <div className="text-display font-extrabold text-slate-900 leading-none tracking-tight">
                     {total ? Number(data.rating_avg).toFixed(1) : "–"}
                 </div>
                 <div className="flex flex-col sm:items-center gap-1">
                     <StarRating value={data.rating_avg} size={16} />
-                    <span className="text-[12.5px] text-slate-500">
+                    <span className="text-small text-slate-500">
                         {total
                             ? `${total.toLocaleString()} rating${total === 1 ? "" : "s"}`
                             : "No ratings yet"}
@@ -167,7 +167,7 @@ function RatingSummary({ data, loading, activeStar, onStarClick }) {
                                 isActive && "bg-amber-50"
                             )}
                         >
-                            <span className="flex items-center gap-1 w-9 shrink-0 text-[12.5px] font-semibold text-slate-600">
+                            <span className="flex items-center gap-1 w-9 shrink-0 text-small font-semibold text-slate-600">
                                 {star} <Star size={11} className="fill-amber-400 text-amber-400" />
                             </span>
                             <span className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -176,7 +176,7 @@ function RatingSummary({ data, loading, activeStar, onStarClick }) {
                                     style={{ width: `${pct}%` }}
                                 />
                             </span>
-                            <span className="w-10 shrink-0 text-right text-[12px] text-slate-500">
+                            <span className="w-10 shrink-0 text-right text-small text-slate-500">
                                 {pct}%
                             </span>
                         </button>
@@ -228,22 +228,22 @@ function MyReviewForm({ courseId, existing, onSaved }) {
         return (
             <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
-                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    <p className="text-small font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Your review
                     </p>
                     <StarRating value={existing.rating} size={14} />
                     {existing.comment && (
-                        <p className="mt-1.5 text-[13.5px] text-slate-600 line-clamp-2">{existing.comment}</p>
+                        <p className="mt-1.5 text-ui text-slate-600 line-clamp-2">{existing.comment}</p>
                     )}
                     {!existing.is_approved && (
-                        <p className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
+                        <p className="mt-2 inline-flex items-center gap-1.5 text-small font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
                             <Clock size={12} /> Awaiting approval — visible to others once approved
                         </p>
                     )}
                 </div>
                 <button
                     onClick={() => setEditing(true)}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-[13px] font-semibold text-slate-700 hover:border-primary hover:text-primary transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-ui font-semibold text-slate-700 hover:border-primary hover:text-primary transition-colors"
                 >
                     <Pencil size={13} /> Edit
                 </button>
@@ -254,12 +254,12 @@ function MyReviewForm({ courseId, existing, onSaved }) {
     if (!existing && !editing) {
         return (
             <div className="rounded-xl border border-dashed border-slate-300 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                <p className="flex-1 text-[13.5px] text-slate-600">
+                <p className="flex-1 text-ui text-slate-600">
                     You&apos;re enrolled in this course — how would you rate it?
                 </p>
                 <button
                     onClick={() => setEditing(true)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover transition-colors"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover transition-colors"
                 >
                     <Star size={15} /> Rate this course
                 </button>
@@ -270,7 +270,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
     return (
         <form onSubmit={submit} className="rounded-xl border border-slate-200 p-4 sm:p-5 space-y-4">
             <div className="text-center">
-                <p className="text-[14px] font-semibold text-slate-800 mb-2">
+                <p className="text-ui font-semibold text-slate-800 mb-2">
                     {existing ? "Update your rating" : "Rate this course"}
                 </p>
                 <RatingInput value={rating} onChange={setRating} disabled={saving} />
@@ -278,7 +278,7 @@ function MyReviewForm({ courseId, existing, onSaved }) {
             <div>
                 <label
                     htmlFor="review-comment"
-                    className="block text-[13px] font-medium text-slate-600 mb-1.5"
+                    className="block text-ui font-medium text-slate-600 mb-1.5"
                 >
                     Your review <span className="text-slate-500">(optional)</span>
                 </label>
@@ -289,22 +289,22 @@ function MyReviewForm({ courseId, existing, onSaved }) {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="What did you like? What could be better?"
-                    className="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-[14px] text-slate-700 bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-none"
+                    className="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-ui text-slate-700 bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-none"
                 />
-                <p className="text-right text-[11.5px] text-slate-500 mt-1">{comment.length}/1000</p>
+                <p className="text-right text-label text-slate-500 mt-1">{comment.length}/1000</p>
             </div>
             <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
                     type="button"
                     onClick={() => setEditing(false)}
-                    className="px-5 py-2.5 rounded-xl text-[13px] font-semibold text-slate-600 hover:bg-slate-100"
+                    className="px-5 py-2.5 rounded-xl text-ui font-semibold text-slate-600 hover:bg-slate-100"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
                     disabled={saving || !rating}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {saving && <Loader2 size={14} className="animate-spin" />}
                     {existing ? "Save changes" : "Submit review"}
@@ -332,11 +332,11 @@ function ReviewList({ reviews, loading, filtered }) {
                 <div className="w-14 h-14 rounded-full bg-primary-light flex items-center justify-center mx-auto mb-3">
                     <MessageSquare className="text-primary" size={22} />
                 </div>
-                <p className="text-[15px] font-semibold text-slate-800">
+                <p className="text-body font-semibold text-slate-800">
                     {filtered ? "No reviews with this rating" : "No written reviews yet"}
                 </p>
                 {!filtered && (
-                    <p className="text-[13px] text-slate-500 mt-1">
+                    <p className="text-ui text-slate-500 mt-1">
                         Enrolled students can be the first to share.
                     </p>
                 )}
@@ -356,23 +356,23 @@ function ReviewList({ reviews, loading, filtered }) {
                                 className="w-10 h-10 rounded-full object-cover shrink-0"
                             />
                         ) : (
-                            <div className="w-10 h-10 rounded-full bg-primary-light text-primary text-[13px] font-bold flex items-center justify-center shrink-0">
+                            <div className="w-10 h-10 rounded-full bg-primary-light text-primary text-ui font-bold flex items-center justify-center shrink-0">
                                 {(r.student_name || "S").slice(0, 2).toUpperCase()}
                             </div>
                         )}
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                <span className="font-semibold text-[14px] text-slate-800">
+                                <span className="font-semibold text-ui text-slate-800">
                                     {r.student_name || "Student"}
                                 </span>
                                 <StarRating value={r.rating} size={12} />
-                                <span className="text-[12px] text-slate-500">
+                                <span className="text-small text-slate-500">
                                     {formatDate(r.review_date || r.created_at)}
                                 </span>
                             </div>
                             <SourceBadge review={r} />
                             {r.comment && (
-                                <p className="mt-1.5 text-[14px] text-slate-600 leading-relaxed whitespace-pre-line break-words">
+                                <p className="mt-1.5 text-ui text-slate-600 leading-relaxed whitespace-pre-line break-words">
                                     {r.comment}
                                 </p>
                             )}
@@ -391,7 +391,7 @@ function SourceBadge({ review }) {
     return (
         <span
             className={cn(
-                "mt-1 inline-flex max-w-full items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold truncate",
+                "mt-1 inline-flex max-w-full items-center rounded-full border px-2 py-0.5 text-label font-semibold truncate",
                 src.cls
             )}
             title={

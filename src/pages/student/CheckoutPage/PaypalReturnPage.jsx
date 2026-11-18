@@ -81,16 +81,16 @@ export default function PaypalReturnPage() {
                 {state.phase === "working" && (
                     <>
                         <Loader2 className="mx-auto animate-spin text-[#2563EB]" size={34} />
-                        <p className="mt-4 text-[15px] font-semibold text-slate-800">
+                        <p className="mt-4 text-body font-semibold text-slate-800">
                             Finishing your PayPal payment…
                         </p>
-                        <p className="mt-1 text-[13px] text-slate-500">Please don't close this window.</p>
+                        <p className="mt-1 text-ui text-slate-500">Please don't close this window.</p>
                     </>
                 )}
                 {state.phase === "done" && (
                     <>
                         <CheckCircle2 className="mx-auto text-emerald-500" size={36} />
-                        <p className="mt-4 text-[15px] font-semibold text-slate-800">
+                        <p className="mt-4 text-body font-semibold text-slate-800">
                             Payment successful — opening your course
                         </p>
                     </>
@@ -98,14 +98,14 @@ export default function PaypalReturnPage() {
                 {state.phase === "error" && (
                     <>
                         <XCircle className="mx-auto text-rose-500" size={36} />
-                        <p className="mt-4 text-[15px] font-semibold text-slate-800">{state.message}</p>
-                        <p className="mt-1 text-[13px] text-slate-500">
+                        <p className="mt-4 text-body font-semibold text-slate-800">{state.message}</p>
+                        <p className="mt-1 text-ui text-slate-500">
                             If money was taken, contact support with your PayPal receipt.
                         </p>
                         <button
                             type="button"
                             onClick={() => navigate("/student/payments")}
-                            className="mt-5 rounded-xl bg-[#2563EB] px-5 py-2.5 text-[13px] font-bold text-white"
+                            className="mt-5 rounded-xl bg-[#2563EB] px-5 py-2.5 text-ui font-bold text-white"
                         >
                             View my payments
                         </button>

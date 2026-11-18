@@ -114,7 +114,7 @@ export default function PaymentHistoryPage() {
                         >
                             Payment History
                         </h1>
-                        <p style={{ fontSize: "14px", color: "#64748B", marginTop: "4px" }}>
+                        <p style={{ fontSize: "13.5px", color: "#64748B", marginTop: "4px" }}>
                             {loading
                                 ? "Loading..."
                                 : `${payments.length} transaction${payments.length !== 1 ? "s" : ""}`}
@@ -131,7 +131,7 @@ export default function PaymentHistoryPage() {
                             <div>
                                 <p
                                     style={{
-                                        fontSize: "10px",
+                                        fontSize: "11.5px",
                                         fontWeight: 700,
                                         color: "#3282B8",
                                         textTransform: "uppercase",
@@ -167,7 +167,7 @@ export default function PaymentHistoryPage() {
                                 borderRadius: "10px",
                                 border: "1px solid #E2E8F0",
                                 background: "#fff",
-                                fontSize: "13px",
+                                fontSize: "13.5px",
                                 color: "#0F172A",
                                 outline: "none",
                             }}
@@ -205,7 +205,7 @@ export default function PaymentHistoryPage() {
                                     <span
                                         key={h}
                                         style={{
-                                            fontSize: "10.5px",
+                                            fontSize: "11.5px",
                                             fontWeight: 700,
                                             color: "#94A3B8",
                                             textTransform: "uppercase",
@@ -229,7 +229,7 @@ export default function PaymentHistoryPage() {
                             {/* No results after search */}
                             {filtered.length === 0 && (
                                 <div className="py-12 text-center">
-                                    <p style={{ fontSize: "14px", color: "#94A3B8" }}>
+                                    <p style={{ fontSize: "13.5px", color: "#94A3B8" }}>
                                         No transactions match "{search}"
                                     </p>
                                 </div>
@@ -275,7 +275,7 @@ function PaymentRow({ payment, isLast }) {
                     <p
                         className="truncate"
                         style={{
-                            fontSize: "11px",
+                            fontSize: "11.5px",
                             color: "#CBD5E1",
                             maxWidth: "220px",
                             marginTop: "2px",
@@ -288,7 +288,7 @@ function PaymentRow({ payment, isLast }) {
             </div>
 
             {/* Date */}
-            <p style={{ fontSize: "12px", color: "#64748B" }}>{fmtDate(payment.created_at)}</p>
+            <p style={{ fontSize: "12.5px", color: "#64748B" }}>{fmtDate(payment.created_at)}</p>
 
             {/* Amount */}
             <div>
@@ -296,7 +296,7 @@ function PaymentRow({ payment, isLast }) {
                     {fmtAmount(payment.amount, payment.currency)}
                 </p>
                 {payment.original_amount && Number(payment.original_amount) !== Number(payment.amount) && (
-                    <p style={{ fontSize: "11px", color: "#CBD5E1", textDecoration: "line-through" }}>
+                    <p style={{ fontSize: "11.5px", color: "#CBD5E1", textDecoration: "line-through" }}>
                         {fmtAmount(payment.original_amount, payment.currency)}
                     </p>
                 )}
@@ -338,7 +338,7 @@ function PaymentRow({ payment, isLast }) {
                     PDF
                 </a>
             ) : (
-                <span style={{ fontSize: "12px", color: "#CBD5E1" }}>—</span>
+                <span style={{ fontSize: "12.5px", color: "#CBD5E1" }}>—</span>
             )}
         </div>
     );
@@ -364,7 +364,7 @@ function PaymentCard({ payment }) {
                 </p>
                 <span
                     className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg"
-                    style={{ fontSize: "11px", fontWeight: 700, background: status.bg, color: status.color }}
+                    style={{ fontSize: "11.5px", fontWeight: 700, background: status.bg, color: status.color }}
                 >
                     <StatusIcon size={10} />
                     {status.label}
@@ -383,7 +383,7 @@ function PaymentCard({ payment }) {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 py-2.5 rounded-xl no-underline"
-                    style={{ background: "#EBF4FF", color: "#3282B8", fontSize: "13px", fontWeight: 700 }}
+                    style={{ background: "#EBF4FF", color: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     <Download size={14} />
                     Download Invoice
@@ -398,7 +398,7 @@ function InfoChip({ label, value }) {
         <div className="px-3 py-2 rounded-xl" style={{ background: "#F8FAFC" }}>
             <p
                 style={{
-                    fontSize: "10.5px",
+                    fontSize: "11.5px",
                     fontWeight: 700,
                     color: "#94A3B8",
                     textTransform: "uppercase",
@@ -439,11 +439,11 @@ function EmptyState() {
 function ErrorState({ message }) {
     return (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
+            <p style={{ fontSize: "13.5px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
             <button
                 onClick={() => window.location.reload()}
                 className="px-4 py-2 rounded-xl"
-                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13px", fontWeight: 700 }}
+                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13.5px", fontWeight: 700 }}
             >
                 Try Again
             </button>

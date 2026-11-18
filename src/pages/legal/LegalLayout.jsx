@@ -13,7 +13,7 @@ const slug = (text) =>
 export function Section({ title, id, children }) {
     return (
         <section id={id || slug(title)} className="scroll-mt-24 mb-10">
-            <h2 className="text-[20px] font-extrabold text-slate-900 mb-3 tracking-tight">{title}</h2>
+            <h2 className="text-h2 font-extrabold text-slate-900 mb-3 tracking-tight">{title}</h2>
             <div className="legal-body">{children}</div>
         </section>
     );
@@ -77,17 +77,17 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
                 style={{ background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)" }}
             >
                 <div className="max-w-5xl mx-auto">
-                    <p className="text-xs font-bold uppercase tracking-widest text-[#38BDF8] mb-3">Legal</p>
-                    <h1 className="text-[34px] md:text-[42px] font-extrabold text-white tracking-tight mb-3">
+                    <p className="text-small font-bold uppercase tracking-widest text-[#38BDF8] mb-3">Legal</p>
+                    <h1 className="text-h1 md:text-display font-extrabold text-white tracking-tight mb-3">
                         {title}
                     </h1>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-ui text-slate-400">
                         Effective date: {effectiveDate}
                         {meta && <span className="mx-2">|</span>}
                         {meta}
                     </p>
                     {intro && (
-                        <p className="text-[15px] text-slate-300 leading-relaxed mt-5 max-w-3xl">{intro}</p>
+                        <p className="text-body text-slate-300 leading-relaxed mt-5 max-w-3xl">{intro}</p>
                     )}
                 </div>
             </section>
@@ -96,7 +96,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
             <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-10">
                 <nav aria-label="On this page" className="hidden lg:block">
                     <div className="sticky top-24">
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">
+                        <p className="text-small font-bold uppercase tracking-widest text-slate-500 mb-3">
                             On this page
                         </p>
                         <ol className="space-y-2">
@@ -104,7 +104,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
                                 <li key={s}>
                                     <a
                                         href={`#${slug(s)}`}
-                                        className="text-[13px] text-slate-600 hover:text-primary leading-snug block"
+                                        className="text-ui text-slate-600 hover:text-primary leading-snug block"
                                     >
                                         {s}
                                     </a>

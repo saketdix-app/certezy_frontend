@@ -57,7 +57,7 @@ export default function CertificationsMarquee() {
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
                 {/* Label */}
-                <p className="text-center text-[11px] font-bold tracking-[0.16em] text-[#64748B] uppercase mb-10">
+                <p className="text-center text-label font-bold tracking-[0.16em] text-[#64748B] uppercase mb-10">
                     Certifications We Prepare You For
                 </p>
 
@@ -67,7 +67,7 @@ export default function CertificationsMarquee() {
                         {items.map((cert, i) => (
                             <span
                                 key={i}
-                                className="px-10 text-slate-500 font-bold text-lg lg:text-xl hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
+                                className="px-10 text-slate-500 font-bold text-h3 lg:text-h2 hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
                             >
                                 {cert}
                             </span>

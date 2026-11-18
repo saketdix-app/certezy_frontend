@@ -63,10 +63,10 @@ export default function NotificationBell({ unreadCount = 0 }) {
             <DropdownMenuContent align="end" className="w-[316px] p-0 rounded-lg shadow-drop border-border">
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                    <span className="text-[14px] font-bold text-text-primary">Notifications</span>
+                    <span className="text-ui font-bold text-text-primary">Notifications</span>
                     {unreadCount > 0 && (
                         <button
-                            className="text-[12.5px] font-medium text-primary hover:text-primary-hover transition-colors"
+                            className="text-small font-medium text-primary hover:text-primary-hover transition-colors"
                             onClick={() => {
                                 // Real project mein:
                                 // dispatch(markAllRead())
@@ -82,7 +82,7 @@ export default function NotificationBell({ unreadCount = 0 }) {
                 {loading && (
                     <div className="flex items-center justify-center py-8 gap-2 text-text-muted">
                         <Loader2 size={16} className="animate-spin" />
-                        <span className="text-[13px]">Loading...</span>
+                        <span className="text-ui">Loading...</span>
                     </div>
                 )}
 
@@ -90,7 +90,7 @@ export default function NotificationBell({ unreadCount = 0 }) {
                 {!loading && notifications.length === 0 && (
                     <div className="py-10 text-center">
                         <Bell size={28} className="mx-auto text-text-muted mb-2" />
-                        <p className="text-[13px] text-text-muted">No notifications yet</p>
+                        <p className="text-ui text-text-muted">No notifications yet</p>
                     </div>
                 )}
 
@@ -107,7 +107,7 @@ export default function NotificationBell({ unreadCount = 0 }) {
                 <div className="px-4 py-3 border-t border-border">
                     <Link
                         to="/student/notifications"
-                        className="block text-center text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                        className="block text-center text-ui font-semibold text-primary hover:text-primary-hover transition-colors"
                     >
                         View all notifications
                     </Link>
@@ -138,13 +138,13 @@ function NotifItem({ notif }) {
             <div className="flex-1">
                 <p
                     className={cn(
-                        "text-[13px] text-text-primary leading-[1.45]",
+                        "text-ui text-text-primary leading-[1.45]",
                         notif.read ? "font-normal" : "font-semibold"
                     )}
                 >
                     {notif.message}
                 </p>
-                <p className="text-[11.5px] text-text-muted mt-0.5">{notif.time}</p>
+                <p className="text-label text-text-muted mt-0.5">{notif.time}</p>
             </div>
         </div>
     );

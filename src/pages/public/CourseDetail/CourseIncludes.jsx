@@ -30,7 +30,7 @@ export default function CourseIncludes({ course, sections }) {
     return (
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
             {items.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-2.5 text-[13.5px] text-slate-600">
+                <li key={text} className="flex items-center gap-2.5 text-ui text-slate-600">
                     <Icon size={16} className="text-primary shrink-0" />
                     {text}
                 </li>
