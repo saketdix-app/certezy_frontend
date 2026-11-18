@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useCheckout } from "./useCheckout";
 import PaymentMethod from "./PaymentMethod";
 import OrderSummary from "./OrderSummary";
+import GuestDetails from "./GuestDetails";
 import Logo from "@/components/shared/Logo";
 
 export default function CheckoutPage() {
@@ -24,6 +25,10 @@ export default function CheckoutPage() {
         paymentAmount,
         paymentCurrency,
         currency,
+        isGuest,
+        guest,
+        setGuest,
+        guestValid,
     } = useCheckout(courseId);
 
     if (loading) return <CheckoutSkeleton />;
@@ -98,6 +103,7 @@ export default function CheckoutPage() {
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                     {/* Left */}
                     <div className="flex-1 space-y-4">
+                        {isGuest && <GuestDetails guest={guest} setGuest={setGuest} courseId={course?.id ?? courseId} />}
                         <PaymentMethod selected={method} onChange={setMethod} />
 
                         {/* Security note */}
@@ -112,8 +118,8 @@ export default function CheckoutPage() {
                         {/* Pay button */}
                         <button
                             onClick={handlePay}
-                            disabled={paying || scriptLoading}
-                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-body text-white bg-action hover:bg-action-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(50,130,184,0.35)]"
+                            disabled={paying || scriptLoading || (isGuest && !guestValid)}
+                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-body text-white bg-action hover:bg-action-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(35,106,158,0.30)]"
                         >
                             {paying || scriptLoading ? (
                                 <>

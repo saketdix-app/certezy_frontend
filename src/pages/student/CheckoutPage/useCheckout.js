@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 import paymentService from "@/services/paymentService";
 import courseService from "@/services/courseService";
 import discountService from "@/services/discountService";
-import { fetchMe, selectUser } from "@/features/auth/authSlice";
+import { fetchMe, selectIsInitializing, selectUser } from "@/features/auth/authSlice";
+import { ROUTES } from "@/config/app";
 import { useSearchParams } from "react-router-dom";
 import { useCurrency } from "@/lib/currency";
 
@@ -77,7 +78,14 @@ function loadRazorpayScript(maxRetries = 3) {
 export function useCheckout(courseId) {
     const navigate = useNavigate();
     const user = useSelector(selectUser);
+    const authLoading = useSelector(selectIsInitializing);
     const dispatch = useDispatch();
+    // Guest checkout: no account needed — details typed here instead
+    const isGuest = !user;
+    const [guest, setGuest] = useState({ name: "", email: "", phone: "", consent: false });
+    const guestValid =
+        guest.name.trim().length >= 2 && /^\S+@\S+\.\S+$/.test(guest.email.trim()) && guest.consent;
+    const guestOrder = useRef(null); // { guest_token, account, email } of the current order
     const [searchParams] = useSearchParams();
 
     // Refs for cleanup and state management
@@ -133,12 +141,14 @@ export function useCheckout(courseId) {
     // ── Fetch course ─────────────────────────
     useEffect(() => {
         if (!courseId) return navigate("/courses");
-        if (!user) {
+        if (authLoading) return; // wait: a returning student may be signing in silently
+
+        const discountToken = searchParams.get("discount");
+        // Discount links are personal: they need the account they were sent to
+        if (!user && discountToken) {
             const back = window.location.pathname + window.location.search;
             return navigate(`/login?redirect=${encodeURIComponent(back)}`);
         }
-
-        const discountToken = searchParams.get("discount");
 
         const fetchCourse = async () => {
             try {
@@ -201,21 +211,37 @@ export function useCheckout(courseId) {
         };
 
         fetchCourse();
-    }, [courseId, searchParams.get("discount")]);
+    }, [courseId, searchParams.get("discount"), authLoading]);
 
     // ── Create Order (COMMON) with retry ─────────────────────────
     const createOrder = useCallback(
         async (type) => {
-            const api =
-                type === "razorpay" ? paymentService.razorpayCreateOrder : paymentService.paypalCreateOrder;
+            const api = isGuest
+                ? type === "razorpay"
+                    ? paymentService.guestRazorpayCreateOrder
+                    : paymentService.guestPaypalCreateOrder
+                : type === "razorpay"
+                  ? paymentService.razorpayCreateOrder
+                  : paymentService.paypalCreateOrder;
 
-            const orderData = {
-                course_id: course.id,
-                ...(course.discount_link_id && { discount_link_id: course.discount_link_id }),
-            };
+            const orderData = isGuest
+                ? {
+                      course_id: course.id,
+                      name: guest.name.trim(),
+                      email: guest.email.trim(),
+                      phone: guest.phone.trim() || null,
+                      consent: true,
+                  }
+                : {
+                      course_id: course.id,
+                      ...(course.discount_link_id && { discount_link_id: course.discount_link_id }),
+                  };
 
             const { data } = await retryWithBackoff(() => api(orderData));
             const order = data.data;
+            guestOrder.current = isGuest
+                ? { guest_token: order.guest_token, account: order.account, email: order.email }
+                : null;
 
             if (isMounted.current) {
                 setPaymentAmount(order.amount);
@@ -224,7 +250,7 @@ export function useCheckout(courseId) {
 
             return order;
         },
-        [course]
+        [course, isGuest, guest]
     );
 
     // ── Razorpay Payment ─────────────────────────
@@ -249,17 +275,22 @@ export function useCheckout(courseId) {
                 order_id: order.razorpay_order_id,
                 name: "CERTEZY",
                 description: course.title,
-                prefill: { name: user.name, email: user.email },
+                prefill: user
+                    ? { name: user.name, email: user.email }
+                    : { name: guest.name.trim(), email: guest.email.trim(), contact: guest.phone.trim() || undefined },
 
                 handler: async (response) => {
                     try {
+                        const proof = {
+                            payment_id: order.payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        };
                         await retryWithBackoff(() =>
-                            paymentService.razorpayVerify({
-                                payment_id: order.payment_id,
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature,
-                            })
+                            order.guest_token
+                                ? paymentService.guestRazorpayVerify({ ...proof, guest_token: order.guest_token })
+                                : paymentService.razorpayVerify(proof)
                         );
 
                         if (isMounted.current) resolve({ status: "success" });
@@ -282,7 +313,7 @@ export function useCheckout(courseId) {
 
             rzp.open();
         });
-    }, [course, user, createOrder]);
+    }, [course, user, guest, createOrder]);
 
     // ── PayPal Payment ─────────────────────────
     const payPaypal = useCallback(async () => {
@@ -316,6 +347,13 @@ export function useCheckout(courseId) {
                     payment_id: order.payment_id,
                     paypal_order_id: order.paypal_order_id,
                     course_id: course.id,
+                    // guest checkout: the return page finishes with this, not a login
+                    ...(order.guest_token && {
+                        guest_token: order.guest_token,
+                        account: order.account,
+                        email: order.email,
+                        course_title: course.title,
+                    }),
                 })
             );
         } catch {
@@ -339,10 +377,10 @@ export function useCheckout(courseId) {
             };
             const capture = async () => {
                 try {
-                    await paymentService.paypalCapture({
-                        payment_id: order.payment_id,
-                        paypal_order_id: order.paypal_order_id,
-                    });
+                    const ids = { payment_id: order.payment_id, paypal_order_id: order.paypal_order_id };
+                    await (order.guest_token
+                        ? paymentService.guestPaypalCapture({ ...ids, guest_token: order.guest_token })
+                        : paymentService.paypalCapture(ids));
                     try {
                         localStorage.removeItem("certezy_paypal_pending");
                     } catch {
@@ -392,6 +430,10 @@ export function useCheckout(courseId) {
             toast.error("Invalid course");
             return;
         }
+        if (isGuest && !guestValid) {
+            toast.error("Add your name and email, and accept the terms");
+            return;
+        }
 
         setPaying(true);
 
@@ -403,6 +445,19 @@ export function useCheckout(courseId) {
             }
 
             if (isMounted.current) {
+                if (guestOrder.current) {
+                    // No login yet: the done page explains how to get in (email kept out of the URL)
+                    try {
+                        sessionStorage.setItem(
+                            "certezy_checkout_done",
+                            JSON.stringify({ ...guestOrder.current, course_id: course.id, course_title: course.title })
+                        );
+                    } catch {
+                        /* the page still shows a generic message */
+                    }
+                    navigate(ROUTES.CHECKOUT_DONE, { replace: true });
+                    return;
+                }
                 toast.success("Payment successful 🎉");
                 await dispatch(fetchMe());
                 navigate(`/student/course/${course.id}/learn`);
@@ -421,7 +476,7 @@ export function useCheckout(courseId) {
                 setPaying(false);
             }
         }
-    }, [paying, scriptLoading, course, method, payRazorpay, payPaypal, dispatch, navigate]);
+    }, [paying, scriptLoading, course, method, payRazorpay, payPaypal, dispatch, navigate, isGuest, guestValid]);
 
     return {
         course,
@@ -436,5 +491,9 @@ export function useCheckout(courseId) {
         paymentAmount,
         paymentCurrency,
         discountInfo,
+        isGuest,
+        guest,
+        setGuest,
+        guestValid,
     };
 }

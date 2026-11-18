@@ -156,7 +156,7 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                     </div>
                 )}
                 {!isLoggedIn && !isEnrolled && (
-                    <p className="mt-2 text-center text-small text-slate-500">Create your account in the next step.</p>
+                    <p className="mt-2 text-center text-small text-slate-500">{pricing.isFree ? "Create your free account in the next step." : "No account needed — pay now, set your password after."}</p>
                 )}
 
                 {/* Guarantee (paid courses only) */}
