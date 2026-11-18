@@ -23,7 +23,7 @@ export function showCertificateEarned(certificate, navigate, { reissued = false 
                     <p className="text-small text-slate-500 mt-0.5">
                         {reissued
                             ? "You passed again — your certificate now shows today's date. Same certificate number and verification link."
-                            : "You completed the course. Your certificate from CERTEZY E-Learning Pvt. Ltd. is ready."}
+                            : "You completed the course. Your certificate from CERTEZY E-LEARNING PVT LTD is ready."}
                     </p>
                     <div className="flex items-center gap-3 mt-2.5">
                         {certificate.pdf_url && (

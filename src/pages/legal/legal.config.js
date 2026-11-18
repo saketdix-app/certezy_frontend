@@ -3,7 +3,7 @@ import { APP_NAME, SUPPORT_EMAIL, SUPPORT_PHONES } from "@/config/app";
 /** Details shared by the Privacy Policy and Terms of Service. */
 export const LEGAL = {
     brand: APP_NAME,
-    company: "CERTEZY E-LEARNING PRIVATE LIMITED",
+    company: "CERTEZY E-LEARNING PVT LTD",
     website: "certezy.com",
     email: SUPPORT_EMAIL,
     phones: SUPPORT_PHONES,

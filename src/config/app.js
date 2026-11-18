@@ -29,7 +29,7 @@ export const PMI_ATP = {
  * admin course list still shows the real creator.
  */
 export const COURSE_INSTRUCTOR = {
-    name: "CERTEZY E-Learning Pvt. Ltd.",
+    name: "CERTEZY E-LEARNING PVT LTD",
     avatar: "/brand/certezy-icon-192.png",
 };
 
@@ -49,7 +49,7 @@ export const WHATSAPP_LINES = SUPPORT_PHONES.map((p) => ({
 
 /** Registered office — shown on the Contact page. */
 export const COMPANY = {
-    legalName: "CERTEZY E-Learning Pvt. Ltd.",
+    legalName: "CERTEZY E-LEARNING PVT LTD",
     // One line per row
     addressLines: [
         "3rd Floor, Streamline J-1 Tower",
