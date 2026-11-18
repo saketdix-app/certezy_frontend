@@ -51,7 +51,7 @@ export default function NotificationsMenu({ className }) {
             >
                 <Bell size={16} />
                 {data.unread > 0 && (
-                    <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-500 px-1 text-center text-[10.5px] font-bold leading-[18px] text-white">
+                    <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-500 px-1 text-center text-label font-bold leading-[18px] text-white">
                         {data.unread > 9 ? "9+" : data.unread}
                     </span>
                 )}
@@ -59,19 +59,19 @@ export default function NotificationsMenu({ className }) {
             {open && (
                 <div className="absolute right-0 z-50 mt-2 w-[min(340px,calc(100vw-24px))] overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-xl">
                     <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5">
-                        <p className="text-[14px] font-bold text-slate-900">Notifications</p>
+                        <p className="text-ui font-bold text-slate-900">Notifications</p>
                         {data.unread > 0 && (
                             <button
                                 type="button"
                                 onClick={() => notificationService.markRead().then(load)}
-                                className="text-[12px] font-semibold text-[#3282B8]"
+                                className="text-small font-semibold text-[#3282B8]"
                             >
                                 Mark all read
                             </button>
                         )}
                     </div>
                     <ul className="max-h-[360px] overflow-y-auto">
-                        {!data.items.length && <li className="px-4 py-6 text-center text-[13px] text-slate-500">You're all caught up.</li>}
+                        {!data.items.length && <li className="px-4 py-6 text-center text-ui text-slate-500">You're all caught up.</li>}
                         {data.items.map((n) => (
                             <li key={n.id}>
                                 <button
@@ -79,9 +79,9 @@ export default function NotificationsMenu({ className }) {
                                     onClick={() => openItem(n)}
                                     className={cn("block w-full px-4 py-2.5 text-left hover:bg-slate-50", !n.read_at && "bg-[#F5FAFF]")}
                                 >
-                                    <p className="text-[13px] font-semibold text-slate-900">{n.title}</p>
-                                    {n.body && <p className="text-[12px] text-slate-500">{n.body}</p>}
-                                    <p className="mt-0.5 text-[11px] text-slate-400">{new Date(n.created_at).toLocaleString()}</p>
+                                    <p className="text-ui font-semibold text-slate-900">{n.title}</p>
+                                    {n.body && <p className="text-small text-slate-500">{n.body}</p>}
+                                    <p className="mt-0.5 text-label text-slate-400">{new Date(n.created_at).toLocaleString()}</p>
                                 </button>
                             </li>
                         ))}

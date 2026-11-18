@@ -29,9 +29,9 @@ const money = (obj) =>
 function Card({ label, value, sub }) {
     return (
         <div className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
-            <p className="text-[12px] font-semibold text-slate-500">{label}</p>
-            <p className="mt-1 text-[22px] font-extrabold text-slate-900">{value}</p>
-            {sub && <p className="text-[12px] text-slate-500">{sub}</p>}
+            <p className="text-small font-semibold text-slate-500">{label}</p>
+            <p className="mt-1 text-h2 font-extrabold text-slate-900">{value}</p>
+            {sub && <p className="text-small text-slate-500">{sub}</p>}
         </div>
     );
 }
@@ -77,8 +77,8 @@ export default function SalesBoard({ isAdmin }) {
         <div>
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Sales</h1>
-                    <p className="mt-1 text-[13px] text-slate-500">
+                    <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">Sales</h1>
+                    <p className="mt-1 text-ui text-slate-500">
                         A sale counts when payment is confirmed, for whoever owned the lead at that moment. Sent discount links aren't sales.
                     </p>
                 </div>
@@ -117,24 +117,24 @@ export default function SalesBoard({ isAdmin }) {
                     </div>
 
                     <section className="rounded-xl border border-slate-200 bg-surface p-4">
-                        <h2 className="mb-2 text-[15px] font-bold text-slate-900">Payments by status</h2>
+                        <h2 className="mb-2 text-body font-bold text-slate-900">Payments by status</h2>
                         <div className="flex flex-wrap gap-x-6 gap-y-1">
                             {STATES.map(([k, l, tone]) => (
-                                <p key={k} className="text-[13px] text-slate-600">
+                                <p key={k} className="text-ui text-slate-600">
                                     {l}: <b className={tone}>{data.payment_states[k] ?? 0}</b>
                                 </p>
                             ))}
                         </div>
-                        <p className="mt-2 text-[12px] text-slate-500">Abandoned = checkout started but not paid within 24 hours.</p>
+                        <p className="mt-2 text-small text-slate-500">Abandoned = checkout started but not paid within 24 hours.</p>
                     </section>
 
                     <div className="grid gap-5 lg:grid-cols-2">
                         <section className="rounded-xl border border-slate-200 bg-surface p-4">
-                            <h2 className="mb-2 text-[15px] font-bold text-slate-900">Course mix</h2>
+                            <h2 className="mb-2 text-body font-bold text-slate-900">Course mix</h2>
                             {!data.by_course.length ? (
-                                <p className="text-[13px] text-slate-500">No sales in this period.</p>
+                                <p className="text-ui text-slate-500">No sales in this period.</p>
                             ) : (
-                                <ul className="space-y-1.5 text-[13px]">
+                                <ul className="space-y-1.5 text-ui">
                                     {data.by_course.map((r, i) => (
                                         <li key={i} className="flex justify-between gap-3">
                                             <span className="truncate">{r.title ?? "—"}</span>
@@ -147,8 +147,8 @@ export default function SalesBoard({ isAdmin }) {
                             )}
                         </section>
                         <section className="rounded-xl border border-slate-200 bg-surface p-4">
-                            <h2 className="mb-2 text-[15px] font-bold text-slate-900">{isAdmin && !ownerId ? "By consultant" : "By lead source"}</h2>
-                            <ul className="space-y-1.5 text-[13px]">
+                            <h2 className="mb-2 text-body font-bold text-slate-900">{isAdmin && !ownerId ? "By consultant" : "By lead source"}</h2>
+                            <ul className="space-y-1.5 text-ui">
                                 {(isAdmin && !ownerId ? data.by_consultant : data.by_source).map((r, i) => (
                                     <li key={i} className="flex justify-between gap-3">
                                         <span>{isAdmin && !ownerId ? r.name ?? "Unassigned lead" : SOURCE_LABEL[r.source] ?? r.source}</span>
@@ -163,17 +163,17 @@ export default function SalesBoard({ isAdmin }) {
                     </div>
 
                     <section className="rounded-xl border border-slate-200 bg-surface p-4">
-                        <h2 className="mb-2 text-[15px] font-bold text-slate-900">Discount links</h2>
-                        <p className="text-[13px] text-slate-600">
+                        <h2 className="mb-2 text-body font-bold text-slate-900">Discount links</h2>
+                        <p className="text-ui text-slate-600">
                             Sent {data.discount_links.generated} · opened {data.discount_links.clicked} · paid {data.discount_links.redeemed} · expired{" "}
                             {data.discount_links.expired} · withdrawn {data.discount_links.revoked}
                         </p>
                     </section>
 
                     <section className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
-                        <h2 className="px-4 pt-3 text-[15px] font-bold text-slate-900">Recent sales</h2>
-                        <table className="mt-2 w-full min-w-[640px] text-left text-[13px]">
-                            <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                        <h2 className="px-4 pt-3 text-body font-bold text-slate-900">Recent sales</h2>
+                        <table className="mt-2 w-full min-w-[640px] text-left text-ui">
+                            <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                                 <tr>
                                     <th className="px-4 py-2">When</th>
                                     <th className="px-4 py-2">Lead</th>
@@ -197,7 +197,7 @@ export default function SalesBoard({ isAdmin }) {
                                         <td className="px-4 py-2">{s.course_title}</td>
                                         <td className="px-4 py-2 text-right font-semibold">
                                             {money({ [s.currency]: Number(s.amount) })}
-                                            {s.discount_link_id && <span className="ml-1 text-[11px] font-normal text-slate-500">(discount)</span>}
+                                            {s.discount_link_id && <span className="ml-1 text-label font-normal text-slate-500">(discount)</span>}
                                         </td>
                                         {isAdmin && <td className="px-4 py-2">{s.credited_to ?? "—"}</td>}
                                     </tr>
@@ -208,12 +208,12 @@ export default function SalesBoard({ isAdmin }) {
 
                     {isAdmin && limit != null && (
                         <section className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-surface p-4">
-                            <p className="text-[13px] text-slate-700">
+                            <p className="text-ui text-slate-700">
                                 <b>Largest discount</b> Consultants and Sub-Admins can send without an Admin:
                             </p>
                             <input type="number" min="1" max="100" value={limit} onChange={(e) => setLimit(e.target.value)} className={cn(inputCls, "w-24")} aria-label="Max discount percent" />
-                            <span className="text-[13px] text-slate-600">%</span>
-                            <button type="button" onClick={saveLimit} className="rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white">
+                            <span className="text-ui text-slate-600">%</span>
+                            <button type="button" onClick={saveLimit} className="rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white">
                                 Save
                             </button>
                         </section>

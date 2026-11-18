@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 /**
  * SearchPicker — a text box that searches as you type and shows matches below.
@@ -100,11 +100,11 @@ export default function SearchPicker({
                     className="absolute z-30 mt-1.5 w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-surface shadow-lg py-1"
                 >
                     {loading && items.length === 0 ? (
-                        <li className="px-4 py-3 text-[13px] text-slate-500 flex items-center gap-2">
+                        <li className="px-4 py-3 text-ui text-slate-500 flex items-center gap-2">
                             <Loader2 className="w-4 h-4 animate-spin" /> Searching…
                         </li>
                     ) : items.length === 0 ? (
-                        <li className="px-4 py-3 text-[13px] text-slate-500">{emptyText}</li>
+                        <li className="px-4 py-3 text-ui text-slate-500">{emptyText}</li>
                     ) : (
                         items.map((item, i) => (
                             <li

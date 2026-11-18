@@ -99,7 +99,7 @@ export default function MyCoursesPage() {
                     >
                         My Courses
                     </h1>
-                    <p style={{ fontSize: "14px", color: "#64748B", marginTop: "4px" }}>
+                    <p style={{ fontSize: "13.5px", color: "#64748B", marginTop: "4px" }}>
                         {enrollments.length > 0
                             ? `${enrollments.length} course${enrollments.length > 1 ? "s" : ""} enrolled`
                             : "You haven't enrolled in any courses yet"}
@@ -121,7 +121,7 @@ export default function MyCoursesPage() {
                                     "flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all duration-200"
                                 )}
                                 style={{
-                                    fontSize: "13px",
+                                    fontSize: "13.5px",
                                     fontWeight: tab === key ? 700 : 500,
                                     background: tab === key ? "#fff" : "transparent",
                                     color: tab === key ? "#0F172A" : "#64748B",
@@ -130,7 +130,7 @@ export default function MyCoursesPage() {
                             >
                                 {label}
                                 <span
-                                    className="px-1.5 py-0.5 rounded-md text-[11px] font-bold"
+                                    className="px-1.5 py-0.5 rounded-md text-label font-bold"
                                     style={{
                                         background: tab === key ? "#EBF4FF" : "rgba(0,0,0,0.06)",
                                         color: tab === key ? "#3282B8" : "#94A3B8",
@@ -160,7 +160,7 @@ export default function MyCoursesPage() {
                                 borderRadius: "10px",
                                 border: "1px solid #E2E8F0",
                                 background: "#fff",
-                                fontSize: "13px",
+                                fontSize: "13.5px",
                                 color: "#0F172A",
                                 outline: "none",
                             }}
@@ -226,7 +226,7 @@ function CourseCard({ enrollment, onOpen }) {
                     <span
                         className="absolute top-3 left-3 px-2.5 py-1 rounded-lg"
                         style={{
-                            fontSize: "10px",
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             textTransform: "uppercase",
                             letterSpacing: "0.06em",
@@ -244,7 +244,7 @@ function CourseCard({ enrollment, onOpen }) {
                     <span
                         className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg"
                         style={{
-                            fontSize: "10px",
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             textTransform: "uppercase",
                             letterSpacing: "0.06em",
@@ -290,7 +290,7 @@ function CourseCard({ enrollment, onOpen }) {
                     <div className="flex items-center justify-between">
                         <span
                             style={{
-                                fontSize: "11px",
+                                fontSize: "11.5px",
                                 fontWeight: 600,
                                 color: "#94A3B8",
                                 textTransform: "uppercase",
@@ -301,7 +301,7 @@ function CourseCard({ enrollment, onOpen }) {
                         </span>
                         <span
                             style={{
-                                fontSize: "12px",
+                                fontSize: "12.5px",
                                 fontWeight: 700,
                                 color: isCompleted ? "#10B981" : "#3282B8",
                             }}
@@ -324,7 +324,7 @@ function CourseCard({ enrollment, onOpen }) {
                 </div>
 
                 {/* Enrolled date */}
-                <p style={{ fontSize: "11px", color: "#CBD5E1" }}>
+                <p style={{ fontSize: "11.5px", color: "#CBD5E1" }}>
                     Enrolled {fmtDate(enrollment.enrolled_at)}
                 </p>
             </div>
@@ -375,7 +375,7 @@ function EmptyState({ tab, search, onBrowse }) {
                 <button
                     onClick={onBrowse}
                     className="px-5 py-2.5 rounded-xl text-white"
-                    style={{ background: "#3282B8", fontSize: "13px", fontWeight: 700 }}
+                    style={{ background: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     Browse Courses
                 </button>
@@ -387,11 +387,11 @@ function EmptyState({ tab, search, onBrowse }) {
 function ErrorState({ message, onRetry }) {
     return (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
+            <p style={{ fontSize: "13.5px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
             <button
                 onClick={onRetry}
                 className="px-4 py-2 rounded-xl"
-                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13px", fontWeight: 700 }}
+                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13.5px", fontWeight: 700 }}
             >
                 Try Again
             </button>

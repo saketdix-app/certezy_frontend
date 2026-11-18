@@ -111,7 +111,7 @@ export function RatingInput({ value = 0, onChange, size = 28, disabled = false }
                     </button>
                 ))}
             </div>
-            <span className="text-[12.5px] font-semibold text-slate-500 h-4">{LABELS[shown]}</span>
+            <span className="text-small font-semibold text-slate-500 h-4">{LABELS[shown]}</span>
         </div>
     );
 }

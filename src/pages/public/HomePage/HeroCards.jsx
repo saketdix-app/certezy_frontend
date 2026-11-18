@@ -14,8 +14,8 @@ import { PMP_FALLBACK, PMP_PRACTICE_EXAMS, PMP_SLUG, TOPICS } from "./useHeroCat
 function Fact({ value, label, first }) {
     return (
         <div className={`px-3 py-2.5 ${first ? "" : "border-l border-slate-200"}`}>
-            <div className="text-[22px] font-extrabold leading-none text-slate-900">{value}</div>
-            <div className="mt-1 text-[11.5px] font-medium text-slate-500">{label}</div>
+            <div className="text-h2 font-extrabold leading-none text-slate-900">{value}</div>
+            <div className="mt-1 text-label font-medium text-slate-500">{label}</div>
         </div>
     );
 }
@@ -32,19 +32,19 @@ export function PmpCourseCard({ pmp }) {
         >
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <span className="text-[11px] font-bold tracking-[0.09em] text-[#1A5F8A]">PMP® EXAM PREP</span>
-                    <span className="ml-2 rounded bg-[#E6F1FB] px-2 py-0.5 text-[11px] font-semibold text-[#0C447C]">
+                    <span className="text-label font-bold tracking-[0.09em] text-[#1A5F8A]">PMP® EXAM PREP</span>
+                    <span className="ml-2 rounded bg-[#E6F1FB] px-2 py-0.5 text-label font-semibold text-[#0C447C]">
                         Self-paced
                     </span>
-                    <p className="mt-1 text-[11.5px] font-semibold text-slate-500">PMI® Authorized Training Partner</p>
+                    <p className="mt-1 text-label font-semibold text-slate-500">PMI® Authorized Training Partner</p>
                 </div>
                 <img src={PMI_ATP.badge} alt={PMI_ATP.alt} width={56} height={56} className="h-14 w-14 shrink-0" />
             </div>
 
-            <h2 id="hero-pmp-title" className="mt-3 text-[20px] font-extrabold leading-snug text-slate-900">
+            <h2 id="hero-pmp-title" className="mt-3 text-h2 font-extrabold leading-snug text-slate-900">
                 Project Management Professional (PMP)®
             </h2>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-slate-600">
+            <p className="mt-2 text-ui leading-relaxed text-slate-600">
                 Predictive, agile and hybrid project management, built for the PMP® certification exam.
             </p>
 
@@ -54,7 +54,7 @@ export function PmpCourseCard({ pmp }) {
                 <Fact value={PMP_PRACTICE_EXAMS} label="Practice exams" />
             </div>
 
-            <ul className="mt-4 space-y-1.5 text-[13.5px] text-slate-700">
+            <ul className="mt-4 space-y-1.5 text-ui text-slate-700">
                 {["Certificate with 35 contact hours", "Full-length timed exam simulations"].map((t) => (
                     <li key={t} className="flex items-center gap-2">
                         <Check size={15} strokeWidth={2.5} className="shrink-0 text-[#3282B8]" aria-hidden="true" />
@@ -64,10 +64,10 @@ export function PmpCourseCard({ pmp }) {
             </ul>
 
             <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
-                <div className="min-h-[24px] text-[13px] text-slate-500">
+                <div className="min-h-[24px] text-ui text-slate-500">
                     {pricing && !pricing.isFree && (
                         <>
-                            <span className="text-[18px] font-extrabold text-slate-900">{pricing.label}</span>
+                            <span className="text-h3 font-extrabold text-slate-900">{pricing.label}</span>
                             {pricing.originalPrice && (
                                 <span className="ml-2 line-through">
                                     {formatMoney(pricing.originalPrice, pricing.currency)}
@@ -78,7 +78,7 @@ export function PmpCourseCard({ pmp }) {
                 </div>
                 <Link
                     to={`/courses/${PMP_SLUG}`}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-action px-4 py-2.5 text-[13.5px] font-bold text-white transition-colors hover:bg-action-hover"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-action px-4 py-2.5 text-ui font-bold text-white transition-colors hover:bg-action-hover"
                 >
                     View course <ArrowRight size={15} aria-hidden="true" />
                 </Link>
@@ -102,11 +102,11 @@ export function TopicCards({ topics = {} }) {
                         className="group flex flex-col rounded-lg border-t-[3px] border-[#3282B8] bg-white px-4 py-4 transition-transform hover:-translate-y-1 sm:px-5"
                     >
                         <Icon size={22} className="text-[#3282B8]" aria-hidden="true" />
-                        <h3 className="mt-2.5 text-[15px] font-extrabold text-slate-900">{title}</h3>
-                        <p className="mt-0.5 min-h-[18px] text-[12px] leading-snug text-slate-500">
+                        <h3 className="mt-2.5 text-body font-extrabold text-slate-900">{title}</h3>
+                        <p className="mt-0.5 min-h-[18px] text-small leading-snug text-slate-500">
                             {info?.subtitle}
                         </p>
-                        <span className="mt-auto inline-flex items-center gap-1 pt-3 text-[12.5px] font-bold text-[#1A5F8A]">
+                        <span className="mt-auto inline-flex items-center gap-1 pt-3 text-small font-bold text-[#1A5F8A]">
                             {info?.count ? `${info.count} course${info.count === 1 ? "" : "s"}` : "Explore"}
                             <ArrowRight
                                 size={14}

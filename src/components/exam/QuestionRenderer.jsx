@@ -70,7 +70,7 @@ export function QuestionRenderer({
                             <span className="text-gray-800">{option.option_text}</span>
                         </div>
                         {isReview && isCorrect && (
-                            <div className="flex items-center gap-1 mt-2 text-green-600 text-sm">
+                            <div className="flex items-center gap-1 mt-2 text-green-600 text-ui">
                                 <CheckCircle2 size={14} />
                                 <span>Correct answer</span>
                             </div>
@@ -87,10 +87,10 @@ export function QuestionRenderer({
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
                 <div className="flex items-start gap-3">
                     <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 leading-relaxed">
+                        <h3 className="text-h3 font-semibold text-gray-900 leading-relaxed">
                             {question.question}
                         </h3>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-4 mt-2 text-ui text-gray-600">
                             <span className="px-2 py-1 bg-[#DBEAFE] text-[#2A6FA0] rounded-md font-medium">
                                 {question.type === "true_false"
                                     ? "True / False"
@@ -124,7 +124,7 @@ export function QuestionRenderer({
                             <Info size={16} className="text-[#3282B8] mt-0.5" />
                             <div>
                                 <h4 className="font-semibold text-blue-900 mb-1">Explanation</h4>
-                                <p className="text-[#1E5F8C] text-sm leading-relaxed">
+                                <p className="text-[#1E5F8C] text-ui leading-relaxed">
                                     {question.explanation}
                                 </p>
                             </div>
@@ -182,10 +182,10 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                             <AlertCircle size={40} className="text-red-600" />
                         )}
                     </div>
-                    <h2 className={`text-3xl font-bold mb-2 ${passed ? "text-green-900" : "text-red-900"}`}>
+                    <h2 className={`text-h1 font-bold mb-2 ${passed ? "text-green-900" : "text-red-900"}`}>
                         {passed ? "Congratulations!" : "Exam Failed"}
                     </h2>
-                    <p className={`text-lg mb-6 ${passed ? "text-green-700" : "text-red-700"}`}>
+                    <p className={`text-h3 mb-6 ${passed ? "text-green-700" : "text-red-700"}`}>
                         {passed ? "You have passed the exam!" : "You did not meet the passing criteria."}{" "}
                         <span className="whitespace-nowrap">(Pass mark: {passMark}%)</span>
                     </p>
@@ -193,22 +193,22 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                     {/* Score Display */}
                     <div className="flex items-center justify-center gap-8 mb-6">
                         <div className="text-center">
-                            <div className={`text-4xl font-bold ${getGradeColor(percentage)}`}>
+                            <div className={`text-h1 font-bold ${getGradeColor(percentage)}`}>
                                 {percentage}%
                             </div>
-                            <div className="text-sm text-gray-600 mt-1">Score</div>
+                            <div className="text-ui text-gray-600 mt-1">Score</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className="text-h2 font-bold text-gray-900">
                                 {correctCount}/{totalQuestions}
                             </div>
-                            <div className="text-sm text-gray-600 mt-1">Correct</div>
+                            <div className="text-ui text-gray-600 mt-1">Correct</div>
                         </div>
                         <div className="text-center">
-                            <div className={`text-lg font-semibold ${getGradeColor(percentage)}`}>
+                            <div className={`text-h3 font-semibold ${getGradeColor(percentage)}`}>
                                 {getGradeLabel(percentage)}
                             </div>
-                            <div className="text-sm text-gray-600 mt-1">Grade</div>
+                            <div className="text-ui text-gray-600 mt-1">Grade</div>
                         </div>
                     </div>
                 </div>
@@ -217,7 +217,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
             {/* Question Review */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Question Review</h3>
+                    <h3 className="text-h3 font-semibold text-gray-900">Question Review</h3>
                 </div>
                 <div className="divide-y divide-gray-200">
                     {questions.map((question, index) => {
@@ -245,7 +245,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                                 Question {index + 1}
                                             </span>
                                             <span
-                                                className={`px-2 py-1 rounded text-xs font-medium ${
+                                                className={`px-2 py-1 rounded text-small font-medium ${
                                                     isCorrect
                                                         ? "bg-green-100 text-green-700"
                                                         : "bg-red-100 text-red-700"
@@ -277,15 +277,15 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                                                   : "bg-gray-50"
                                                         }`}
                                                     >
-                                                        <span className="text-sm font-medium">
+                                                        <span className="text-ui font-medium">
                                                             {String.fromCharCode(
                                                                 65 + question.options.indexOf(option)
                                                             )}
                                                             .
                                                         </span>
-                                                        <span className="text-sm">{option.option_text}</span>
+                                                        <span className="text-ui">{option.option_text}</span>
                                                         {isSelected && (
-                                                            <span className="ml-auto text-xs font-medium text-gray-500">
+                                                            <span className="ml-auto text-small font-medium text-gray-500">
                                                                 Your answer
                                                             </span>
                                                         )}
@@ -305,10 +305,10 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                                 <div className="flex items-start gap-2">
                                                     <Info size={14} className="text-[#3282B8] mt-0.5" />
                                                     <div>
-                                                        <span className="font-medium text-blue-900 text-sm">
+                                                        <span className="font-medium text-blue-900 text-ui">
                                                             Explanation:{" "}
                                                         </span>
-                                                        <span className="text-[#1E5F8C] text-sm">
+                                                        <span className="text-[#1E5F8C] text-ui">
                                                             {question.explanation}
                                                         </span>
                                                     </div>

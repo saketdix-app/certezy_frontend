@@ -60,30 +60,30 @@ export default function CrmOverview({ name, leadsPath }) {
 
     return (
         <div>
-            <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Hi {name?.split(" ")[0]}, here's today</h1>
-            <p className="mt-1 mb-5 text-[13px] text-slate-500">Your pipeline and the follow-ups due today.</p>
+            <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">Hi {name?.split(" ")[0]}, here's today</h1>
+            <p className="mt-1 mb-5 text-ui text-slate-500">Your pipeline and the follow-ups due today.</p>
 
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                 {KPIS.map(([k, label, tone]) => (
                     <div key={k} className="rounded-xl border border-slate-200 bg-surface px-4 py-3">
-                        <p className="text-[12px] font-semibold text-slate-500">{label}</p>
-                        <p className={cn("mt-1 text-[24px] font-extrabold text-slate-900", data.kpis[k] > 0 && tone)}>{data.kpis[k]}</p>
+                        <p className="text-small font-semibold text-slate-500">{label}</p>
+                        <p className={cn("mt-1 text-h2 font-extrabold text-slate-900", data.kpis[k] > 0 && tone)}>{data.kpis[k]}</p>
                     </div>
                 ))}
             </div>
 
             <div className="mt-6 grid gap-5 lg:grid-cols-2">
                 <section className="rounded-xl border border-slate-200 bg-surface px-4 pt-3">
-                    <h2 className="text-[15px] font-bold text-slate-900">Due today</h2>
+                    <h2 className="text-body font-bold text-slate-900">Due today</h2>
                     <FollowUpList items={data.today} onOpen={setOpenId} onDone={complete} busyId={busyId} />
                 </section>
                 <section className="rounded-xl border border-slate-200 bg-surface px-4 pt-3">
-                    <h2 className="text-[15px] font-bold text-slate-900">Overdue</h2>
+                    <h2 className="text-body font-bold text-slate-900">Overdue</h2>
                     <FollowUpList items={data.overdue} onOpen={setOpenId} onDone={complete} busyId={busyId} />
                 </section>
             </div>
 
-            <p className="mt-5 text-[13px] text-slate-500">
+            <p className="mt-5 text-ui text-slate-500">
                 Sales and revenue tracking is coming in a later update.{" "}
                 <Link to={leadsPath} className="font-semibold text-action">
                     Go to my leads →

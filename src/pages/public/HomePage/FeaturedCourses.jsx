@@ -109,13 +109,13 @@ export default function FeaturedCourses() {
                                     onClick={() => setSelectedCategory(category.id)}
                                 >
                                     <div className="h-[160px] bg-gradient-to-br from-[#3282B8] to-[#1A5F8A] flex items-center justify-center">
-                                        <span className="text-sm font-bold">{category.courses} Courses</span>
+                                        <span className="text-ui font-bold">{category.courses} Courses</span>
                                     </div>
 
                                     <div className="p-5 flex flex-col flex-1">
-                                        <h3 className="font-bold text-lg mb-2">{category.title}</h3>
+                                        <h3 className="font-bold text-h3 mb-2">{category.title}</h3>
 
-                                        <p className="text-gray-400 text-sm mb-4">{category.description}</p>
+                                        <p className="text-gray-400 text-ui mb-4">{category.description}</p>
 
                                         <Link
                                             to={`/courses?category=${category.id}`}

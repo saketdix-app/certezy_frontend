@@ -10,7 +10,7 @@ export default function AboutMission() {
                         {/* accent line */}
                         <div className="w-14 h-[4px] bg-gradient-to-r from-[#3282B8] to-[#7C3AED] mb-6 rounded-full"></div>
 
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
+                        <h2 className="text-h1 md:text-h1 font-bold text-gray-900 leading-tight mb-6">
                             Making Certifications Accessible
                             <br />
                             to Everyone
@@ -59,7 +59,7 @@ export default function AboutMission() {
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle,_#ffffff_1px,_transparent_1px)] [background-size:22px_22px]"></div>
 
                             {/* quote text */}
-                            <p className="text-white text-lg font-medium max-w-[280px] text-center relative z-10 leading-relaxed px-6">
+                            <p className="text-white text-h3 font-medium max-w-[280px] text-center relative z-10 leading-relaxed px-6">
                                 “Building the future of digital credentials, one professional at a time.”
                             </p>
                         </div>

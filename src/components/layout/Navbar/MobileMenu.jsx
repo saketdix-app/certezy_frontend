@@ -62,7 +62,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                     onClick={onClose}
                     className={cn(
                         "flex items-center gap-2.5 px-2 py-2.5 rounded",
-                        "text-[14px] font-medium text-text-secondary",
+                        "text-ui font-medium text-text-secondary",
                         "hover:bg-primary-light hover:text-primary",
                         "transition-colors duration-150"
                     )}
@@ -76,7 +76,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                     onClick={() => setCatOpen(!catOpen)}
                     className={cn(
                         "w-full flex items-center justify-between",
-                        "px-2 py-2.5 rounded text-[14px] font-medium",
+                        "px-2 py-2.5 rounded text-ui font-medium",
                         "text-text-secondary hover:bg-primary-light hover:text-primary",
                         "transition-colors duration-150"
                     )}
@@ -100,7 +100,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                         {loading ? (
                             <div className="flex items-center gap-2 py-3 text-text-muted">
                                 <Loader2 size={14} className="animate-spin" />
-                                <span className="text-[13px]">Loading...</span>
+                                <span className="text-ui">Loading...</span>
                             </div>
                         ) : categories.length > 0 ? (
                             <>
@@ -111,7 +111,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                         onClick={onClose}
                                         className={cn(
                                             "block px-2 py-2 rounded",
-                                            "text-[13.5px] font-medium text-text-secondary",
+                                            "text-ui font-medium text-text-secondary",
                                             "hover:bg-primary-light hover:text-primary",
                                             "transition-colors duration-150"
                                         )}
@@ -122,13 +122,13 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                 <Link
                                     to="/courses"
                                     onClick={onClose}
-                                    className="block px-2 py-2 text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                                    className="block px-2 py-2 text-ui font-semibold text-primary hover:text-primary-hover transition-colors"
                                 >
                                     View all courses →
                                 </Link>
                             </>
                         ) : (
-                            <p className="text-[13px] text-text-muted px-2 py-2">No categories found</p>
+                            <p className="text-ui text-text-muted px-2 py-2">No categories found</p>
                         )}
                     </div>
                 )}
@@ -147,7 +147,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                             onClick={onClose}
                             className={cn(
                                 "block px-2 py-2.5 rounded",
-                                "text-[14px] font-medium text-text-secondary",
+                                "text-ui font-medium text-text-secondary",
                                 "hover:bg-primary-light hover:text-primary",
                                 "transition-colors duration-150"
                             )}
@@ -166,7 +166,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                         {/* User info pill */}
                         <div className="flex items-center gap-3 px-2 py-3">
                             <div className="w-8 h-8 rounded-full bg-action flex items-center justify-center shrink-0">
-                                <span className="text-white text-[11px] font-bold">
+                                <span className="text-white text-label font-bold">
                                     {user.name
                                         .split(" ")
                                         .map((n) => n[0])
@@ -176,10 +176,10 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                 </span>
                             </div>
                             <div className="min-w-0">
-                                <p className="text-[13.5px] font-semibold text-text-primary truncate">
+                                <p className="text-ui font-semibold text-text-primary truncate">
                                     {user.name}
                                 </p>
-                                <p className="text-[12px] text-text-muted truncate">{user.email}</p>
+                                <p className="text-small text-text-muted truncate">{user.email}</p>
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                         key={i}
                                         onClick={handleLogout}
                                         className={cn(
-                                            "w-full text-left block px-2 py-2.5 rounded text-[14px] font-medium",
+                                            "w-full text-left block px-2 py-2.5 rounded text-ui font-medium",
                                             "transition-colors duration-150 text-red-500 hover:bg-red-50"
                                         )}
                                     >
@@ -207,7 +207,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                                         to={item.to}
                                         onClick={onClose}
                                         className={cn(
-                                            "block px-2 py-2.5 rounded text-[14px] font-medium",
+                                            "block px-2 py-2.5 rounded text-ui font-medium",
                                             "transition-colors duration-150 hover:bg-primary-light hover:text-primary",
                                             item.admin
                                                 ? "text-primary font-semibold flex items-center gap-2"
@@ -232,7 +232,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                             className={cn(
                                 "flex-1 text-center py-2.5 rounded",
                                 "border-[1.5px] border-border",
-                                "text-[14px] font-semibold text-text-primary",
+                                "text-ui font-semibold text-text-primary",
                                 "hover:border-primary hover:text-primary transition-colors duration-200"
                             )}
                         >
@@ -244,7 +244,7 @@ export default function MobileMenu({ isLoggedIn, user, onClose }) {
                             className={cn(
                                 "flex-1 text-center py-2.5 rounded",
                                 "bg-action hover:bg-action-hover",
-                                "text-[14px] font-semibold text-white",
+                                "text-ui font-semibold text-white",
                                 "transition-colors duration-200"
                             )}
                         >

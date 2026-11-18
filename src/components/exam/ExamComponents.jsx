@@ -42,7 +42,7 @@ export function ExamTimer({ duration, onTimeUp, isActive }) {
             }`}
         >
             <Clock size={16} />
-            <span className="font-semibold text-sm">{formatTime(timeLeft)}</span>
+            <span className="font-semibold text-ui">{formatTime(timeLeft)}</span>
             {isWarning && <AlertCircle size={14} className="animate-pulse" />}
         </div>
     );
@@ -59,8 +59,8 @@ export function QuestionNavigator({
         <div className="w-80 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-[#0F2545] to-[#1E3A5F] text-white p-4">
-                <h3 className="font-semibold text-lg">Question Navigator</h3>
-                <div className="flex items-center gap-4 mt-2 text-sm">
+                <h3 className="font-semibold text-h3">Question Navigator</h3>
+                <div className="flex items-center gap-4 mt-2 text-ui">
                     <div className="flex items-center gap-1">
                         <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                         <span>Answered</span>
@@ -88,7 +88,7 @@ export function QuestionNavigator({
                             <button
                                 key={question.id}
                                 onClick={() => onQuestionSelect(index)}
-                                className={`relative w-12 h-12 rounded-lg font-semibold text-sm transition-all ${
+                                className={`relative w-12 h-12 rounded-lg font-semibold text-ui transition-all ${
                                     isCurrent
                                         ? "bg-action text-white ring-2 ring-[#3282B8]/30"
                                         : isAnswered
@@ -109,7 +109,7 @@ export function QuestionNavigator({
 
                 {/* Progress */}
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <div className="flex justify-between text-ui text-gray-600 mb-2">
                         <span>Progress</span>
                         <span>
                             {Object.keys(answers).length}/{questions.length}
@@ -137,8 +137,8 @@ export function SubmitExamModal({ isOpen, onClose, onSubmit, unansweredCount, fl
                     <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <AlertCircle size={32} className="text-yellow-600" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">Submit Exam?</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-h2 font-bold text-gray-900 mb-2">Submit Exam?</h3>
+                    <p className="text-gray-600 text-ui">
                         Are you sure you want to submit your exam? This action cannot be undone.
                     </p>
                 </div>
@@ -147,13 +147,13 @@ export function SubmitExamModal({ isOpen, onClose, onSubmit, unansweredCount, fl
                 {(unansweredCount > 0 || flaggedCount > 0) && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                         {unansweredCount > 0 && (
-                            <div className="flex items-center gap-2 text-yellow-800 text-sm mb-2">
+                            <div className="flex items-center gap-2 text-yellow-800 text-ui mb-2">
                                 <AlertCircle size={16} />
                                 <span>{unansweredCount} unanswered questions</span>
                             </div>
                         )}
                         {flaggedCount > 0 && (
-                            <div className="flex items-center gap-2 text-yellow-800 text-sm">
+                            <div className="flex items-center gap-2 text-yellow-800 text-ui">
                                 <Flag size={16} />
                                 <span>{flaggedCount} flagged questions for review</span>
                             </div>

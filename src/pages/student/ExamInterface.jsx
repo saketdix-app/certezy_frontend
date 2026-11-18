@@ -217,7 +217,7 @@ function ExamScreen({
 
     if (!currentQuestion) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9] text-[15px] text-[#475569]">
+            <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9] text-body text-[#475569]">
                 This exam has no questions yet.
             </div>
         );
@@ -279,10 +279,10 @@ function ExamScreen({
                     aria-labelledby="exit-exam-title"
                 >
                     <div className="bg-white rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl">
-                        <h3 id="exit-exam-title" className="text-[17px] font-extrabold text-[#0F172A]">
+                        <h3 id="exit-exam-title" className="text-h3 font-extrabold text-[#0F172A]">
                             Exit the exam?
                         </h3>
-                        <p className="mt-2 text-[13.5px] text-[#475569]">
+                        <p className="mt-2 text-ui text-[#475569]">
                             Your answers won&apos;t be submitted or scored. You can start the exam again from
                             the course at any time.
                         </p>
@@ -291,14 +291,14 @@ function ExamScreen({
                                 type="button"
                                 onClick={() => setConfirmExit(false)}
                                 autoFocus
-                                className="flex-1 py-2.5 rounded-xl bg-action text-white text-[13.5px] font-bold hover:bg-action-hover"
+                                className="flex-1 py-2.5 rounded-xl bg-action text-white text-ui font-bold hover:bg-action-hover"
                             >
                                 Keep going
                             </button>
                             <button
                                 type="button"
                                 onClick={onExit}
-                                className="flex-1 py-2.5 rounded-xl border border-[#E2E8F0] text-[13.5px] font-semibold text-[#B91C1C] hover:bg-red-50"
+                                className="flex-1 py-2.5 rounded-xl border border-[#E2E8F0] text-ui font-semibold text-[#B91C1C] hover:bg-red-50"
                             >
                                 Exit exam
                             </button>

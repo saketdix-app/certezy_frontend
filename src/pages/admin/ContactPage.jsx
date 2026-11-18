@@ -229,10 +229,10 @@ export default function ContactPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">
                         Contact Management
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Handle customer support tickets and inquiries efficiently.
                     </p>
                 </div>
@@ -278,10 +278,10 @@ export default function ContactPage() {
                                     <Icon size={20} style={{ color }} />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                         {label}
                                     </p>
-                                    <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                    <p className="text-h1 font-extrabold text-slate-900 leading-none mt-0.5">
                                         {value}
                                     </p>
                                 </div>
@@ -308,7 +308,7 @@ export default function ContactPage() {
                                 placeholder="Search by name, email, or subject..."
                                 value={searchTerm}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                             />
                         </div>
                     </div>
@@ -316,7 +316,7 @@ export default function ContactPage() {
                         <select
                             value={selectedStatus}
                             onChange={(e) => handleStatusFilter(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                         >
                             <option value="">All Status</option>
                             <option value="new">New</option>
@@ -339,8 +339,8 @@ export default function ContactPage() {
                 ) : messages.length === 0 ? (
                     <div className="text-center py-20">
                         <Mail className="mx-auto text-slate-300 mb-4" size={48} />
-                        <p className="text-lg font-semibold text-slate-900">No messages found</p>
-                        <p className="text-sm text-slate-600 mt-1">Try adjusting your search or filters</p>
+                        <p className="text-h3 font-semibold text-slate-900">No messages found</p>
+                        <p className="text-ui text-slate-600 mt-1">Try adjusting your search or filters</p>
                     </div>
                 ) : (
                     <>
@@ -349,22 +349,22 @@ export default function ContactPage() {
                             <table className="w-full min-w-[720px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Customer
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Subject
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Message
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Status
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Date
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Actions
                                         </th>
                                     </tr>
@@ -384,26 +384,26 @@ export default function ContactPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div>
-                                                        <p className="text-sm font-semibold text-slate-900">
+                                                        <p className="text-ui font-semibold text-slate-900">
                                                             {message.name}
                                                         </p>
-                                                        <p className="text-xs text-slate-500">
+                                                        <p className="text-small text-slate-500">
                                                             {message.email}
                                                         </p>
                                                         {message.phone && (
-                                                            <p className="text-xs text-slate-500">
+                                                            <p className="text-small text-slate-500">
                                                                 {message.phone}
                                                             </p>
                                                         )}
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <p className="text-sm font-medium text-slate-900">
+                                                    <p className="text-ui font-medium text-slate-900">
                                                         {message.subject}
                                                     </p>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <p className="text-sm text-slate-600 line-clamp-2">
+                                                    <p className="text-ui text-slate-600 line-clamp-2">
                                                         {truncateMessage(
                                                             message.message ?? message.message_preview
                                                         )}
@@ -416,7 +416,7 @@ export default function ContactPage() {
                                                             style={{ color: statusStyle.color }}
                                                         />
                                                         <span
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium"
                                                             style={{
                                                                 background: statusStyle.bg,
                                                                 color: statusStyle.color,
@@ -429,7 +429,7 @@ export default function ContactPage() {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2 text-slate-600">
                                                         <Calendar size={14} />
-                                                        <span className="text-sm">
+                                                        <span className="text-ui">
                                                             {formatDate(message.created_at)}
                                                         </span>
                                                     </div>
@@ -479,7 +479,7 @@ export default function ContactPage() {
                         {/* Pagination */}
                         {totalPages > 1 && (
                             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-                                <p className="text-sm text-slate-600">
+                                <p className="text-ui text-slate-600">
                                     Showing {(currentPage - 1) * PER_PAGE + 1} to{" "}
                                     {Math.min(currentPage * PER_PAGE, totalCount)} of {totalCount} results
                                 </p>
@@ -491,7 +491,7 @@ export default function ContactPage() {
                                     >
                                         <ChevronLeft size={16} />
                                     </button>
-                                    <span className="px-3 py-1 text-sm text-slate-600">
+                                    <span className="px-3 py-1 text-ui text-slate-600">
                                         Page {currentPage} of {totalPages}
                                     </span>
                                     <button
@@ -519,21 +519,21 @@ export default function ContactPage() {
                         <div className="px-6 py-4 border-b border-slate-100">
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex-1">
-                                    <h3 className="text-lg font-semibold text-slate-900">
+                                    <h3 className="text-h3 font-semibold text-slate-900">
                                         {selectedMessage.subject}
                                     </h3>
                                     <div className="mt-2 space-y-1">
-                                        <p className="text-sm text-slate-600">
+                                        <p className="text-ui text-slate-600">
                                             <span className="font-medium">From:</span> {selectedMessage.name}{" "}
                                             ({selectedMessage.email})
                                         </p>
                                         {selectedMessage.phone && (
-                                            <p className="text-sm text-slate-600">
+                                            <p className="text-ui text-slate-600">
                                                 <span className="font-medium">Phone:</span>{" "}
                                                 {selectedMessage.phone}
                                             </p>
                                         )}
-                                        <p className="text-sm text-slate-600">
+                                        <p className="text-ui text-slate-600">
                                             <span className="font-medium">Received:</span>{" "}
                                             {formatDate(selectedMessage.created_at)}
                                         </p>
@@ -551,7 +551,7 @@ export default function ContactPage() {
                         {/* Modal Body */}
                         <div className="px-6 py-4 overflow-y-auto max-h-96">
                             <div className="bg-slate-50 rounded-xl p-4">
-                                <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                <p className="text-ui text-slate-700 whitespace-pre-wrap">
                                     {selectedMessage.message ||
                                         (selectedMessage.loadingFull ? "Loading message…" : "No message")}
                                 </p>
@@ -565,11 +565,11 @@ export default function ContactPage() {
                                             key={r.id}
                                             className="ml-6 rounded-xl border border-brand-200 bg-action-soft p-4"
                                         >
-                                            <p className="text-[11.5px] font-semibold text-action mb-1">
+                                            <p className="text-label font-semibold text-action mb-1">
                                                 Reply by {r.admin_name || "CERTEZY team"} ·{" "}
                                                 {formatDate(r.created_at)}
                                             </p>
-                                            <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                            <p className="text-ui text-slate-700 whitespace-pre-wrap">
                                                 {r.message}
                                             </p>
                                         </div>
@@ -580,7 +580,7 @@ export default function ContactPage() {
                             {/* Write a reply */}
                             {replyOpen && (
                                 <div className="mt-4">
-                                    <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                                    <label className="block text-ui font-semibold text-slate-700 mb-1.5">
                                         Reply to {selectedMessage.email}
                                     </label>
                                     <textarea
@@ -590,9 +590,9 @@ export default function ContactPage() {
                                         maxLength={5000}
                                         autoFocus
                                         placeholder={`Hi ${selectedMessage.name?.split(" ")[0] || "there"},`}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13.5px] text-slate-800 outline-none focus:border-action resize-y"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-surface text-ui text-slate-800 outline-none focus:border-action resize-y"
                                     />
-                                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[12px] text-slate-500">
+                                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-small text-slate-500">
                                         <label className="flex items-center gap-2 cursor-pointer">
                                             <input
                                                 type="checkbox"
@@ -612,9 +612,9 @@ export default function ContactPage() {
                         <div className="px-6 py-4 border-t border-slate-100">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm text-slate-600">Status:</span>
+                                    <span className="text-ui text-slate-600">Status:</span>
                                     <span
-                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium"
                                         style={{
                                             background:
                                                 STATUS_COLORS[selectedMessage.status]?.bg || "#F3F4F6",
@@ -629,7 +629,7 @@ export default function ContactPage() {
                                         <button
                                             onClick={() => handleStatusUpdate(selectedMessage.id, "read")}
                                             disabled={updatingStatus}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition-colors disabled:opacity-50"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 text-white text-ui font-semibold hover:bg-blue-600 transition-colors disabled:opacity-50"
                                         >
                                             <MessageSquare size={16} />
                                             Mark as Read
@@ -639,7 +639,7 @@ export default function ContactPage() {
                                         <button
                                             onClick={() => handleStatusUpdate(selectedMessage.id, "resolved")}
                                             disabled={updatingStatus}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition-colors disabled:opacity-50"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500 text-white text-ui font-semibold hover:bg-green-600 transition-colors disabled:opacity-50"
                                         >
                                             <CheckCircle size={16} />
                                             Mark as Resolved
@@ -650,14 +650,14 @@ export default function ContactPage() {
                                             <button
                                                 onClick={() => setReplyOpen(false)}
                                                 disabled={sendingReply}
-                                                className="px-4 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                                className="px-4 py-2 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 onClick={handleSendReply}
                                                 disabled={sendingReply || replyText.trim().length < 2}
-                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-sm font-semibold hover:bg-action-hover transition-colors disabled:opacity-50"
+                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover transition-colors disabled:opacity-50"
                                             >
                                                 {sendingReply ? (
                                                     <Loader2 size={16} className="animate-spin" />
@@ -670,7 +670,7 @@ export default function ContactPage() {
                                     ) : (
                                         <button
                                             onClick={() => setReplyOpen(true)}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-sm font-semibold hover:bg-action-hover transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover transition-colors"
                                         >
                                             <Reply size={16} />
                                             Reply

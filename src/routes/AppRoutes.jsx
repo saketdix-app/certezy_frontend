@@ -112,9 +112,9 @@ function NotFound() {
     return (
         <div className="min-h-[70vh] flex items-center justify-center">
             <div className="text-center">
-                <p className="text-[48px] font-extrabold text-primary">404</p>
-                <p className="text-[16px] text-text-secondary mt-2">Page not found</p>
-                <Link to={ROUTES.HOME} className="inline-block mt-4 text-[14px] font-semibold text-primary">
+                <p className="text-display font-extrabold text-primary">404</p>
+                <p className="text-body text-text-secondary mt-2">Page not found</p>
+                <Link to={ROUTES.HOME} className="inline-block mt-4 text-ui font-semibold text-primary">
                     ← Back to home
                 </Link>
             </div>

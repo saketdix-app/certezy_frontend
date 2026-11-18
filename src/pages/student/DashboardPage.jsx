@@ -181,7 +181,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                     >
                         Welcome back, {firstName} 👋
                     </h1>
-                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.58)", lineHeight: 1.6 }}>
+                    <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.58)", lineHeight: 1.6 }}>
                         {totalEnrolled > 0
                             ? `You have ${totalEnrolled} course${totalEnrolled > 1 ? "s" : ""} in progress. Keep pushing forward!`
                             : "Start your learning journey — browse courses and enroll today."}
@@ -193,7 +193,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                         style={{
                             background: "#3282B8",
                             color: "#fff",
-                            fontSize: "13px",
+                            fontSize: "13.5px",
                             fontWeight: 700,
                         }}
                     >
@@ -220,7 +220,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                     <div>
                         <p
                             style={{
-                                fontSize: "11px",
+                                fontSize: "11.5px",
                                 color: "rgba(255,255,255,0.4)",
                                 fontWeight: 600,
                                 letterSpacing: "0.06em",
@@ -229,7 +229,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                         >
                             Learning Streak
                         </p>
-                        <p style={{ fontSize: "18px", fontWeight: 800, color: "#fff" }}>Keep it up!</p>
+                        <p style={{ fontSize: "17px", fontWeight: 800, color: "#fff" }}>Keep it up!</p>
                     </div>
                 </div>
             </div>
@@ -286,10 +286,10 @@ function StatsRow({ totalEnrolled, totalCompleted, totalCerts, recentAttemptsCou
                         <Icon size={20} style={{ color }} />
                     </div>
                     <div>
-                        <p style={{ fontSize: "24px", fontWeight: 800, color: "#0F172A", lineHeight: 1 }}>
+                        <p style={{ fontSize: "22px", fontWeight: 800, color: "#0F172A", lineHeight: 1 }}>
                             {value}
                         </p>
-                        <p style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px", fontWeight: 500 }}>
+                        <p style={{ fontSize: "12.5px", color: "#94A3B8", marginTop: "4px", fontWeight: 500 }}>
                             {label}
                         </p>
                     </div>
@@ -312,11 +312,11 @@ function ContinueLearning({ enrollments, inProgress }) {
     return (
         <section>
             <div className="flex items-center justify-between mb-4">
-                <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>Continue Learning</h2>
+                <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>Continue Learning</h2>
                 <Link
                     to="/student/my-courses"
                     className="flex items-center gap-1 no-underline"
-                    style={{ fontSize: "13px", fontWeight: 600, color: "#3282B8" }}
+                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
                 >
                     View All <ChevronRight size={14} />
                 </Link>
@@ -356,7 +356,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                     <span
                         className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-white"
                         style={{
-                            fontSize: "10px",
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             textTransform: "uppercase",
                             letterSpacing: "0.06em",
@@ -373,7 +373,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                     <span
                         className="absolute top-3 right-3 px-2.5 py-1 rounded-lg"
                         style={{
-                            fontSize: "10px",
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             background: "rgba(16,185,129,0.85)",
                             color: "#fff",
@@ -405,7 +405,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                     <div className="flex items-center justify-between">
                         <span
                             style={{
-                                fontSize: "11px",
+                                fontSize: "11.5px",
                                 color: "#94A3B8",
                                 fontWeight: 600,
                                 textTransform: "uppercase",
@@ -414,7 +414,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                         >
                             Progress
                         </span>
-                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#3282B8" }}>
+                        <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#3282B8" }}>
                             {progress}%
                         </span>
                     </div>
@@ -435,7 +435,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                         className="w-full mt-3 flex items-center justify-center gap-2 py-2.5 rounded-xl text-white transition-colors duration-200"
                         style={{
                             background: isCompleted ? "#10B981" : "#3282B8",
-                            fontSize: "13px",
+                            fontSize: "13.5px",
                             fontWeight: 700,
                         }}
                     >
@@ -462,12 +462,12 @@ function RecentTests({ attempts, enrollments }) {
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                     <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
-                    <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>Recent Tests</h2>
+                    <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>Recent Tests</h2>
                 </div>
                 <Link
                     to="/student/tests"
                     className="no-underline"
-                    style={{ fontSize: "13px", fontWeight: 600, color: "#3282B8" }}
+                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
                 >
                     View All
                 </Link>
@@ -492,7 +492,7 @@ function RecentTests({ attempts, enrollments }) {
                             <span
                                 key={h}
                                 style={{
-                                    fontSize: "10.5px",
+                                    fontSize: "11.5px",
                                     fontWeight: 700,
                                     color: "#94A3B8",
                                     textTransform: "uppercase",
@@ -510,20 +510,20 @@ function RecentTests({ attempts, enrollments }) {
                             className="grid grid-cols-[1fr_auto_auto_auto] gap-3 items-center px-3 py-3 rounded-xl hover:bg-[#F8FAFC] transition-colors"
                         >
                             <div>
-                                <p style={{ fontSize: "13px", fontWeight: 600, color: "#0F172A" }}>
+                                <p style={{ fontSize: "13.5px", fontWeight: 600, color: "#0F172A" }}>
                                     {attempt.test_title ?? "Test"}
                                 </p>
-                                <p style={{ fontSize: "11px", color: "#94A3B8" }}>
+                                <p style={{ fontSize: "11.5px", color: "#94A3B8" }}>
                                     {fmtDate(attempt.completed_at)}
                                 </p>
                             </div>
-                            <span style={{ fontSize: "14px", fontWeight: 700, color: "#0F172A" }}>
+                            <span style={{ fontSize: "13.5px", fontWeight: 700, color: "#0F172A" }}>
                                 {attempt.score}%
                             </span>
                             <span
                                 className="px-2.5 py-1 rounded-lg text-center"
                                 style={{
-                                    fontSize: "11px",
+                                    fontSize: "11.5px",
                                     fontWeight: 700,
                                     background: attempt.is_passed ? "#ECFDF5" : "#FEF2F2",
                                     color: attempt.is_passed ? "#10B981" : "#EF4444",
@@ -534,7 +534,7 @@ function RecentTests({ attempts, enrollments }) {
                             <Link
                                 to={`/student/tests/${attempt.id}/result`}
                                 className="no-underline"
-                                style={{ fontSize: "12px", fontWeight: 600, color: "#3282B8" }}
+                                style={{ fontSize: "12.5px", fontWeight: 600, color: "#3282B8" }}
                             >
                                 Details
                             </Link>
@@ -560,13 +560,13 @@ function CertificatesSection({ certificates }) {
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                     <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
-                    <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0F172A" }}>My Certificates</h2>
+                    <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>My Certificates</h2>
                 </div>
                 {certificates.length > 0 && (
                     <Link
                         to="/student/certificates"
                         className="no-underline"
-                        style={{ fontSize: "13px", fontWeight: 600, color: "#3282B8" }}
+                        style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
                     >
                         View All
                     </Link>
@@ -606,10 +606,10 @@ function CertCard({ cert }) {
             </div>
 
             <div className="flex-1 min-w-0">
-                <p style={{ fontSize: "13px", fontWeight: 700, color: "#0F172A" }} className="truncate">
+                <p style={{ fontSize: "13.5px", fontWeight: 700, color: "#0F172A" }} className="truncate">
                     {cert.course_title}
                 </p>
-                <p style={{ fontSize: "11px", color: "#92400E", marginTop: "2px" }}>
+                <p style={{ fontSize: "11.5px", color: "#92400E", marginTop: "2px" }}>
                     Issued {fmtDate(cert.issued_at)}
                 </p>
             </div>
@@ -623,7 +623,7 @@ function CertCard({ cert }) {
                     style={{
                         background: "#FDE68A",
                         color: "#92400E",
-                        fontSize: "12px",
+                        fontSize: "12.5px",
                         fontWeight: 700,
                     }}
                 >
@@ -647,16 +647,16 @@ function EmptyState({ icon: Icon, title, desc, actionLabel, onAction }) {
                 <Icon size={24} style={{ color: "#94A3B8" }} />
             </div>
             <div>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#0F172A", marginBottom: "4px" }}>
+                <p style={{ fontSize: "13.5px", fontWeight: 700, color: "#0F172A", marginBottom: "4px" }}>
                     {title}
                 </p>
-                <p style={{ fontSize: "13px", color: "#94A3B8" }}>{desc}</p>
+                <p style={{ fontSize: "13.5px", color: "#94A3B8" }}>{desc}</p>
             </div>
             {actionLabel && (
                 <button
                     onClick={onAction}
                     className="mt-1 px-4 py-2 rounded-xl text-white transition-colors"
-                    style={{ background: "#3282B8", fontSize: "13px", fontWeight: 700 }}
+                    style={{ background: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     {actionLabel}
                 </button>

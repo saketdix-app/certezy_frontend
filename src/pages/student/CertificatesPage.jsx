@@ -64,7 +64,7 @@ export default function CertificatesPage() {
                     >
                         My Certificates
                     </h1>
-                    <p style={{ fontSize: "14px", color: "#64748B", marginTop: "4px" }}>
+                    <p style={{ fontSize: "13.5px", color: "#64748B", marginTop: "4px" }}>
                         {loading
                             ? "Loading..."
                             : `${certificates.length} certificate${certificates.length !== 1 ? "s" : ""} earned`}
@@ -122,7 +122,7 @@ function GeneratePdfButton({ cert, onReady }) {
             onClick={generate}
             disabled={busy}
             className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl disabled:opacity-60"
-            style={{ background: "#F1F5F9", color: "#334155", fontSize: "13px", fontWeight: 700 }}
+            style={{ background: "#F1F5F9", color: "#334155", fontSize: "13.5px", fontWeight: 700 }}
         >
             {busy ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
             Generate PDF
@@ -187,7 +187,7 @@ function CertCard({ cert, onPdfReady }) {
                     <span
                         className="shrink-0 px-2.5 py-1 rounded-lg"
                         style={{
-                            fontSize: "10px",
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             textTransform: "uppercase",
                             letterSpacing: "0.08em",
@@ -250,7 +250,7 @@ function CertCard({ cert, onPdfReady }) {
                                 style={{
                                     background: "#3282B8",
                                     color: "#fff",
-                                    fontSize: "13px",
+                                    fontSize: "13.5px",
                                     fontWeight: 700,
                                 }}
                             >
@@ -291,7 +291,7 @@ function MetaRow({ icon: Icon, label, value, mono }) {
     return (
         <div className="flex items-center gap-2.5">
             <Icon size={13} style={{ color: "#94A3B8", shrink: 0 }} />
-            <span style={{ fontSize: "12px", color: "#94A3B8", fontWeight: 500, minWidth: "90px" }}>
+            <span style={{ fontSize: "12.5px", color: "#94A3B8", fontWeight: 500, minWidth: "90px" }}>
                 {label}
             </span>
             <span
@@ -334,11 +334,11 @@ function EmptyState() {
 function ErrorState({ message }) {
     return (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
+            <p style={{ fontSize: "13.5px", fontWeight: 600, color: "#EF4444" }}>{message}</p>
             <button
                 onClick={() => window.location.reload()}
                 className="px-4 py-2 rounded-xl"
-                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13px", fontWeight: 700 }}
+                style={{ background: "#FEF2F2", color: "#EF4444", fontSize: "13.5px", fontWeight: 700 }}
             >
                 Try Again
             </button>

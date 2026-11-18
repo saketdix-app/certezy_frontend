@@ -25,7 +25,7 @@ const fileNameFromUrl = (url) => {
 };
 
 const btn =
-    "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold transition-colors";
+    "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-ui font-semibold transition-colors";
 
 export default function PdfLesson({ lesson }) {
     const isMobile = useIsMobile();
@@ -56,8 +56,8 @@ export default function PdfLesson({ lesson }) {
                     <div className="w-16 h-16 rounded-2xl bg-red-500/15 flex items-center justify-center mb-4">
                         <FileText size={30} className="text-red-400" />
                     </div>
-                    <p className="text-white font-bold text-[15px] mb-1">{lesson.title}</p>
-                    <p className="text-[12.5px] mb-5 break-all" style={{ color: "rgba(255,255,255,0.45)" }}>
+                    <p className="text-white font-bold text-body mb-1">{lesson.title}</p>
+                    <p className="text-small mb-5 break-all" style={{ color: "rgba(255,255,255,0.45)" }}>
                         {fileName}
                     </p>
                     <a

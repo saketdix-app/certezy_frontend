@@ -47,7 +47,7 @@ const SOURCE_OPTIONS = [
 ];
 
 const fieldCls =
-    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-700 bg-surface outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
+    "w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-ui text-slate-700 bg-surface outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
 
 const apiError = (err, fallback) =>
     err.response?.data?.errors?.[0] || err.response?.data?.message || err.message || fallback;
@@ -136,8 +136,8 @@ export default function ReviewsManagementPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-[20px] sm:text-[22px] font-extrabold text-slate-900">Reviews</h1>
-                    <p className="text-[13px] text-slate-500 mt-1">
+                    <h1 className="text-h2 sm:text-h2 font-extrabold text-slate-900">Reviews</h1>
+                    <p className="text-ui text-slate-500 mt-1">
                         Moderate student reviews and add genuine reviews collected from classroom batches,
                         corporate training or other platforms.
                     </p>
@@ -145,14 +145,14 @@ export default function ReviewsManagementPage() {
                 <div className="flex gap-2">
                     <Link
                         to="/admin/import"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13px] font-semibold text-slate-700 hover:border-action hover:text-action"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-ui font-semibold text-slate-700 hover:border-action hover:text-action"
                     >
                         <FileUp size={15} /> Import CSV
                     </Link>
                     <button
                         type="button"
                         onClick={() => setEditing({})}
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover"
                     >
                         <Plus size={15} /> Add review
                     </button>
@@ -206,8 +206,8 @@ export default function ReviewsManagementPage() {
                         <div className="w-14 h-14 rounded-full bg-action-soft flex items-center justify-center mx-auto mb-3">
                             <Star className="text-action" size={22} />
                         </div>
-                        <p className="text-[15px] font-semibold text-slate-800">No reviews found</p>
-                        <p className="text-[13px] text-slate-500 mt-1">
+                        <p className="text-body font-semibold text-slate-800">No reviews found</p>
+                        <p className="text-ui text-slate-500 mt-1">
                             {search || status || source
                                 ? "Try different filters."
                                 : "Student reviews appear here. You can also add reviews you've collected."}
@@ -232,7 +232,7 @@ export default function ReviewsManagementPage() {
             {/* Pagination */}
             {!loading && pagination.total > 0 && (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <p className="text-[13px] text-slate-500">
+                    <p className="text-ui text-slate-500">
                         Showing {from}–{to} of {pagination.total}
                     </p>
                     <div className="flex items-center gap-2">
@@ -245,7 +245,7 @@ export default function ReviewsManagementPage() {
                         >
                             <ChevronLeft size={16} />
                         </button>
-                        <span className="text-[13px] font-semibold text-slate-700">
+                        <span className="text-ui font-semibold text-slate-700">
                             Page {page} of {pagination.totalPages}
                         </span>
                         <button
@@ -284,16 +284,16 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
     return (
         <li className="p-4 sm:px-5 flex flex-col lg:flex-row lg:items-start gap-3">
             <div className="flex items-start gap-3 flex-1 min-w-0">
-                <div className="w-9 h-9 rounded-full bg-action-soft text-action text-[12px] font-bold flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-full bg-action-soft text-action text-small font-bold flex items-center justify-center shrink-0">
                     {(r.student_name || "?").slice(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                        <span className="text-[14px] font-semibold text-slate-800">{r.student_name}</span>
+                        <span className="text-ui font-semibold text-slate-800">{r.student_name}</span>
                         <StarRating value={r.rating} size={12} />
                         <span
                             className={cn(
-                                "text-[11px] font-semibold px-2 py-0.5 rounded-full",
+                                "text-label font-semibold px-2 py-0.5 rounded-full",
                                 r.is_approved
                                     ? "bg-emerald-50 text-emerald-700"
                                     : "bg-amber-50 text-amber-700"
@@ -303,14 +303,14 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
                         </span>
                         <span
                             className={cn(
-                                "text-[11px] font-semibold px-2 py-0.5 rounded-full border",
+                                "text-label font-semibold px-2 py-0.5 rounded-full border",
                                 src.cls
                             )}
                         >
                             {isAdminEntered ? src.label : "Written on site"}
                         </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[12px] text-slate-500">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-small text-slate-500">
                         <span className="inline-flex items-center gap-1 min-w-0">
                             <BookOpen size={12} className="shrink-0" />
                             <span className="truncate max-w-[260px]">{r.course_title}</span>
@@ -324,7 +324,7 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
                         {isAdminEntered && r.created_by_name && <span>· added by {r.created_by_name}</span>}
                     </div>
                     {r.comment && (
-                        <p className="mt-2 text-[13.5px] text-slate-600 leading-relaxed whitespace-pre-line break-words line-clamp-4">
+                        <p className="mt-2 text-ui text-slate-600 leading-relaxed whitespace-pre-line break-words line-clamp-4">
                             {r.comment}
                         </p>
                     )}
@@ -458,7 +458,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                 className="bg-surface w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl shadow-xl"
             >
                 <div className="sticky top-0 bg-surface flex items-center justify-between px-5 py-4 border-b border-slate-100">
-                    <h2 id="review-form-title" className="text-[16px] font-extrabold text-slate-900">
+                    <h2 id="review-form-title" className="text-body font-extrabold text-slate-900">
                         {isEdit ? "Edit review" : "Add a review"}
                     </h2>
                     <button
@@ -472,7 +472,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                 </div>
 
                 <div className="p-5 space-y-4">
-                    <p className="text-[12.5px] text-slate-500 -mt-1">
+                    <p className="text-small text-slate-500 -mt-1">
                         For reviews learners gave outside this website. They appear on the course page with
                         their source and count toward its rating.
                     </p>
@@ -559,7 +559,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                         </Field>
                     </div>
 
-                    <label className="flex items-center gap-2 text-[13px] text-slate-600">
+                    <label className="flex items-center gap-2 text-ui text-slate-600">
                         <input
                             type="checkbox"
                             checked={!!form.is_approved}
@@ -570,7 +570,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                     </label>
 
                     {!isEdit && (
-                        <label className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[13px] text-amber-900">
+                        <label className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-ui text-amber-900">
                             <input
                                 type="checkbox"
                                 checked={confirmed}
@@ -589,14 +589,14 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-2.5 rounded-xl text-[13px] font-semibold text-slate-600 hover:bg-slate-100"
+                        className="px-5 py-2.5 rounded-xl text-ui font-semibold text-slate-600 hover:bg-slate-100"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={saving || !confirmed}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-[13px] font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {saving && <Loader2 size={14} className="animate-spin" />}
                         {isEdit ? "Save changes" : "Add review"}
@@ -610,7 +610,7 @@ function ReviewFormModal({ review, courses, onClose, onSaved }) {
 function Field({ label, children }) {
     return (
         <label className="block">
-            <span className="block text-[12.5px] font-semibold text-slate-600 mb-1.5">{label}</span>
+            <span className="block text-small font-semibold text-slate-600 mb-1.5">{label}</span>
             {children}
         </label>
     );

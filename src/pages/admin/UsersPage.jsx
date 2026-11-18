@@ -37,7 +37,7 @@ import adminService from "@/services/adminService";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const PER_PAGE = 10;
 
@@ -386,20 +386,20 @@ export default function UsersPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+                    <p className="text-label font-bold text-slate-500 uppercase tracking-widest mb-1">
                         Dashboard › <span style={{ color: "#236A9E" }}>Users</span>
                     </p>
-                    <h1 className="text-[24px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">
                         User Management
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Manage students and sub-admin access
                     </p>
                 </div>
                 {tab === "subadmins" && (
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white shrink-0 transition-colors"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
                         style={{ background: "#236A9E" }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -408,7 +408,7 @@ export default function UsersPage() {
                     </button>
                 )}
                 {tab === "students" && (
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors shrink-0">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors shrink-0">
                         <Download size={15} /> Export
                     </button>
                 )}
@@ -459,10 +459,10 @@ export default function UsersPage() {
                                 <Icon size={18} style={{ color: ic }} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                     {label}
                                 </p>
-                                <p className="text-[22px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                <p className="text-h2 font-extrabold text-slate-900 leading-none mt-0.5">
                                     {value}
                                 </p>
                             </div>
@@ -482,7 +482,7 @@ export default function UsersPage() {
                         key={key}
                         onClick={() => setTab(key)}
                         className={cn(
-                            "px-5 py-2 rounded-xl text-[13px] font-bold transition-all duration-150",
+                            "px-5 py-2 rounded-xl text-ui font-bold transition-all duration-150",
                             tab === key ? "text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
                         )}
                         style={tab === key ? { background: "#236A9E" } : {}}
@@ -509,13 +509,13 @@ export default function UsersPage() {
                                 value={stuSearch}
                                 onChange={(e) => setStuSearch(e.target.value)}
                                 placeholder="Search by name or email..."
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-ui text-slate-700 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
                             />
                         </div>
                         <select
                             value={stuStatus}
                             onChange={(e) => setStuStatus(e.target.value)}
-                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
+                            className="px-4 py-2.5 rounded-xl border border-slate-200 text-ui text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             <option value="active">Active</option>
@@ -539,7 +539,7 @@ export default function UsersPage() {
                             {["User", "Mobile", "Joined", "Status", "Action"].map((h) => (
                                 <span
                                     key={h}
-                                    className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider"
+                                    className="text-label font-bold text-slate-500 uppercase tracking-wider"
                                 >
                                     {h}
                                 </span>
@@ -565,7 +565,7 @@ export default function UsersPage() {
                                         {/* User */}
                                         <div className="flex items-center gap-3 min-w-0">
                                             <div
-                                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[13px] font-extrabold shrink-0"
+                                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-ui font-extrabold shrink-0"
                                                 style={{
                                                     background: "linear-gradient(135deg, #3282B8, #0a1628)",
                                                 }}
@@ -573,18 +573,18 @@ export default function UsersPage() {
                                                 {user.name?.charAt(0).toUpperCase()}
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-[13px] font-bold text-slate-900 truncate">
+                                                <p className="text-ui font-bold text-slate-900 truncate">
                                                     {user.name}
                                                 </p>
-                                                <p className="text-[11.5px] text-slate-500 truncate">
+                                                <p className="text-label text-slate-500 truncate">
                                                     {user.email}
                                                 </p>
                                             </div>
                                         </div>
                                         {/* Mobile */}
-                                        <p className="text-[12.5px] text-slate-600">{user.mobile || "—"}</p>
+                                        <p className="text-small text-slate-600">{user.mobile || "—"}</p>
                                         {/* Joined */}
-                                        <p className="text-[12.5px] text-slate-600">
+                                        <p className="text-small text-slate-600">
                                             {fmtDate(user.created_at)}
                                         </p>
                                         {/* Status */}
@@ -597,7 +597,7 @@ export default function UsersPage() {
                                             />
                                             <span
                                                 className={cn(
-                                                    "text-[12px] font-semibold",
+                                                    "text-small font-semibold",
                                                     isActive ? "text-green-700" : "text-red-600"
                                                 )}
                                             >
@@ -608,7 +608,7 @@ export default function UsersPage() {
                                         <div className="flex items-center gap-2">
                                             <Link
                                                 to={`/admin/assign-courses?user=${user.id}`}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-[12px] font-bold text-action bg-blue-50 hover:bg-blue-100 transition-colors"
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-small font-bold text-action bg-blue-50 hover:bg-blue-100 transition-colors"
                                                 title="View and assign free courses"
                                             >
                                                 <BookOpen size={13} /> Courses
@@ -616,7 +616,7 @@ export default function UsersPage() {
                                             {isActive ? (
                                                 <button
                                                     onClick={() => setBlockTarget({ user, action: "block" })}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-[12px] font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-small font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
                                                 >
                                                     <UserX size={13} /> Block
                                                 </button>
@@ -625,7 +625,7 @@ export default function UsersPage() {
                                                     onClick={() =>
                                                         setBlockTarget({ user, action: "unblock" })
                                                     }
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 text-[12px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 text-small font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors"
                                                 >
                                                     <UserCheck size={13} /> Unblock
                                                 </button>
@@ -647,7 +647,7 @@ export default function UsersPage() {
                         {/* Pagination */}
                         {!stuLoading && totalPages > 1 && (
                             <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
-                                <p className="text-[12.5px] text-slate-500">{stuTotal} students</p>
+                                <p className="text-small text-slate-500">{stuTotal} students</p>
                                 <div className="flex items-center gap-1.5">
                                     <button
                                         onClick={() => setStuPage((p) => Math.max(1, p - 1))}
@@ -662,7 +662,7 @@ export default function UsersPage() {
                                                 key={p}
                                                 onClick={() => setStuPage(p)}
                                                 className={cn(
-                                                    "w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-semibold transition-colors",
+                                                    "w-8 h-8 flex items-center justify-center rounded-lg text-ui font-semibold transition-colors",
                                                     stuPage === p
                                                         ? "text-white"
                                                         : "border border-slate-200 text-slate-600 hover:bg-slate-50"
@@ -702,12 +702,12 @@ export default function UsersPage() {
                             <Shield size={26} style={{ color: "#8B5CF6" }} />
                         </div>
                         <div>
-                            <p className="text-[15px] font-bold text-slate-800">No sub-admins yet</p>
-                            <p className="text-[13px] text-slate-500 mt-1">Grant team members admin access</p>
+                            <p className="text-body font-bold text-slate-800">No sub-admins yet</p>
+                            <p className="text-ui text-slate-500 mt-1">Grant team members admin access</p>
                         </div>
                         <button
                             onClick={() => setShowAddModal(true)}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white"
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
                             style={{ background: "#236A9E" }}
                         >
                             <Plus size={15} /> Add Sub-Admin
@@ -733,7 +733,7 @@ export default function UsersPage() {
                         className="bg-surface rounded-2xl border border-slate-100 p-4 space-y-3"
                         style={{ boxShadow: "0 1px 6px rgba(15,23,42,0.04)" }}
                     >
-                        <p className="text-[12.5px] text-slate-500 flex items-start gap-2">
+                        <p className="text-small text-slate-500 flex items-start gap-2">
                             <Archive size={15} className="text-slate-500 shrink-0 mt-0.5" />
                             Deleted users can&apos;t sign in. Restore them within 30 days to bring back their
                             account, courses, progress and certificates. After 30 days their data is erased
@@ -772,21 +772,21 @@ export default function UsersPage() {
                                         className="flex items-center gap-4 px-5 py-3.5 border-b border-slate-50"
                                         style={{ minWidth: 640 }}
                                     >
-                                        <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-[13px] font-extrabold shrink-0">
+                                        <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-ui font-extrabold shrink-0">
                                             {user.name?.charAt(0).toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-[13px] font-bold text-slate-900 truncate">
+                                            <p className="text-ui font-bold text-slate-900 truncate">
                                                 {user.name}{" "}
-                                                <span className="text-[11px] font-semibold text-slate-500">
+                                                <span className="text-label font-semibold text-slate-500">
                                                     {user.role === "sub_admin" ? "· Sub-admin" : "· Student"}
                                                 </span>
                                             </p>
-                                            <p className="text-[11.5px] text-slate-500 truncate">
+                                            <p className="text-label text-slate-500 truncate">
                                                 {user.email}
                                             </p>
                                         </div>
-                                        <div className="text-[12px] text-slate-500 w-40 shrink-0">
+                                        <div className="text-small text-slate-500 w-40 shrink-0">
                                             Deleted {fmtDate(user.deleted_at)}
                                             <p
                                                 className={cn(
@@ -800,7 +800,7 @@ export default function UsersPage() {
                                         <button
                                             onClick={() => handleRestore(user)}
                                             disabled={restoringId === user.id}
-                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 text-[12px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-60 shrink-0"
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 text-small font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-60 shrink-0"
                                         >
                                             {restoringId === user.id ? (
                                                 <Loader2 size={13} className="animate-spin" />
@@ -829,15 +829,15 @@ export default function UsersPage() {
                         <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <Trash2 size={26} className="text-red-500" />
                         </div>
-                        <h3 className="text-[17px] font-extrabold text-slate-900 mb-2">
+                        <h3 className="text-h3 font-extrabold text-slate-900 mb-2">
                             Delete {deleteTarget.name}?
                         </h3>
-                        <p className="text-[13px] text-slate-500 leading-relaxed mb-4">
+                        <p className="text-ui text-slate-500 leading-relaxed mb-4">
                             They are signed out and can&apos;t sign in. You can restore them from the{" "}
                             <b>Deleted</b> tab for 30 days. After that their courses, progress, test results,
                             certificates and reviews are erased permanently.
                         </p>
-                        <label className="block text-left text-[12px] font-semibold text-slate-600 mb-1.5">
+                        <label className="block text-left text-small font-semibold text-slate-600 mb-1.5">
                             Type <span className="font-mono text-red-600">DELETE</span> to confirm
                         </label>
                         <input
@@ -850,7 +850,7 @@ export default function UsersPage() {
                             <button
                                 onClick={handleDeleteConfirm}
                                 disabled={blockLoading || deleteConfirm.trim().toUpperCase() !== "DELETE"}
-                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13.5px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors disabled:opacity-50"
+                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-ui font-bold text-white bg-red-500 hover:bg-red-600 transition-colors disabled:opacity-50"
                             >
                                 {blockLoading ? (
                                     <Loader2 size={15} className="animate-spin" />
@@ -863,7 +863,7 @@ export default function UsersPage() {
                                     setDeleteTarget(null);
                                     setDeleteConfirm("");
                                 }}
-                                className="w-full py-3 rounded-xl text-[13.5px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
+                                className="w-full py-3 rounded-xl text-ui font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -879,10 +879,10 @@ export default function UsersPage() {
                         <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <UserX size={28} className="text-red-500" />
                         </div>
-                        <h3 className="text-[17px] font-extrabold text-slate-900 mb-2">
+                        <h3 className="text-h3 font-extrabold text-slate-900 mb-2">
                             {blockTarget.action === "block" ? "Block" : "Unblock"} {blockTarget.user.name}?
                         </h3>
-                        <p className="text-[13px] text-slate-500 leading-relaxed mb-6 max-w-[260px] mx-auto">
+                        <p className="text-ui text-slate-500 leading-relaxed mb-6 max-w-[260px] mx-auto">
                             {blockTarget.action === "block"
                                 ? "The user will lose access to all their courses until you unblock them."
                                 : "The user will regain access to all their enrolled courses."}
@@ -892,7 +892,7 @@ export default function UsersPage() {
                                 onClick={handleBlockConfirm}
                                 disabled={blockLoading}
                                 className={cn(
-                                    "w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13.5px] font-bold text-white transition-colors disabled:opacity-60",
+                                    "w-full flex items-center justify-center gap-2 py-3 rounded-xl text-ui font-bold text-white transition-colors disabled:opacity-60",
                                     blockTarget.action === "block"
                                         ? "bg-red-500 hover:bg-red-600"
                                         : "bg-green-600 hover:bg-green-700"
@@ -908,7 +908,7 @@ export default function UsersPage() {
                             </button>
                             <button
                                 onClick={() => setBlockTarget(null)}
-                                className="w-full py-3 rounded-xl text-[13.5px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
+                                className="w-full py-3 rounded-xl text-ui font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -923,10 +923,10 @@ export default function UsersPage() {
                     <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
                         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
-                                <h3 className="text-[17px] font-extrabold text-slate-900">
+                                <h3 className="text-h3 font-extrabold text-slate-900">
                                     Add New Sub-Admin
                                 </h3>
-                                <p className="text-[12.5px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     Grant system access to a new team member.
                                 </p>
                             </div>
@@ -1009,14 +1009,14 @@ export default function UsersPage() {
                             <button
                                 type="button"
                                 onClick={() => setShowAddModal(false)}
-                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleCreateSubAdmin}
                                 disabled={saving}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                 style={{ background: "#236A9E" }}
                                 onMouseEnter={(e) => {
                                     if (!saving) e.currentTarget.style.background = "#1B5582";
@@ -1044,10 +1044,10 @@ export default function UsersPage() {
                     <div className="bg-surface rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100">
                             <div>
-                                <h3 className="text-[16px] font-extrabold text-slate-900">
+                                <h3 className="text-body font-extrabold text-slate-900">
                                     Edit Permissions
                                 </h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">{showEditModal.name}</p>
+                                <p className="text-small text-slate-500 mt-0.5">{showEditModal.name}</p>
                             </div>
                             <button
                                 onClick={() => setShowEditModal(null)}
@@ -1071,14 +1071,14 @@ export default function UsersPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowEditModal(null)}
-                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                     style={{ background: "#236A9E" }}
                                     onMouseEnter={(e) => {
                                         if (!saving) e.currentTarget.style.background = "#1B5582";
@@ -1110,30 +1110,30 @@ export default function UsersPage() {
                                 <Trash2 size={22} className="text-red-500" />
                             </div>
                             <div>
-                                <h3 className="text-[15px] font-extrabold text-slate-900">Revoke Access</h3>
-                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                <h3 className="text-body font-extrabold text-slate-900">Revoke Access</h3>
+                                <p className="text-small text-slate-500 mt-0.5">
                                     This cannot be undone easily.
                                 </p>
                             </div>
                         </div>
                         <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 mb-4">
-                            <p className="text-[13.5px] font-bold text-slate-800">{showRevoke.name}</p>
-                            <p className="text-[12px] text-slate-500 mt-0.5">{showRevoke.email}</p>
+                            <p className="text-ui font-bold text-slate-800">{showRevoke.name}</p>
+                            <p className="text-small text-slate-500 mt-0.5">{showRevoke.email}</p>
                         </div>
-                        <p className="text-[12.5px] text-slate-500 mb-5">
+                        <p className="text-small text-slate-500 mb-5">
                             All admin permissions will be removed. They will become a regular user.
                         </p>
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowRevoke(null)}
-                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleRevoke}
                                 disabled={saving}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 transition-colors"
                             >
                                 {saving ? <Loader2 size={14} className="animate-spin" /> : "Revoke Access"}
                             </button>
@@ -1157,14 +1157,14 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
             {/* Avatar + info */}
             <div className="flex items-center gap-3 mb-4">
                 <div
-                    className="w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-extrabold shrink-0"
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white text-body font-extrabold shrink-0"
                     style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
                 >
                     {subAdmin.name?.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                    <p className="text-[14px] font-extrabold text-slate-900 truncate">{subAdmin.name}</p>
-                    <p className="text-[12px] text-slate-500 truncate">{subAdmin.email}</p>
+                    <p className="text-ui font-extrabold text-slate-900 truncate">{subAdmin.name}</p>
+                    <p className="text-small text-slate-500 truncate">{subAdmin.email}</p>
                 </div>
             </div>
 
@@ -1181,7 +1181,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
                             )}
                             <span
                                 className={cn(
-                                    "text-[12.5px]",
+                                    "text-small",
                                     has ? "text-slate-700 font-medium" : "text-slate-500"
                                 )}
                             >
@@ -1196,13 +1196,13 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
             <div className="flex gap-2 pt-3 border-t border-slate-100">
                 <button
                     onClick={onEdit}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-brand-200 text-[12.5px] font-bold text-action hover:bg-action-soft transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-brand-200 text-small font-bold text-action hover:bg-action-soft transition-colors"
                 >
                     <Edit2 size={13} /> Edit Permissions
                 </button>
                 <button
                     onClick={onRevoke}
-                    className="px-3 py-2 rounded-xl border border-red-200 text-[12.5px] font-bold text-red-500 hover:bg-red-50 transition-colors"
+                    className="px-3 py-2 rounded-xl border border-red-200 text-small font-bold text-red-500 hover:bg-red-50 transition-colors"
                 >
                     Revoke
                 </button>
@@ -1230,8 +1230,8 @@ function PermissionRow({ perm, checked, onChange }) {
                 <Icon size={16} style={{ color: perm.color }} />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-bold text-slate-800">{perm.label}</p>
-                <p className="text-[11.5px] text-slate-500">{perm.desc}</p>
+                <p className="text-ui font-bold text-slate-800">{perm.label}</p>
+                <p className="text-label text-slate-500">{perm.desc}</p>
             </div>
             {/* Checkbox style */}
             <div
@@ -1252,7 +1252,7 @@ function SectionLabel({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-2">
             <Icon size={14} style={{ color: "#236A9E" }} />
-            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#236A9E" }}>
+            <span className="text-label font-bold uppercase tracking-widest" style={{ color: "#236A9E" }}>
                 {label}
             </span>
         </div>
@@ -1262,7 +1262,7 @@ function SectionLabel({ icon: Icon, label }) {
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}
@@ -1309,7 +1309,7 @@ function EmptyRow({ message }) {
     return (
         <div className="py-16 text-center">
             <Users size={32} className="text-slate-200 mx-auto mb-3" />
-            <p className="text-[14px] font-semibold text-slate-500">{message}</p>
+            <p className="text-ui font-semibold text-slate-500">{message}</p>
         </div>
     );
 }

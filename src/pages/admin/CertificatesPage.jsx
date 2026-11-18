@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 10;
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 const fmtDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -71,7 +71,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
     if (!withTraining) {
         return (
             <label className="block">
-                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">
                     Completion date
                 </span>
                 <input
@@ -81,7 +81,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
                     onChange={set("issueDate")}
                     className={cn(inputCls, "w-48")}
                 />
-                <span className="block mt-1.5 text-[11.5px] text-slate-500">
+                <span className="block mt-1.5 text-label text-slate-500">
                     Printed on the certificate as the date of completion.
                 </span>
             </label>
@@ -90,7 +90,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <label className="block">
-                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">
                     Training start
                 </span>
                 <input
@@ -102,7 +102,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
                 />
             </label>
             <label className="block">
-                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Training end</span>
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">Training end</span>
                 <input
                     type="date"
                     value={value.trainingEnd}
@@ -113,7 +113,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
                 />
             </label>
             <label className="block">
-                <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Issue date</span>
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">Issue date</span>
                 <input
                     type="date"
                     value={value.issueDate}
@@ -123,7 +123,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
                     className={inputCls}
                 />
             </label>
-            <p className="sm:col-span-3 -mt-1 text-[11.5px] text-slate-500">
+            <p className="sm:col-span-3 -mt-1 text-label text-slate-500">
                 Printed on the certificate as “Training period: start – end”.
             </p>
         </div>
@@ -192,15 +192,15 @@ export default function CertificatesPage() {
         <div className="space-y-5 px-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[24px] font-extrabold text-slate-900 tracking-tight">Certificates</h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">Certificates</h1>
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Certificates are issued automatically when a student completes a course. You can also
                         issue one yourself.
                     </p>
                 </div>
                 <button
                     onClick={() => setIssueOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover shrink-0"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white bg-action hover:bg-action-hover shrink-0"
                 >
                     <Plus size={15} /> Issue certificate
                 </button>
@@ -231,8 +231,8 @@ export default function CertificatesPage() {
                 ) : rows.length === 0 ? (
                     <div className="text-center py-16">
                         <Award className="mx-auto text-slate-300 mb-3" size={40} />
-                        <p className="text-[15px] font-semibold text-slate-800">No certificates found</p>
-                        <p className="text-[13px] text-slate-500 mt-1">
+                        <p className="text-body font-semibold text-slate-800">No certificates found</p>
+                        <p className="text-ui text-slate-500 mt-1">
                             {search ? "Try a different search." : "Issued certificates will appear here."}
                         </p>
                     </div>
@@ -251,7 +251,7 @@ export default function CertificatesPage() {
                                     ].map((h) => (
                                         <th
                                             key={h}
-                                            className="text-left px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-600"
+                                            className="text-left px-4 py-3 text-label font-bold uppercase tracking-wider text-slate-600"
                                         >
                                             {h}
                                         </th>
@@ -262,23 +262,23 @@ export default function CertificatesPage() {
                                 {rows.map((c) => (
                                     <tr key={c.id} className="hover:bg-slate-50">
                                         <td className="px-4 py-3">
-                                            <p className="text-sm font-semibold text-slate-900">
+                                            <p className="text-ui font-semibold text-slate-900">
                                                 {c.student_name}
                                             </p>
-                                            <p className="text-xs text-slate-500">{c.student_email}</p>
+                                            <p className="text-small text-slate-500">{c.student_email}</p>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-800 max-w-[260px]">
+                                        <td className="px-4 py-3 text-ui text-slate-800 max-w-[260px]">
                                             <p className="truncate">{c.course_title}</p>
                                         </td>
-                                        <td className="px-4 py-3 font-mono text-[12.5px] text-slate-700 whitespace-nowrap">
+                                        <td className="px-4 py-3 font-mono text-small text-slate-700 whitespace-nowrap">
                                             {c.certificate_no}
                                         </td>
-                                        <td className="px-4 py-3 text-[12.5px] text-slate-600 whitespace-nowrap">
+                                        <td className="px-4 py-3 text-small text-slate-600 whitespace-nowrap">
                                             {c.has_training_period && c.training_start
                                                 ? `${fmtDay(c.training_start)} – ${fmtDay(c.training_end)}`
                                                 : "—"}
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="px-4 py-3 text-ui text-slate-600 whitespace-nowrap">
                                             {fmtDate(c.issued_at)}
                                         </td>
                                         <td className="px-4 py-3">
@@ -315,7 +315,7 @@ export default function CertificatesPage() {
                                                     type="button"
                                                     onClick={() => setRegenTarget(c)}
                                                     title="Regenerate with corrected dates"
-                                                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-[12px] font-semibold text-action hover:bg-action-soft"
+                                                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-small font-semibold text-action hover:bg-action-soft"
                                                 >
                                                     <RotateCw size={13} /> Regenerate
                                                 </button>
@@ -338,7 +338,7 @@ export default function CertificatesPage() {
 
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-                        <p className="text-sm text-slate-600">
+                        <p className="text-ui text-slate-600">
                             {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, total)} of {total}
                         </p>
                         <div className="flex items-center gap-2">
@@ -350,7 +350,7 @@ export default function CertificatesPage() {
                             >
                                 <ChevronLeft size={16} />
                             </button>
-                            <span className="text-sm text-slate-600">
+                            <span className="text-ui text-slate-600">
                                 Page {page} of {totalPages}
                             </span>
                             <button
@@ -394,10 +394,10 @@ export default function CertificatesPage() {
                         <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                             <Trash2 size={24} className="text-red-500" />
                         </div>
-                        <h3 className="text-[17px] font-extrabold text-slate-900 mb-2">
+                        <h3 className="text-h3 font-extrabold text-slate-900 mb-2">
                             Revoke this certificate?
                         </h3>
-                        <p className="text-[13px] text-slate-500 mb-5">
+                        <p className="text-ui text-slate-500 mb-5">
                             {revokeTarget.student_name} · {revokeTarget.course_title}. Number{" "}
                             <span className="font-mono">{revokeTarget.certificate_no}</span> will no longer
                             verify. This can&apos;t be undone (you can issue a new one later).
@@ -405,14 +405,14 @@ export default function CertificatesPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setRevokeTarget(null)}
-                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleRevoke}
                                 disabled={revoking}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-60"
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-60"
                             >
                                 {revoking ? <Loader2 size={15} className="animate-spin" /> : "Revoke"}
                             </button>
@@ -510,7 +510,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
+                    <h3 className="text-h3 font-extrabold text-slate-900 flex items-center gap-2">
                         <Award size={18} className="text-action" /> Issue certificate
                     </h3>
                     <button
@@ -524,7 +524,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
 
                 <div className="px-6 py-5 space-y-5">
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Student</label>
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">Student</label>
                         {student ? (
                             <Chosen
                                 title={student.name}
@@ -544,10 +544,10 @@ function IssueCertificateModal({ onClose, onIssued }) {
                                 emptyText="No students match"
                                 renderItem={(s) => (
                                     <div className="min-w-0">
-                                        <p className="text-[13px] font-medium text-slate-800 truncate">
+                                        <p className="text-ui font-medium text-slate-800 truncate">
                                             {s.name}
                                         </p>
-                                        <p className="text-[12px] text-slate-500 truncate">{s.email}</p>
+                                        <p className="text-small text-slate-500 truncate">{s.email}</p>
                                     </div>
                                 )}
                             />
@@ -555,7 +555,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                     </div>
 
                     <div>
-                        <label className="block text-[13px] font-semibold text-slate-700 mb-2">Course</label>
+                        <label className="block text-ui font-semibold text-slate-700 mb-2">Course</label>
                         {course ? (
                             <Chosen
                                 title={course.title}
@@ -573,7 +573,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                                 onSelect={setCourse}
                                 emptyText="No courses with a certificate match"
                                 renderItem={(c) => (
-                                    <p className="text-[13px] font-medium text-slate-800 truncate">
+                                    <p className="text-ui font-medium text-slate-800 truncate">
                                         {c.title}
                                     </p>
                                 )}
@@ -582,7 +582,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                         {student && course && enrollments && (
                             <p
                                 className={cn(
-                                    "mt-2 text-[12px] flex items-center gap-1.5",
+                                    "mt-2 text-small flex items-center gap-1.5",
                                     enrollment ? "text-green-700" : "text-amber-700"
                                 )}
                             >
@@ -606,7 +606,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                     )}
 
                     {exists && (
-                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-[12.5px] text-amber-900 space-y-2">
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-small text-amber-900 space-y-2">
                             <p className="flex items-start gap-2">
                                 <AlertTriangle size={15} className="shrink-0 mt-0.5" /> {exists}
                             </p>
@@ -626,14 +626,14 @@ function IssueCertificateModal({ onClose, onIssued }) {
                 <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={submit}
                         disabled={busy || !student || !course || (exists && !replace)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
                     >
                         {busy ? <Loader2 size={15} className="animate-spin" /> : <Award size={15} />}
                         {replace ? "Replace certificate" : "Issue certificate"}
@@ -678,7 +678,7 @@ function RegenerateModal({ cert, onClose, onDone }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-surface rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-[17px] font-extrabold text-slate-900 flex items-center gap-2">
+                    <h3 className="text-h3 font-extrabold text-slate-900 flex items-center gap-2">
                         <RotateCw size={17} className="text-action" /> Regenerate certificate
                     </h3>
                     <button
@@ -690,13 +690,13 @@ function RegenerateModal({ cert, onClose, onDone }) {
                     </button>
                 </div>
                 <div className="px-6 py-5 space-y-4">
-                    <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 text-[13px]">
+                    <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 text-ui">
                         <p className="font-semibold text-slate-900">{cert.student_name}</p>
                         <p className="text-slate-600">{cert.course_title}</p>
-                        <p className="text-slate-500 font-mono text-[12px] mt-1">{cert.certificate_no}</p>
+                        <p className="text-slate-500 font-mono text-small mt-1">{cert.certificate_no}</p>
                     </div>
                     <CertificateDates value={dates} onChange={setDates} withTraining={withTraining} />
-                    <p className="text-[12px] text-slate-500">
+                    <p className="text-small text-slate-500">
                         The old PDF is replaced. The certificate number and verification link stay the same,
                         so links already shared keep working.
                     </p>
@@ -704,14 +704,14 @@ function RegenerateModal({ cert, onClose, onDone }) {
                 <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
+                        className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={save}
                         disabled={busy}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white bg-action hover:bg-action-hover disabled:opacity-50"
                     >
                         {busy ? <Loader2 size={15} className="animate-spin" /> : <RotateCw size={15} />}
                         Regenerate
@@ -726,8 +726,8 @@ function Chosen({ title, subtitle, onClear }) {
     return (
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
             <div className="flex-1 min-w-0">
-                <p className="font-semibold text-slate-900 text-sm truncate">{title}</p>
-                <p className="text-slate-500 text-xs truncate">{subtitle}</p>
+                <p className="font-semibold text-slate-900 text-ui truncate">{title}</p>
+                <p className="text-slate-500 text-small truncate">{subtitle}</p>
             </div>
             <button
                 type="button"

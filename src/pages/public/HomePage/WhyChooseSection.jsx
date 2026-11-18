@@ -45,13 +45,13 @@ export default function WhyChooseSection() {
             <div className="max-w-[1400px] mx-auto px-6">
                 {/* Badge */}
                 <div className="flex justify-center mb-6">
-                    <span className="text-xs tracking-widest border border-blue-400/30 text-blue-300 px-5 py-2 rounded-full bg-blue-500/10">
+                    <span className="text-small tracking-widest border border-blue-400/30 text-blue-300 px-5 py-2 rounded-full bg-blue-500/10">
                         THE CERTEZY ADVANTAGE
                     </span>
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-center font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
+                <h2 className="text-center font-bold text-h1 md:text-display lg:text-6xl mb-6">
                     Why Choose <span className="text-blue-400">CERTEZY?</span>
                 </h2>
 
@@ -80,15 +80,15 @@ function FeatureCard({ feature }) {
                 <Icon size={22} className="text-blue-400" />
             </div>
 
-            <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+            <h3 className="text-h2 font-semibold mb-3">{feature.title}</h3>
 
-            <p className="text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
+            <p className="text-gray-400 text-ui leading-relaxed">{feature.desc}</p>
 
             <ul className="mt-auto flex flex-wrap gap-2 pt-6">
                 {feature.points.map((point) => (
                     <li
                         key={point}
-                        className="rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1 text-xs text-blue-200"
+                        className="rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1 text-small text-blue-200"
                     >
                         {point}
                     </li>

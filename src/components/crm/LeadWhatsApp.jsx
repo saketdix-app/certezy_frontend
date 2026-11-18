@@ -60,12 +60,12 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                 type="button"
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
-                className="flex w-full items-center justify-between text-[13px] font-bold uppercase tracking-wide text-slate-500"
+                className="flex w-full items-center justify-between text-ui font-bold uppercase tracking-wide text-slate-500"
             >
                 <span className="inline-flex items-center gap-1.5">
                     <MessageCircle size={14} className="text-emerald-600" aria-hidden="true" /> WhatsApp conversation
                 </span>
-                <span className="text-[12px] font-semibold normal-case text-action">{open ? "Hide" : "Show"}</span>
+                <span className="text-small font-semibold normal-case text-action">{open ? "Hide" : "Show"}</span>
             </button>
 
             {open && (
@@ -77,17 +77,17 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                     ) : (
                         <>
                             <div className="max-h-72 space-y-1.5 overflow-y-auto p-3">
-                                {!data.messages.length && <p className="py-4 text-center text-[12.5px] text-slate-500">No WhatsApp messages yet.</p>}
+                                {!data.messages.length && <p className="py-4 text-center text-small text-slate-500">No WhatsApp messages yet.</p>}
                                 {data.messages.map((m) => (
                                     <div key={m.id} className={cn("flex", m.direction === "out" ? "justify-end" : "justify-start")}>
                                         <div
                                             className={cn(
-                                                "max-w-[85%] rounded-lg px-2.5 py-1.5 text-[13px] shadow-sm",
+                                                "max-w-[85%] rounded-lg px-2.5 py-1.5 text-ui shadow-sm",
                                                 m.direction === "out" ? "bg-[#DCF8C6] text-slate-800" : "bg-surface text-slate-800"
                                             )}
                                         >
                                             <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                                            <p className="mt-0.5 flex items-center justify-end gap-1 text-[10.5px] text-slate-500">
+                                            <p className="mt-0.5 flex items-center justify-end gap-1 text-label text-slate-500">
                                                 {m.direction === "out" && m.sent_by_name && <span>{m.sent_by_name} ·</span>}
                                                 {fmtDateTime(m.created_at)}
                                                 {m.direction === "out" &&
@@ -109,7 +109,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
 
                             <div className="border-t border-slate-200 bg-surface p-2.5">
                                 {data.unavailable ? (
-                                    <p className="text-[12.5px] text-slate-500">WhatsApp isn't connected yet (Admin → Integrations).</p>
+                                    <p className="text-small text-slate-500">WhatsApp isn't connected yet (Admin → Integrations).</p>
                                 ) : data.window_open ? (
                                     <div className="flex gap-2">
                                         <textarea
@@ -132,7 +132,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
-                                        <p className="text-[12px] text-slate-500">
+                                        <p className="text-small text-slate-500">
                                             They haven't written in the last 24 hours, so WhatsApp only allows an approved template.
                                         </p>
                                         <select
@@ -152,7 +152,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                                                 </option>
                                             ))}
                                         </select>
-                                        {template && <p className="rounded bg-slate-50 px-2 py-1.5 text-[12px] text-slate-600">{template.body}</p>}
+                                        {template && <p className="rounded bg-slate-50 px-2 py-1.5 text-small text-slate-600">{template.body}</p>}
                                         {params.map((p, i) => (
                                             <input
                                                 key={i}
@@ -167,7 +167,7 @@ export default function LeadWhatsApp({ leadId, onSent }) {
                                                 type="button"
                                                 disabled={busy || !template}
                                                 onClick={send}
-                                                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                                                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-small font-bold text-white disabled:opacity-50"
                                             >
                                                 {busy && <Loader2 size={13} className="animate-spin" />} Send template
                                             </button>

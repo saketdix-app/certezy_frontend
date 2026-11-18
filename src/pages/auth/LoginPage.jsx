@@ -149,7 +149,7 @@ export default function LoginPage() {
                         >
                             Welcome back to your learning journey.
                         </h2>
-                        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.50)", lineHeight: 1.65 }}>
+                        <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.50)", lineHeight: 1.65 }}>
                             Pick up where you left off — your certifications are waiting.
                         </p>
                     </div>
@@ -165,7 +165,7 @@ export default function LoginPage() {
                                     <div key={s.label}>
                                         <p
                                             style={{
-                                                fontSize: "18px",
+                                                fontSize: "17px",
                                                 fontWeight: 800,
                                                 color: "#fff",
                                                 lineHeight: 1,
@@ -208,7 +208,7 @@ export default function LoginPage() {
 
                         <h1
                             style={{
-                                fontSize: "26px",
+                                fontSize: "30px",
                                 fontWeight: 800,
                                 color: "#0F172A",
                                 letterSpacing: "-0.02em",
@@ -217,7 +217,7 @@ export default function LoginPage() {
                         >
                             Welcome back
                         </h1>
-                        <p style={{ fontSize: "14px", color: "#64748B", marginBottom: "28px" }}>
+                        <p style={{ fontSize: "13.5px", color: "#64748B", marginBottom: "28px" }}>
                             Sign in to continue learning
                         </p>
 
@@ -330,7 +330,7 @@ function Divider() {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "22px 0" }}>
             <div style={{ flex: 1, height: "1px", background: "#E2E8F0" }} />
-            <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748B" }}>
+            <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#64748B" }}>
                 OR CONTINUE WITH EMAIL
             </span>
             <div style={{ flex: 1, height: "1px", background: "#E2E8F0" }} />
@@ -343,7 +343,7 @@ function Label({ text, noMargin }) {
         <label
             style={{
                 display: "block",
-                fontSize: "11px",
+                fontSize: "11.5px",
                 fontWeight: 700,
                 color: "#64748B",
                 textTransform: "uppercase",
@@ -399,7 +399,7 @@ function EyeBtn({ show, toggle }) {
 
 function FieldErr({ msg }) {
     if (!msg) return null;
-    return <p style={{ fontSize: "12px", color: "#EF4444", marginTop: "5px" }}>{msg}</p>;
+    return <p style={{ fontSize: "12.5px", color: "#EF4444", marginTop: "5px" }}>{msg}</p>;
 }
 
 function SubmitBtn({ loading, label, loadingLabel }) {
@@ -414,7 +414,7 @@ function SubmitBtn({ loading, label, loadingLabel }) {
                 border: "none",
                 background: loading ? "#94A3B8" : "#236A9E",
                 color: "#fff",
-                fontSize: "14px",
+                fontSize: "13.5px",
                 fontWeight: 700,
                 cursor: loading ? "not-allowed" : "pointer",
                 transition: "background 0.15s",
@@ -468,7 +468,7 @@ const inputSt = (hasError) => ({
     paddingRight: "14px",
     borderRadius: "10px",
     outline: "none",
-    fontSize: "14px",
+    fontSize: "13.5px",
     color: "#0F172A",
     border: hasError ? "1.5px solid #EF4444" : "1.5px solid #E2E8F0",
     background: hasError ? "#FEF2F2" : "#F8FAFC",

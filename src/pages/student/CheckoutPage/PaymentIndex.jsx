@@ -33,10 +33,10 @@ export default function CheckoutPage() {
             <div className="min-h-screen flex items-center justify-center bg-slate-50">
                 <div className="text-center px-6">
                     <AlertCircle size={40} className="text-red-400 mx-auto mb-4" />
-                    <p className="text-[15px] font-semibold text-slate-900 mb-3">{error}</p>
+                    <p className="text-body font-semibold text-slate-900 mb-3">{error}</p>
                     <button
                         onClick={() => navigate("/courses")}
-                        className="px-4 py-2 rounded-xl bg-action text-white text-sm font-bold"
+                        className="px-4 py-2 rounded-xl bg-action text-white text-ui font-bold"
                     >
                         Browse Courses
                     </button>
@@ -72,7 +72,7 @@ export default function CheckoutPage() {
             <div className="sticky top-0 z-20 h-[60px] flex items-center px-4 sm:px-6 bg-white border-b border-[#EEF2F7]">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center gap-1.5 mr-4 text-[13px] font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+                    className="flex items-center gap-1.5 mr-4 text-ui font-semibold text-slate-500 hover:text-slate-800 transition-colors"
                 >
                     <ChevronLeft size={16} />
                     Back
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
                     <Logo height={28} />
                 </Link>
 
-                <div className="ml-auto flex items-center gap-1.5 text-emerald-600 text-[12px] font-semibold">
+                <div className="ml-auto flex items-center gap-1.5 text-emerald-600 text-small font-semibold">
                     <Lock size={13} />
                     Secure Checkout
                 </div>
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
 
             {/* ── Body ─────────────────────────────────────────────────── */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-                <h1 className="text-[22px] font-extrabold text-slate-900 tracking-tight mb-6">
+                <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight mb-6">
                     Complete Your Purchase
                 </h1>
 
@@ -103,7 +103,7 @@ export default function CheckoutPage() {
                         {/* Security note */}
                         <div className="flex items-start gap-3 px-4 py-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
                             <ShieldCheck size={16} className="text-emerald-600 mt-0.5 shrink-0" />
-                            <p className="text-[12.5px] text-emerald-800 leading-relaxed">
+                            <p className="text-small text-emerald-800 leading-relaxed">
                                 Your payment is processed securely. CERTEZY never stores your card details.
                                 You'll get instant access after payment.
                             </p>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
                         <button
                             onClick={handlePay}
                             disabled={paying || scriptLoading}
-                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-[15px] text-white bg-action hover:bg-action-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(50,130,184,0.35)]"
+                            className="w-full h-[50px] rounded-xl flex items-center justify-center gap-2 font-extrabold text-body text-white bg-action hover:bg-action-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-[0_4px_14px_rgba(50,130,184,0.35)]"
                         >
                             {paying || scriptLoading ? (
                                 <>

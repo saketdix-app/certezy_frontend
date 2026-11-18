@@ -46,16 +46,16 @@ export default function ConsultantLayout() {
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-surface px-4 lg:px-6">
                 <div className="flex items-center gap-2">
                     <Logo to="/consultant" height={26} />
-                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-action-soft-ink">Sales</span>
+                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">Sales</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <ThemeToggle mode={theme} onChange={setTheme} />
                     <NotificationsMenu />
-                    <span className="hidden text-[13px] text-slate-600 sm:inline">{user?.name}</span>
+                    <span className="hidden text-ui text-slate-600 sm:inline">{user?.name}</span>
                     <button
                         type="button"
                         onClick={logout}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[12.5px] font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-small font-semibold text-slate-700 hover:bg-slate-50"
                     >
                         <LogOut size={14} aria-hidden="true" /> <span className="hidden sm:inline">Sign out</span>
                     </button>
@@ -72,7 +72,7 @@ export default function ConsultantLayout() {
                                     end={end}
                                     className={({ isActive }) =>
                                         cn(
-                                            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium",
+                                            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-ui font-medium",
                                             isActive ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-100"
                                         )
                                     }
@@ -101,7 +101,7 @@ export default function ConsultantLayout() {
                                     to={to}
                                     onClick={() => setMoreOpen(false)}
                                     className={({ isActive }) =>
-                                        cn("flex items-center gap-3 rounded-lg px-3 py-3 text-[14px] font-medium", isActive ? "bg-blue-50 text-blue-700" : "text-slate-700")
+                                        cn("flex items-center gap-3 rounded-lg px-3 py-3 text-ui font-medium", isActive ? "bg-blue-50 text-blue-700" : "text-slate-700")
                                     }
                                 >
                                     <Icon size={18} aria-hidden="true" /> {label}
@@ -118,7 +118,7 @@ export default function ConsultantLayout() {
                         to={to}
                         end={end}
                         className={({ isActive }) =>
-                            cn("flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold", isActive ? "text-action" : "text-slate-500")
+                            cn("flex flex-col items-center gap-0.5 py-2 text-label font-semibold", isActive ? "text-action" : "text-slate-500")
                         }
                     >
                         <Icon size={20} aria-hidden="true" /> {label}
@@ -129,7 +129,7 @@ export default function ConsultantLayout() {
                     onClick={() => setMoreOpen((v) => !v)}
                     aria-expanded={moreOpen}
                     className={cn(
-                        "flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold",
+                        "flex flex-col items-center gap-0.5 py-2 text-label font-semibold",
                         MORE.some((m) => pathname.startsWith(m.to)) ? "text-action" : "text-slate-500"
                     )}
                 >

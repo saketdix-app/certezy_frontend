@@ -59,7 +59,7 @@ export default function IntegrationAlertBanner() {
                         key={`${a.source}-${a.level}`}
                         role={error ? "alert" : "status"}
                         className={cn(
-                            "flex items-start gap-2.5 px-4 py-2.5 text-[13px] lg:px-6",
+                            "flex items-start gap-2.5 px-4 py-2.5 text-ui lg:px-6",
                             error ? "bg-red-50 text-red-800" : "bg-amber-50 text-amber-900"
                         )}
                     >

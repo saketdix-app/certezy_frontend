@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 const STRONG = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]).{8,72}$/;
 
 const inputCls =
-    "w-full pl-10 pr-3.5 py-2.5 rounded-xl border bg-slate-50 text-[14px] text-slate-800 outline-none focus:bg-white transition-colors";
+    "w-full pl-10 pr-3.5 py-2.5 rounded-xl border bg-slate-50 text-ui text-slate-800 outline-none focus:bg-white transition-colors";
 
 function Card({ title, subtitle, children }) {
     return (
@@ -31,8 +31,8 @@ function Card({ title, subtitle, children }) {
                 }}
             >
                 <Logo to="/" height={30} className="mb-6" />
-                <h1 className="text-[22px] font-extrabold text-slate-900">{title}</h1>
-                {subtitle && <p className="text-[14px] text-slate-500 mt-1.5">{subtitle}</p>}
+                <h1 className="text-h2 font-extrabold text-slate-900">{title}</h1>
+                {subtitle && <p className="text-ui text-slate-500 mt-1.5">{subtitle}</p>}
                 <div className="mt-6">{children}</div>
             </div>
         </div>
@@ -43,7 +43,7 @@ function BackToLogin() {
     return (
         <Link
             to={ROUTES.LOGIN}
-            className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-action hover:underline"
+            className="mt-6 inline-flex items-center gap-1.5 text-ui font-semibold text-action hover:underline"
         >
             <ArrowLeft size={15} /> Back to sign in
         </Link>
@@ -76,7 +76,7 @@ export function ForgotPasswordPage() {
     if (sentTo) {
         return (
             <Card title="Check your email">
-                <div className="flex items-start gap-3 rounded-xl bg-green-50 border border-green-200 p-4 text-[13.5px] text-green-900">
+                <div className="flex items-start gap-3 rounded-xl bg-green-50 border border-green-200 p-4 text-ui text-green-900">
                     <CheckCircle2 size={18} className="shrink-0 mt-0.5 text-green-600" />
                     <p>
                         If an account exists for <b>{sentTo}</b>, we&apos;ve sent a link to reset the
@@ -87,7 +87,7 @@ export function ForgotPasswordPage() {
                 <button
                     type="button"
                     onClick={() => setSentTo(null)}
-                    className="mt-4 text-[13px] text-slate-500 hover:text-slate-700 underline"
+                    className="mt-4 text-ui text-slate-500 hover:text-slate-700 underline"
                 >
                     Use a different email
                 </button>
@@ -104,7 +104,7 @@ export function ForgotPasswordPage() {
             subtitle="Enter the email you signed up with and we'll send you a reset link."
         >
             <form onSubmit={submit} noValidate>
-                <label htmlFor="fp-email" className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                <label htmlFor="fp-email" className="block text-ui font-semibold text-slate-700 mb-1.5">
                     Email
                 </label>
                 <div className="relative">
@@ -127,11 +127,11 @@ export function ForgotPasswordPage() {
                         aria-invalid={!!error}
                     />
                 </div>
-                {error && <p className="text-[12px] text-red-500 mt-1">{error}</p>}
+                {error && <p className="text-small text-red-500 mt-1">{error}</p>}
                 <button
                     type="submit"
                     disabled={busy}
-                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold disabled:opacity-60"
+                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-ui font-bold disabled:opacity-60"
                 >
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     Send reset link
@@ -191,7 +191,7 @@ export function ResetPasswordPage() {
     if (linkState === "checking") {
         return (
             <Card title="Reset your password">
-                <div className="flex items-center gap-2 text-[14px] text-slate-500">
+                <div className="flex items-center gap-2 text-ui text-slate-500">
                     <Loader2 size={16} className="animate-spin" /> Checking your link…
                 </div>
             </Card>
@@ -201,7 +201,7 @@ export function ResetPasswordPage() {
     if (linkState === "invalid") {
         return (
             <Card title="This link has expired">
-                <div className="flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-200 p-4 text-[13.5px] text-amber-900">
+                <div className="flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-200 p-4 text-ui text-amber-900">
                     <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-600" />
                     <p>
                         Reset links work once and expire after 1 hour. Request a new one and use the latest
@@ -210,7 +210,7 @@ export function ResetPasswordPage() {
                 </div>
                 <Link
                     to="/forgot-password"
-                    className="mt-5 w-full flex items-center justify-center py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold"
+                    className="mt-5 w-full flex items-center justify-center py-3 rounded-xl bg-action hover:bg-action-hover text-white text-ui font-bold"
                 >
                     Send a new link
                 </Link>
@@ -221,7 +221,7 @@ export function ResetPasswordPage() {
 
     const field = (id, label, value, setValue, error, autoComplete) => (
         <div>
-            <label htmlFor={id} className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+            <label htmlFor={id} className="block text-ui font-semibold text-slate-700 mb-1.5">
                 {label}
             </label>
             <div className="relative">
@@ -251,7 +251,7 @@ export function ResetPasswordPage() {
                     {show ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
             </div>
-            {error && <p className="text-[12px] text-red-500 mt-1">{error}</p>}
+            {error && <p className="text-small text-red-500 mt-1">{error}</p>}
         </div>
     );
 
@@ -270,13 +270,13 @@ export function ResetPasswordPage() {
                     errors.confirm,
                     "new-password"
                 )}
-                <p className="text-[12px] text-slate-500">
+                <p className="text-small text-slate-500">
                     At least 8 characters with upper and lower case letters, a number and a symbol.
                 </p>
                 <button
                     type="submit"
                     disabled={busy}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-[14px] font-bold disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-action hover:bg-action-hover text-white text-ui font-bold disabled:opacity-60"
                 >
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     Change password

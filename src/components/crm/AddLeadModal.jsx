@@ -79,7 +79,7 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
         <CrmModal title="Add lead" onClose={onClose}>
             <form onSubmit={submit} className="space-y-3">
                 {duplicates && (
-                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900">
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-ui text-amber-900">
                         <p className="flex items-center gap-2 font-semibold">
                             <AlertTriangle size={15} aria-hidden="true" /> This person may already be a lead
                         </p>
@@ -97,12 +97,12 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                                                 onClose();
                                                 onOpenLead(d.id);
                                             }}
-                                            className="rounded-md border border-amber-300 bg-surface px-2 py-0.5 text-[12px] font-semibold"
+                                            className="rounded-md border border-amber-300 bg-surface px-2 py-0.5 text-small font-semibold"
                                         >
                                             Open lead
                                         </button>
                                     ) : (
-                                        <span className="text-[12px]">Ask an Admin to review it</span>
+                                        <span className="text-small">Ask an Admin to review it</span>
                                     )}
                                 </li>
                             ))}
@@ -110,21 +110,21 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                     </div>
                 )}
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Name</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Name</span>
                     <input value={form.name} onChange={set("name")} className={inputCls} autoFocus />
                 </label>
                 <div className="grid gap-3 sm:grid-cols-2">
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Phone</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Phone</span>
                         <input value={form.phone} onChange={set("phone")} inputMode="tel" placeholder="+91 98765 43210" className={inputCls} />
                     </label>
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Email</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Email</span>
                         <input type="email" value={form.email} onChange={set("email")} className={inputCls} />
                     </label>
                 </div>
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Interested in</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Interested in</span>
                     <select value={form.course_id} onChange={set("course_id")} className={inputCls}>
                         <option value="">Not sure yet</option>
                         {courses.map((c) => (
@@ -135,12 +135,12 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                     </select>
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Preferred schedule (optional)</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Preferred schedule (optional)</span>
                     <input value={form.preferred_schedule} onChange={set("preferred_schedule")} placeholder="Weekend evenings" className={inputCls} />
                 </label>
                 <div className="grid gap-3 sm:grid-cols-2">
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Source</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Source</span>
                         <select value={form.source} onChange={set("source")} className={inputCls}>
                             {SOURCES.map(([v, l]) => (
                                 <option key={v} value={v}>
@@ -150,13 +150,13 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                         </select>
                     </label>
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Campaign (optional)</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Campaign (optional)</span>
                         <input value={form.campaign} onChange={set("campaign")} className={inputCls} />
                     </label>
                 </div>
                 {isAdmin && (
                     <label className="block">
-                        <span className="mb-1 block text-[13px] font-semibold text-slate-700">Owner</span>
+                        <span className="mb-1 block text-ui font-semibold text-slate-700">Owner</span>
                         <select value={form.owner_id} onChange={set("owner_id")} className={inputCls}>
                             <option value="auto">Auto (Round Robin)</option>
                             <option value="">Leave unassigned</option>
@@ -170,13 +170,13 @@ export default function AddLeadModal({ isAdmin, onClose, onCreated, onOpenLead }
                     </label>
                 )}
                 <div className="flex justify-end gap-2 pt-1">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={busy}
-                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white hover:bg-action-hover disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60"
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Add lead

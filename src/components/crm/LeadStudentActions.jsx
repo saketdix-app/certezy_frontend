@@ -81,23 +81,23 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
 
     return (
         <section>
-            <h3 className="mb-2 text-[13px] font-bold uppercase tracking-wide text-slate-500">Student & course</h3>
+            <h3 className="mb-2 text-ui font-bold uppercase tracking-wide text-slate-500">Student & course</h3>
 
             {!lead.user_id ? (
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-[13px] text-slate-600">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-ui text-slate-600">
                     <p>No student account yet. Create one to assign courses or issue certificates — they get an email to set their password.</p>
                     <button
                         type="button"
                         disabled={busy || !lead.email}
                         onClick={() => run(() => crmService.studentAccount(lead.id), "Student account created")}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-50"
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-50"
                     >
                         <UserPlus size={13} aria-hidden="true" /> Create student account
                     </button>
-                    {!lead.email && <p className="mt-1 text-[12px] text-amber-700">Add the lead's email first.</p>}
+                    {!lead.email && <p className="mt-1 text-small text-amber-700">Add the lead's email first.</p>}
                 </div>
             ) : (
-                <p className="mb-2 text-[13px] text-slate-600">
+                <p className="mb-2 text-ui text-slate-600">
                     Student account: <b>{lead.student_email ?? lead.email}</b>
                 </p>
             )}
@@ -110,7 +110,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                         disabled={key !== "discount" && !lead.user_id}
                         onClick={() => setOpen(open === key ? null : key)}
                         className={cn(
-                            "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-semibold disabled:opacity-40",
+                            "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-small font-semibold disabled:opacity-40",
                             open === key ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-700 hover:bg-slate-50"
                         )}
                     >
@@ -133,7 +133,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                     {open === "assign" && (
                         <>
                             <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note (optional)" className={inputCls} />
-                            <p className="text-[12px] text-slate-500">Gives free access to the course. The student is emailed.</p>
+                            <p className="text-small text-slate-500">Gives free access to the course. The student is emailed.</p>
                         </>
                     )}
 
@@ -141,18 +141,18 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                         <>
                             <div className="grid grid-cols-2 gap-2">
                                 <label className="block">
-                                    <span className="mb-1 block text-[12px] font-semibold text-slate-600">
+                                    <span className="mb-1 block text-small font-semibold text-slate-600">
                                         Price (US$){course ? ` — list $${course.price}` : ""}
                                     </span>
                                     <input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} className={inputCls} />
                                 </label>
                                 <label className="block">
-                                    <span className="mb-1 block text-[12px] font-semibold text-slate-600">Valid for (hours)</span>
+                                    <span className="mb-1 block text-small font-semibold text-slate-600">Valid for (hours)</span>
                                     <input type="number" min="1" value={hours} onChange={(e) => setHours(e.target.value)} className={inputCls} />
                                 </label>
                             </div>
                             {course && price !== "" && Number(course.price) > 0 && (
-                                <p className="text-[12px] text-slate-500">
+                                <p className="text-small text-slate-500">
                                     {Math.round(((Number(course.price) - Number(price)) / Number(course.price)) * 100)}% off.
                                     {!isAdmin && " Large discounts need an Admin."} It's emailed to {lead.student_email ?? lead.email}; it only counts as a sale once paid.
                                 </p>
@@ -162,7 +162,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
 
                     {open === "certificate" && (
                         <>
-                            <p className="text-[12px] text-slate-500">
+                            <p className="text-small text-slate-500">
                                 Issued only when the student has completed the course (all lessons and every exam).
                             </p>
                             {isAdmin && (
@@ -177,10 +177,10 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
                     )}
 
                     <div className="flex justify-end gap-2">
-                        <button type="button" onClick={() => setOpen(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[12.5px] font-semibold">
+                        <button type="button" onClick={() => setOpen(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
                             Cancel
                         </button>
-                        <button type="button" disabled={busy} onClick={submit} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-[12.5px] font-bold text-white disabled:opacity-60">
+                        <button type="button" disabled={busy} onClick={submit} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-60">
                             {busy && <Loader2 size={13} className="animate-spin" />}
                             {ACTIONS.find(([k]) => k === open)?.[1]}
                         </button>
@@ -189,7 +189,7 @@ export default function LeadStudentActions({ lead, isAdmin, onLeadChanged }) {
             )}
 
             {lastLink && (
-                <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-[12.5px] text-emerald-900">
+                <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-small text-emerald-900">
                     <span className="truncate">Offer link: {lastLink.offer_url}</span>
                     <button
                         type="button"

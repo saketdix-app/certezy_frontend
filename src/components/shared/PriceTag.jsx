@@ -9,9 +9,9 @@ import { useCurrency } from "@/lib/currency";
  * <PriceTag course={course} size="lg" />     enroll card
  */
 const SIZES = {
-    sm: { price: "text-[14px]", original: "text-[12px]", badge: "text-[10px] px-1.5 py-0.5" },
-    md: { price: "text-[16px]", original: "text-[12.5px]", badge: "text-[10.5px] px-2 py-0.5" },
-    lg: { price: "text-[32px] tracking-tight", original: "text-[16px]", badge: "text-[12px] px-2.5 py-1" },
+    sm: { price: "text-ui", original: "text-small", badge: "text-label px-1.5 py-0.5" },
+    md: { price: "text-body", original: "text-small", badge: "text-label px-2 py-0.5" },
+    lg: { price: "text-h1 tracking-tight", original: "text-body", badge: "text-small px-2.5 py-1" },
 };
 
 export default function PriceTag({ course, size = "md", className }) {

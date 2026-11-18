@@ -162,10 +162,10 @@ export default function PaymentsPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">
                         Payments & Revenue
                     </h1>
-                    <p className="text-[13.5px] text-slate-500 mt-0.5">
+                    <p className="text-ui text-slate-500 mt-0.5">
                         Track all payment transactions and revenue across your platform.
                     </p>
                 </div>
@@ -174,7 +174,7 @@ export default function PaymentsPage() {
                         // Export functionality can be added here
                         toast.info("Export feature coming soon!");
                     }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                     <Download size={14} />
                     Export
@@ -237,10 +237,10 @@ export default function PaymentsPage() {
                                     <Icon size={20} style={{ color }} />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                         {label}
                                     </p>
-                                    <p className="text-[28px] font-extrabold text-slate-900 leading-none mt-0.5">
+                                    <p className="text-h1 font-extrabold text-slate-900 leading-none mt-0.5">
                                         {value}
                                     </p>
                                 </div>
@@ -266,13 +266,13 @@ export default function PaymentsPage() {
                             placeholder="Search by student or course..."
                             value={searchTerm}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                         />
                     </div>
                     <select
                         value={selectedStatus}
                         onChange={(e) => handleStatusFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Status</option>
                         <option value="success">Success</option>
@@ -282,7 +282,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedMethod}
                         onChange={(e) => handleMethodFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Methods</option>
                         <option value="razorpay">Razorpay</option>
@@ -292,7 +292,7 @@ export default function PaymentsPage() {
                     <select
                         value={selectedCurrency}
                         onChange={(e) => handleCurrencyFilter(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors"
                     >
                         <option value="">All Currencies</option>
                         <option value="INR">INR</option>
@@ -314,8 +314,8 @@ export default function PaymentsPage() {
                 ) : payments.length === 0 ? (
                     <div className="text-center py-20">
                         <CreditCard className="mx-auto text-slate-300 mb-4" size={48} />
-                        <p className="text-lg font-semibold text-slate-900">No payments found</p>
-                        <p className="text-sm text-slate-600 mt-1">Try adjusting your search or filters</p>
+                        <p className="text-h3 font-semibold text-slate-900">No payments found</p>
+                        <p className="text-ui text-slate-600 mt-1">Try adjusting your search or filters</p>
                     </div>
                 ) : (
                     <>
@@ -324,28 +324,28 @@ export default function PaymentsPage() {
                             <table className="w-full min-w-[720px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Student
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Course
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Amount
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             USD Value
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Method
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Status
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Date
                                         </th>
-                                        <th className="text-left px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                                        <th className="text-left px-6 py-4 text-label font-bold uppercase tracking-wider text-slate-600">
                                             Reference
                                         </th>
                                     </tr>
@@ -365,14 +365,14 @@ export default function PaymentsPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-sm font-semibold">
+                                                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-ui font-semibold">
                                                             {payment.student_name?.charAt(0)?.toUpperCase()}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-semibold text-slate-900">
+                                                            <p className="text-ui font-semibold text-slate-900">
                                                                 {payment.student_name}
                                                             </p>
-                                                            <p className="text-xs text-slate-500">
+                                                            <p className="text-small text-slate-500">
                                                                 {payment.student_email}
                                                             </p>
                                                         </div>
@@ -380,43 +380,43 @@ export default function PaymentsPage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div>
-                                                        <p className="text-sm font-semibold text-slate-900">
+                                                        <p className="text-ui font-semibold text-slate-900">
                                                             {payment.course_title}
                                                         </p>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-lg font-bold text-slate-900">
+                                                        <span className="text-h3 font-bold text-slate-900">
                                                             {formatAmount(
                                                                 payment.paid_amount,
                                                                 payment.currency
                                                             )}
                                                         </span>
-                                                        <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                                        <span className="text-small text-slate-500 bg-slate-100 px-2 py-1 rounded">
                                                             {payment.currency}
                                                         </span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-lg font-bold text-green-600">
+                                                        <span className="text-h3 font-bold text-green-600">
                                                             $
                                                             {payment.usd_amount
                                                                 ? parseFloat(payment.usd_amount).toFixed(2)
                                                                 : "0.00"}
                                                         </span>
-                                                        <span className="text-xs text-slate-500 bg-green-50 px-2 py-1 rounded">
+                                                        <span className="text-small text-slate-500 bg-green-50 px-2 py-1 rounded">
                                                             USD
                                                         </span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-lg">
+                                                        <span className="text-h3">
                                                             {METHOD_ICONS[payment.method] || "💳"}
                                                         </span>
-                                                        <span className="text-sm font-medium text-slate-700 capitalize">
+                                                        <span className="text-ui font-medium text-slate-700 capitalize">
                                                             {payment.method}
                                                         </span>
                                                     </div>
@@ -428,7 +428,7 @@ export default function PaymentsPage() {
                                                             style={{ backgroundColor: statusStyle.color }}
                                                         />
                                                         <span
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium"
                                                             style={{
                                                                 background: statusStyle.bg,
                                                                 color: statusStyle.color,
@@ -441,13 +441,13 @@ export default function PaymentsPage() {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2 text-slate-600">
                                                         <Calendar size={14} />
-                                                        <span className="text-sm">
+                                                        <span className="text-ui">
                                                             {formatDate(payment.created_at)}
                                                         </span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded">
+                                                    <div className="font-mono text-small text-slate-600 bg-slate-100 px-2 py-1 rounded">
                                                         {payment.gateway_txn_id || "N/A"}
                                                     </div>
                                                 </td>
@@ -461,7 +461,7 @@ export default function PaymentsPage() {
                         {/* Pagination */}
                         {totalPages > 1 && (
                             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-                                <p className="text-sm text-slate-600">
+                                <p className="text-ui text-slate-600">
                                     Showing {(currentPage - 1) * PER_PAGE + 1} to{" "}
                                     {Math.min(currentPage * PER_PAGE, totalCount)} of {totalCount} results
                                 </p>
@@ -473,7 +473,7 @@ export default function PaymentsPage() {
                                     >
                                         <ChevronLeft size={16} />
                                     </button>
-                                    <span className="px-3 py-1 text-sm text-slate-600">
+                                    <span className="px-3 py-1 text-ui text-slate-600">
                                         Page {currentPage} of {totalPages}
                                     </span>
                                     <button

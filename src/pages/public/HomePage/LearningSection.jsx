@@ -160,7 +160,7 @@ export default function LearningSection() {
                     <div style={{ textAlign: "center", marginBottom: "56px" }}>
                         <p
                             style={{
-                                fontSize: "10.5px",
+                                fontSize: "11.5px",
                                 fontWeight: 700,
                                 letterSpacing: "0.12em",
                                 color: "#94A3B8",
@@ -202,7 +202,7 @@ export default function LearningSection() {
                                             />
                                             <div
                                                 style={{
-                                                    fontSize: "20px",
+                                                    fontSize: "22px",
                                                     fontWeight: 800,
                                                     color: "#fff",
                                                     lineHeight: 1,
@@ -212,7 +212,7 @@ export default function LearningSection() {
                                             </div>
                                             <div
                                                 style={{
-                                                    fontSize: "12px",
+                                                    fontSize: "12.5px",
                                                     color: "#94A3B8",
                                                     marginTop: "5px",
                                                     fontWeight: 500,
@@ -225,7 +225,7 @@ export default function LearningSection() {
                                         <>
                                             <div
                                                 style={{
-                                                    fontSize: "32px",
+                                                    fontSize: "30px",
                                                     fontWeight: 900,
                                                     lineHeight: 1,
                                                     color: "#4E9CD3",
@@ -237,7 +237,7 @@ export default function LearningSection() {
                                             </div>
                                             <div
                                                 style={{
-                                                    fontSize: "13px",
+                                                    fontSize: "13.5px",
                                                     fontWeight: 700,
                                                     color: "#F1F5F9",
                                                 }}
@@ -265,7 +265,7 @@ export default function LearningSection() {
                             <h2
                                 className="ls-heading ls-fade"
                                 style={{
-                                    fontSize: "42px",
+                                    fontSize: "44px",
                                     fontWeight: 900,
                                     lineHeight: 1.15,
                                     letterSpacing: "-0.025em",
@@ -279,7 +279,7 @@ export default function LearningSection() {
 
                             <p
                                 style={{
-                                    fontSize: "15.5px",
+                                    fontSize: "15px",
                                     color: "#94A3B8",
                                     lineHeight: 1.7,
                                     maxWidth: "440px",
@@ -303,7 +303,7 @@ export default function LearningSection() {
                                         <div>
                                             <h3
                                                 style={{
-                                                    fontSize: "14px",
+                                                    fontSize: "13.5px",
                                                     fontWeight: 700,
                                                     color: "#F1F5F9",
                                                     marginBottom: "5px",

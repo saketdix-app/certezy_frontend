@@ -141,7 +141,7 @@ function Accordion({ title, children, defaultOpen = false }) {
         <div className="border-b border-white/[0.07]">
             <button
                 onClick={() => setOpen(!open)}
-                className="w-full flex justify-between items-center py-4 bg-transparent border-none cursor-pointer text-white text-xs font-bold uppercase tracking-widest"
+                className="w-full flex justify-between items-center py-4 bg-transparent border-none cursor-pointer text-white text-small font-bold uppercase tracking-widest"
             >
                 {title}
                 <IconChevron open={open} />
@@ -161,7 +161,7 @@ function FooterLink({ to = "#", children, highlight }) {
     return (
         <Link
             to={to}
-            className={`block py-1 text-sm transition-colors duration-150 no-underline ${
+            className={`block py-1 text-ui transition-colors duration-150 no-underline ${
                 highlight
                     ? "text-blue-400 font-semibold hover:text-blue-300"
                     : "text-slate-400 font-normal hover:text-slate-200"
@@ -202,7 +202,7 @@ function BackToTop() {
     return (
         <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-1.5 bg-transparent border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-200 cursor-pointer"
+            className="flex items-center gap-1.5 bg-transparent border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 text-small font-semibold text-slate-400 hover:text-slate-200 transition-all duration-200 cursor-pointer"
         >
             <IconArrowUp /> Back to top
         </button>
@@ -213,7 +213,7 @@ function BackToTop() {
 function SupportCard() {
     return (
         <div className="rounded-xl p-4 bg-white/[0.04] border border-white/[0.08]">
-            <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">Support</p>
+            <p className="text-small font-bold uppercase tracking-widest text-white mb-3.5">Support</p>
 
             {/* Email */}
             <div className="flex items-start gap-2.5">
@@ -221,10 +221,10 @@ function SupportCard() {
                     <IconMail />
                 </span>
                 <div>
-                    <p className="text-xs text-slate-400 mb-0.5">Email us</p>
+                    <p className="text-small text-slate-400 mb-0.5">Email us</p>
                     <a
                         href={`mailto:${SUPPORT_EMAIL}`}
-                        className="text-sm text-slate-400 font-medium hover:text-white"
+                        className="text-ui text-slate-400 font-medium hover:text-white"
                     >
                         {SUPPORT_EMAIL}
                     </a>
@@ -238,8 +238,8 @@ function SupportCard() {
                         <IconPhone />
                     </span>
                     <div>
-                        <p className="text-xs text-slate-400 mb-0.5">Call us · {phone.label}</p>
-                        <a href={phone.href} className="text-sm text-slate-400 font-medium hover:text-white">
+                        <p className="text-small text-slate-400 mb-0.5">Call us · {phone.label}</p>
+                        <a href={phone.href} className="text-ui text-slate-400 font-medium hover:text-white">
                             {phone.number}
                         </a>
                     </div>
@@ -271,7 +271,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <CertezyLogo />
-                        <p className="text-sm text-slate-400 leading-relaxed mb-5">
+                        <p className="text-ui text-slate-400 leading-relaxed mb-5">
                             Industry-recognized certification courses taught by experts. Advance your career
                             with confidence.
                         </p>
@@ -280,7 +280,7 @@ export default function Footer() {
 
                     {/* Categories */}
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">
+                        <p className="text-small font-bold uppercase tracking-widest text-white mb-3.5">
                             Top Categories
                         </p>
                         {CATEGORIES.map((c) => (
@@ -292,7 +292,7 @@ export default function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">
+                        <p className="text-small font-bold uppercase tracking-widest text-white mb-3.5">
                             Quick Links
                         </p>
                         {QUICK_LINKS.map((l) => (
@@ -304,7 +304,7 @@ export default function Footer() {
 
                     {/* Student Area */}
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">
+                        <p className="text-small font-bold uppercase tracking-widest text-white mb-3.5">
                             Student Area
                         </p>
                         {STUDENT_LINKS.map((l) => (
@@ -316,7 +316,7 @@ export default function Footer() {
 
                     {/* Support */}
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-white mb-3.5">
+                        <p className="text-small font-bold uppercase tracking-widest text-white mb-3.5">
                             Get in Touch
                         </p>
                         <SupportCard />
@@ -327,7 +327,7 @@ export default function Footer() {
                 <div className="md:hidden">
                     <div className="pb-6 border-b border-white/[0.07]">
                         <CertezyLogo />
-                        <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                        <p className="text-ui text-slate-400 leading-relaxed mb-4">
                             Industry-recognized certification courses to accelerate your career.
                         </p>
                         <SocialLinks />
@@ -374,32 +374,32 @@ export default function Footer() {
                             className="h-[72px] w-[72px] shrink-0"
                         />
                         <div>
-                            <p className="text-[13px] font-semibold text-slate-300">
+                            <p className="text-ui font-semibold text-slate-300">
                                 {APP_NAME} is a PMI<sup>®</sup> Authorized Training Partner
                             </p>
-                            <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{PMI_ATP.notice}</p>
+                            <p className="mt-1 text-label leading-relaxed text-slate-400">{PMI_ATP.notice}</p>
                         </div>
                     </div>
                     <div className="flex items-center justify-between flex-wrap gap-3 py-5">
-                        <span className="text-xs text-slate-400">
+                        <span className="text-small text-slate-400">
                             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
                         </span>
                         <div className="flex items-center gap-5 flex-wrap">
                             <Link
                                 to={ROUTES.PRIVACY}
-                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
+                                className="text-small text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Privacy Policy
                             </Link>
                             <Link
                                 to={ROUTES.TERMS}
-                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
+                                className="text-small text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Terms of Service
                             </Link>
                             <Link
                                 to={ROUTES.COMPLAINTS}
-                                className="text-xs text-slate-400 hover:text-slate-400 transition-colors no-underline"
+                                className="text-small text-slate-400 hover:text-slate-400 transition-colors no-underline"
                             >
                                 Complaints Policy
                             </Link>

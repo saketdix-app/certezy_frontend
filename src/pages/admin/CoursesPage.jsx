@@ -410,19 +410,19 @@ export default function CoursesPage() {
             {/* ── Header ── */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">
+                    <p className="text-small font-semibold text-slate-500 uppercase tracking-widest mb-1">
                         Dashboard › <span style={{ color: "#236A9E" }}>Courses</span>
                     </p>
-                    <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Courses</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">Manage your course catalog and content</p>
+                    <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">Courses</h1>
+                    <p className="text-ui text-slate-500 mt-0.5">Manage your course catalog and content</p>
                 </div>
                 <div className="flex gap-3 flex-wrap">
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
                         <Download size={15} /> Export
                     </button>
                     <button
                         onClick={openCreate}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-colors whitespace-nowrap"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors whitespace-nowrap"
                         style={{ background: "#236A9E" }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -479,11 +479,11 @@ export default function CoursesPage() {
                     >
                         <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                                <p className="text-xs font-medium text-slate-500 mb-1 truncate">{label}</p>
-                                <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-none">
+                                <p className="text-small font-medium text-slate-500 mb-1 truncate">{label}</p>
+                                <p className="text-h2 sm:text-h1 font-extrabold text-slate-900 leading-none">
                                     {value}
                                 </p>
-                                <p className={`text-xs font-medium mt-1.5 truncate ${subColor}`}>{sub}</p>
+                                <p className={`text-small font-medium mt-1.5 truncate ${subColor}`}>{sub}</p>
                             </div>
                             <div
                                 className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -513,7 +513,7 @@ export default function CoursesPage() {
                             placeholder="Search by course title, instructor..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-ui text-slate-800 bg-slate-50 outline-none focus:border-action focus:bg-surface transition-colors"
                         />
                     </div>
                     {/* Filters row */}
@@ -521,7 +521,7 @@ export default function CoursesPage() {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-ui text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Status</option>
                             {STATUSES.map((s) => (
@@ -533,7 +533,7 @@ export default function CoursesPage() {
                         <select
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-ui text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Levels</option>
                             {LEVELS.map((l) => (
@@ -549,7 +549,7 @@ export default function CoursesPage() {
                                 setSelectedParent(e.target.value);
                                 setCatId("");
                             }}
-                            className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
+                            className="px-3 py-2 rounded-xl border border-slate-200 text-ui text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                         >
                             <option value="">All Categories</option>
                             {categories
@@ -565,7 +565,7 @@ export default function CoursesPage() {
                             <select
                                 value={catId}
                                 onChange={(e) => setCatId(e.target.value)}
-                                className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
+                                className="px-3 py-2 rounded-xl border border-slate-200 text-ui text-slate-700 bg-surface outline-none focus:border-action cursor-pointer"
                             >
                                 <option value="">All Sub-Categories</option>
                                 {getChildCategories(selectedParent).map((c) => (
@@ -591,10 +591,10 @@ export default function CoursesPage() {
                 ) : error ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
                         <AlertCircle size={28} className="text-red-500" />
-                        <p className="text-sm font-medium text-red-600 text-center px-4">{error}</p>
+                        <p className="text-ui font-medium text-red-600 text-center px-4">{error}</p>
                         <button
                             onClick={loadCourses}
-                            className="px-4 py-2 rounded-xl text-sm font-bold text-white"
+                            className="px-4 py-2 rounded-xl text-ui font-bold text-white"
                             style={{ background: "#236A9E" }}
                         >
                             Retry
@@ -603,10 +603,10 @@ export default function CoursesPage() {
                 ) : courses.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
                         <BookOpen size={32} className="text-slate-300" />
-                        <p className="text-sm font-medium text-slate-500">No courses found</p>
+                        <p className="text-ui font-medium text-slate-500">No courses found</p>
                         <button
                             onClick={openCreate}
-                            className="px-4 py-2 rounded-xl text-sm font-bold text-white"
+                            className="px-4 py-2 rounded-xl text-ui font-bold text-white"
                             style={{ background: "#236A9E" }}
                         >
                             Create First Course
@@ -629,7 +629,7 @@ export default function CoursesPage() {
                                     ].map(({ label, cls }) => (
                                         <th
                                             key={label}
-                                            className={`text-left py-3 px-4 text-[10.5px] font-bold text-slate-500 tracking-widest uppercase whitespace-nowrap ${cls}`}
+                                            className={`text-left py-3 px-4 text-label font-bold text-slate-500 tracking-widest uppercase whitespace-nowrap ${cls}`}
                                         >
                                             {label}
                                         </th>
@@ -655,11 +655,11 @@ export default function CoursesPage() {
                                                         compact
                                                     />
                                                     <div className="min-w-0">
-                                                        <p className="text-[13px] font-bold text-slate-900 truncate max-w-[180px] lg:max-w-[240px]">
+                                                        <p className="text-ui font-bold text-slate-900 truncate max-w-[180px] lg:max-w-[240px]">
                                                             {course.title}
                                                         </p>
                                                         <p
-                                                            className="text-[11px] font-semibold uppercase tracking-wider mt-0.5 truncate max-w-[180px]"
+                                                            className="text-label font-semibold uppercase tracking-wider mt-0.5 truncate max-w-[180px]"
                                                             style={{ color: "#236A9E" }}
                                                         >
                                                             {course.category_name ?? "—"}
@@ -670,12 +670,12 @@ export default function CoursesPage() {
                                             {/* Instructor */}
                                             <td className="py-3.5 px-4 hidden 2xl:table-cell">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-[11px] font-bold text-slate-600 shrink-0">
+                                                    <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-label font-bold text-slate-600 shrink-0">
                                                         {(course.instructor_name ?? "?")
                                                             .charAt(0)
                                                             .toUpperCase()}
                                                     </div>
-                                                    <span className="text-[13px] text-slate-700 whitespace-nowrap">
+                                                    <span className="text-ui text-slate-700 whitespace-nowrap">
                                                         {course.instructor_name ?? "—"}
                                                     </span>
                                                 </div>
@@ -683,17 +683,17 @@ export default function CoursesPage() {
                                             {/* Level */}
                                             <td className="py-3.5 px-4">
                                                 <span
-                                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide ${LEVEL_STYLE[course.level] ?? "bg-slate-100 text-slate-600"}`}
+                                                    className={`px-2.5 py-1 rounded-lg text-label font-bold uppercase tracking-wide ${LEVEL_STYLE[course.level] ?? "bg-slate-100 text-slate-600"}`}
                                                 >
                                                     {course.level ?? "—"}
                                                 </span>
                                             </td>
                                             {/* Price */}
-                                            <td className="py-3.5 px-4 text-[13px] font-bold text-slate-800 whitespace-nowrap">
+                                            <td className="py-3.5 px-4 text-ui font-bold text-slate-800 whitespace-nowrap">
                                                 <PriceTag course={course} size="sm" />
                                             </td>
                                             {/* Students */}
-                                            <td className="py-3.5 px-4 text-[13px] text-slate-700 hidden 2xl:table-cell">
+                                            <td className="py-3.5 px-4 text-ui text-slate-700 hidden 2xl:table-cell">
                                                 {(course.enrolled_count ?? 0).toLocaleString()}
                                             </td>
                                             {/* Status */}
@@ -703,7 +703,7 @@ export default function CoursesPage() {
                                                         setSelectedCourse(course);
                                                         setShowStatusModal(true);
                                                     }}
-                                                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-opacity hover:opacity-75 ${s.bg} ${s.text}`}
+                                                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-label font-bold uppercase tracking-wide transition-opacity hover:opacity-75 ${s.bg} ${s.text}`}
                                                 >
                                                     <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
                                                     {s.label}
@@ -778,7 +778,7 @@ export default function CoursesPage() {
                 {/* Pagination */}
                 {!loading && !error && totalPages > 1 && (
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-100">
-                        <p className="text-[13px] text-slate-500 text-center sm:text-left">
+                        <p className="text-ui text-slate-500 text-center sm:text-left">
                             Showing {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, totalCount)} of{" "}
                             {totalCount} results
                         </p>
@@ -795,7 +795,7 @@ export default function CoursesPage() {
                                     key={p}
                                     onClick={() => setPage(p)}
                                     className={cn(
-                                        "w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-semibold transition-colors",
+                                        "w-8 h-8 flex items-center justify-center rounded-lg text-ui font-semibold transition-colors",
                                         page === p
                                             ? "text-white"
                                             : "border border-slate-200 text-slate-600 hover:bg-slate-50"
@@ -807,11 +807,11 @@ export default function CoursesPage() {
                             ))}
                             {totalPages > 5 && (
                                 <>
-                                    <span className="text-slate-500 text-sm">...</span>
+                                    <span className="text-slate-500 text-ui">...</span>
                                     <button
                                         onClick={() => setPage(totalPages)}
                                         className={cn(
-                                            "w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-semibold transition-colors",
+                                            "w-8 h-8 flex items-center justify-center rounded-lg text-ui font-semibold transition-colors",
                                             page === totalPages
                                                 ? "text-white"
                                                 : "border border-slate-200 text-slate-600 hover:bg-slate-50"
@@ -844,10 +844,10 @@ export default function CoursesPage() {
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
                             <div>
-                                <h2 className="text-[17px] font-extrabold text-slate-900">
+                                <h2 className="text-h3 font-extrabold text-slate-900">
                                     {editCourse ? "Edit Course" : "Create Course"}
                                 </h2>
-                                <p className="text-[12.5px] text-slate-500 mt-0.5">
+                                <p className="text-small text-slate-500 mt-0.5">
                                     {editCourse
                                         ? "Update course details"
                                         : "Fill in the details to create a new course"}
@@ -914,7 +914,7 @@ export default function CoursesPage() {
                                             </select>
                                         )}
                                         {getFormSelectedCategory() && (
-                                            <p className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">
+                                            <p className="text-small text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">
                                                 Selected:{" "}
                                                 <span className="font-semibold text-slate-600">
                                                     {getFormSelectedCategory().name}
@@ -1026,11 +1026,11 @@ export default function CoursesPage() {
                                         onChange={(e) => setF("inr_enabled", e.target.checked)}
                                         className="mt-0.5 w-4 h-4 accent-action"
                                     />
-                                    <span className="text-[13px] leading-snug">
+                                    <span className="text-ui leading-snug">
                                         <span className="font-semibold text-slate-800">
                                             Sell in Indian rupees (₹) to visitors from India
                                         </span>
-                                        <span className="block text-[12px] text-slate-500">
+                                        <span className="block text-small text-slate-500">
                                             Off: everyone, including India, sees and pays the US$ price with
                                             PayPal. On: visitors from India see the ₹ price and pay with
                                             Razorpay.
@@ -1040,7 +1040,7 @@ export default function CoursesPage() {
                             )}
                             {form.pricing_type === "paid" && form.inr_enabled && (
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div className="hidden sm:block self-center text-[12px] text-slate-500 leading-snug">
+                                    <div className="hidden sm:block self-center text-small text-slate-500 leading-snug">
                                         India prices. Leave empty to convert the USD price at today's rate.
                                     </div>
                                     <Field label="INDIA PRICE (₹)">
@@ -1069,7 +1069,7 @@ export default function CoursesPage() {
                                 </div>
                             )}
                             {form.pricing_type === "paid" && Number(form.price) > 0 && (
-                                <p className="-mt-2 text-[12px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <p className="-mt-2 text-small text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
                                     <span className="flex items-center gap-2">
                                         {form.inr_enabled ? "Outside India:" : "Everyone:"}{" "}
                                         <PriceTag course={{ ...form, price_inr: null }} size="sm" />
@@ -1154,16 +1154,16 @@ export default function CoursesPage() {
                             {/* Course page: exam details + FAQs (help visitors decide, and rank in search) */}
                             <div className="rounded-xl border border-slate-200 p-4 space-y-4">
                                 <div>
-                                    <p className="text-[13px] font-bold text-slate-800">Course page content</p>
-                                    <p className="text-[12px] text-slate-500">
+                                    <p className="text-ui font-bold text-slate-800">Course page content</p>
+                                    <p className="text-small text-slate-500">
                                         Shown on the course page. Leave empty to hide a section. Check exam facts against the
                                         official source before publishing.
                                     </p>
                                 </div>
                                 {pageContent === "loading" ? (
-                                    <p className="text-[12.5px] text-slate-500">Loading…</p>
+                                    <p className="text-small text-slate-500">Loading…</p>
                                 ) : pageContent === "failed" ? (
-                                    <p className="text-[12.5px] text-amber-700">
+                                    <p className="text-small text-amber-700">
                                         Couldn't load this course's exam info and FAQs, so they won't be changed. Close and open the
                                         course again to edit them.
                                     </p>
@@ -1179,7 +1179,7 @@ export default function CoursesPage() {
                                             />
                                         </Field>
                                         <div className="space-y-2">
-                                            <p className="text-[11px] font-bold tracking-wider text-slate-500">FAQS ({form.faqs.length})</p>
+                                            <p className="text-label font-bold tracking-wider text-slate-500">FAQS ({form.faqs.length})</p>
                                             {form.faqs.map((f, i) => (
                                                 <div key={i} className="rounded-lg border border-slate-200 p-3 space-y-2">
                                                     <div className="flex items-center gap-2">
@@ -1195,7 +1195,7 @@ export default function CoursesPage() {
                                                         <button
                                                             type="button"
                                                             onClick={() => setF("faqs", form.faqs.filter((_, j) => j !== i))}
-                                                            className="shrink-0 rounded-lg px-2 py-1 text-[12px] font-semibold text-red-600 hover:bg-red-50"
+                                                            className="shrink-0 rounded-lg px-2 py-1 text-small font-semibold text-red-600 hover:bg-red-50"
                                                         >
                                                             Remove
                                                         </button>
@@ -1216,7 +1216,7 @@ export default function CoursesPage() {
                                                 type="button"
                                                 disabled={form.faqs.length >= 40}
                                                 onClick={() => setF("faqs", [...form.faqs, { q: "", a: "" }])}
-                                                className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-[12.5px] font-semibold text-[#236A9E] hover:bg-slate-50 disabled:opacity-50"
+                                                className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-small font-semibold text-[#236A9E] hover:bg-slate-50 disabled:opacity-50"
                                             >
                                                 + Add a question
                                             </button>
@@ -1245,14 +1245,14 @@ export default function CoursesPage() {
                             <button
                                 type="button"
                                 onClick={() => setShowModal(false)}
-                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
                                 style={{ background: "#236A9E" }}
                                 onMouseEnter={(e) => {
                                     if (!saving) e.currentTarget.style.background = "#1B5582";
@@ -1282,7 +1282,7 @@ export default function CoursesPage() {
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
                     <div className="bg-surface rounded-2xl w-full max-w-sm mx-4 shadow-2xl">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                            <h3 className="text-[15px] font-extrabold text-slate-900">Change Status</h3>
+                            <h3 className="text-body font-extrabold text-slate-900">Change Status</h3>
                             <button
                                 onClick={() => setShowStatusModal(false)}
                                 className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
@@ -1291,8 +1291,8 @@ export default function CoursesPage() {
                             </button>
                         </div>
                         <div className="px-6 py-4">
-                            <p className="text-xs text-slate-500 mb-1">Course</p>
-                            <p className="text-[13.5px] font-bold text-slate-900 mb-4 line-clamp-2">
+                            <p className="text-small text-slate-500 mb-1">Course</p>
+                            <p className="text-ui font-bold text-slate-900 mb-4 line-clamp-2">
                                 {selectedCourse.title}
                             </p>
                             <div className="space-y-2">
@@ -1305,12 +1305,12 @@ export default function CoursesPage() {
                                         }}
                                         className="w-full flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-left transition-colors"
                                     >
-                                        <span className="text-lg">{opt.icon}</span>
+                                        <span className="text-h3">{opt.icon}</span>
                                         <div>
-                                            <p className="text-[13px] font-bold text-slate-800">
+                                            <p className="text-ui font-bold text-slate-800">
                                                 {opt.label}
                                             </p>
-                                            <p className="text-[11.5px] text-slate-500 mt-0.5">{opt.desc}</p>
+                                            <p className="text-label text-slate-500 mt-0.5">{opt.desc}</p>
                                         </div>
                                     </button>
                                 ))}
@@ -1319,7 +1319,7 @@ export default function CoursesPage() {
                         <div className="px-6 pb-4">
                             <button
                                 onClick={() => setShowStatusModal(false)}
-                                className="w-full py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                className="w-full py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -1334,12 +1334,12 @@ export default function CoursesPage() {
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-[13.5px] text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-ui text-slate-800 outline-none focus:border-action focus:bg-surface transition-colors";
 
 function Field({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                 {label}
             </label>
             {children}
@@ -1364,7 +1364,7 @@ function Toggle({ label, checked, onChange }) {
                     )}
                 />
             </div>
-            <span className="text-[13px] font-medium text-slate-700">{label}</span>
+            <span className="text-ui font-medium text-slate-700">{label}</span>
         </label>
     );
 }

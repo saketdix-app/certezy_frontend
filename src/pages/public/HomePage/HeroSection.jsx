@@ -148,7 +148,7 @@ export default function HeroSection() {
                                         borderRadius: "100px",
                                         border: "1px solid rgba(59,130,246,0.35)",
                                         background: "rgba(59,130,246,0.08)",
-                                        fontSize: "12px",
+                                        fontSize: "12.5px",
                                         fontWeight: 700,
                                         color: "#93C5FD",
                                         letterSpacing: "0.02em",
@@ -196,7 +196,7 @@ export default function HeroSection() {
                             <p
                                 className="afu3 hero-desc"
                                 style={{
-                                    fontSize: "16.5px",
+                                    fontSize: "17px",
                                     color: "var(--c-muted)",
                                     lineHeight: 1.72,
                                     maxWidth: "480px",
@@ -313,7 +313,7 @@ export default function HeroSection() {
                                         <div>
                                             <div
                                                 style={{
-                                                    fontSize: "24px",
+                                                    fontSize: "22px",
                                                     fontWeight: 900,
                                                     lineHeight: 1,
                                                     color: blue ? "#3282B8" : "var(--c-text)",
@@ -324,7 +324,7 @@ export default function HeroSection() {
                                             </div>
                                             <div
                                                 style={{
-                                                    fontSize: "10.5px",
+                                                    fontSize: "11.5px",
                                                     fontWeight: 700,
                                                     color: "var(--c-muted)",
                                                     letterSpacing: "0.08em",

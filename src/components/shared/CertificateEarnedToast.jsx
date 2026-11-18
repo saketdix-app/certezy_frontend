@@ -17,10 +17,10 @@ export function showCertificateEarned(certificate, navigate, { reissued = false 
                     <Award size={20} />
                 </div>
                 <div className="min-w-0 flex-1">
-                    <p className="text-[14px] font-bold text-slate-900">
+                    <p className="text-ui font-bold text-slate-900">
                         {reissued ? "Certificate reissued 🎉" : "Certificate earned! 🎉"}
                     </p>
-                    <p className="text-[12.5px] text-slate-500 mt-0.5">
+                    <p className="text-small text-slate-500 mt-0.5">
                         {reissued
                             ? "You passed again — your certificate now shows today's date. Same certificate number and verification link."
                             : "You completed the course. Your certificate from CERTEZY E-Learning Pvt. Ltd. is ready."}
@@ -31,7 +31,7 @@ export function showCertificateEarned(certificate, navigate, { reissued = false 
                                 href={certificate.pdf_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-[12.5px] font-bold text-primary hover:underline"
+                                className="text-small font-bold text-primary hover:underline"
                             >
                                 Download PDF
                             </a>
@@ -42,7 +42,7 @@ export function showCertificateEarned(certificate, navigate, { reissued = false 
                                 toast.dismiss(t.id);
                                 navigate?.("/student/certificates");
                             }}
-                            className="text-[12.5px] font-semibold text-slate-600 hover:text-primary"
+                            className="text-small font-semibold text-slate-600 hover:text-primary"
                         >
                             My certificates
                         </button>

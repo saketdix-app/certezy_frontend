@@ -72,7 +72,7 @@ function NavBarIndex() {
                                 {/* My Learning — lg+ only */}
                                 <Link
                                     to="/student/my-courses"
-                                    className="hidden lg:block text-[13.5px] font-semibold text-text-secondary hover:text-primary transition-colors whitespace-nowrap"
+                                    className="hidden lg:block text-ui font-semibold text-text-secondary hover:text-primary transition-colors whitespace-nowrap"
                                 >
                                     My Learning
                                 </Link>
@@ -121,7 +121,7 @@ function LoginBtn() {
     return (
         <Link
             to="/login"
-            className="text-[13.5px] font-semibold text-text-secondary hover:text-primary transition-colors duration-200 whitespace-nowrap"
+            className="text-ui font-semibold text-text-secondary hover:text-primary transition-colors duration-200 whitespace-nowrap"
         >
             Log In
         </Link>
@@ -135,7 +135,7 @@ function RegisterBtn() {
             className={cn(
                 "flex items-center h-[36px] px-5 rounded-lg shrink-0",
                 "bg-action hover:bg-action-hover",
-                "text-[13.5px] font-bold text-white",
+                "text-ui font-bold text-white",
                 "transition-colors duration-200 whitespace-nowrap",
                 "shadow-sm"
             )}

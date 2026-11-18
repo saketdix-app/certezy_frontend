@@ -35,18 +35,18 @@ function useRecords(fetcher) {
 function Table({ title, intro, head, rows, render, empty }) {
     return (
         <div>
-            <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">{title}</h1>
-            <p className="mt-1 mb-4 text-[13px] text-slate-500">{intro}</p>
+            <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">{title}</h1>
+            <p className="mt-1 mb-4 text-ui text-slate-500">{intro}</p>
             {!rows ? (
                 <div className="flex justify-center py-16">
                     <Loader2 className="animate-spin text-slate-500" />
                 </div>
             ) : !rows.length ? (
-                <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-[14px] text-slate-500">{empty}</p>
+                <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-ui text-slate-500">{empty}</p>
             ) : (
                 <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
-                    <table className="w-full min-w-[720px] text-left text-[13px]">
-                        <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                    <table className="w-full min-w-[720px] text-left text-ui">
+                        <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                             <tr>
                                 {head.map((h) => (
                                     <th key={h} className="px-4 py-2.5">
@@ -94,15 +94,15 @@ export function DiscountLinksBoard({ isAdmin }) {
                         <span className="ml-1 text-slate-500">({Math.round(r.discount_pct)}%)</span>
                     </td>
                     <td className="px-4 py-2.5">
-                        <span className={cn("rounded-md px-2 py-0.5 text-[11.5px] font-semibold", LINK_STATE[r.state]?.[1])}>{LINK_STATE[r.state]?.[0]}</span>
-                        {r.revoke_reason && <span className="block text-[11.5px] text-slate-500">{r.revoke_reason}</span>}
+                        <span className={cn("rounded-md px-2 py-0.5 text-label font-semibold", LINK_STATE[r.state]?.[1])}>{LINK_STATE[r.state]?.[0]}</span>
+                        {r.revoke_reason && <span className="block text-label text-slate-500">{r.revoke_reason}</span>}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2.5 text-slate-500">{fmtDateTime(r.expires_at)}</td>
                     {isAdmin && <td className="px-4 py-2.5">{r.created_by_name}</td>}
                     {isAdmin && (
                         <td className="px-4 py-2.5 text-right">
                             {["generated", "clicked"].includes(r.state) && (
-                                <button type="button" onClick={() => revoke(r)} className="rounded-lg border border-red-200 px-2.5 py-1 text-[12px] font-semibold text-red-600">
+                                <button type="button" onClick={() => revoke(r)} className="rounded-lg border border-red-200 px-2.5 py-1 text-small font-semibold text-red-600">
                                     Withdraw
                                 </button>
                             )}
@@ -129,7 +129,7 @@ export function AssignmentsBoard({ isAdmin }) {
                     <td className="whitespace-nowrap px-4 py-2.5 text-slate-500">{fmtDateTime(r.created_at)}</td>
                     <td className="px-4 py-2.5">
                         {r.student_name}
-                        <span className="block text-[12px] text-slate-500">{r.student_email}</span>
+                        <span className="block text-small text-slate-500">{r.student_email}</span>
                     </td>
                     <td className="px-4 py-2.5">{r.course_title}</td>
                     <td className="px-4 py-2.5">{r.progress ?? 0}%</td>
@@ -163,7 +163,7 @@ export function IssuedCertificatesBoard({ isAdmin }) {
                         ) : (
                             r.certificate_no
                         )}
-                        {r.override_reason && <span className="block text-[11.5px] text-amber-700">Override: {r.override_reason}</span>}
+                        {r.override_reason && <span className="block text-label text-amber-700">Override: {r.override_reason}</span>}
                     </td>
                     {isAdmin && <td className="px-4 py-2.5">{r.issued_by_name}</td>}
                 </tr>

@@ -137,7 +137,7 @@ export default function SearchBar({ className }) {
                         }}
                         onBlur={() => setFocused(false)}
                         placeholder="Search courses..."
-                        className="flex-1 min-w-0 bg-transparent border-none outline-none text-[13px] text-text-primary placeholder:text-text-muted"
+                        className="flex-1 min-w-0 bg-transparent border-none outline-none text-ui text-text-primary placeholder:text-text-muted"
                     />
                     {query.length > 0 && (
                         <button
@@ -169,7 +169,7 @@ export default function SearchBar({ className }) {
                         <>
                             <div className="flex items-center gap-2 px-4 pt-4 pb-2.5">
                                 <TrendingUp size={13} className="text-primary" />
-                                <span className="text-[11px] font-bold text-text-muted uppercase tracking-widest">
+                                <span className="text-label font-bold text-text-muted uppercase tracking-widest">
                                     Trending Searches
                                 </span>
                             </div>
@@ -186,7 +186,7 @@ export default function SearchBar({ className }) {
                                         className={cn(
                                             "flex items-center gap-1.5 px-3 py-1.5 rounded-full",
                                             "border border-border bg-page",
-                                            "text-[12.5px] font-medium text-text-secondary",
+                                            "text-small font-medium text-text-secondary",
                                             "hover:border-primary hover:text-primary hover:bg-primary-light",
                                             "transition-all duration-150"
                                         )}
@@ -205,7 +205,7 @@ export default function SearchBar({ className }) {
                                         navigate("/courses");
                                         setDropOpen(false);
                                     }}
-                                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-[12.5px] font-semibold text-primary hover:bg-primary-light transition-colors"
+                                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-small font-semibold text-primary hover:bg-primary-light transition-colors"
                                 >
                                     Browse all courses <ArrowUpRight size={13} />
                                 </button>
@@ -239,10 +239,10 @@ export default function SearchBar({ className }) {
                             {!loading && results.length > 0 && (
                                 <>
                                     <div className="flex items-center justify-between px-4 pt-3.5 pb-1.5">
-                                        <span className="text-[11px] font-bold text-text-muted uppercase tracking-widest">
+                                        <span className="text-label font-bold text-text-muted uppercase tracking-widest">
                                             Results
                                         </span>
-                                        <span className="text-[11px] text-text-muted">
+                                        <span className="text-label text-text-muted">
                                             {results.length} found
                                         </span>
                                     </div>
@@ -260,19 +260,19 @@ export default function SearchBar({ className }) {
                                                 <BookOpen size={14} className="text-primary" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-[13px] font-semibold text-text-primary truncate">
+                                                <p className="text-ui font-semibold text-text-primary truncate">
                                                     {course.title}
                                                 </p>
-                                                <p className="text-[11.5px] text-text-muted mt-0.5 flex items-center gap-1.5">
+                                                <p className="text-label text-text-muted mt-0.5 flex items-center gap-1.5">
                                                     {course.category_name}
                                                     {course.level && (
-                                                        <span className="px-1.5 py-0.5 rounded-full bg-page text-[10.5px] font-semibold capitalize border border-border">
+                                                        <span className="px-1.5 py-0.5 rounded-full bg-page text-label font-semibold capitalize border border-border">
                                                             {course.level}
                                                         </span>
                                                     )}
                                                 </p>
                                             </div>
-                                            <span className="text-[13px] font-bold text-primary shrink-0">
+                                            <span className="text-ui font-bold text-primary shrink-0">
                                                 ${course.price}
                                             </span>
                                         </button>
@@ -284,7 +284,7 @@ export default function SearchBar({ className }) {
                                                 e.preventDefault();
                                                 handleViewAll();
                                             }}
-                                            className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-[12.5px] font-semibold text-primary hover:bg-primary-light transition-colors"
+                                            className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-small font-semibold text-primary hover:bg-primary-light transition-colors"
                                         >
                                             View all results for "{query}" <ArrowUpRight size={13} />
                                         </button>
@@ -298,10 +298,10 @@ export default function SearchBar({ className }) {
                                     <div className="w-10 h-10 rounded-full bg-page flex items-center justify-center mx-auto mb-3">
                                         <Search size={16} className="text-text-muted" />
                                     </div>
-                                    <p className="text-[13.5px] font-semibold text-text-primary mb-1">
+                                    <p className="text-ui font-semibold text-text-primary mb-1">
                                         No results found
                                     </p>
-                                    <p className="text-[12px] text-text-muted mb-3">
+                                    <p className="text-small text-text-muted mb-3">
                                         No courses match "{query}"
                                     </p>
                                     <button
@@ -309,7 +309,7 @@ export default function SearchBar({ className }) {
                                             e.preventDefault();
                                             handleViewAll();
                                         }}
-                                        className="text-[12.5px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                                        className="text-small font-semibold text-primary hover:text-primary-hover transition-colors"
                                     >
                                         Browse all courses →
                                     </button>

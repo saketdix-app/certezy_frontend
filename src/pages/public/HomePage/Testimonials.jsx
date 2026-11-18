@@ -233,7 +233,7 @@ export default function Testimonials() {
                     <div className="ts-f0" style={{ textAlign: "center", marginBottom: "40px" }}>
                         <p
                             style={{
-                                fontSize: "11px",
+                                fontSize: "11.5px",
                                 fontWeight: 700,
                                 letterSpacing: "0.16em",
                                 textTransform: "uppercase",
@@ -274,7 +274,7 @@ export default function Testimonials() {
                         <p
                             style={{
                                 textAlign: "center",
-                                fontSize: "12px",
+                                fontSize: "12.5px",
                                 fontWeight: 600,
                                 color: "#94A3B8",
                                 marginBottom: "14px",
@@ -288,7 +288,7 @@ export default function Testimonials() {
                                     <span
                                         key={`${name}-${i}`}
                                         aria-hidden={i >= CERTIFICATIONS.length ? true : undefined}
-                                        className="px-10 text-[#94A3B8] font-bold text-lg lg:text-xl hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
+                                        className="px-10 text-[#94A3B8] font-bold text-h3 lg:text-h2 hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
                                     >
                                         {name}
                                     </span>
@@ -305,7 +305,7 @@ export default function Testimonials() {
                                 <div className="ts-stat-item">
                                     <span
                                         style={{
-                                            fontSize: "26px",
+                                            fontSize: "30px",
                                             fontWeight: 900,
                                             color: "#4E9CD3",
                                             letterSpacing: "-0.02em",
@@ -316,7 +316,7 @@ export default function Testimonials() {
                                     </span>
                                     <span
                                         style={{
-                                            fontSize: "14px",
+                                            fontSize: "13.5px",
                                             color: "#94A3B8",
                                             fontWeight: 500,
                                         }}
@@ -414,7 +414,7 @@ export default function Testimonials() {
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
-                                                    fontSize: "16px",
+                                                    fontSize: "15px",
                                                     fontWeight: 800,
                                                     color: "#fff",
                                                     flexShrink: 0,
@@ -429,7 +429,7 @@ export default function Testimonials() {
                                             <div>
                                                 <div
                                                     style={{
-                                                        fontSize: "14px",
+                                                        fontSize: "13.5px",
                                                         fontWeight: 700,
                                                         color: "#F1F5F9",
                                                         lineHeight: 1.3,
@@ -439,7 +439,7 @@ export default function Testimonials() {
                                                 </div>
                                                 <div
                                                     style={{
-                                                        fontSize: "12px",
+                                                        fontSize: "12.5px",
                                                         color: "#94A3B8",
                                                         fontWeight: 500,
                                                     }}

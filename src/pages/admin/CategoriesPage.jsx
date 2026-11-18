@@ -36,7 +36,7 @@ const colorFor = (id) => ICON_COLORS[id % ICON_COLORS.length];
 
 // ─── Field style ──────────────────────────────────────────────────────────────
 const fieldCls =
-    "w-full px-4 py-2.5 border border-slate-200 rounded-xl text-[13.5px] text-slate-900 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
+    "w-full px-4 py-2.5 border border-slate-200 rounded-xl text-ui text-slate-900 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
@@ -132,7 +132,7 @@ export default function CategoriesPage() {
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-4">
+            <div className="flex items-center gap-1.5 text-label font-bold uppercase tracking-widest text-slate-500 mb-4">
                 <span className="hover:text-slate-600 cursor-pointer">Dashboard</span>
                 <ChevronRight size={11} />
                 <span className="hover:text-slate-600 cursor-pointer">Courses</span>
@@ -143,19 +143,19 @@ export default function CategoriesPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-7">
                 <div>
-                    <h1 className="text-[28px] font-extrabold text-slate-900 tracking-tight">Categories</h1>
-                    <p className="text-[13.5px] text-slate-500 mt-1 max-w-md">
+                    <h1 className="text-h1 font-extrabold text-slate-900 tracking-tight">Categories</h1>
+                    <p className="text-ui text-slate-500 mt-1 max-w-md">
                         Organize your courses into categories and sub-categories.
                     </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-surface text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
                         <Download size={15} />
                         Export
                     </button>
                     <button
                         onClick={openCreate}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-colors"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
                         style={{ background: "#236A9E" }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
@@ -180,7 +180,7 @@ export default function CategoriesPage() {
                             setPage(1);
                         }}
                         placeholder="Filter categories by name, ID or tags..."
-                        className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-[13px] text-slate-700 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all"
+                        className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-ui text-slate-700 bg-slate-50 focus:outline-none focus:border-action focus:ring-2 focus:ring-action/10 transition-all"
                     />
                 </div>
                 <div className="flex gap-3 shrink-0">
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
                                 setStatusFilter(e.target.value);
                                 setPage(1);
                             }}
-                            className="appearance-none pl-4 pr-9 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-surface focus:outline-none focus:border-action cursor-pointer"
+                            className="appearance-none pl-4 pr-9 py-2.5 border border-slate-200 rounded-xl text-ui font-semibold text-slate-600 bg-surface focus:outline-none focus:border-action cursor-pointer"
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -203,7 +203,7 @@ export default function CategoriesPage() {
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
                         />
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 bg-surface hover:bg-slate-50 transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-ui font-semibold text-slate-600 bg-surface hover:bg-slate-50 transition-colors">
                         <SlidersHorizontal size={14} />
                         Filters
                     </button>
@@ -226,7 +226,7 @@ export default function CategoriesPage() {
                     {["Category Name & Taxonomy", "Hierarchy", "Order", "Status", "Actions"].map((h) => (
                         <span
                             key={h}
-                            className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider"
+                            className="text-label font-bold text-slate-500 uppercase tracking-wider"
                         >
                             {h}
                         </span>
@@ -238,7 +238,7 @@ export default function CategoriesPage() {
                 ) : paginated.length === 0 ? (
                     <div className="py-16 text-center">
                         <Folder size={36} className="text-slate-200 mx-auto mb-3" />
-                        <p className="text-[14px] font-semibold text-slate-500">No categories found</p>
+                        <p className="text-ui font-semibold text-slate-500">No categories found</p>
                     </div>
                 ) : (
                     paginated.map((cat) => (
@@ -254,7 +254,7 @@ export default function CategoriesPage() {
                 {/* Footer */}
                 {!loading && filtered.length > 0 && (
                     <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-                        <p className="text-[12.5px] text-slate-500">
+                        <p className="text-small text-slate-500">
                             Showing <span className="font-bold text-slate-700">{parentCount}</span> main
                             categories and <span className="font-bold text-slate-700">{childCount}</span>{" "}
                             sub-categories
@@ -311,7 +311,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
 
                 {!isChild && (
                     <div
-                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-[13px] font-extrabold"
+                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-ui font-extrabold"
                         style={{ background: bg, color }}
                     >
                         {initials(cat.name)}
@@ -324,20 +324,20 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                             className={cn(
                                 "truncate",
                                 isChild
-                                    ? "text-[13.5px] font-semibold text-slate-700"
-                                    : "text-[14px] font-bold text-slate-900"
+                                    ? "text-ui font-semibold text-slate-700"
+                                    : "text-ui font-bold text-slate-900"
                             )}
                         >
                             {cat.name}
                         </p>
                         {isChild && (
-                            <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">
+                            <span className="shrink-0 px-1.5 py-0.5 rounded text-label font-bold bg-slate-100 text-slate-500">
                                 {initials(cat.name)}
                             </span>
                         )}
                     </div>
                     {cat.description && (
-                        <p className="text-[12px] text-slate-500 truncate mt-0.5">{cat.description}</p>
+                        <p className="text-small text-slate-500 truncate mt-0.5">{cat.description}</p>
                     )}
                 </div>
             </div>
@@ -345,16 +345,16 @@ function CategoryRow({ cat, onEdit, onDelete }) {
             {/* Hierarchy */}
             <div>
                 {!isChild ? (
-                    <span className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 text-slate-500 uppercase tracking-wider">
+                    <span className="px-2.5 py-1 rounded-lg text-label font-bold bg-slate-100 text-slate-500 uppercase tracking-wider">
                         Main Level
                     </span>
                 ) : (
-                    <span className="text-[12px] text-slate-500">Sub-category</span>
+                    <span className="text-small text-slate-500">Sub-category</span>
                 )}
             </div>
 
             {/* Order */}
-            <p className="text-[13px] font-semibold text-slate-600">
+            <p className="text-ui font-semibold text-slate-600">
                 {String(cat.sort_order ?? 0).padStart(2, "0")}
             </p>
 
@@ -368,7 +368,7 @@ function CategoryRow({ cat, onEdit, onDelete }) {
                 />
                 <span
                     className={cn(
-                        "text-[12.5px] font-semibold",
+                        "text-small font-semibold",
                         isActive ? "text-emerald-600" : "text-slate-500"
                     )}
                 >
@@ -448,7 +448,7 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100">
-                    <h3 className="text-[16px] font-extrabold text-slate-900">
+                    <h3 className="text-body font-extrabold text-slate-900">
                         {isEdit ? "Edit Category" : "Create Category"}
                     </h3>
                     <button
@@ -539,14 +539,14 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-50 transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-50 transition-colors"
                             style={{ background: "#236A9E" }}
                             onMouseEnter={(e) => {
                                 if (!loading) e.currentTarget.style.background = "#1B5582";
@@ -585,32 +585,32 @@ function DeleteModal({ cat, onClose, onConfirm }) {
                         <Trash2 size={22} className="text-red-500" />
                     </div>
                     <div>
-                        <h3 className="text-[15px] font-extrabold text-slate-900">Delete Category</h3>
-                        <p className="text-[12.5px] text-slate-500 mt-0.5">This action cannot be undone.</p>
+                        <h3 className="text-body font-extrabold text-slate-900">Delete Category</h3>
+                        <p className="text-small text-slate-500 mt-0.5">This action cannot be undone.</p>
                     </div>
                 </div>
 
                 <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 mb-5">
-                    <p className="text-[13.5px] font-bold text-slate-800">{cat.name}</p>
+                    <p className="text-ui font-bold text-slate-800">{cat.name}</p>
                     {cat.description && (
-                        <p className="text-[12px] text-slate-500 mt-0.5">{cat.description}</p>
+                        <p className="text-small text-slate-500 mt-0.5">{cat.description}</p>
                     )}
                 </div>
 
-                <p className="text-[12px] text-slate-500 mb-5">
+                <p className="text-small text-slate-500 mb-5">
                     Note: Categories with active courses or sub-categories cannot be deleted.
                 </p>
 
                 <div className="flex gap-3">
                     <button
                         onClick={onClose}
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="flex-1 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors"
+                        className="flex-1 px-4 py-2.5 rounded-xl text-ui font-bold text-white bg-red-500 hover:bg-red-600 transition-colors"
                     >
                         Delete
                     </button>
@@ -637,7 +637,7 @@ function Overlay({ onClose, children }) {
 function FormField({ label, children }) {
     return (
         <div>
-            <label className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+            <label className="block text-label font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                 {label}
             </label>
             {children}
@@ -660,7 +660,7 @@ function Pagination({ page, total, onChange }) {
                     key={p}
                     onClick={() => onChange(p)}
                     className={cn(
-                        "w-8 h-8 rounded-lg text-[13px] font-bold transition-colors",
+                        "w-8 h-8 rounded-lg text-ui font-bold transition-colors",
                         p === page ? "text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50"
                     )}
                     style={p === page ? { background: "#236A9E" } : {}}

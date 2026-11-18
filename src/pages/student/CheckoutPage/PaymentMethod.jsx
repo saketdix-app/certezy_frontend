@@ -45,15 +45,15 @@ export default function PaymentMethod({ selected, onChange }) {
                             </div>
 
                             <div>
-                                <p className="text-[14px] font-bold text-slate-900">{m.label}</p>
-                                <p className="text-[12px] text-slate-500 mt-0.5">{m.desc}</p>
+                                <p className="text-ui font-bold text-slate-900">{m.label}</p>
+                                <p className="text-small text-slate-500 mt-0.5">{m.desc}</p>
                             </div>
                         </button>
                     );
                 })}
             </div>
 
-            <p className="mt-3 text-[12px] text-slate-500">
+            <p className="mt-3 text-small text-slate-500">
                 {selected === "razorpay"
                     ? "Prices in Indian rupees for customers in India."
                     : "Prices in US dollars for customers outside India."}
@@ -66,7 +66,7 @@ export function SectionTitle({ title }) {
     return (
         <div className="flex items-center gap-2.5">
             <div className="w-[3px] h-5 rounded-full bg-action shrink-0" />
-            <h2 className="text-[14px] font-bold text-slate-900">{title}</h2>
+            <h2 className="text-ui font-bold text-slate-900">{title}</h2>
         </div>
     );
 }

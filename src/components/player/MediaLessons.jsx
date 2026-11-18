@@ -14,13 +14,13 @@ import { getVideoEmbedUrl, getEmbedUrl, isHttpUrl, hostnameOf } from "@/lib/medi
 const panel =
     "rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center bg-white/[0.04] border border-white/[0.08]";
 const primaryBtn =
-    "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold bg-action hover:bg-action-hover text-white transition-colors w-full sm:w-auto";
+    "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-semibold bg-action hover:bg-action-hover text-white transition-colors w-full sm:w-auto";
 
 function Unavailable({ icon: Icon = FileText, text = "This lesson's content isn't available yet." }) {
     return (
         <div className="flex flex-col items-center justify-center text-center px-6 py-20">
             <Icon size={48} className="mb-3 text-white/20" />
-            <p className="text-white/50 text-[14px]">{text}</p>
+            <p className="text-white/50 text-ui">{text}</p>
         </div>
     );
 }
@@ -88,7 +88,7 @@ export function EmbedLesson({ lesson }) {
                 href={lesson.content}
                 target="_blank"
                 rel="noreferrer"
-                className="self-start inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-white/60 hover:text-white"
+                className="self-start inline-flex items-center gap-1.5 text-small font-semibold text-white/60 hover:text-white"
             >
                 <ExternalLink size={13} /> Open in a new tab
             </a>
@@ -105,12 +105,12 @@ export function LinkLesson({ lesson }) {
                 <div className="w-16 h-16 rounded-2xl bg-sky-500/15 flex items-center justify-center mb-4">
                     <Link2 size={30} className="text-sky-400" />
                 </div>
-                <p className="text-white font-bold text-[16px] mb-1">{lesson.title}</p>
-                <p className="text-[12.5px] mb-6 text-white/45 break-all">{hostnameOf(url)}</p>
+                <p className="text-white font-bold text-body mb-1">{lesson.title}</p>
+                <p className="text-small mb-6 text-white/45 break-all">{hostnameOf(url)}</p>
                 <a href={url} target="_blank" rel="noreferrer" className={primaryBtn}>
                     <ExternalLink size={16} /> Open resource
                 </a>
-                <p className="text-[12px] text-white/40 mt-4">
+                <p className="text-small text-white/40 mt-4">
                     Opens in a new tab. Come back here to mark it complete.
                 </p>
             </div>
@@ -127,7 +127,7 @@ export function AudioLesson({ lesson, onEnded }) {
                 <div className="w-16 h-16 rounded-2xl bg-violet-500/15 flex items-center justify-center mb-4">
                     <Headphones size={30} className="text-violet-300" />
                 </div>
-                <p className="text-white font-bold text-[16px] mb-5">{lesson.title}</p>
+                <p className="text-white font-bold text-body mb-5">{lesson.title}</p>
                 <audio
                     key={lesson.id}
                     src={src}
@@ -151,10 +151,10 @@ export function QuizLesson({ lesson, exams = [], onStart }) {
                 <div className="w-16 h-16 rounded-2xl bg-amber-500/15 flex items-center justify-center mb-4">
                     <ClipboardList size={30} className="text-amber-300" />
                 </div>
-                <p className="text-white font-bold text-[16px] mb-1">{exam?.title || lesson.title}</p>
+                <p className="text-white font-bold text-body mb-1">{exam?.title || lesson.title}</p>
                 {exam ? (
                     <>
-                        <p className="text-[12.5px] mb-6 text-white/50">
+                        <p className="text-small mb-6 text-white/50">
                             {[
                                 exam.total_questions && `${exam.total_questions} questions`,
                                 exam.duration && `${exam.duration} min`,
@@ -168,7 +168,7 @@ export function QuizLesson({ lesson, exams = [], onStart }) {
                         </button>
                     </>
                 ) : (
-                    <p className="text-[13px] text-white/50 mt-2">This quiz isn&apos;t available yet.</p>
+                    <p className="text-ui text-white/50 mt-2">This quiz isn&apos;t available yet.</p>
                 )}
             </div>
         </div>

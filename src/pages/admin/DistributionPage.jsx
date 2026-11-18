@@ -98,18 +98,18 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
         <CrmModal title={pool ? `Edit pool — ${pool.name}` : "New routing pool"} onClose={onClose} wide>
             <form onSubmit={save} className="space-y-4">
                 <label className="block">
-                    <span className="mb-1 block text-[13px] font-semibold text-slate-700">Name</span>
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Name</span>
                     <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="PMP team" className={inputCls} />
                 </label>
                 {isDefault ? (
-                    <p className="text-[13px] text-slate-500">
+                    <p className="text-ui text-slate-500">
                         The default pool takes every lead no other pool matches, and rotates through all active consultants.
                         Pause someone, or set their limits, on Team → Lead settings.
                     </p>
                 ) : (
                     <>
                         <fieldset>
-                            <legend className="mb-1 text-[13px] font-semibold text-slate-700">Leads for these courses</legend>
+                            <legend className="mb-1 text-ui font-semibold text-slate-700">Leads for these courses</legend>
                             <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
                                 {courses.map((c) => (
                                     <button
@@ -117,7 +117,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                                         type="button"
                                         onClick={() => toggleIn("course_ids", c.id)}
                                         className={cn(
-                                            "rounded-full border px-2.5 py-1 text-[12px]",
+                                            "rounded-full border px-2.5 py-1 text-small",
                                             form.course_ids.includes(c.id) ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-600"
                                         )}
                                     >
@@ -127,7 +127,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend className="mb-1 text-[13px] font-semibold text-slate-700">From these sources</legend>
+                            <legend className="mb-1 text-ui font-semibold text-slate-700">From these sources</legend>
                             <div className="flex flex-wrap gap-1.5">
                                 {SOURCES.map(([v, l]) => (
                                     <button
@@ -135,7 +135,7 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                                         type="button"
                                         onClick={() => toggleIn("sources", v)}
                                         className={cn(
-                                            "rounded-full border px-2.5 py-1 text-[12px]",
+                                            "rounded-full border px-2.5 py-1 text-small",
                                             form.sources.includes(v) ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 text-slate-600"
                                         )}
                                     >
@@ -145,20 +145,20 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                             </div>
                         </fieldset>
                         <label className="block">
-                            <span className="mb-1 block text-[13px] font-semibold text-slate-700">Campaigns (comma-separated, optional)</span>
+                            <span className="mb-1 block text-ui font-semibold text-slate-700">Campaigns (comma-separated, optional)</span>
                             <input value={form.campaigns} onChange={(e) => setForm((f) => ({ ...f, campaigns: e.target.value }))} placeholder="PMP Nov, Diwali offer" className={inputCls} />
                         </label>
-                        <p className="text-[12px] text-slate-500">A lead joins this pool when it matches every rule you set. Unmatched leads go to the default pool.</p>
+                        <p className="text-small text-slate-500">A lead joins this pool when it matches every rule you set. Unmatched leads go to the default pool.</p>
                         <fieldset>
-                            <legend className="mb-1 text-[13px] font-semibold text-slate-700">Consultants, in turn order</legend>
+                            <legend className="mb-1 text-ui font-semibold text-slate-700">Consultants, in turn order</legend>
                             <div className="grid gap-1.5 sm:grid-cols-2">
                                 {consultants.map((c) => {
                                     const pos = form.member_ids.indexOf(c.id);
                                     return (
-                                        <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px]">
+                                        <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-ui">
                                             <input type="checkbox" checked={pos >= 0} onChange={() => toggleIn("member_ids", c.id)} className="accent-action" />
                                             <span className="flex-1">{c.name}</span>
-                                            {pos >= 0 && <span className="text-[11.5px] text-slate-500">#{pos + 1}</span>}
+                                            {pos >= 0 && <span className="text-label text-slate-500">#{pos + 1}</span>}
                                         </label>
                                     );
                                 })}
@@ -167,14 +167,14 @@ function PoolModal({ pool, consultants, onClose, onSaved }) {
                     </>
                 )}
                 <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3">
-                    <span className="text-[13.5px] font-semibold text-slate-800">Pool on</span>
+                    <span className="text-ui font-semibold text-slate-800">Pool on</span>
                     <Switch checked={form.enabled} onChange={(v) => setForm((f) => ({ ...f, enabled: v }))} label="Pool on" />
                 </label>
                 <div className="flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-[13.5px] font-semibold text-slate-700">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
                     </button>
-                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-[13.5px] font-bold text-white disabled:opacity-60">
+                    <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white disabled:opacity-60">
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Save pool
                     </button>
@@ -232,8 +232,8 @@ export default function DistributionPage() {
     return (
         <div className="mx-auto max-w-[1300px] space-y-6">
             <div>
-                <h1 className="text-[22px] font-extrabold tracking-tight text-slate-900">Lead distribution</h1>
-                <p className="mt-1 text-[13px] text-slate-500">
+                <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">Lead distribution</h1>
+                <p className="mt-1 text-ui text-slate-500">
                     Round Robin gives new leads to eligible consultants in turn. Pause someone or set their limits on{" "}
                     <Link to="/admin/team" className="font-semibold text-action">Team → Lead settings</Link>.
                 </p>
@@ -243,8 +243,8 @@ export default function DistributionPage() {
             <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-surface p-5">
                     <div>
-                        <p className="text-[15px] font-bold text-slate-900">Round Robin</p>
-                        <p className="mt-1 text-[13px] text-slate-500">
+                        <p className="text-body font-bold text-slate-900">Round Robin</p>
+                        <p className="mt-1 text-ui text-slate-500">
                             {cfg.round_robin_enabled
                                 ? "On — new leads are assigned automatically."
                                 : "Off — new leads wait in the unassigned queue."}
@@ -261,10 +261,10 @@ export default function DistributionPage() {
                     <div className="flex items-center gap-3">
                         <Inbox size={22} className="text-slate-500" aria-hidden="true" />
                         <div>
-                            <p className="text-[15px] font-bold text-slate-900">
+                            <p className="text-body font-bold text-slate-900">
                                 {report.unassigned} lead{report.unassigned === 1 ? "" : "s"} waiting
                             </p>
-                            <Link to="/admin/leads?owner=unassigned" className="text-[13px] font-semibold text-action">
+                            <Link to="/admin/leads?owner=unassigned" className="text-ui font-semibold text-action">
                                 Review the unassigned queue →
                             </Link>
                         </div>
@@ -274,7 +274,7 @@ export default function DistributionPage() {
                         disabled={busy || !report.unassigned || !cfg.round_robin_enabled}
                         onClick={() => act(() => crmService.distributeQueue(), "Done")}
                         title={!cfg.round_robin_enabled ? "Turn Round Robin on first" : undefined}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-[13px] font-bold text-white disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-ui font-bold text-white disabled:opacity-50"
                     >
                         <Shuffle size={14} aria-hidden="true" /> Distribute now
                     </button>
@@ -284,8 +284,8 @@ export default function DistributionPage() {
             {/* Pools */}
             <section>
                 <div className="mb-2 flex items-center justify-between">
-                    <h2 className="text-[16px] font-bold text-slate-900">Routing pools</h2>
-                    <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-[13px] font-semibold text-slate-700">
+                    <h2 className="text-body font-bold text-slate-900">Routing pools</h2>
+                    <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-ui font-semibold text-slate-700">
                         <Plus size={14} aria-hidden="true" /> New pool
                     </button>
                 </div>
@@ -295,9 +295,9 @@ export default function DistributionPage() {
                             <div className="flex items-start justify-between gap-3">
                                 <div>
                                     <p className="font-bold text-slate-900">
-                                        {p.name} {p.is_default && <span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500">Default</span>}
+                                        {p.name} {p.is_default && <span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-label font-semibold text-slate-500">Default</span>}
                                     </p>
-                                    <p className="mt-0.5 text-[12.5px] text-slate-500">
+                                    <p className="mt-0.5 text-small text-slate-500">
                                         {p.is_default
                                             ? "Every lead no other pool matches"
                                             : [
@@ -316,19 +316,19 @@ export default function DistributionPage() {
                                     onChange={(v) => act(() => crmService.savePool(p.id, { enabled: v }), v ? "Pool on" : "Pool off")}
                                 />
                             </div>
-                            <p className="mt-2 text-[12.5px] text-slate-600">
+                            <p className="mt-2 text-small text-slate-600">
                                 {p.members.length ? p.members.map((m) => m.name).join(" → ") : "No consultants"}
                             </p>
-                            {p.next_up && <p className="mt-0.5 text-[12px] text-slate-500">Last assigned: {p.next_up}</p>}
+                            {p.next_up && <p className="mt-0.5 text-small text-slate-500">Last assigned: {p.next_up}</p>}
                             <div className="mt-3 flex gap-1.5">
-                                <button type="button" onClick={() => setEditing(p)} className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-[12px] font-semibold text-slate-700">
+                                <button type="button" onClick={() => setEditing(p)} className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-small font-semibold text-slate-700">
                                     <Pencil size={12} aria-hidden="true" /> Edit
                                 </button>
                                 {!p.is_default && (
                                     <button
                                         type="button"
                                         onClick={() => window.confirm(`Delete the pool "${p.name}"?`) && act(() => crmService.deletePool(p.id), "Pool deleted")}
-                                        className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1 text-[12px] font-semibold text-red-600"
+                                        className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1 text-small font-semibold text-red-600"
                                     >
                                         <Trash2 size={12} aria-hidden="true" /> Delete
                                     </button>
@@ -342,7 +342,7 @@ export default function DistributionPage() {
             {/* Report */}
             <section>
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="text-[16px] font-bold text-slate-900">Distribution by consultant</h2>
+                    <h2 className="text-body font-bold text-slate-900">Distribution by consultant</h2>
                     <select value={days} onChange={(e) => setDays(Number(e.target.value))} className={cn(inputCls, "w-auto")} aria-label="Period">
                         {RANGES.map(([v, l]) => (
                             <option key={v} value={v}>
@@ -352,8 +352,8 @@ export default function DistributionPage() {
                     </select>
                 </div>
                 <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
-                    <table className="w-full min-w-[820px] text-left text-[13px]">
-                        <thead className="bg-slate-50 text-[11.5px] uppercase tracking-wide text-slate-500">
+                    <table className="w-full min-w-[820px] text-left text-ui">
+                        <thead className="bg-slate-50 text-label uppercase tracking-wide text-slate-500">
                             <tr>
                                 <th className="px-4 py-2.5">Consultant</th>
                                 <th className="px-4 py-2.5">Now</th>
@@ -376,7 +376,7 @@ export default function DistributionPage() {
                                 <tr key={c.id}>
                                     <td className="px-4 py-2.5 font-semibold text-slate-900">{c.name}</td>
                                     <td className="px-4 py-2.5">
-                                        <span className={cn("rounded-md px-2 py-0.5 text-[11.5px] font-semibold", STATE[c.state]?.[1])}>{STATE[c.state]?.[0]}</span>
+                                        <span className={cn("rounded-md px-2 py-0.5 text-label font-semibold", STATE[c.state]?.[1])}>{STATE[c.state]?.[0]}</span>
                                     </td>
                                     <td className="px-4 py-2.5 text-right">{c.round_robin}</td>
                                     <td className="px-4 py-2.5 text-right">{c.manual}</td>

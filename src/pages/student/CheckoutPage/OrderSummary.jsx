@@ -59,13 +59,13 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency, c
             <div className="p-5 space-y-4">
                 <SectionTitle title="Order Summary" />
 
-                <p className="text-[14px] font-bold text-slate-900 leading-snug">{course.title}</p>
+                <p className="text-ui font-bold text-slate-900 leading-snug">{course.title}</p>
 
                 <div className="space-y-2">
                     {meta.map(({ icon: Icon, label }) => (
                         <div key={label} className="flex items-center gap-2.5">
                             <Icon size={13} className="text-[#3282B8] shrink-0" />
-                            <span className="text-[12.5px] text-slate-500">{label}</span>
+                            <span className="text-small text-slate-500">{label}</span>
                         </div>
                     ))}
                 </div>
@@ -75,30 +75,30 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency, c
                 {/* Price */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <span className="text-[13px] text-slate-500">Course price</span>
+                        <span className="text-ui text-slate-500">Course price</span>
                         <span
-                            className={`text-[13px] font-semibold ${hasDiscount ? "text-slate-400 line-through" : "text-slate-900"}`}
+                            className={`text-ui font-semibold ${hasDiscount ? "text-slate-400 line-through" : "text-slate-900"}`}
                         >
                             {hasDiscount ? listPrice : displayPrice}
                         </span>
                     </div>
                     {hasDiscount && (
                         <div className="flex items-center justify-between">
-                            <span className="text-[13px] font-semibold text-emerald-700">
+                            <span className="text-ui font-semibold text-emerald-700">
                                 Your special offer
                             </span>
-                            <span className="text-[13px] font-bold text-emerald-700">−{saving}</span>
+                            <span className="text-ui font-bold text-emerald-700">−{saving}</span>
                         </div>
                     )}
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                        <span className="text-[14px] font-bold text-slate-900">Total</span>
-                        <span className="text-[18px] font-extrabold text-slate-900">{displayPrice}</span>
+                        <span className="text-ui font-bold text-slate-900">Total</span>
+                        <span className="text-h3 font-extrabold text-slate-900">{displayPrice}</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                     <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
-                    <span className="text-[11.5px] text-slate-500">30-day money-back guarantee</span>
+                    <span className="text-label text-slate-500">30-day money-back guarantee</span>
                 </div>
             </div>
         </div>

@@ -47,11 +47,11 @@ export function EnhancedTextLesson({
     const getFontSizeClass = (size) => {
         switch (size) {
             case "small":
-                return "text-sm";
+                return "text-ui";
             case "large":
-                return "text-lg";
+                return "text-h3";
             default:
-                return "text-base";
+                return "text-body";
         }
     };
 
@@ -70,9 +70,9 @@ export function EnhancedTextLesson({
 
         // Simple markdown-like parsing
         const processedContent = escapeHtml(lesson.content)
-            .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-gray-900 mt-6 mb-3">$1</h3>')
-            .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
-            .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-5">$1</h1>')
+            .replace(/^### (.*$)/gim, '<h3 class="text-h2 font-bold text-gray-900 mt-6 mb-3">$1</h3>')
+            .replace(/^## (.*$)/gim, '<h2 class="text-h2 font-bold text-gray-900 mt-8 mb-4">$1</h2>')
+            .replace(/^# (.*$)/gim, '<h1 class="text-h1 font-bold text-gray-900 mt-10 mb-5">$1</h1>')
             .replace(/\*\*(.*)\*\*/gim, '<strong class="font-semibold text-gray-900">$1</strong>')
             .replace(/\*(.*)\*/gim, '<em class="italic text-gray-700">$1</em>')
             .replace(
@@ -81,7 +81,7 @@ export function EnhancedTextLesson({
             )
             .replace(
                 /`([^`]+)`/gim,
-                '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">$1</code>'
+                '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-ui">$1</code>'
             )
             .replace(
                 /```([^`]+)```/gim,
@@ -110,8 +110,8 @@ export function EnhancedTextLesson({
                     <div className="flex items-center gap-3">
                         <BookOpen size={20} className="text-blue-600" />
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">{lesson.title}</h1>
-                            <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                            <h1 className="text-h2 font-bold text-gray-900">{lesson.title}</h1>
+                            <div className="flex items-center gap-4 mt-1 text-ui text-gray-600">
                                 <span>Text Lesson</span>
                                 {estimatedReadingTime > 0 && (
                                     <div className="flex items-center gap-1">
@@ -129,7 +129,7 @@ export function EnhancedTextLesson({
                         <div className="flex items-center bg-white rounded-lg border border-gray-200">
                             <button
                                 onClick={() => setFontSize("small")}
-                                className={`px-3 py-2 text-sm font-medium rounded-l-lg transition-colors ${
+                                className={`px-3 py-2 text-ui font-medium rounded-l-lg transition-colors ${
                                     fontSize === "small"
                                         ? "bg-blue-100 text-blue-700"
                                         : "text-gray-600 hover:bg-gray-50"
@@ -139,7 +139,7 @@ export function EnhancedTextLesson({
                             </button>
                             <button
                                 onClick={() => setFontSize("medium")}
-                                className={`px-3 py-2 text-sm font-medium transition-colors ${
+                                className={`px-3 py-2 text-ui font-medium transition-colors ${
                                     fontSize === "medium"
                                         ? "bg-blue-100 text-blue-700"
                                         : "text-gray-600 hover:bg-gray-50"
@@ -149,7 +149,7 @@ export function EnhancedTextLesson({
                             </button>
                             <button
                                 onClick={() => setFontSize("large")}
-                                className={`px-3 py-2 text-sm font-medium rounded-r-lg transition-colors ${
+                                className={`px-3 py-2 text-ui font-medium rounded-r-lg transition-colors ${
                                     fontSize === "large"
                                         ? "bg-blue-100 text-blue-700"
                                         : "text-gray-600 hover:bg-gray-50"
@@ -173,7 +173,7 @@ export function EnhancedTextLesson({
             {/* Reading Progress (Fullscreen only) */}
             {isFullscreen && (
                 <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
-                    <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                    <div className="flex items-center justify-between text-ui text-gray-600 mb-2">
                         <span>Reading Progress</span>
                         <span>{Math.round(readingProgress)}%</span>
                     </div>

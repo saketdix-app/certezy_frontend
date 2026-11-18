@@ -9,7 +9,7 @@ export default function SkillsSection() {
                     <div className="relative">
                         <div className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 shadow-xl">
                             {/* fake code lines */}
-                            <div className="space-y-3 font-mono text-sm">
+                            <div className="space-y-3 font-mono text-ui">
                                 <p className="text-blue-400">const cloudEngineer = () =&gt; {"{"}</p>
 
                                 <p className="text-green-400 ml-4">learn("AWS", "Docker", "Kubernetes")</p>
@@ -31,15 +31,15 @@ export default function SkillsSection() {
                             </div>
 
                             <div>
-                                <p className="font-semibold text-lg">20+ Courses</p>
-                                <p className="text-gray-400 text-sm">Cloud, DevOps, Security, PM</p>
+                                <p className="font-semibold text-h3">20+ Courses</p>
+                                <p className="text-gray-400 text-ui">Cloud, DevOps, Security, PM</p>
                             </div>
                         </div>
                     </div>
 
                     {/* RIGHT CONTENT */}
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                        <h2 className="text-h1 md:text-display font-bold leading-tight mb-6">
                             Master the Skills of <span className="text-blue-500">Tomorrow</span> Today.
                         </h2>
 

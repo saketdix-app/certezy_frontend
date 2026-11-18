@@ -34,9 +34,9 @@ export function ExamTopBar({ title, secondsLeft, current, total, hasTimer, onExi
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                     <Logo variant="light" height={24} className="hidden sm:inline-flex" />
                     <span className="hidden sm:block w-px h-7 bg-white/20" aria-hidden="true" />
-                    <h1 className="text-[15px] sm:text-[17px] font-bold leading-tight truncate">{title}</h1>
+                    <h1 className="text-body sm:text-h3 font-bold leading-tight truncate">{title}</h1>
                 </div>
-                <div className="shrink-0 flex items-center gap-2 sm:gap-3 text-[13px] sm:text-[14px]">
+                <div className="shrink-0 flex items-center gap-2 sm:gap-3 text-ui sm:text-ui">
                     {hasTimer && (
                         <span
                             className={cn(
@@ -96,14 +96,14 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
     return (
         <div style={{ fontFamily: FONT }}>
             {number != null && (
-                <p className="text-[12px] font-bold uppercase tracking-wider mb-2" style={{ color: BLUE }}>
+                <p className="text-small font-bold uppercase tracking-wider mb-2" style={{ color: BLUE }}>
                     Question {number}
                 </p>
             )}
-            <p className="text-[17px] sm:text-[18px] font-semibold leading-[1.6] text-[#0F172A] whitespace-pre-line">
+            <p className="text-h3 sm:text-h3 font-semibold leading-[1.6] text-[#0F172A] whitespace-pre-line">
                 {question.question}
             </p>
-            <p className="mt-1.5 text-[13px] text-[#64748B]">
+            <p className="mt-1.5 text-ui text-[#64748B]">
                 {single ? "Select one answer." : "Select all that apply."}
             </p>
 
@@ -131,7 +131,7 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                             <span
                                 aria-hidden="true"
                                 className={cn(
-                                    "mt-px w-7 h-7 shrink-0 flex items-center justify-center text-[13px] font-bold border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#3282B8]/40",
+                                    "mt-px w-7 h-7 shrink-0 flex items-center justify-center text-ui font-bold border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#3282B8]/40",
                                     single ? "rounded-full" : "rounded-md",
                                     checked
                                         ? "border-[#3282B8] bg-action text-white"
@@ -140,7 +140,7 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                             >
                                 {checked && !single ? <Check size={15} strokeWidth={3} /> : letter}
                             </span>
-                            <span className="text-[15px] sm:text-[16px] leading-[1.55] text-[#1E293B] pt-0.5">
+                            <span className="text-body sm:text-body leading-[1.55] text-[#1E293B] pt-0.5">
                                 <span className="sr-only">{letter}. </span>
                                 {option.option_text}
                             </span>
@@ -161,7 +161,7 @@ function BarButton({ onClick, disabled, children, active = false, primary = fals
             aria-label={label}
             aria-pressed={active || undefined}
             className={cn(
-                "flex items-center gap-1.5 h-10 px-3.5 sm:px-4 rounded-lg text-[13.5px] sm:text-[14px] font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+                "flex items-center gap-1.5 h-10 px-3.5 sm:px-4 rounded-lg text-ui sm:text-ui font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
                 primary
                     ? "bg-action text-white hover:bg-action-hover"
                     : active
@@ -222,7 +222,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                 <div className="flex items-center gap-3 sm:gap-4">
                     <Logo variant="light" height={24} className="hidden sm:inline-flex" />
                     <span className="hidden sm:block w-px h-7 bg-white/20" aria-hidden="true" />
-                    <h2 className="text-[16px] sm:text-[17px] font-bold">Review your answers</h2>
+                    <h2 className="text-body sm:text-h3 font-bold">Review your answers</h2>
                 </div>
                 <button
                     type="button"
@@ -236,7 +236,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
 
             <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6">
                 <div className="max-w-5xl mx-auto bg-white rounded-2xl border border-[#E2E8F0] p-5 sm:p-7">
-                    <p className="text-[14.5px] text-[#334155]">
+                    <p className="text-body text-[#334155]">
                         Select a question to go back to it, or choose <strong>End exam</strong> to submit.{" "}
                         {incomplete > 0 && (
                             <>
@@ -246,7 +246,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                         )}
                     </p>
 
-                    <div className="mt-5 flex flex-wrap gap-2 text-[13.5px]">
+                    <div className="mt-5 flex flex-wrap gap-2 text-ui">
                         {[
                             ["all", `All (${questions.length})`],
                             ["incomplete", `Unanswered (${incomplete})`],
@@ -270,7 +270,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                     </div>
 
                     {rows.length === 0 ? (
-                        <p className="py-8 text-[14px] text-[#64748B]">No questions in this list.</p>
+                        <p className="py-8 text-ui text-[#64748B]">No questions in this list.</p>
                     ) : (
                         <div className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(64px,1fr))] gap-2">
                             {rows.map(({ q, i, answered, flagged: isFlagged }) => (
@@ -280,7 +280,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                                     onClick={() => onJump(i)}
                                     title={`Question ${i + 1}: ${answered ? "answered" : "unanswered"}${isFlagged ? ", flagged" : ""}`}
                                     className={cn(
-                                        "relative h-12 rounded-lg border-2 text-[14px] font-bold transition-colors",
+                                        "relative h-12 rounded-lg border-2 text-ui font-bold transition-colors",
                                         answered
                                             ? "border-[#3282B8] bg-[#EBF4FB] text-[#1E5F8C] hover:bg-[#DBEAFE]"
                                             : "border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE]"
@@ -299,7 +299,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                         </div>
                     )}
 
-                    <div className="mt-5 flex flex-wrap gap-4 text-[12px] text-[#64748B]">
+                    <div className="mt-5 flex flex-wrap gap-4 text-small text-[#64748B]">
                         <span className="flex items-center gap-1.5">
                             <span className="w-3.5 h-3.5 rounded border-2 border-[#3282B8] bg-[#EBF4FB]" />
                             Answered

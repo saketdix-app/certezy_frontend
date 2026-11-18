@@ -52,11 +52,11 @@ export default function MegaMenu({ onClose }) {
                 >
                     {/* ── Header ── */}
                     <div className="flex items-center justify-between px-6 py-3 border-b border-border">
-                        <p className="text-[13.5px] font-bold text-text-primary">Browse Categories</p>
+                        <p className="text-ui font-bold text-text-primary">Browse Categories</p>
                         <Link
                             to="/courses"
                             onClick={onClose}
-                            className="flex items-center gap-1 text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                            className="flex items-center gap-1 text-ui font-semibold text-primary hover:text-primary-hover transition-colors"
                         >
                             All Courses <ArrowRight size={13} />
                         </Link>
@@ -68,17 +68,17 @@ export default function MegaMenu({ onClose }) {
                         {loading && (
                             <div className="flex items-center justify-center py-16 gap-2 text-text-muted">
                                 <Loader2 size={18} className="animate-spin" />
-                                <span className="text-[13.5px]">Loading categories...</span>
+                                <span className="text-ui">Loading categories...</span>
                             </div>
                         )}
 
                         {/* Error */}
                         {!loading && error && (
                             <div className="text-center py-16">
-                                <p className="text-[13.5px] text-red-500">{error}</p>
+                                <p className="text-ui text-red-500">{error}</p>
                                 <button
                                     onClick={() => window.location.reload()}
-                                    className="mt-2 text-[13px] text-primary underline"
+                                    className="mt-2 text-ui text-primary underline"
                                 >
                                     Retry
                                 </button>
@@ -123,7 +123,7 @@ function CategoryCard({ category, onClose }) {
                     <CategoryIcon slug={category.slug} />
                 </div>
 
-                <span className="text-[13.5px] font-bold text-text-primary group-hover:text-primary transition-colors duration-200">
+                <span className="text-ui font-bold text-text-primary group-hover:text-primary transition-colors duration-200">
                     {category.name}
                 </span>
             </Link>
@@ -139,7 +139,7 @@ function CategoryCard({ category, onClose }) {
                                 to={`/courses?category_id=${child.id}`} // ✅ FIXED
                                 onClick={onClose}
                                 className={cn(
-                                    "block px-1.5 py-1 rounded text-[12.5px]",
+                                    "block px-1.5 py-1 rounded text-small",
                                     "text-text-secondary hover:text-primary hover:bg-primary-light",
                                     "transition-colors duration-150"
                                 )}
@@ -150,14 +150,14 @@ function CategoryCard({ category, onClose }) {
                     ))}
                 </ul>
             ) : (
-                <p className="text-[12px] text-text-muted px-1.5 mb-2 italic">Courses coming soon</p>
+                <p className="text-small text-text-muted px-1.5 mb-2 italic">Courses coming soon</p>
             )}
 
             {/* More → */}
             <Link
                 to={`/courses?category_id=${category.id}`} // ✅ FIXED
                 onClick={onClose}
-                className="flex items-center gap-1 px-1.5 text-[12px] font-semibold text-primary hover:text-primary-hover transition-colors"
+                className="flex items-center gap-1 px-1.5 text-small font-semibold text-primary hover:text-primary-hover transition-colors"
             >
                 More {category.name} <ArrowRight size={11} />
             </Link>

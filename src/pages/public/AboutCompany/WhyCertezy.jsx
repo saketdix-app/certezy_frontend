@@ -121,7 +121,7 @@ export default function WhyCertezy() {
                 <div className="max-w-[1200px] mx-auto px-6">
                     {/* Header */}
                     <div className="text-center mb-14 wc-f0">
-                        <h2 className="text-[#0F172A] font-black text-4xl lg:text-5xl tracking-tight leading-tight mb-4">
+                        <h2 className="text-[#0F172A] font-black text-h1 lg:text-display tracking-tight leading-tight mb-4">
                             Why Thousands Choose{" "}
                             <span
                                 style={{
@@ -134,7 +134,7 @@ export default function WhyCertezy() {
                                 CERTEZY
                             </span>
                         </h2>
-                        <p className="text-[#64748B] text-base lg:text-lg max-w-xl mx-auto leading-relaxed">
+                        <p className="text-[#64748B] text-body lg:text-h3 max-w-xl mx-auto leading-relaxed">
                             We've refined our learning experience so that every student doesn't just learn,
                             but masters their craft.
                         </p>
@@ -150,12 +150,12 @@ export default function WhyCertezy() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-[#0F172A] font-bold text-[16.5px] mb-3 leading-snug">
+                                <h3 className="text-[#0F172A] font-bold text-h3 mb-3 leading-snug">
                                     {title}
                                 </h3>
 
                                 {/* Desc */}
-                                <p className="text-[#64748B] text-[13.5px] leading-relaxed">{desc}</p>
+                                <p className="text-[#64748B] text-ui leading-relaxed">{desc}</p>
                             </article>
                         ))}
                     </div>

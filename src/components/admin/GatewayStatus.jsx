@@ -17,10 +17,10 @@ function Row({ name, g, extra }) {
                 ) : (
                     <ShieldAlert size={18} className="text-rose-600" />
                 )}
-                <p className="text-[14px] font-bold text-slate-900">{name}</p>
+                <p className="text-ui font-bold text-slate-900">{name}</p>
                 {g.mode && (
                     <span
-                        className={`ml-auto rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${
+                        className={`ml-auto rounded-full px-2 py-0.5 text-label font-bold uppercase ${
                             g.mode === "live"
                                 ? "bg-emerald-100 text-emerald-700"
                                 : "bg-amber-100 text-amber-800"
@@ -30,7 +30,7 @@ function Row({ name, g, extra }) {
                     </span>
                 )}
             </div>
-            <p className={`mt-1.5 text-[12.5px] ${g.ok ? "text-emerald-800" : "text-rose-700"}`}>
+            <p className={`mt-1.5 text-small ${g.ok ? "text-emerald-800" : "text-rose-700"}`}>
                 {g.ok ? "Keys accepted by the gateway." : g.error}
             </p>
             {extra}
@@ -55,8 +55,8 @@ export default function GatewayStatus() {
         <div className="rounded-2xl border border-slate-200 bg-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <p className="text-[15px] font-bold text-slate-900">Payment gateways</p>
-                    <p className="text-[12.5px] text-slate-500">
+                    <p className="text-body font-bold text-slate-900">Payment gateways</p>
+                    <p className="text-small text-slate-500">
                         Checks the server's Razorpay and PayPal keys — no payment is made.
                     </p>
                 </div>
@@ -64,14 +64,14 @@ export default function GatewayStatus() {
                     type="button"
                     onClick={run}
                     disabled={state.loading}
-                    className="flex items-center gap-2 rounded-xl bg-action px-4 py-2 text-[13px] font-bold text-white disabled:opacity-60"
+                    className="flex items-center gap-2 rounded-xl bg-action px-4 py-2 text-ui font-bold text-white disabled:opacity-60"
                 >
                     {state.loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                     Check gateways
                 </button>
             </div>
 
-            {state.error && <p className="mt-3 text-[13px] text-rose-600">{state.error}</p>}
+            {state.error && <p className="mt-3 text-ui text-rose-600">{state.error}</p>}
             {state.data && (
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Row
@@ -79,7 +79,7 @@ export default function GatewayStatus() {
                         g={state.data.razorpay}
                         extra={
                             !state.data.razorpay.webhook_secret_set && (
-                                <p className="mt-1 text-[12px] text-amber-700">
+                                <p className="mt-1 text-small text-amber-700">
                                     Webhook secret not set — payments still work, but set it so a payment is
                                     recorded even if the student closes the page.
                                 </p>
@@ -90,7 +90,7 @@ export default function GatewayStatus() {
                         name="PayPal (USD)"
                         g={state.data.paypal}
                         extra={
-                            <p className="mt-1 text-[12px] text-slate-500 break-all">
+                            <p className="mt-1 text-small text-slate-500 break-all">
                                 Return page: {state.data.paypal_return_url}
                             </p>
                         }

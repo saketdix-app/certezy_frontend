@@ -50,7 +50,7 @@ export default function CourseSortBar() {
             style={{ border: "1px solid #E8ECF4", boxShadow: "0 1px 4px rgba(15,23,42,0.05)" }}
         >
             {/* Count */}
-            <p className="text-[13px] font-medium text-text-muted shrink-0 whitespace-nowrap">
+            <p className="text-ui font-medium text-text-muted shrink-0 whitespace-nowrap">
                 {total === 0 ? (
                     "No courses"
                 ) : (
@@ -69,7 +69,7 @@ export default function CourseSortBar() {
                     className="flex items-center gap-1.5 overflow-x-auto"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
-                    <span className="hidden lg:block text-[12px] font-semibold text-text-muted mr-1 shrink-0">
+                    <span className="hidden lg:block text-small font-semibold text-text-muted mr-1 shrink-0">
                         Sort by:
                     </span>
 
@@ -77,7 +77,7 @@ export default function CourseSortBar() {
                     <button
                         onClick={() => dispatch(setFilter({ key: "sort", value: null }))}
                         className={cn(
-                            "px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold shrink-0 whitespace-nowrap",
+                            "px-3.5 py-1.5 rounded-full text-small font-semibold shrink-0 whitespace-nowrap",
                             "transition-all duration-150 border",
                             !filters.sort
                                 ? "bg-action text-white border-primary shadow-sm"
@@ -94,7 +94,7 @@ export default function CourseSortBar() {
                                 key={opt.value}
                                 onClick={() => handleSort(opt.value)}
                                 className={cn(
-                                    "px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold shrink-0 whitespace-nowrap",
+                                    "px-3.5 py-1.5 rounded-full text-small font-semibold shrink-0 whitespace-nowrap",
                                     "transition-all duration-150 border",
                                     active
                                         ? "bg-action text-white border-primary shadow-sm"
@@ -116,7 +116,7 @@ export default function CourseSortBar() {
             </div>
 
             {total > 0 && (
-                <p className="hidden xl:block text-[12px] text-text-muted shrink-0 whitespace-nowrap">
+                <p className="hidden xl:block text-small text-text-muted shrink-0 whitespace-nowrap">
                     {from}–{to} of {total.toLocaleString()}
                 </p>
             )}
