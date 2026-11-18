@@ -18,6 +18,8 @@ import {
 import toast from "react-hot-toast";
 
 import paymentService from "@/services/paymentService";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/features/auth/authSlice";
 import GatewayStatus from "@/components/admin/GatewayStatus";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -39,6 +41,7 @@ const METHOD_ICONS = {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function PaymentsPage() {
+    const isSuper = useSelector(selectUser)?.role === "super_admin";
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -76,8 +79,8 @@ export default function PaymentsPage() {
     // ── Load stats from API
     const loadStats = useCallback(async () => {
         try {
-            const { data } = await paymentService.getRevenueStats();
-            const apiStats = data.data;
+            // Revenue totals are for Super Admins only
+            const apiStats = isSuper ? (await paymentService.getRevenueStats()).data.data : {};
 
             // Calculate payment counts from current payments data
             const successCount = payments.filter((p) => p.status === "success").length;
@@ -106,7 +109,7 @@ export default function PaymentsPage() {
                 totalCount: 0,
             });
         }
-    }, [payments]);
+    }, [payments, isSuper]);
 
     useEffect(() => {
         load();
@@ -188,20 +191,24 @@ export default function PaymentsPage() {
             {stats && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
-                        {
-                            label: "Total Revenue",
-                            value: `$${stats.total_revenue_usd}`,
-                            icon: DollarSign,
-                            bg: "#F0FDF4",
-                            color: "#16A34A",
-                        },
-                        {
-                            label: "Total Sales",
-                            value: stats.total_sales,
-                            icon: CheckCircle,
-                            bg: "#EEF6FC",
-                            color: "#236A9E",
-                        },
+                        ...(isSuper
+                            ? [
+                                  {
+                                      label: "Total Revenue",
+                                      value: `$${stats.total_revenue_usd}`,
+                                      icon: DollarSign,
+                                      bg: "#F0FDF4",
+                                      color: "#16A34A",
+                                  },
+                                  {
+                                      label: "Total Sales",
+                                      value: stats.total_sales,
+                                      icon: CheckCircle,
+                                      bg: "#EEF6FC",
+                                      color: "#236A9E",
+                                  },
+                              ]
+                            : []),
                         {
                             label: "Successful",
                             value: stats.successCount,

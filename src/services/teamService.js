@@ -29,6 +29,11 @@ const teamService = {
     setAllocation: (id, data) => api.put(`/admin/team/${id}/allocation`, data),
     changeRole: (id, data) => api.patch(`/admin/team/${id}/role`, data),
     setStatus: (id, is_active) => api.patch(`/admin/team/${id}/status`, { is_active }),
+    // Open leads / exams a person still has, and moving them (before blocking, deleting, a role change)
+    handoverInfo: (id) => api.get(`/admin/team/${id}/handover`),
+    handover: (id, data) => api.post(`/admin/team/${id}/handover`, data),
+    // { confirm_email, handover? } — soft delete; refused while open leads / exams remain
+    remove: (id, data) => api.delete(`/admin/team/${id}`, { data }),
     grantSuperAdminCreate: (id, password) =>
         api.post(`/admin/team/${id}/privileges/super-admin-create`, { password }),
     revokeSuperAdminCreate: (id, password) =>

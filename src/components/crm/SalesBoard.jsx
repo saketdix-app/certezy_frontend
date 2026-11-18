@@ -19,9 +19,11 @@ const STATES = [
     ["refunded", "Refunded", "text-slate-600"],
     ["cancelled", "Abandoned", "text-slate-500"],
 ];
+// Amounts come back empty (null) for anyone but a Super Admin
 const money = (obj) =>
-    Object.entries(obj ?? {}).length
+    Object.entries(obj ?? {}).filter(([, v]) => v != null).length
         ? Object.entries(obj)
+              .filter(([, v]) => v != null)
               .map(([cur, v]) => new Intl.NumberFormat(cur === "INR" ? "en-IN" : "en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(v))
               .join(" + ")
         : "—";
@@ -111,9 +113,13 @@ export default function SalesBoard({ isAdmin }) {
                 <div className="space-y-5">
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                         <Card label="Sales" value={data.sales} />
-                        <Card label="Revenue (net)" value={money(data.revenue)} sub={`Gross ${money(data.gross)}`} />
+                        {data.money_visible === false ? (
+                            <Card label="Revenue" value="—" sub="Visible to Super Admins only" />
+                        ) : (
+                            <Card label="Revenue (net)" value={money(data.revenue)} sub={`Gross ${money(data.gross)}`} />
+                        )}
                         <Card label="Conversion" value={`${data.conversion.rate}%`} sub={`${data.conversion.converted} of ${data.conversion.leads} new leads`} />
-                        <Card label="Discount links" value={`${data.discount_links.redeemed} / ${data.discount_links.generated}`} sub={`redeemed · ${money(data.discount_links.revenue)}`} />
+                        <Card label="Discount links" value={`${data.discount_links.redeemed} / ${data.discount_links.generated}`} sub={data.money_visible === false ? "redeemed" : `redeemed · ${money(data.discount_links.revenue)}`} />
                     </div>
 
                     <section className="rounded-xl border border-slate-200 bg-surface p-4">
@@ -139,7 +145,8 @@ export default function SalesBoard({ isAdmin }) {
                                         <li key={i} className="flex justify-between gap-3">
                                             <span className="truncate">{r.title ?? "—"}</span>
                                             <span className="shrink-0 text-slate-600">
-                                                {r.sales} · {money({ [r.currency]: r.amount })}
+                                                {r.sales}
+                                                {r.amount != null && <> · {money({ [r.currency]: r.amount })}</>}
                                             </span>
                                         </li>
                                     ))}
@@ -153,7 +160,8 @@ export default function SalesBoard({ isAdmin }) {
                                     <li key={i} className="flex justify-between gap-3">
                                         <span>{isAdmin && !ownerId ? r.name ?? "Unassigned lead" : SOURCE_LABEL[r.source] ?? r.source}</span>
                                         <span className="text-slate-600">
-                                            {r.sales} · {money({ [r.currency]: r.amount })}
+                                            {r.sales}
+                                            {r.amount != null && <> · {money({ [r.currency]: r.amount })}</>}
                                         </span>
                                     </li>
                                 ))}
@@ -196,7 +204,7 @@ export default function SalesBoard({ isAdmin }) {
                                         <td className="px-4 py-2">{s.lead_name}</td>
                                         <td className="px-4 py-2">{s.course_title}</td>
                                         <td className="px-4 py-2 text-right font-semibold">
-                                            {money({ [s.currency]: Number(s.amount) })}
+                                            {s.amount == null ? "—" : money({ [s.currency]: Number(s.amount) })}
                                             {s.discount_link_id && <span className="ml-1 text-label font-normal text-slate-500">(discount)</span>}
                                         </td>
                                         {isAdmin && <td className="px-4 py-2">{s.credited_to ?? "—"}</td>}

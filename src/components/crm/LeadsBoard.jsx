@@ -150,6 +150,29 @@ export default function LeadsBoard({ isAdmin }) {
         });
     const shownColumns = COLUMNS.filter((c) => columns.includes(c.key) && (!c.admin || isAdmin));
 
+    // Filters as the API takes them (the list, and "select all matching")
+    const filters = () => ({
+        stage: stage || undefined,
+        search: search.trim() || undefined,
+        source: source || undefined,
+        owner_id: ownerId || undefined,
+        follow_up: overdueOnly ? "overdue" : undefined,
+        exam: exam || undefined,
+    });
+    const [selectingAll, setSelectingAll] = useState(false);
+    const selectAllMatching = async () => {
+        setSelectingAll(true);
+        try {
+            const { data: res } = await crmService.list({ ...filters(), ids_only: 1 });
+            setSelected(res.data.ids);
+            if (res.data.capped) toast(`Selected the first ${res.data.ids.length} of ${res.data.total}. Move these, then select again.`);
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not select the leads"));
+        } finally {
+            setSelectingAll(false);
+        }
+    };
+
     const load = useCallback(async () => {
         try {
             const { data: res } = await crmService.list({
@@ -324,7 +347,19 @@ export default function LeadsBoard({ isAdmin }) {
 
             {isAdmin && selected.length > 0 && (
                 <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-action bg-action-soft px-4 py-2.5">
-                    <p className="text-ui font-semibold text-action-soft-ink">{selected.length} selected</p>
+                    <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-ui font-semibold text-action-soft-ink">
+                        {selected.length} selected
+                        {data?.pagination?.total > selected.length && (
+                            <button
+                                type="button"
+                                disabled={selectingAll}
+                                onClick={selectAllMatching}
+                                className="text-small font-semibold text-action underline-offset-2 hover:underline disabled:opacity-60"
+                            >
+                                {selectingAll ? "Selecting…" : `Select all ${data.pagination.total} matching leads`}
+                            </button>
+                        )}
+                    </p>
                     <div className="flex gap-2">
                         <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
                             Clear
