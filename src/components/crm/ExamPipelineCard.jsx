@@ -24,8 +24,8 @@ export default function ExamPipelineCard() {
     const stats = [
         ["Exams scheduled", exams.scheduled],
         ["In the next 7 days", exams.next_7_days],
-        ["Completed this month", exams.completed_this_month],
-        ["Awaiting Course Done", exams.awaiting_course_done, "text-amber-700"],
+        ["Exams done this month", exams.completed_this_month],
+        ["Exam done, payment due", exams.payment_alerts, "text-red-600"],
     ];
 
     return (
