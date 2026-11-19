@@ -27,6 +27,7 @@ import {
     TrendingUp,
     BarChart3,
     Plug,
+    UsersRound,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -46,6 +47,7 @@ const ADMIN_NAV_GROUPS = [
         label: "CRM",
         items: [
             { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES },
+            { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant", roles: TEAM_MANAGER_ROLES },
             { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES },
             { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES },
             { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES },

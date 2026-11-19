@@ -15,6 +15,7 @@ import api from "./api";
  *   GET   /follow-ups                → (?when=today|overdue|upcoming&owner_id)
  *   PATCH /follow-ups/:id            → { status: done|missed|cancelled, outcome? }
  *   GET   /owners                    → people a lead can be assigned to (admins)
+ *   GET   /consultants/progress      → per consultant: leads per stage, follow-ups, client discussion (admins)
  *   GET   /exam-coordinators         → active Exam Coordinators;  PUT /leads/:id/exam-coordinator, PUT /leads/:id/exam
  *   POST  /leads/:id/student-account | assign-course | discount-link | certificate   (phase 5)
  *   GET   /sales, /discounts, /assignments, /certificates;  GET/PUT /settings
@@ -25,6 +26,7 @@ import api from "./api";
 const crmService = {
     dashboard: () => api.get("/crm/dashboard"),
     list: (params) => api.get("/crm/leads", { params }),
+    consultantProgress: () => api.get("/crm/consultants/progress"),
     get: (id) => api.get(`/crm/leads/${id}`),
     create: (data) => api.post("/crm/leads", data),
     update: (id, data) => api.patch(`/crm/leads/${id}`, data),

@@ -70,6 +70,7 @@ const ConsultantLeadsPage = crmPage("ConsultantLeadsPage");
 const ConsultantFollowUpsPage = crmPage("ConsultantFollowUpsPage");
 const AdminLeadsPage = crmPage("AdminLeadsPage");
 const AdminFollowUpsPage = crmPage("AdminFollowUpsPage");
+const AdminConsultantLeadsPage = crmPage("AdminConsultantLeadsPage");
 const ConsultantSalesPage = crmPage("ConsultantSalesPage");
 const ConsultantDiscountsPage = crmPage("ConsultantDiscountsPage");
 const ConsultantAssignmentsPage = crmPage("ConsultantAssignmentsPage");
@@ -270,6 +271,14 @@ export default function AppRoutes() {
                         element={
                             <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
                                 <AdminLeadsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="by-consultant"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <AdminConsultantLeadsPage />
                             </ProtectedRoute>
                         }
                     />

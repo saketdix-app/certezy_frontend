@@ -5,6 +5,7 @@ import CrmOverview from "@/components/crm/CrmOverview";
 import LeadsBoard from "@/components/crm/LeadsBoard";
 import FollowUpsBoard from "@/components/crm/FollowUpsBoard";
 import SalesBoard from "@/components/crm/SalesBoard";
+import ConsultantProgressBoard from "@/components/crm/ConsultantProgressBoard";
 import { AssignmentsBoard, DiscountLinksBoard, IssuedCertificatesBoard } from "@/components/crm/CrmRecords";
 
 /** Consultant workspace pages (own leads only — the server enforces it). */
@@ -22,5 +23,6 @@ export const ConsultantCertificatesPage = () => <IssuedCertificatesBoard />;
 /** Admin → Leads / Follow-ups: the same screens across the whole team. */
 export const AdminLeadsPage = () => <LeadsBoard isAdmin />;
 export const AdminFollowUpsPage = () => <FollowUpsBoard isAdmin />;
+export const AdminConsultantLeadsPage = () => <ConsultantProgressBoard />;
 export const AdminSalesPage = () => <SalesBoard isAdmin />;
 export const AdminCrmDiscountsPage = () => <DiscountLinksBoard isAdmin />;
