@@ -27,6 +27,8 @@ const teamService = {
     resendInvite: (id) => api.post(`/admin/team/${id}/resend-invite`),
     setPermissions: (id, permissions) => api.put(`/admin/team/${id}/permissions`, permissions),
     setAllocation: (id, data) => api.put(`/admin/team/${id}/allocation`, data),
+    // { name?, email?, mobile?, password? } — password (yours) when changing an Admin / Super Admin / your own email
+    update: (id, data) => api.patch(`/admin/team/${id}`, data),
     changeRole: (id, data) => api.patch(`/admin/team/${id}/role`, data),
     setStatus: (id, is_active) => api.patch(`/admin/team/${id}/status`, { is_active }),
     // Open leads / exams a person still has, and moving them (before blocking, deleting, a role change)
