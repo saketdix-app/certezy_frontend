@@ -268,11 +268,11 @@ export default function HeroSection() {
                                     }}
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.transform = "translateY(-2px)";
-                                        e.currentTarget.style.boxShadow = "0 10px 32px rgba(59,130,246,0.55)";
+                                        e.currentTarget.style.boxShadow = "0 10px 32px rgba(58,118,170,0.55)";
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.transform = "";
-                                        e.currentTarget.style.boxShadow = "0 6px 24px rgba(59,130,246,0.45)";
+                                        e.currentTarget.style.boxShadow = "0 6px 24px rgba(58,118,170,0.45)";
                                     }}
                                 >
                                     Explore Courses <ArrowRight size={16} aria-hidden="true" />

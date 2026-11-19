@@ -184,7 +184,7 @@ export default function CoursesPage() {
                             style={{
                                 fontSize: "clamp(26px, 3.5vw, 40px)",
                                 fontWeight: 800,
-                                color: "#60A5FA",
+                                color: "#5B91C0",
                                 lineHeight: 1.18,
                                 letterSpacing: "-0.025em",
                                 marginBottom: "18px",
@@ -318,23 +318,23 @@ export default function CoursesPage() {
                         <span style={{ fontSize: "13.5px", color: "#64748B" }}>Results for</span>
                         <span
                             className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1 rounded-full"
-                            style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}
+                            style={{ background: "#EAF2F9", border: "1px solid #C9DCEC" }}
                         >
-                            <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#2563EB" }}>
+                            <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#2F6496" }}>
                                 {filters.search}
                             </span>
                             <button
                                 onClick={() => dispatch(setFilter({ key: "search", value: null }))}
                                 className="w-4 h-4 rounded-full flex items-center justify-center transition-colors"
-                                style={{ background: "rgba(37,99,235,0.10)" }}
+                                style={{ background: "rgba(47,100,150,0.10)" }}
                                 onMouseEnter={(e) =>
-                                    (e.currentTarget.style.background = "rgba(37,99,235,0.22)")
+                                    (e.currentTarget.style.background = "rgba(47,100,150,0.22)")
                                 }
                                 onMouseLeave={(e) =>
-                                    (e.currentTarget.style.background = "rgba(37,99,235,0.10)")
+                                    (e.currentTarget.style.background = "rgba(47,100,150,0.10)")
                                 }
                             >
-                                <X size={10} style={{ color: "#2563EB" }} />
+                                <X size={10} style={{ color: "#2F6496" }} />
                             </button>
                         </span>
                     </div>
@@ -478,7 +478,7 @@ export default function CoursesPage() {
                             <button
                                 onClick={() => setMobileFilterOpen(false)}
                                 className="w-full h-12 rounded-xl bg-action text-white text-ui font-bold hover:bg-action-hover transition-colors"
-                                style={{ boxShadow: "0 2px 8px rgba(37,99,235,0.3)" }}
+                                style={{ boxShadow: "0 2px 8px rgba(47,100,150,0.3)" }}
                             >
                                 {activeFilterCount > 0
                                     ? `Apply ${activeFilterCount} Filter${activeFilterCount > 1 ? "s" : ""}`

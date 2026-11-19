@@ -118,7 +118,7 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                                 "flex items-start gap-3.5 rounded-xl border-2 px-4 py-3.5 cursor-pointer transition-colors",
                                 checked
                                     ? "border-[#3A76AA] bg-[#EAF2F9]"
-                                    : "border-[#E2E8F0] bg-white hover:border-[#BFDBFE] hover:bg-[#F8FAFC]"
+                                    : "border-[#E2E8F0] bg-white hover:border-[#C9DCEC] hover:bg-[#F8FAFC]"
                             )}
                         >
                             <input
@@ -282,8 +282,8 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                                     className={cn(
                                         "relative h-12 rounded-lg border-2 text-ui font-bold transition-colors",
                                         answered
-                                            ? "border-[#3A76AA] bg-[#EAF2F9] text-[#275382] hover:bg-[#DBEAFE]"
-                                            : "border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE]"
+                                            ? "border-[#3A76AA] bg-[#EAF2F9] text-[#275382] hover:bg-[#D6E5F2]"
+                                            : "border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#C9DCEC]"
                                     )}
                                 >
                                     {i + 1}

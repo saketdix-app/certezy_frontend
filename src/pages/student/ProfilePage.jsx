@@ -126,7 +126,7 @@ export default function ProfilePage() {
                             <h2 className="text-h3 font-extrabold text-slate-900 tracking-tight">
                                 {user?.name}
                             </h2>
-                            <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider bg-[#EBF4FF] text-[#3A76AA] border border-[#BFDBFE]">
+                            <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider bg-[#EAF2F9] text-[#3A76AA] border border-[#C9DCEC]">
                                 {user?.role ?? "student"}
                             </span>
                         </div>
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                         </button>
                         <button
                             onClick={() => setShowPasswordModal(true)}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold border-2 border-[#3A76AA] text-[#3A76AA] hover:bg-[#EBF4FF] transition-colors"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold border-2 border-[#3A76AA] text-[#3A76AA] hover:bg-[#EAF2F9] transition-colors"
                         >
                             <Shield size={14} /> Change Password
                         </button>
@@ -185,11 +185,11 @@ export default function ProfilePage() {
                     {
                         tag: "ACTIVE",
                         tagColor: "#3A76AA",
-                        tagBg: "#EBF4FF",
+                        tagBg: "#EAF2F9",
                         label: "Enrolled Courses",
                         value: enrolledCount,
                         icon: BookOpen,
-                        ibg: "#EBF4FF",
+                        ibg: "#EAF2F9",
                         ic: "#3A76AA",
                     },
                     {

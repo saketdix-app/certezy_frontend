@@ -101,7 +101,7 @@ export default function PaypalReturnPage() {
             <div className="w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200">
                 {state.phase === "working" && (
                     <>
-                        <Loader2 className="mx-auto animate-spin text-[#2563EB]" size={34} />
+                        <Loader2 className="mx-auto animate-spin text-[#2F6496]" size={34} />
                         <p className="mt-4 text-body font-semibold text-slate-800">
                             Finishing your PayPal payment…
                         </p>
@@ -126,7 +126,7 @@ export default function PaypalReturnPage() {
                         <button
                             type="button"
                             onClick={() => navigate("/student/payments")}
-                            className="mt-5 rounded-xl bg-[#2563EB] px-5 py-2.5 text-ui font-bold text-white"
+                            className="mt-5 rounded-xl bg-[#2F6496] px-5 py-2.5 text-ui font-bold text-white"
                         >
                             View my payments
                         </button>

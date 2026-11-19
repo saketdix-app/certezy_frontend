@@ -16,12 +16,12 @@ import { getInitials } from "@/lib/format";
  */
 
 const CATEGORY_GRADIENTS = {
-    "cloud-computing": ["#0EA5E9", "#0369A1"],
+    "cloud-computing": ["#3A76AA", "#0369A1"],
     "cyber-security": ["#EF4444", "#991B1B"],
     devops: ["#8B5CF6", "#5B21B6"],
     "data-science": ["#10B981", "#065F46"],
     "project-management": ["#F59E0B", "#92400E"],
-    networking: ["#3B82F6", "#1E3A8A"],
+    networking: ["#3A76AA", "#1E3F5E"],
     "it-service-management": ["#EC4899", "#9D174D"],
     "software-development": ["#14B8A6", "#134E4A"],
 };

@@ -112,7 +112,7 @@ export default function SearchBar({ className }) {
                         "flex items-center gap-2 h-[36px] px-3.5",
                         "bg-[#F5F7FA] border border-transparent rounded-full",
                         "transition-all duration-200",
-                        focused && "bg-white border-primary shadow-[0_0_0_3px_rgba(59,130,246,0.08)]"
+                        focused && "bg-white border-primary shadow-[0_0_0_3px_rgba(58,118,170,0.08)]"
                     )}
                 >
                     {loading ? (
@@ -254,7 +254,7 @@ export default function SearchBar({ className }) {
                                                 e.preventDefault();
                                                 handleCourseClick(course.slug);
                                             }}
-                                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F8FAFF] transition-colors border-b border-border/60 last:border-0"
+                                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F4F8FC] transition-colors border-b border-border/60 last:border-0"
                                         >
                                             <div className="w-9 h-9 rounded-xl bg-primary-light shrink-0 flex items-center justify-center">
                                                 <BookOpen size={14} className="text-primary" />

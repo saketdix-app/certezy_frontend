@@ -132,7 +132,7 @@ export default function MyCoursesPage() {
                                 <span
                                     className="px-1.5 py-0.5 rounded-md text-label font-bold"
                                     style={{
-                                        background: tab === key ? "#EBF4FF" : "rgba(0,0,0,0.06)",
+                                        background: tab === key ? "#EAF2F9" : "rgba(0,0,0,0.06)",
                                         color: tab === key ? "#3A76AA" : "#94A3B8",
                                     }}
                                 >
@@ -316,7 +316,7 @@ function CourseCard({ enrollment, onOpen }) {
                                 width: `${progress}%`,
                                 background: isCompleted
                                     ? "#10B981"
-                                    : "linear-gradient(90deg, #3A76AA, #60A5FA)",
+                                    : "linear-gradient(90deg, #3A76AA, #5B91C0)",
                                 transition: "width 0.6s ease",
                             }}
                         />

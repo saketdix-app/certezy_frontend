@@ -191,10 +191,10 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                         <div className="my-4" style={{ height: "1px", background: "#F1F5F9" }} />
                         <div
                             className="flex items-center gap-2.5 rounded-xl px-3.5 py-3"
-                            style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}
+                            style={{ background: "#EAF2F9", border: "1px solid #C9DCEC" }}
                         >
                             <Award size={15} style={{ color: "#3A76AA", flexShrink: 0 }} />
-                            <p style={{ fontSize: "12.5px", fontWeight: 600, color: "#1D4ED8" }}>
+                            <p style={{ fontSize: "12.5px", fontWeight: 600, color: "#275382" }}>
                                 Certificate of completion included
                             </p>
                         </div>

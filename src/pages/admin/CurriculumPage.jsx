@@ -58,7 +58,7 @@ const TYPE_STYLES = {
     text: { color: "#F97316", bg: "#FFF7ED" },
     article: { color: "#F97316", bg: "#FFF7ED" },
     pdf: { color: "#DC2626", bg: "#FEF2F2" },
-    link: { color: "#0EA5E9", bg: "#F0F9FF" },
+    link: { color: "#3A76AA", bg: "#F0F9FF" },
     embed: { color: "#14B8A6", bg: "#F0FDFA" },
     audio: { color: "#A855F7", bg: "#FAF5FF" },
     quiz: { color: "#8B5CF6", bg: "#F5F3FF" },

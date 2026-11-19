@@ -81,7 +81,7 @@ export default function OfferPage() {
 
     return (
         <OfferShell>
-            <div className="overflow-hidden rounded-2xl border border-[#DBEAFE] bg-white shadow-[0_12px_32px_rgba(37,99,235,0.10)]">
+            <div className="overflow-hidden rounded-2xl border border-[#D6E5F2] bg-white shadow-[0_12px_32px_rgba(47,100,150,0.10)]">
                 <div className="grid sm:grid-cols-[260px_1fr]">
                     <CourseThumbnail
                         src={offer.course.thumbnail}
@@ -89,7 +89,7 @@ export default function OfferPage() {
                         className="w-full self-center sm:ml-6 sm:my-6 sm:w-[calc(100%-24px)] rounded-xl"
                     />
                     <div className="p-6">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EFF6FF] px-3 py-1 text-small font-bold text-[#1D4ED8]">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF2F9] px-3 py-1 text-small font-bold text-[#275382]">
                             <Tag size={13} /> Exclusive offer
                         </span>
                         <h1 className="mt-3 text-h2 font-extrabold leading-snug text-slate-900">
@@ -102,7 +102,7 @@ export default function OfferPage() {
                         )}
 
                         <div className="mt-4 flex flex-wrap items-baseline gap-3">
-                            <span className="text-h1 font-extrabold text-[#2563EB]">
+                            <span className="text-h1 font-extrabold text-[#2F6496]">
                                 {money(offerPrice)}
                             </span>
                             <span className="text-h3 text-slate-400 line-through">
@@ -126,11 +126,11 @@ export default function OfferPage() {
                     </div>
                 </div>
 
-                <div className="border-t border-[#DBEAFE] bg-[#F8FAFF] p-6">
+                <div className="border-t border-[#D6E5F2] bg-[#F4F8FC] p-6">
                     {inactive ? (
                         <Link
                             to={`/courses/${offer.course.slug}`}
-                            className="inline-flex rounded-xl bg-[#2563EB] px-5 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
+                            className="inline-flex rounded-xl bg-[#2F6496] px-5 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
                         >
                             View the course
                         </Link>
@@ -142,7 +142,7 @@ export default function OfferPage() {
                             </p>
                             <Link
                                 to={checkoutUrl}
-                                className="rounded-xl bg-[#2563EB] px-6 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
+                                className="rounded-xl bg-[#2F6496] px-6 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
                             >
                                 Continue to payment
                             </Link>
@@ -150,7 +150,7 @@ export default function OfferPage() {
                     ) : (
                         <div>
                             <p className="flex items-center gap-2 text-ui text-slate-700">
-                                <Mail size={16} className="text-[#2563EB]" />
+                                <Mail size={16} className="text-[#2F6496]" />
                                 Use the email this offer was sent to
                                 {offer.email_hint && (
                                     <strong className="font-mono">{offer.email_hint}</strong>
@@ -159,13 +159,13 @@ export default function OfferPage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                                 <Link
                                     to={`/register?${authQuery()}`}
-                                    className="rounded-xl bg-[#2563EB] px-6 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
+                                    className="rounded-xl bg-[#2F6496] px-6 py-3 text-ui font-bold text-white no-underline hover:opacity-90"
                                 >
                                     Create account &amp; claim
                                 </Link>
                                 <Link
                                     to={`/login?${authQuery()}`}
-                                    className="rounded-xl border border-[#BFDBFE] bg-white px-6 py-3 text-ui font-bold text-[#1D4ED8] no-underline hover:bg-[#EFF6FF]"
+                                    className="rounded-xl border border-[#C9DCEC] bg-white px-6 py-3 text-ui font-bold text-[#275382] no-underline hover:bg-[#EAF2F9]"
                                 >
                                     I already have an account
                                 </Link>
@@ -188,7 +188,7 @@ function OfferShell({ children }) {
             <div className="mx-auto max-w-3xl">
                 {children}
                 <p className="mt-5 flex items-center justify-center gap-1.5 text-small text-slate-500">
-                    <ShieldCheck size={14} className="text-[#2563EB]" /> Secure checkout by CERTEZY E-LEARNING PVT LTD
+                    <ShieldCheck size={14} className="text-[#2F6496]" /> Secure checkout by CERTEZY E-LEARNING PVT LTD
                 </p>
             </div>
         </div>

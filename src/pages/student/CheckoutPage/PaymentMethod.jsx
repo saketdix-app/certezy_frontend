@@ -30,8 +30,8 @@ export default function PaymentMethod({ selected, onChange }) {
                             className={cn(
                                 "w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all duration-150",
                                 active
-                                    ? "border-[#3A76AA] bg-[#EBF4FF]"
-                                    : "border-[#EEF2F7] bg-white hover:border-[#BFDBFE]"
+                                    ? "border-[#3A76AA] bg-[#EAF2F9]"
+                                    : "border-[#EEF2F7] bg-white hover:border-[#C9DCEC]"
                             )}
                         >
                             {/* Radio */}

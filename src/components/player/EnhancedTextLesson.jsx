@@ -108,7 +108,7 @@ export function EnhancedTextLesson({
     const content = (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+            <div className="bg-gradient-to-r from-blue-50 to-brand-100 px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <BookOpen size={20} className="text-blue-600" />

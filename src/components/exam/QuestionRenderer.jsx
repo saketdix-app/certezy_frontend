@@ -84,14 +84,14 @@ export function QuestionRenderer({
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Question Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+            <div className="bg-gradient-to-r from-blue-50 to-brand-100 px-6 py-4 border-b border-gray-200">
                 <div className="flex items-start gap-3">
                     <div className="flex-1">
                         <h3 className="text-h3 font-semibold text-gray-900 leading-relaxed">
                             {question.question}
                         </h3>
                         <div className="flex items-center gap-4 mt-2 text-ui text-gray-600">
-                            <span className="px-2 py-1 bg-[#DBEAFE] text-[#2F6496] rounded-md font-medium">
+                            <span className="px-2 py-1 bg-[#D6E5F2] text-[#2F6496] rounded-md font-medium">
                                 {question.type === "true_false"
                                     ? "True / False"
                                     : isSingleChoice(question)
@@ -119,7 +119,7 @@ export function QuestionRenderer({
             {/* Explanation */}
             {showExplanation && question.explanation && (
                 <div className="px-6 pb-6">
-                    <div className="bg-[#EAF2F9] border border-[#BFDBFE] rounded-lg p-4">
+                    <div className="bg-[#EAF2F9] border border-[#C9DCEC] rounded-lg p-4">
                         <div className="flex items-start gap-2">
                             <Info size={16} className="text-[#3A76AA] mt-0.5" />
                             <div>
@@ -301,7 +301,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                         </div>
 
                                         {question.explanation && (
-                                            <div className="mt-3 p-3 bg-[#EAF2F9] border border-[#BFDBFE] rounded">
+                                            <div className="mt-3 p-3 bg-[#EAF2F9] border border-[#C9DCEC] rounded">
                                                 <div className="flex items-start gap-2">
                                                     <Info size={14} className="text-[#3A76AA] mt-0.5" />
                                                     <div>
