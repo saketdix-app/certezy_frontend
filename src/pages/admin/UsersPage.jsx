@@ -48,8 +48,8 @@ const PERMISSIONS = [
         label: "Course Management",
         desc: "Can create, edit and archive courses",
         icon: BookOpen,
-        color: "#236A9E",
-        bg: "#EEF6FC",
+        color: "#2F6496",
+        bg: "#EAF2F9",
     },
     {
         key: "can_manage_students",
@@ -411,7 +411,7 @@ export default function UsersPage() {
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                     <p className="text-label font-bold text-slate-500 uppercase tracking-widest mb-1">
-                        Dashboard › <span style={{ color: "#236A9E" }}>Users</span>
+                        Dashboard › <span style={{ color: "#2F6496" }}>Users</span>
                     </p>
                     <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">
                         User Management
@@ -424,9 +424,9 @@ export default function UsersPage() {
                     <button
                         onClick={() => setShowAddModal(true)}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
-                        style={{ background: "#236A9E" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                        style={{ background: "#2F6496" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                     >
                         <Plus size={15} /> Add Sub-Admin
                     </button>
@@ -445,8 +445,8 @@ export default function UsersPage() {
                         label: "Total Users",
                         value: activeStudents + blockedStudents + subAdmins.length,
                         icon: Users,
-                        ibg: "#EEF6FC",
-                        ic: "#236A9E",
+                        ibg: "#EAF2F9",
+                        ic: "#2F6496",
                     },
                     {
                         label: "Active Students",
@@ -509,7 +509,7 @@ export default function UsersPage() {
                             "px-5 py-2 rounded-xl text-ui font-bold transition-all duration-150",
                             tab === key ? "text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
                         )}
-                        style={tab === key ? { background: "#236A9E" } : {}}
+                        style={tab === key ? { background: "#2F6496" } : {}}
                     >
                         {label}
                     </button>
@@ -591,7 +591,7 @@ export default function UsersPage() {
                                             <div
                                                 className="w-9 h-9 rounded-full flex items-center justify-center text-white text-ui font-extrabold shrink-0"
                                                 style={{
-                                                    background: "linear-gradient(135deg, #3282B8, #0a1628)",
+                                                    background: "linear-gradient(135deg, #3A76AA, #15304a)",
                                                 }}
                                             >
                                                 {user.name?.charAt(0).toUpperCase()}
@@ -691,7 +691,7 @@ export default function UsersPage() {
                                                         ? "text-white"
                                                         : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                                 )}
-                                                style={stuPage === p ? { background: "#236A9E" } : {}}
+                                                style={stuPage === p ? { background: "#2F6496" } : {}}
                                             >
                                                 {p}
                                             </button>
@@ -715,7 +715,7 @@ export default function UsersPage() {
             {tab === "subadmins" &&
                 (saLoading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
+                        <Loader2 size={28} className="animate-spin" style={{ color: "#2F6496" }} />
                     </div>
                 ) : subAdmins.length === 0 ? (
                     <div
@@ -732,7 +732,7 @@ export default function UsersPage() {
                         <button
                             onClick={() => setShowAddModal(true)}
                             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
-                            style={{ background: "#236A9E" }}
+                            style={{ background: "#2F6496" }}
                         >
                             <Plus size={15} /> Add Sub-Admin
                         </button>
@@ -1092,12 +1092,12 @@ export default function UsersPage() {
                                 onClick={handleCreateSubAdmin}
                                 disabled={saving}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                style={{ background: "#236A9E" }}
+                                style={{ background: "#2F6496" }}
                                 onMouseEnter={(e) => {
-                                    if (!saving) e.currentTarget.style.background = "#1B5582";
+                                    if (!saving) e.currentTarget.style.background = "#275382";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = "#236A9E";
+                                    e.currentTarget.style.background = "#2F6496";
                                 }}
                             >
                                 {saving ? (
@@ -1154,12 +1154,12 @@ export default function UsersPage() {
                                     type="submit"
                                     disabled={saving}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#236A9E" }}
+                                    style={{ background: "#2F6496" }}
                                     onMouseEnter={(e) => {
-                                        if (!saving) e.currentTarget.style.background = "#1B5582";
+                                        if (!saving) e.currentTarget.style.background = "#275382";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#236A9E";
+                                        e.currentTarget.style.background = "#2F6496";
                                     }}
                                 >
                                     {saving ? (
@@ -1233,7 +1233,7 @@ function SubAdminCard({ subAdmin, onEdit, onRevoke }) {
             <div className="flex items-center gap-3 mb-4">
                 <div
                     className="w-11 h-11 rounded-full flex items-center justify-center text-white text-body font-extrabold shrink-0"
-                    style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
+                    style={{ background: "linear-gradient(135deg, #3A76AA, #15304a)" }}
                 >
                     {subAdmin.name?.charAt(0).toUpperCase()}
                 </div>
@@ -1326,8 +1326,8 @@ function PermissionRow({ perm, checked, onChange }) {
 function SectionLabel({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-2">
-            <Icon size={14} style={{ color: "#236A9E" }} />
-            <span className="text-label font-bold uppercase tracking-widest" style={{ color: "#236A9E" }}>
+            <Icon size={14} style={{ color: "#2F6496" }} />
+            <span className="text-label font-bold uppercase tracking-widest" style={{ color: "#2F6496" }}>
                 {label}
             </span>
         </div>

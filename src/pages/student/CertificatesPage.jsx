@@ -143,7 +143,7 @@ function CertCard({ cert, onPdfReady }) {
             <div
                 className="relative px-6 pt-6 pb-5 overflow-hidden"
                 style={{
-                    background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                    background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
                 }}
             >
                 {/* dot pattern */}
@@ -248,7 +248,7 @@ function CertCard({ cert, onPdfReady }) {
                                 rel="noreferrer"
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl no-underline transition-colors duration-150"
                                 style={{
-                                    background: "#3282B8",
+                                    background: "#3A76AA",
                                     color: "#fff",
                                     fontSize: "13.5px",
                                     fontWeight: 700,
@@ -361,7 +361,7 @@ function CertSkeleton() {
                     >
                         <div
                             className="h-[140px]"
-                            style={{ background: "linear-gradient(135deg, #0a1628, #162d5a)" }}
+                            style={{ background: "linear-gradient(135deg, #15304a, #1e3f5e)" }}
                         />
                         <div className="p-5 space-y-3">
                             <div className="h-3 bg-[#F1F5F9] rounded-full w-3/4" />

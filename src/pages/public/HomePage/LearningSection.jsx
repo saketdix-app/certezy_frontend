@@ -11,7 +11,7 @@ const CSS = `
   .ls-fade-3 { animation: countUp .5s .15s ease both; }
 
   .ls-stat-card {
-    background: #0F172A;
+    background: #1A375C;
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 16px;
     padding: 24px;
@@ -196,7 +196,7 @@ export default function LearningSection() {
                                         <>
                                             <ShieldCheck
                                                 size={26}
-                                                color="#3282B8"
+                                                color="#3A76AA"
                                                 style={{ marginBottom: "14px" }}
                                                 aria-hidden="true"
                                             />
@@ -228,7 +228,7 @@ export default function LearningSection() {
                                                     fontSize: "30px",
                                                     fontWeight: 900,
                                                     lineHeight: 1,
-                                                    color: "#4E9CD3",
+                                                    color: "#5B91C0",
                                                     marginBottom: "8px",
                                                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                                                 }}
@@ -273,7 +273,7 @@ export default function LearningSection() {
                                     marginBottom: "16px",
                                 }}
                             >
-                                You Can Learn Anything, <span style={{ color: "#4E9CD3" }}>Anytime</span> From
+                                You Can Learn Anything, <span style={{ color: "#5B91C0" }}>Anytime</span> From
                                 Anywhere
                             </h2>
 
@@ -298,7 +298,7 @@ export default function LearningSection() {
                                         style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}
                                     >
                                         <div className="ls-feature-icon" aria-hidden="true">
-                                            <Icon size={20} color="#3282B8" />
+                                            <Icon size={20} color="#3A76AA" />
                                         </div>
                                         <div>
                                             <h3

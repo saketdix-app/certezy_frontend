@@ -54,7 +54,7 @@ const CONTENT_PLACEHOLDER = {
 
 // Icon colours per lesson type in the curriculum list
 const TYPE_STYLES = {
-    video: { color: "#236A9E", bg: "#EEF6FC" },
+    video: { color: "#2F6496", bg: "#EAF2F9" },
     text: { color: "#F97316", bg: "#FFF7ED" },
     article: { color: "#F97316", bg: "#FFF7ED" },
     pdf: { color: "#DC2626", bg: "#FEF2F2" },
@@ -343,7 +343,7 @@ export default function CurriculumPage() {
                     {course?.title ?? "..."}
                 </span>
                 <ChevronRight size={11} />
-                <span style={{ color: "#236A9E" }}>Curriculum</span>
+                <span style={{ color: "#2F6496" }}>Curriculum</span>
             </div>
 
             {/* ── Header ── */}
@@ -364,9 +364,9 @@ export default function CurriculumPage() {
                     <button
                         onClick={openCreateSection}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
-                        style={{ background: "#236A9E" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                        style={{ background: "#2F6496" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                     >
                         <Plus size={15} /> Add Section
                     </button>
@@ -380,8 +380,8 @@ export default function CurriculumPage() {
                         {
                             icon: BookOpen,
                             label: `${sections.length} Sections`,
-                            ibg: "#EEF6FC",
-                            ic: "#236A9E",
+                            ibg: "#EAF2F9",
+                            ic: "#2F6496",
                         },
                         {
                             icon: FileText,
@@ -416,7 +416,7 @@ export default function CurriculumPage() {
             {/* ── Content ── */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
+                    <Loader2 size={28} className="animate-spin" style={{ color: "#2F6496" }} />
                 </div>
             ) : sections.length === 0 ? (
                 <EmptyState onAdd={openCreateSection} />
@@ -501,12 +501,12 @@ export default function CurriculumPage() {
                                     type="submit"
                                     disabled={savingSection}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#236A9E" }}
+                                    style={{ background: "#2F6496" }}
                                     onMouseEnter={(e) => {
-                                        if (!savingSection) e.currentTarget.style.background = "#1B5582";
+                                        if (!savingSection) e.currentTarget.style.background = "#275382";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#236A9E";
+                                        e.currentTarget.style.background = "#2F6496";
                                     }}
                                 >
                                     {savingSection ? (
@@ -716,12 +716,12 @@ export default function CurriculumPage() {
                                     type="submit"
                                     disabled={savingLesson}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                    style={{ background: "#236A9E" }}
+                                    style={{ background: "#2F6496" }}
                                     onMouseEnter={(e) => {
-                                        if (!savingLesson) e.currentTarget.style.background = "#1B5582";
+                                        if (!savingLesson) e.currentTarget.style.background = "#275382";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#236A9E";
+                                        e.currentTarget.style.background = "#2F6496";
                                     }}
                                 >
                                     {savingLesson ? (
@@ -774,7 +774,7 @@ function SectionCard({
                 {/* Number badge */}
                 <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-small font-extrabold"
-                    style={{ background: "#236A9E" }}
+                    style={{ background: "#2F6496" }}
                 >
                     §{index + 1}
                 </div>
@@ -925,7 +925,7 @@ function EmptyState({ onAdd }) {
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">
-                <BookOpen size={26} style={{ color: "#236A9E" }} />
+                <BookOpen size={26} style={{ color: "#2F6496" }} />
             </div>
             <div>
                 <p className="text-body font-bold text-slate-800">No sections yet</p>
@@ -936,9 +936,9 @@ function EmptyState({ onAdd }) {
             <button
                 onClick={onAdd}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
-                style={{ background: "#236A9E" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                style={{ background: "#2F6496" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
             >
                 <Plus size={15} /> Add First Section
             </button>

@@ -53,7 +53,7 @@ export default function ConsultantLayout() {
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-surface px-4 lg:px-6">
                 <div className="flex items-center gap-2">
                     <Logo to="/consultant" height={26} />
-                    <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">{isCoordinator ? "Exams" : "Sales"}</span>
+                    <span className="rounded bg-[#EAF2F9] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">{isCoordinator ? "Exams" : "Sales"}</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <ThemeToggle mode={theme} onChange={setTheme} />

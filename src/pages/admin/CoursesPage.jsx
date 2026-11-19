@@ -411,7 +411,7 @@ export default function CoursesPage() {
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                     <p className="text-small font-semibold text-slate-500 uppercase tracking-widest mb-1">
-                        Dashboard › <span style={{ color: "#236A9E" }}>Courses</span>
+                        Dashboard › <span style={{ color: "#2F6496" }}>Courses</span>
                     </p>
                     <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">Courses</h1>
                     <p className="text-ui text-slate-500 mt-0.5">Manage your course catalog and content</p>
@@ -423,9 +423,9 @@ export default function CoursesPage() {
                     <button
                         onClick={openCreate}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors whitespace-nowrap"
-                        style={{ background: "#236A9E" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                        style={{ background: "#2F6496" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                     >
                         <Plus size={16} /> Create Course
                     </button>
@@ -441,8 +441,8 @@ export default function CoursesPage() {
                         sub: "All courses",
                         subColor: "text-action",
                         icon: BookOpen,
-                        ibg: "#EEF6FC",
-                        ic: "#236A9E",
+                        ibg: "#EAF2F9",
+                        ic: "#2F6496",
                     },
                     {
                         label: "Published",
@@ -586,7 +586,7 @@ export default function CoursesPage() {
             >
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
+                        <Loader2 size={28} className="animate-spin" style={{ color: "#2F6496" }} />
                     </div>
                 ) : error ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
@@ -595,7 +595,7 @@ export default function CoursesPage() {
                         <button
                             onClick={loadCourses}
                             className="px-4 py-2 rounded-xl text-ui font-bold text-white"
-                            style={{ background: "#236A9E" }}
+                            style={{ background: "#2F6496" }}
                         >
                             Retry
                         </button>
@@ -607,7 +607,7 @@ export default function CoursesPage() {
                         <button
                             onClick={openCreate}
                             className="px-4 py-2 rounded-xl text-ui font-bold text-white"
-                            style={{ background: "#236A9E" }}
+                            style={{ background: "#2F6496" }}
                         >
                             Create First Course
                         </button>
@@ -660,7 +660,7 @@ export default function CoursesPage() {
                                                         </p>
                                                         <p
                                                             className="text-label font-semibold uppercase tracking-wider mt-0.5 truncate max-w-[180px]"
-                                                            style={{ color: "#236A9E" }}
+                                                            style={{ color: "#2F6496" }}
                                                         >
                                                             {course.category_name ?? "—"}
                                                         </p>
@@ -800,7 +800,7 @@ export default function CoursesPage() {
                                             ? "text-white"
                                             : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                     )}
-                                    style={page === p ? { background: "#236A9E" } : {}}
+                                    style={page === p ? { background: "#2F6496" } : {}}
                                 >
                                     {p}
                                 </button>
@@ -816,7 +816,7 @@ export default function CoursesPage() {
                                                 ? "text-white"
                                                 : "border border-slate-200 text-slate-600 hover:bg-slate-50"
                                         )}
-                                        style={page === totalPages ? { background: "#236A9E" } : {}}
+                                        style={page === totalPages ? { background: "#2F6496" } : {}}
                                     >
                                         {totalPages}
                                     </button>
@@ -1216,7 +1216,7 @@ export default function CoursesPage() {
                                                 type="button"
                                                 disabled={form.faqs.length >= 40}
                                                 onClick={() => setF("faqs", [...form.faqs, { q: "", a: "" }])}
-                                                className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-small font-semibold text-[#236A9E] hover:bg-slate-50 disabled:opacity-50"
+                                                className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-small font-semibold text-[#2F6496] hover:bg-slate-50 disabled:opacity-50"
                                             >
                                                 + Add a question
                                             </button>
@@ -1253,12 +1253,12 @@ export default function CoursesPage() {
                                 onClick={handleSave}
                                 disabled={saving}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                style={{ background: "#236A9E" }}
+                                style={{ background: "#2F6496" }}
                                 onMouseEnter={(e) => {
-                                    if (!saving) e.currentTarget.style.background = "#1B5582";
+                                    if (!saving) e.currentTarget.style.background = "#275382";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = "#236A9E";
+                                    e.currentTarget.style.background = "#2F6496";
                                 }}
                             >
                                 {saving ? (

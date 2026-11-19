@@ -32,7 +32,7 @@ const CSS = `
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #3282B8, #6C3BD5);
+    background: linear-gradient(90deg, #3A76AA, #F2A33A);
     opacity: 0;
     transition: opacity .25s ease;
     border-radius: 20px 20px 0 0;
@@ -61,15 +61,15 @@ const FEATURES = [
     {
         icon: BadgeCheck,
         iconBg: "bg-blue-50",
-        iconColor: "#3282B8",
+        iconColor: "#3A76AA",
         title: "Industry Certifications",
         desc: "Direct preparation for the most in-demand exams in tech, cloud and project management.",
         cls: "wc-f0",
     },
     {
         icon: Clock,
-        iconBg: "bg-purple-50",
-        iconColor: "#6C3BD5",
+        iconBg: "bg-amber-50",
+        iconColor: "#C97A16",
         title: "Learn at Your Pace",
         desc: "Flexible schedules that fit into a busy professional life without compromising quality.",
         cls: "wc-f1",
@@ -77,15 +77,15 @@ const FEATURES = [
     {
         icon: GraduationCap,
         iconBg: "bg-blue-50",
-        iconColor: "#3282B8",
+        iconColor: "#3A76AA",
         title: "Expert Instructors",
         desc: "Learn from certified experts with years of hands-on industry experience.",
         cls: "wc-f2",
     },
     {
         icon: CreditCard,
-        iconBg: "bg-purple-50",
-        iconColor: "#6C3BD5",
+        iconBg: "bg-amber-50",
+        iconColor: "#C97A16",
         title: "Affordable Pricing",
         desc: "Premium education at a fraction of the cost of traditional in-person bootcamps.",
         cls: "wc-f3",
@@ -93,15 +93,15 @@ const FEATURES = [
     {
         icon: Award,
         iconBg: "bg-blue-50",
-        iconColor: "#3282B8",
+        iconColor: "#3A76AA",
         title: "Verified Certificates",
         desc: "Shareable certificates with a public verification link that recruiters can check instantly.",
         cls: "wc-f4",
     },
     {
         icon: Briefcase,
-        iconBg: "bg-purple-50",
-        iconColor: "#6C3BD5",
+        iconBg: "bg-amber-50",
+        iconColor: "#C97A16",
         title: "Job-Ready Skills",
         desc: "Beyond theory — we focus on the practical skills needed to hit the ground running.",
         cls: "wc-f5",
@@ -121,11 +121,11 @@ export default function WhyCertezy() {
                 <div className="max-w-[1200px] mx-auto px-6">
                     {/* Header */}
                     <div className="text-center mb-14 wc-f0">
-                        <h2 className="text-[#0F172A] font-black text-h1 lg:text-display tracking-tight leading-tight mb-4">
+                        <h2 className="text-[#1F2A36] font-black text-h1 lg:text-display tracking-tight leading-tight mb-4">
                             Why Thousands Choose{" "}
                             <span
                                 style={{
-                                    background: "linear-gradient(135deg, #3282B8, #6C3BD5)",
+                                    background: "linear-gradient(135deg, #3A76AA, #1E3F5E)",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
@@ -150,7 +150,7 @@ export default function WhyCertezy() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-[#0F172A] font-bold text-h3 mb-3 leading-snug">
+                                <h3 className="text-[#1F2A36] font-bold text-h3 mb-3 leading-snug">
                                     {title}
                                 </h3>
 

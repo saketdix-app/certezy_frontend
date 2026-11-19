@@ -171,7 +171,7 @@ export default function CategoryTabs() {
     return (
         <nav
             aria-label="Course categories"
-            className="relative bg-[#0a1628] text-white"
+            className="relative bg-[#15304a] text-white"
             onMouseLeave={scheduleClose}
             onKeyDown={(e) => e.key === "Escape" && close()}
         >

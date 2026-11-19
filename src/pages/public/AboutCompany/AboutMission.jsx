@@ -8,7 +8,7 @@ export default function AboutMission() {
                     {/* LEFT CONTENT */}
                     <div>
                         {/* accent line */}
-                        <div className="w-14 h-[4px] bg-gradient-to-r from-[#3282B8] to-[#7C3AED] mb-6 rounded-full"></div>
+                        <div className="w-14 h-[4px] bg-gradient-to-r from-[#3A76AA] to-[#F2A33A] mb-6 rounded-full"></div>
 
                         <h2 className="text-h1 md:text-h1 font-bold text-gray-900 leading-tight mb-6">
                             Making Certifications Accessible
@@ -26,21 +26,21 @@ export default function AboutMission() {
                         {/* bullet list */}
                         <div className="space-y-4">
                             <div className="flex gap-3 items-start">
-                                <CheckCircle size={20} className="text-[#3282B8] mt-1" />
+                                <CheckCircle size={20} className="text-[#3A76AA] mt-1" />
                                 <p className="text-gray-700">
                                     Curriculum organized around published exam outlines.
                                 </p>
                             </div>
 
                             <div className="flex gap-3 items-start">
-                                <CheckCircle size={20} className="text-[#3282B8] mt-1" />
+                                <CheckCircle size={20} className="text-[#3A76AA] mt-1" />
                                 <p className="text-gray-700">
                                     Quizzes and timed practice exams to test your knowledge.
                                 </p>
                             </div>
 
                             <div className="flex gap-3 items-start">
-                                <CheckCircle size={20} className="text-[#3282B8] mt-1" />
+                                <CheckCircle size={20} className="text-[#3A76AA] mt-1" />
                                 <p className="text-gray-700">Continuous updates to match industry shifts.</p>
                             </div>
                         </div>
@@ -48,7 +48,7 @@ export default function AboutMission() {
 
                     {/* RIGHT VISUAL CARD */}
                     <div className="relative">
-                        <div className="relative rounded-3xl overflow-hidden border border-gray-200 shadow-xl h-[380px] flex items-center justify-center bg-gradient-to-br from-[#236A9E] via-[#3B6FE0] to-[#6D28D9]">
+                        <div className="relative rounded-3xl overflow-hidden border border-gray-200 shadow-xl h-[380px] flex items-center justify-center bg-gradient-to-br from-[#3A76AA] via-[#1E3F5E] to-[#15304A]">
                             {/* glow effect */}
                             <div className="absolute w-40 h-40 bg-white/20 blur-3xl rounded-full top-10 left-10"></div>
 

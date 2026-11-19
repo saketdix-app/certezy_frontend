@@ -7,17 +7,17 @@
  * Yeh default nprogress.css ko override karta hai
  */
 
-/* Bar color — brand #3282B8 */
+/* Bar color — brand #3A76AA */
 #nprogress .bar {
-    background: #3282b8 !important;
+    background: #3a76aa !important;
     height: 2.5px !important;
 }
 
 /* Glow effect */
 #nprogress .peg {
     box-shadow:
-        0 0 10px #3282b8,
-        0 0 5px #3282b8 !important;
+        0 0 10px #3a76aa,
+        0 0 5px #3a76aa !important;
 }
 
 /* Spinner hide — already disabled in config but just in case */

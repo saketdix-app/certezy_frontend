@@ -75,7 +75,7 @@ export default function FeaturedCourses() {
     };
 
     return (
-        <section className="bg-[#0B1120] py-24 text-white">
+        <section className="bg-[#15304A] py-24 text-white">
             <style>{customStyles}</style>
 
             <div className="max-w-[1400px] mx-auto px-6">
@@ -100,15 +100,15 @@ export default function FeaturedCourses() {
                             {categories.map((category, index) => (
                                 <div
                                     key={category.id}
-                                    className={`bg-[#0F172A] border border-white/10 rounded-2xl overflow-hidden tech-card-hover flex flex-col w-[320px] flex-shrink-0 ${
-                                        selectedCategory === category.id ? "ring-2 ring-[#3282B8]" : ""
+                                    className={`bg-[#1A375C] border border-white/10 rounded-2xl overflow-hidden tech-card-hover flex flex-col w-[320px] flex-shrink-0 ${
+                                        selectedCategory === category.id ? "ring-2 ring-[#3A76AA]" : ""
                                     }`}
                                     style={{
                                         animation: `slideInFromLeft .6s ease ${index * 0.1}s both`,
                                     }}
                                     onClick={() => setSelectedCategory(category.id)}
                                 >
-                                    <div className="h-[160px] bg-gradient-to-br from-[#3282B8] to-[#1A5F8A] flex items-center justify-center">
+                                    <div className="h-[160px] bg-gradient-to-br from-[#3A76AA] to-[#1E3F5E] flex items-center justify-center">
                                         <span className="text-ui font-bold">{category.courses} Courses</span>
                                     </div>
 
@@ -133,7 +133,7 @@ export default function FeaturedCourses() {
                 <div className="text-center mt-14">
                     <Link
                         to="/courses"
-                        className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/15 hover:border-[#3282B8] transition"
+                        className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/15 hover:border-[#3A76AA] transition"
                     >
                         View All Courses
                         <ArrowRight size={16} />

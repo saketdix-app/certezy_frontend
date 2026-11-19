@@ -34,7 +34,7 @@ const CSS = `
   .ts-f4 { animation: tsFadeUp .55s .32s ease both; }
 
   .ts-card {
-    background: #0F172A;
+    background: #1A375C;
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 20px;
     padding: 32px 28px;
@@ -150,8 +150,8 @@ const CERTIFICATIONS = [
 ];
 
 const AVATAR_COLORS = [
-    "linear-gradient(135deg, #3282B8, #1A5F8A)",
-    "linear-gradient(135deg, #6C3BD5, #4C1D95)",
+    "linear-gradient(135deg, #3A76AA, #1E3F5E)",
+    "linear-gradient(135deg, #F2A33A, #C97A16)",
     "linear-gradient(135deg, #0891B2, #0E7490)",
     "linear-gradient(135deg, #059669, #065F46)",
     "linear-gradient(135deg, #D97706, #92400E)",
@@ -202,7 +202,7 @@ export default function Testimonials() {
                 className="ts-section"
                 aria-label="Student success stories and testimonials"
                 style={{
-                    background: "#0B1120",
+                    background: "#15304A",
                     borderTop: "1px solid rgba(255,255,255,0.05)",
                     padding: "90px 0 100px",
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -257,7 +257,7 @@ export default function Testimonials() {
                             Hear from{" "}
                             <span
                                 style={{
-                                    background: "linear-gradient(90deg, #3282B8 0%, #6C3BD5 100%)",
+                                    background: "linear-gradient(90deg, #3A76AA 0%, #F2A33A 100%)",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
@@ -288,7 +288,7 @@ export default function Testimonials() {
                                     <span
                                         key={`${name}-${i}`}
                                         aria-hidden={i >= CERTIFICATIONS.length ? true : undefined}
-                                        className="px-10 text-[#94A3B8] font-bold text-h3 lg:text-h2 hover:text-[#3282B8] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
+                                        className="px-10 text-[#94A3B8] font-bold text-h3 lg:text-h2 hover:text-[#3A76AA] transition-colors duration-200 cursor-default select-none whitespace-nowrap"
                                     >
                                         {name}
                                     </span>
@@ -307,7 +307,7 @@ export default function Testimonials() {
                                         style={{
                                             fontSize: "30px",
                                             fontWeight: 900,
-                                            color: "#4E9CD3",
+                                            color: "#5B91C0",
                                             letterSpacing: "-0.02em",
                                             fontFamily: "'Plus Jakarta Sans', sans-serif",
                                         }}
@@ -368,7 +368,7 @@ export default function Testimonials() {
                                             style={{
                                                 fontSize: "52px",
                                                 lineHeight: 1,
-                                                color: "#4E9CD3",
+                                                color: "#5B91C0",
                                                 fontWeight: 900,
                                                 marginBottom: "8px",
                                                 fontFamily: "Georgia, serif",

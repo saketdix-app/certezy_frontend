@@ -34,7 +34,7 @@ const CSS = `
     width: 100%;
     padding: 17px 32px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #236A9E 0%, #6C3BD5 100%);
+    background: linear-gradient(135deg, #3A76AA 0%, #1E3F5E 55%, #15304A 100%);
     color: #fff;
     font-size: 16px;
     font-weight: 700;
@@ -122,7 +122,7 @@ export default function CTABanner() {
                 className="cta-section"
                 aria-label="Start your IT career with CERTEZY"
                 style={{
-                    background: "#0B1120",
+                    background: "#15304A",
                     borderTop: "1px solid rgba(255,255,255,0.05)",
                     padding: "80px 0 90px",
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -134,7 +134,7 @@ export default function CTABanner() {
                         style={{
                             borderRadius: "28px",
                             padding: "64px 60px",
-                            background: "linear-gradient(135deg, #0F172A 0%, #0D1F35 100%)",
+                            background: "linear-gradient(135deg, #1A375C 0%, #15304A 100%)",
                             border: "1px solid rgba(50,130,184,0.15)",
                             boxShadow: "0 0 80px rgba(50,130,184,0.07), inset 0 0 60px rgba(50,130,184,0.04)",
                             position: "relative",
@@ -198,7 +198,7 @@ export default function CTABanner() {
                                     flexShrink: 0,
                                 }}
                             >
-                                <ShieldCheck size={17} color="#3282B8" aria-hidden="true" />
+                                <ShieldCheck size={17} color="#3A76AA" aria-hidden="true" />
                             </div>
                             <div>
                                 <div
@@ -229,7 +229,7 @@ export default function CTABanner() {
                                         fontWeight: 700,
                                         letterSpacing: "0.14em",
                                         textTransform: "uppercase",
-                                        color: "#4E9CD3",
+                                        color: "#5B91C0",
                                         marginBottom: "16px",
                                     }}
                                 >
@@ -277,7 +277,7 @@ export default function CTABanner() {
                                 >
                                     {TRUST_PILLS.map(({ icon: Icon, label }) => (
                                         <span key={label} className="cta-pill">
-                                            <Icon size={13} color="#3282B8" aria-hidden="true" />
+                                            <Icon size={13} color="#3A76AA" aria-hidden="true" />
                                             {label}
                                         </span>
                                     ))}

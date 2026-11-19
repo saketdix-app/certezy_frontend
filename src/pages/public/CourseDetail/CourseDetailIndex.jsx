@@ -182,7 +182,7 @@ export default function CourseDetailIndex() {
             <div
                 ref={heroRef}
                 style={{
-                    background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                    background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
                     position: "relative",
                     overflow: "hidden",
                 }}
@@ -362,7 +362,7 @@ export default function CourseDetailIndex() {
                                 type="button"
                                 onClick={isEnrolled ? () => navigate(`/student/course/${course.id}/learn`) : handleEnroll}
                                 disabled={enrolling}
-                                className="inline-flex items-center gap-2 rounded-[10px] bg-[#236A9E] px-5 py-3 text-body font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
+                                className="inline-flex items-center gap-2 rounded-[10px] bg-[#2F6496] px-5 py-3 text-body font-bold text-white hover:bg-[#275382] disabled:opacity-60"
                             >
                                 {isEnrolled ? "Go to course" : getPricing(course).isFree ? "Enroll for free" : "Enroll now"}
                             </button>
@@ -430,7 +430,7 @@ export default function CourseDetailIndex() {
                                     <button
                                         type="button"
                                         onClick={() => setEnquiry("syllabus")}
-                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-small font-semibold text-[#236A9E] hover:bg-slate-50"
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-small font-semibold text-[#2F6496] hover:bg-slate-50"
                                     >
                                         <Download size={14} aria-hidden="true" /> Download the syllabus
                                     </button>
@@ -541,7 +541,7 @@ export default function CourseDetailIndex() {
                                         <div
                                             className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 text-white font-bold text-h3"
                                             style={{
-                                                background: "linear-gradient(135deg, #3282B8, #0a1628)",
+                                                background: "linear-gradient(135deg, #3A76AA, #15304a)",
                                             }}
                                         >
                                             {course.instructor_name.charAt(0).toUpperCase()}
@@ -566,7 +566,7 @@ export default function CourseDetailIndex() {
                                             <p
                                                 style={{
                                                     fontSize: "13.5px",
-                                                    color: "#236A9E",
+                                                    color: "#2F6496",
                                                     fontWeight: 500,
                                                     marginBottom: "10px",
                                                 }}
@@ -599,7 +599,7 @@ export default function CourseDetailIndex() {
                                                 )}
                                                 {course.instructor_students && (
                                                     <div className="flex items-center gap-1.5">
-                                                        <Users size={13} style={{ color: "#3282B8" }} />
+                                                        <Users size={13} style={{ color: "#3A76AA" }} />
                                                         <span
                                                             style={{
                                                                 fontSize: "12.5px",
@@ -616,7 +616,7 @@ export default function CourseDetailIndex() {
                                                     <div className="flex items-center gap-1.5">
                                                         <GraduationCap
                                                             size={13}
-                                                            style={{ color: "#3282B8" }}
+                                                            style={{ color: "#3A76AA" }}
                                                         />
                                                         <span
                                                             style={{
@@ -696,7 +696,7 @@ export default function CourseDetailIndex() {
 
                         {/* Still deciding? Another way to raise a hand */}
                         {!isEnrolled && (
-                            <div className="flex flex-col gap-4 rounded-2xl bg-[#0a1628] p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex flex-col gap-4 rounded-2xl bg-[#15304a] p-6 text-white sm:flex-row sm:items-center sm:justify-between">
                                 <div className="min-w-0">
                                     <h2 className="text-h3 font-bold">Still have questions?</h2>
                                     <p className="mt-1 text-ui text-white/70">
@@ -707,7 +707,7 @@ export default function CourseDetailIndex() {
                                     <button
                                         type="button"
                                         onClick={() => setEnquiry("advisor")}
-                                        className="inline-flex items-center gap-2 rounded-[10px] bg-white px-4 py-2.5 text-ui font-bold text-[#0a1628] hover:bg-slate-100"
+                                        className="inline-flex items-center gap-2 rounded-[10px] bg-white px-4 py-2.5 text-ui font-bold text-[#15304a] hover:bg-slate-100"
                                     >
                                         <Phone size={15} aria-hidden="true" /> Talk to an advisor
                                     </button>
@@ -759,7 +759,7 @@ function StickyCourseBar({ visible, course, highlight, isEnrolled, enrolling, on
     return (
         <div
             aria-hidden={!visible}
-            className={`hidden lg:block fixed left-0 right-0 top-[114px] z-30 bg-[#0a1628] text-white shadow-lg transition-all duration-200 ${
+            className={`hidden lg:block fixed left-0 right-0 top-[114px] z-30 bg-[#15304a] text-white shadow-lg transition-all duration-200 ${
                 visible ? "translate-y-0 opacity-100" : "-translate-y-3 opacity-0 pointer-events-none"
             }`}
         >
@@ -821,7 +821,7 @@ function CourseDetailSkeleton() {
         <div className="min-h-screen bg-[#F1F5F9]">
             <div
                 className="h-[260px] animate-pulse"
-                style={{ background: "linear-gradient(135deg, #0a1628, #162d5a)" }}
+                style={{ background: "linear-gradient(135deg, #15304a, #1e3f5e)" }}
             />
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">

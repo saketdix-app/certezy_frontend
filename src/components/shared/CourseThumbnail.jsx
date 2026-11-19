@@ -25,7 +25,7 @@ const CATEGORY_GRADIENTS = {
     "it-service-management": ["#EC4899", "#9D174D"],
     "software-development": ["#14B8A6", "#134E4A"],
 };
-const DEFAULT_GRADIENT = ["#3282B8", "#0a1628"];
+const DEFAULT_GRADIENT = ["#3A76AA", "#15304a"];
 
 export default function CourseThumbnail({
     src,

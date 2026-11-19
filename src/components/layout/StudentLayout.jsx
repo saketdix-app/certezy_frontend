@@ -91,7 +91,7 @@ export default function StudentLayout() {
                                     className={cn(
                                         "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline group relative",
                                         active
-                                            ? "bg-[#EBF4FF] text-[#3282B8]"
+                                            ? "bg-[#EBF4FF] text-[#3A76AA]"
                                             : "text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
                                     )}
                                 >
@@ -104,8 +104,8 @@ export default function StudentLayout() {
                                         className={cn(
                                             "shrink-0 transition-colors",
                                             active
-                                                ? "text-[#3282B8]"
-                                                : "text-[#94A3B8] group-hover:text-[#3282B8]"
+                                                ? "text-[#3A76AA]"
+                                                : "text-[#94A3B8] group-hover:text-[#3A76AA]"
                                         )}
                                     />
                                     <span
@@ -125,7 +125,7 @@ export default function StudentLayout() {
                     {isAdminRole(user?.role) && (
                         <Link
                             to="/admin/dashboard"
-                            className="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] text-[#3282B8] no-underline hover:bg-[#DBEAFE] transition-colors"
+                            className="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] text-[#3A76AA] no-underline hover:bg-[#DBEAFE] transition-colors"
                         >
                             <ShieldCheck size={17} className="shrink-0" />
                             <span style={{ fontSize: "13.5px", fontWeight: 700 }}>Admin Panel</span>
@@ -140,7 +140,7 @@ export default function StudentLayout() {
                         <div className="flex items-center gap-3 px-1">
                             <div
                                 className="w-9 h-9 rounded-full flex items-center justify-center text-white text-ui font-bold shrink-0"
-                                style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
+                                style={{ background: "linear-gradient(135deg, #3A76AA, #15304a)" }}
                             >
                                 {user.name?.charAt(0).toUpperCase()}
                             </div>

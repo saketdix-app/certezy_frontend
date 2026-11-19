@@ -29,8 +29,8 @@ export const printSyllabus = (courseTitle, sections) => {
         .join("");
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(courseTitle)} — Syllabus | CERTEZY</title>
 <style>body{font-family:"Plus Jakarta Sans",Arial,sans-serif;color:#0f172a;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.55}
-header{border-bottom:2px solid #236a9e;padding-bottom:12px;margin-bottom:20px}p.brand{color:#236a9e;font-weight:700;letter-spacing:.06em;font-size:12px;margin:0}
-h1{font-size:24px;margin:6px 0 0}h2{font-size:15px;color:#1b5582;margin:20px 0 6px}ol{margin:0;padding-left:22px;color:#334155;font-size:13.5px}
+header{border-bottom:2px solid #2f6496;padding-bottom:12px;margin-bottom:20px}p.brand{color:#2f6496;font-weight:700;letter-spacing:.06em;font-size:12px;margin:0}
+h1{font-size:24px;margin:6px 0 0}h2{font-size:15px;color:#275382;margin:20px 0 6px}ol{margin:0;padding-left:22px;color:#334155;font-size:13.5px}
 footer{margin-top:28px;font-size:12px;color:#5e6e85;border-top:1px solid #e2e8f0;padding-top:10px}</style></head>
 <body><header><p class="brand">CERTEZY · COURSE SYLLABUS</p><h1>${esc(courseTitle)}</h1></header>${body}
 <footer>CERTEZY E-LEARNING PVT LTD · certezy.com</footer><script>window.onload=function(){window.print()}</script></body></html>`);

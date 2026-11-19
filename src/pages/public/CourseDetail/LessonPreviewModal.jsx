@@ -55,25 +55,25 @@ function LessonBody({ lesson }) {
             );
         case "pdf":
             return (
-                <div className="w-full bg-[#0a1628]" style={{ height: "70vh" }}>
+                <div className="w-full bg-[#15304a]" style={{ height: "70vh" }}>
                     <PdfLesson lesson={lesson} />
                 </div>
             );
         case "embed":
             return (
-                <div className="w-full bg-[#0a1628]">
+                <div className="w-full bg-[#15304a]">
                     <EmbedLesson lesson={lesson} />
                 </div>
             );
         case "link":
             return (
-                <div className="w-full bg-[#0a1628]">
+                <div className="w-full bg-[#15304a]">
                     <LinkLesson lesson={lesson} />
                 </div>
             );
         case "audio":
             return (
-                <div className="w-full bg-[#0a1628]">
+                <div className="w-full bg-[#15304a]">
                     <AudioLesson lesson={lesson} />
                 </div>
             );

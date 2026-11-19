@@ -419,7 +419,7 @@ export default function CoursePlayerPage() {
 
     if (error)
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#0a1628]">
+            <div className="min-h-screen flex items-center justify-center bg-[#15304a]">
                 <div className="text-center px-6">
                     <AlertCircle size={40} className="text-red-400 mx-auto mb-4" />
                     <p className="text-white font-semibold mb-3">{error}</p>
@@ -575,7 +575,7 @@ export default function CoursePlayerPage() {
                                                     ? ""
                                                     : cn(
                                                           "border border-slate-200 shadow-sm",
-                                                          currentLesson.type === "video" ? "bg-black" : "bg-[#0a1628]"
+                                                          currentLesson.type === "video" ? "bg-black" : "bg-[#15304a]"
                                                       )
                                             )}
                                             style={
@@ -739,7 +739,7 @@ function TopBar({
         <div
             className="h-[60px] flex items-center px-4 gap-4 shrink-0"
             style={{
-                background: "#0a1628",
+                background: "#15304a",
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
             }}
         >
@@ -751,7 +751,7 @@ function TopBar({
                 className="flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors"
                 style={{
                     background: sidebarOpen ? "rgba(127,186,227,0.18)" : "rgba(255,255,255,0.06)",
-                    color: sidebarOpen ? "#B0D5EF" : "rgba(255,255,255,0.7)",
+                    color: sidebarOpen ? "#C9DCEC" : "rgba(255,255,255,0.7)",
                     fontSize: "12.5px",
                     fontWeight: 600,
                 }}
@@ -785,7 +785,7 @@ function TopBar({
                         className="h-full rounded-full transition-all duration-500"
                         style={{
                             width: `${progressPct}%`,
-                            background: "linear-gradient(90deg, #3282B8, #7FBAE3)",
+                            background: "linear-gradient(90deg, #3A76AA, #86B0D4)",
                         }}
                     />
                 </div>
@@ -1062,7 +1062,7 @@ function CourseSidebar({
 // ─── Not Enrolled ─────────────────────────────────────────────────────────────
 function NotEnrolledState({ navigate }) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0a1628]">
+        <div className="min-h-screen flex items-center justify-center bg-[#15304a]">
             <div className="text-center px-6">
                 <Lock size={48} style={{ color: "rgba(255,255,255,0.2)" }} className="mx-auto mb-4" />
                 <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", marginBottom: "8px" }}>
@@ -1075,7 +1075,7 @@ function NotEnrolledState({ navigate }) {
                     <button
                         onClick={() => navigate("/courses")}
                         className="px-5 py-2.5 rounded-xl text-white font-bold text-ui"
-                        style={{ background: "#3282B8" }}
+                        style={{ background: "#3A76AA" }}
                     >
                         View Course
                     </button>
@@ -1097,7 +1097,7 @@ function PlayerSkeleton() {
     return (
         <div className="h-[100vh] supports-[height:100dvh]:h-dvh flex flex-col bg-[#EEF2F7] animate-pulse">
             <div
-                className="h-[60px] bg-[#0a1628]"
+                className="h-[60px] bg-[#15304a]"
                 style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
             />
             <div className="flex flex-1 overflow-hidden">

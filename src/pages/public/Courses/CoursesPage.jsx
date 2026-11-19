@@ -112,7 +112,7 @@ export default function CoursesPage() {
             ══════════════════════════════════════════════ */}
             <div
                 style={{
-                    background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                    background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
                     position: "relative",
                     overflow: "hidden",
                 }}
@@ -243,7 +243,7 @@ export default function CoursesPage() {
                                         style={{
                                             height: "40px",
                                             padding: "0 22px",
-                                            background: "#236A9E",
+                                            background: "#2F6496",
                                             color: "#fff",
                                             border: "none",
                                             borderRadius: "10px",
@@ -253,8 +253,8 @@ export default function CoursesPage() {
                                             transition: "background 0.15s",
                                             whiteSpace: "nowrap",
                                         }}
-                                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                                        onMouseEnter={(e) => (e.currentTarget.style.background = "#2f6496")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                                     >
                                         Search
                                     </button>

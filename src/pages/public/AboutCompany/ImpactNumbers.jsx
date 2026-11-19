@@ -10,7 +10,7 @@ export default function ImpactNumbers() {
     return (
         <section
             aria-label="Our impact in numbers"
-            className="bg-[#0B1120] border-t border-white/5 py-20"
+            className="bg-[#15304A] border-t border-white/5 py-20"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
             <div className="max-w-[1200px] mx-auto px-6">

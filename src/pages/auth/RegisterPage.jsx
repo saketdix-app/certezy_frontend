@@ -164,7 +164,7 @@ export default function RegisterPage() {
                         flexDirection: "column",
                         justifyContent: "space-between",
                         padding: "48px 44px",
-                        background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                        background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
                         position: "relative",
                         overflow: "hidden",
                     }}
@@ -475,7 +475,7 @@ export default function RegisterPage() {
                             Already have an account?{" "}
                             <Link
                                 to={`/login${params.toString() ? `?${params.toString()}` : ""}`}
-                                style={{ fontWeight: 700, color: "#236A9E", textDecoration: "none" }}
+                                style={{ fontWeight: 700, color: "#2F6496", textDecoration: "none" }}
                             >
                                 Sign in
                             </Link>
@@ -491,11 +491,11 @@ export default function RegisterPage() {
                             }}
                         >
                             By creating an account, you agree to our{" "}
-                            <Link to={ROUTES.TERMS} style={{ color: "#236A9E", textDecoration: "none" }}>
+                            <Link to={ROUTES.TERMS} style={{ color: "#2F6496", textDecoration: "none" }}>
                                 Terms
                             </Link>{" "}
                             and{" "}
-                            <Link to={ROUTES.PRIVACY} style={{ color: "#236A9E", textDecoration: "none" }}>
+                            <Link to={ROUTES.PRIVACY} style={{ color: "#2F6496", textDecoration: "none" }}>
                                 Privacy Policy
                             </Link>
                         </p>
@@ -583,7 +583,7 @@ function SubmitBtn({ loading, label, loadingLabel }) {
                 height: "46px",
                 borderRadius: "10px",
                 border: "none",
-                background: loading ? "#94A3B8" : "#236A9E",
+                background: loading ? "#94A3B8" : "#2F6496",
                 color: "#fff",
                 fontSize: "13.5px",
                 fontWeight: 700,
@@ -596,10 +596,10 @@ function SubmitBtn({ loading, label, loadingLabel }) {
                 boxShadow: loading ? "none" : "0 2px 8px rgba(50,130,184,0.30)",
             }}
             onMouseEnter={(e) => {
-                if (!loading) e.currentTarget.style.background = "#2a6fa0";
+                if (!loading) e.currentTarget.style.background = "#2f6496";
             }}
             onMouseLeave={(e) => {
-                if (!loading) e.currentTarget.style.background = "#236A9E";
+                if (!loading) e.currentTarget.style.background = "#2F6496";
             }}
         >
             {loading ? (
@@ -649,7 +649,7 @@ const inputSt = (hasError) => ({
 
 const onFocus = (e, hasError) => {
     if (!hasError) {
-        e.target.style.borderColor = "#236A9E";
+        e.target.style.borderColor = "#2F6496";
         e.target.style.background = "#fff";
         e.target.style.boxShadow = "0 0 0 3px rgba(50,130,184,0.10)";
     }

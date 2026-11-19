@@ -10,11 +10,11 @@ import { useHeroCatalog } from "./useHeroCatalog";
 ───────────────────────────────────────────────────────────────────────────── */
 const STYLES = `
   :root {
-    --c-bg:       #0B1120;
-    --c-blue:     #3282B8;
-    --c-blue-d:   #1A5F8A;
+    --c-bg:       linear-gradient(135deg, #3A76AA 0%, #1E3F5E 48%, #15304A 100%);
+    --c-blue:     #3A76AA;
+    --c-blue-d:   #1E3F5E;
     --c-text:     #F1F5F9;
-    --c-muted:    #94A3B8;
+    --c-muted:    #C9DCEC;
   }
 
   /* GPU-only — no layout recalc */
@@ -123,7 +123,7 @@ export default function HeroSection() {
                         width: "520px",
                         height: "520px",
                         borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 68%)",
+                        background: "radial-gradient(circle, rgba(201,220,236,0.14) 0%, transparent 68%)",
                         pointerEvents: "none",
                     }}
                 />
@@ -146,11 +146,11 @@ export default function HeroSection() {
                                         gap: "8px",
                                         padding: "7px 16px",
                                         borderRadius: "100px",
-                                        border: "1px solid rgba(59,130,246,0.35)",
-                                        background: "rgba(59,130,246,0.08)",
+                                        border: "1px solid rgba(255,255,255,0.35)",
+                                        background: "rgba(255,255,255,0.08)",
                                         fontSize: "12.5px",
                                         fontWeight: 700,
-                                        color: "#93C5FD",
+                                        color: "#EAF2F9",
                                         letterSpacing: "0.02em",
                                         lineHeight: 1.45,
                                         maxWidth: "100%",
@@ -158,7 +158,7 @@ export default function HeroSection() {
                                 >
                                     <ShieldCheck
                                         size={14}
-                                        color="#3282B8"
+                                        color="#3A76AA"
                                         aria-hidden="true"
                                         style={{ flexShrink: 0 }}
                                     />
@@ -182,10 +182,7 @@ export default function HeroSection() {
                                 with{" "}
                                 <span
                                     style={{
-                                        background: "linear-gradient(90deg, #3282B8 0%, #38BDF8 100%)",
-                                        WebkitBackgroundClip: "text",
-                                        WebkitTextFillColor: "transparent",
-                                        backgroundClip: "text",
+                                        color: "#FFD08A",
                                     }}
                                 >
                                     CERTEZY
@@ -228,7 +225,7 @@ export default function HeroSection() {
                                     >
                                         <CheckCircle2
                                             size={15}
-                                            color="#3282B8"
+                                            color="#3A76AA"
                                             aria-hidden="true"
                                             style={{ flexShrink: 0 }}
                                         />
@@ -260,7 +257,7 @@ export default function HeroSection() {
                                         gap: "8px",
                                         padding: "14px 26px",
                                         borderRadius: "12px",
-                                        background: "linear-gradient(135deg, #3282B8 0%, #1A5F8A 100%)",
+                                        background: "linear-gradient(135deg, #3A76AA 0%, #1E3F5E 100%)",
                                         color: "#fff",
                                         fontSize: "15px",
                                         fontWeight: 700,
@@ -316,7 +313,7 @@ export default function HeroSection() {
                                                     fontSize: "22px",
                                                     fontWeight: 900,
                                                     lineHeight: 1,
-                                                    color: blue ? "#3282B8" : "var(--c-text)",
+                                                    color: blue ? "#3A76AA" : "var(--c-text)",
                                                     letterSpacing: "-0.02em",
                                                 }}
                                             >

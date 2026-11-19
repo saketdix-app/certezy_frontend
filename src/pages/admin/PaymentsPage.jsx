@@ -204,8 +204,8 @@ export default function PaymentsPage() {
                                       label: "Total Sales",
                                       value: stats.total_sales,
                                       icon: CheckCircle,
-                                      bg: "#EEF6FC",
-                                      color: "#236A9E",
+                                      bg: "#EAF2F9",
+                                      color: "#2F6496",
                                   },
                               ]
                             : []),
@@ -213,8 +213,8 @@ export default function PaymentsPage() {
                             label: "Successful",
                             value: stats.successCount,
                             icon: CheckCircle,
-                            bg: "#EEF6FC",
-                            color: "#236A9E",
+                            bg: "#EAF2F9",
+                            color: "#2F6496",
                         },
                         {
                             label: "Pending",

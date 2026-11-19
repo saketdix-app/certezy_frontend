@@ -7,7 +7,7 @@ export default function SkillsSection() {
                 <div className="grid lg:grid-cols-2 gap-14 items-center">
                     {/* LEFT SIDE - CODE VISUAL */}
                     <div className="relative">
-                        <div className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 shadow-xl">
+                        <div className="bg-[#1A375C] border border-white/10 rounded-2xl p-6 shadow-xl">
                             {/* fake code lines */}
                             <div className="space-y-3 font-mono text-ui">
                                 <p className="text-blue-400">const cloudEngineer = () =&gt; {"{"}</p>
@@ -25,7 +25,7 @@ export default function SkillsSection() {
                         </div>
 
                         {/* floating stats card */}
-                        <div className="absolute -bottom-6 left-6 bg-[#0f172a] border border-white/10 px-6 py-4 rounded-xl flex items-center gap-4 shadow-xl">
+                        <div className="absolute -bottom-6 left-6 bg-[#1A375C] border border-white/10 px-6 py-4 rounded-xl flex items-center gap-4 shadow-xl">
                             <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
                                 🎓
                             </div>
@@ -66,7 +66,7 @@ export default function SkillsSection() {
                         </div>
 
                         <div className="flex flex-wrap gap-4">
-                            <button className="bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3 rounded-lg font-semibold">
+                            <button className="bg-gradient-to-r from-[#3A76AA] to-[#1E3F5E] px-7 py-3 rounded-lg font-semibold">
                                 Start Your Journey
                             </button>
 

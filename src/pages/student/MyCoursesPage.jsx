@@ -133,7 +133,7 @@ export default function MyCoursesPage() {
                                     className="px-1.5 py-0.5 rounded-md text-label font-bold"
                                     style={{
                                         background: tab === key ? "#EBF4FF" : "rgba(0,0,0,0.06)",
-                                        color: tab === key ? "#3282B8" : "#94A3B8",
+                                        color: tab === key ? "#3A76AA" : "#94A3B8",
                                     }}
                                 >
                                     {counts[key]}
@@ -217,7 +217,7 @@ function CourseCard({ enrollment, onOpen }) {
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
                     <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg">
-                        <Play size={16} className="text-[#3282B8] fill-[#3282B8] ml-0.5" />
+                        <Play size={16} className="text-[#3A76AA] fill-[#3A76AA] ml-0.5" />
                     </div>
                 </div>
 
@@ -303,7 +303,7 @@ function CourseCard({ enrollment, onOpen }) {
                             style={{
                                 fontSize: "12.5px",
                                 fontWeight: 700,
-                                color: isCompleted ? "#10B981" : "#3282B8",
+                                color: isCompleted ? "#10B981" : "#3A76AA",
                             }}
                         >
                             {progress}%
@@ -316,7 +316,7 @@ function CourseCard({ enrollment, onOpen }) {
                                 width: `${progress}%`,
                                 background: isCompleted
                                     ? "#10B981"
-                                    : "linear-gradient(90deg, #3282B8, #60A5FA)",
+                                    : "linear-gradient(90deg, #3A76AA, #60A5FA)",
                                 transition: "width 0.6s ease",
                             }}
                         />
@@ -375,7 +375,7 @@ function EmptyState({ tab, search, onBrowse }) {
                 <button
                     onClick={onBrowse}
                     className="px-5 py-2.5 rounded-xl text-white"
-                    style={{ background: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
+                    style={{ background: "#3A76AA", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     Browse Courses
                 </button>

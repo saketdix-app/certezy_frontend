@@ -64,7 +64,7 @@ export default function OrderSummary({ course, paymentAmount, paymentCurrency, c
                 <div className="space-y-2">
                     {meta.map(({ icon: Icon, label }) => (
                         <div key={label} className="flex items-center gap-2.5">
-                            <Icon size={13} className="text-[#3282B8] shrink-0" />
+                            <Icon size={13} className="text-[#3A76AA] shrink-0" />
                             <span className="text-small text-slate-500">{label}</span>
                         </div>
                     ))}

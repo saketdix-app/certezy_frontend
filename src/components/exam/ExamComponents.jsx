@@ -38,7 +38,7 @@ export function ExamTimer({ duration, onTimeUp, isActive }) {
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
                 isWarning
                     ? "bg-red-50 text-red-600 border border-red-200"
-                    : "bg-[#EBF4FB] text-[#3282B8] border border-[#BFDBFE]"
+                    : "bg-[#EAF2F9] text-[#3A76AA] border border-[#BFDBFE]"
             }`}
         >
             <Clock size={16} />
@@ -58,7 +58,7 @@ export function QuestionNavigator({
     return (
         <div className="w-80 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#0F2545] to-[#1E3A5F] text-white p-4">
+            <div className="bg-gradient-to-r from-[#183254] to-[#1E3F5E] text-white p-4">
                 <h3 className="font-semibold text-h3">Question Navigator</h3>
                 <div className="flex items-center gap-4 mt-2 text-ui">
                     <div className="flex items-center gap-1">
@@ -90,7 +90,7 @@ export function QuestionNavigator({
                                 onClick={() => onQuestionSelect(index)}
                                 className={`relative w-12 h-12 rounded-lg font-semibold text-ui transition-all ${
                                     isCurrent
-                                        ? "bg-action text-white ring-2 ring-[#3282B8]/30"
+                                        ? "bg-action text-white ring-2 ring-[#3A76AA]/30"
                                         : isAnswered
                                           ? "bg-green-100 text-green-700 hover:bg-green-200"
                                           : isFlagged

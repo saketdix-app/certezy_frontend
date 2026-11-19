@@ -75,7 +75,7 @@ function FeatureCard({ feature }) {
     const Icon = feature.icon;
 
     return (
-        <div className="flex flex-col bg-[#0f172a] border border-white/10 rounded-2xl p-8 transition duration-300 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-xl">
+        <div className="flex flex-col bg-[#1A375C] border border-white/10 rounded-2xl p-8 transition duration-300 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-xl">
             <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-500/10 mb-6">
                 <Icon size={22} className="text-blue-400" />
             </div>

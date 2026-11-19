@@ -24,7 +24,7 @@ const PER_PAGE = 10;
 
 const STATUS_COLORS = {
     new: { bg: "#FFFBEB", color: "#F59E0B", icon: Clock },
-    read: { bg: "#EEF6FC", color: "#236A9E", icon: MessageSquare },
+    read: { bg: "#EAF2F9", color: "#2F6496", icon: MessageSquare },
     resolved: { bg: "#F0FDF4", color: "#16A34A", icon: CheckCircle },
 };
 
@@ -246,16 +246,16 @@ export default function ContactPage() {
                             label: "Total Messages",
                             value: stats.total,
                             icon: MessageSquare,
-                            bg: "#EEF6FC",
-                            color: "#236A9E",
+                            bg: "#EAF2F9",
+                            color: "#2F6496",
                         },
                         { label: "New", value: stats.new, icon: Clock, bg: "#FFFBEB", color: "#F59E0B" },
                         {
                             label: "Read",
                             value: stats.read,
                             icon: MessageSquare,
-                            bg: "#EEF6FC",
-                            color: "#236A9E",
+                            bg: "#EAF2F9",
+                            color: "#2F6496",
                         },
                         {
                             label: "Resolved",
