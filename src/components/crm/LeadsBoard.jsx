@@ -2,9 +2,22 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/features/auth/authSlice";
-import { ExamStatusBadge } from "./LeadExamSection";
+import { ExamStatusBadge, PaymentBadge } from "./LeadExamSection";
+import courseService from "@/services/courseService";
 import toast from "react-hot-toast";
-import { CalendarClock, Columns3, LayoutGrid, List, Loader2, Plus, Search, Shuffle } from "lucide-react";
+import {
+    AlertTriangle,
+    CalendarClock,
+    Columns3,
+    LayoutGrid,
+    List,
+    Loader2,
+    Plus,
+    Search,
+    Shuffle,
+    SlidersHorizontal,
+    X,
+} from "lucide-react";
 
 import crmService from "@/services/crmService";
 import { cn } from "@/lib/utils";
@@ -12,28 +25,64 @@ import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
-import { EXAM_RESULT_LABEL, EXAM_STATUS, SOURCES, SOURCE_LABEL, STAGES, ageOf, fmtMoney, apiMessage, fmtDateTime, formLabel, inputCls, isOverdue, maskPhone } from "@/lib/crm";
+import {
+    EXAM_RESULT_LABEL,
+    EXAM_STATUS,
+    PAYMENT_STATUS,
+    SOURCES,
+    SOURCE_LABEL,
+    STAGES,
+    WORKFLOW_STAGES,
+    ageOf,
+    fmtDate,
+    fmtMoney,
+    apiMessage,
+    fmtDateTime,
+    formLabel,
+    inputCls,
+    isOverdue,
+    maskPhone,
+} from "@/lib/crm";
 
 // ── List view: columns people can show or hide (remembered per browser) ──
 const COLUMNS = [
     { key: "phone", label: "Phone", cell: (l) => maskPhone(l.phone) || "—" },
     { key: "email", label: "Email", cell: (l) => l.email || "—" },
     { key: "stage", label: "Status", cell: (l) => <StageBadge stage={l.stage} /> },
-    { key: "course", label: "Course", cell: (l) => l.course_title || <span className="text-slate-500">No course</span> },
+    {
+        key: "course",
+        label: "Course",
+        cell: (l) => l.course_title || <span className="text-slate-500">No course</span>,
+    },
     { key: "source", label: "Source", cell: (l) => SOURCE_LABEL[l.source] ?? l.source },
-    { key: "owner", label: "Owner", admin: true, cell: (l) => l.owner_name ?? <span className="text-amber-700">Unassigned</span> },
-    { key: "added", label: "Added", cell: (l) => <span title={fmtDateTime(l.created_at)}>{ageOf(l.created_at)} ago</span> },
+    {
+        key: "owner",
+        label: "Owner",
+        admin: true,
+        cell: (l) => l.owner_name ?? <span className="text-amber-700">Unassigned</span>,
+    },
+    {
+        key: "added",
+        label: "Added",
+        cell: (l) => <span title={fmtDateTime(l.created_at)}>{ageOf(l.created_at)} ago</span>,
+    },
     {
         key: "follow_up",
         label: "Next follow-up",
         cell: (l) =>
             l.next_follow_up_at ? (
-                <span className={cn(isOverdue(l.next_follow_up_at) && "font-semibold text-red-600")}>{fmtDateTime(l.next_follow_up_at)}</span>
+                <span className={cn(isOverdue(l.next_follow_up_at) && "font-semibold text-red-600")}>
+                    {fmtDateTime(l.next_follow_up_at)}
+                </span>
             ) : (
                 "—"
             ),
     },
-    { key: "stage_changed", label: "Status changed", cell: (l) => <span title={fmtDateTime(l.stage_changed_at)}>{ageOf(l.stage_changed_at)} ago</span> },
+    {
+        key: "stage_changed",
+        label: "Status changed",
+        cell: (l) => <span title={fmtDateTime(l.stage_changed_at)}>{ageOf(l.stage_changed_at)} ago</span>,
+    },
     {
         key: "enquiry",
         label: "Enquiry",
@@ -62,24 +111,174 @@ const COLUMNS = [
         cell: (l) => (
             <span className="inline-flex flex-col items-start gap-0.5">
                 <ExamStatusBadge status={l.exam_status} />
-                {l.exam_status === "scheduled" && l.exam_scheduled_at && (
+                {["scheduled", "rescheduled"].includes(l.exam_status) && l.exam_scheduled_at && (
                     <span className="text-label text-slate-500">{fmtDateTime(l.exam_scheduled_at)}</span>
                 )}
-                {l.exam_status === "completed" && l.exam_result && (
-                    <span className="text-label text-slate-500">{EXAM_RESULT_LABEL[l.exam_result]}</span>
+                {l.exam_done && (
+                    <span className="text-label font-semibold text-emerald-700">
+                        Done{l.exam_result && ` · ${EXAM_RESULT_LABEL[l.exam_result]}`}
+                    </span>
                 )}
             </span>
         ),
     },
-    { key: "exam_coordinator", label: "Exam coordinator", cell: (l) => l.exam_coordinator_name ?? <span className="text-slate-500">—</span> },
+    {
+        key: "exam_coordinator",
+        label: "Exam coordinator",
+        cell: (l) => l.exam_coordinator_name ?? <span className="text-slate-500">—</span>,
+    },
     {
         key: "ticket",
         label: "Ticket size",
-        cell: (l) => (l.ticket_size != null ? <span className="font-semibold tabular-nums">{fmtMoney(l.ticket_size, l.ticket_currency)}</span> : "—"),
+        cell: (l) =>
+            l.ticket_size != null ? (
+                <span className="font-semibold tabular-nums">
+                    {fmtMoney(l.ticket_size, l.ticket_currency)}
+                </span>
+            ) : (
+                "—"
+            ),
     },
-    { key: "enrolled", label: "Enrolled", cell: (l) => (l.enrolled ? <span className="font-semibold text-emerald-700">Yes</span> : "—") },
+    {
+        key: "enrolled",
+        label: "Enrolled",
+        cell: (l) => (l.enrolled ? <span className="font-semibold text-emerald-700">Yes</span> : "—"),
+    },
 ];
-const DEFAULT_COLUMNS = ["phone", "email", "stage", "course", "source", "enquiry", "exam", "ticket", "owner", "added", "follow_up"];
+// ── Exam workflow columns (Application / Exam Scheduled / Course Done tabs) ──
+const WORKFLOW_COLUMNS = [
+    {
+        key: "consultant",
+        label: "Consultant",
+        cell: (l) => l.owner_name ?? <span className="text-amber-700">Unassigned</span>,
+    },
+    {
+        key: "app_submitted",
+        label: "Application",
+        cell: (l) =>
+            l.application_submitted ? (
+                <span className="font-semibold text-emerald-700">
+                    Submitted
+                    {l.application_submitted_at && (
+                        <span className="font-normal text-slate-500">
+                            {" "}
+                            · {fmtDate(l.application_submitted_at)}
+                        </span>
+                    )}
+                </span>
+            ) : (
+                <span className="text-slate-500">Not submitted</span>
+            ),
+    },
+    {
+        key: "exam_date",
+        label: "Exam date & time",
+        cell: (l) =>
+            l.exam_scheduled_at ? (
+                <span className="font-semibold text-slate-800">{fmtDateTime(l.exam_scheduled_at)}</span>
+            ) : (
+                "—"
+            ),
+    },
+    { key: "exam_state", label: "Exam status", cell: (l) => <ExamStatusBadge status={l.exam_status} /> },
+    {
+        key: "exam_done",
+        label: "Exam done",
+        cell: (l) =>
+            l.exam_done ? (
+                <span className="font-semibold text-emerald-700">
+                    Yes
+                    {l.exam_completed_at && (
+                        <span className="font-normal text-slate-500"> · {fmtDate(l.exam_completed_at)}</span>
+                    )}
+                    {l.exam_result && (
+                        <span className="font-normal text-slate-500">
+                            {" "}
+                            · {EXAM_RESULT_LABEL[l.exam_result]}
+                        </span>
+                    )}
+                </span>
+            ) : (
+                <span className="text-slate-500">No</span>
+            ),
+    },
+    { key: "payment", label: "Payment", cell: (l) => <PaymentBadge status={l.payment_status ?? "due"} /> },
+    {
+        key: "payment_details",
+        label: "Payment details",
+        cell: (l) =>
+            l.payment_status === "done" ? (
+                <span>
+                    <b className="font-semibold text-slate-800">
+                        {l.payment_done_at ? fmtDate(l.payment_done_at) : "Paid"}
+                    </b>
+                    {l.payment_reference && <span className="text-slate-500"> · {l.payment_reference}</span>}
+                </span>
+            ) : (
+                "—"
+            ),
+    },
+];
+const ALL_COLUMNS = [...COLUMNS, ...WORKFLOW_COLUMNS];
+const TAB_COLUMNS = {
+    application: [
+        "phone",
+        "course",
+        "consultant",
+        "exam_coordinator",
+        "ticket",
+        "app_submitted",
+        "stage_changed",
+    ],
+    exam_scheduled: [
+        "course",
+        "consultant",
+        "exam_coordinator",
+        "exam_date",
+        "exam_state",
+        "exam_done",
+        "payment",
+        "ticket",
+    ],
+    course_done: ["course", "consultant", "exam_coordinator", "ticket", "exam_done", "payment_details"],
+};
+
+// Advanced filters (all optional); which ones show depends on the tab
+const EMPTY_ADV = {
+    owner_id: "",
+    exam_coordinator_id: "",
+    course_id: "",
+    currency: "",
+    ticket_min: "",
+    ticket_max: "",
+    app_submitted: "",
+    app_from: "",
+    app_to: "",
+    exam: "",
+    exam_done: "",
+    exam_from: "",
+    exam_to: "",
+    payment: "",
+    paid_from: "",
+    paid_to: "",
+    alert: "",
+    from: "",
+    to: "",
+};
+
+const DEFAULT_COLUMNS = [
+    "phone",
+    "email",
+    "stage",
+    "course",
+    "source",
+    "enquiry",
+    "exam",
+    "ticket",
+    "owner",
+    "added",
+    "follow_up",
+];
 // Columns added later, switched on once for people who already saved a choice
 const NEW_COLUMNS = [
     ["enquiry", "crm.leads.columns.enquiry"],
@@ -110,9 +309,14 @@ const writePref = (key, value) => {
  */
 export default function LeadsBoard({ isAdmin }) {
     const isCoordinator = useSelector(selectUser)?.role === "exam_coordinator";
+    const [adv, setAdv] = useState(EMPTY_ADV);
+    const [showAdv, setShowAdv] = useState(false);
+    const [coordinators, setCoordinators] = useState([]);
+    const [courses, setCourses] = useState([]);
     // Deep links from notifications: ?lead=123 opens it, ?owner=unassigned filters
     const [params] = useSearchParams();
-    const [stage, setStage] = useState("");
+    // Exam Coordinators work three tabs: Application, Exam Scheduled, Course Done
+    const [stage, setStage] = useState(isCoordinator ? "application" : "");
     const [search, setSearch] = useState("");
     const [source, setSource] = useState("");
     const [ownerId, setOwnerId] = useState(isAdmin ? (params.get("owner") ?? "") : "");
@@ -120,19 +324,23 @@ export default function LeadsBoard({ isAdmin }) {
     const [moving, setMoving] = useState(null); // lead ids
     const [panelKey, setPanelKey] = useState(0);
     const [overdueOnly, setOverdueOnly] = useState(false);
-    const [exam, setExam] = useState("");
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [owners, setOwners] = useState([]);
     const [openId, setOpenId] = useState(Number(params.get("lead")) || null);
     const [adding, setAdding] = useState(false);
-    const [view, setViewState] = useState(() => (readPref("crm.leads.view", "list") === "cards" ? "cards" : "list"));
+    const [view, setViewState] = useState(() =>
+        readPref("crm.leads.view", "list") === "cards" ? "cards" : "list"
+    );
     const [columns, setColumnsState] = useState(() => {
         const saved = readPref("crm.leads.columns", DEFAULT_COLUMNS);
-        let cols = Array.isArray(saved) ? saved.filter((k) => COLUMNS.some((c) => c.key === k)) : DEFAULT_COLUMNS;
+        let cols = Array.isArray(saved)
+            ? saved.filter((k) => COLUMNS.some((c) => c.key === k))
+            : DEFAULT_COLUMNS;
         for (const [key, flag] of NEW_COLUMNS) {
             if (readPref(flag, false)) continue;
-            if (!cols.includes(key)) cols = COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
+            if (!cols.includes(key))
+                cols = COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
             writePref(flag, true);
             writePref("crm.leads.columns", cols);
         }
@@ -144,11 +352,24 @@ export default function LeadsBoard({ isAdmin }) {
     };
     const toggleColumn = (key) =>
         setColumnsState((cols) => {
-            const next = cols.includes(key) ? cols.filter((k) => k !== key) : COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
+            const next = cols.includes(key)
+                ? cols.filter((k) => k !== key)
+                : COLUMNS.filter((c) => c.key === key || cols.includes(c.key)).map((c) => c.key);
             writePref("crm.leads.columns", next);
             return next;
         });
-    const shownColumns = COLUMNS.filter((c) => columns.includes(c.key) && (!c.admin || isAdmin));
+    const workflowTab = WORKFLOW_STAGES.includes(stage);
+    const shownColumns = workflowTab
+        ? TAB_COLUMNS[stage].map((k) => ALL_COLUMNS.find((c) => c.key === k)).filter(Boolean)
+        : COLUMNS.filter((c) => columns.includes(c.key) && (!c.admin || isAdmin));
+    const advCount = Object.values(adv).filter(Boolean).length;
+    const setA = (k) => (e) => {
+        const v = e.target.type === "checkbox" ? (e.target.checked ? "1" : "") : e.target.value;
+        setAdv((a) => ({ ...a, [k]: v }));
+        setPage(1);
+        setSelected([]);
+    };
+    const advParams = Object.fromEntries(Object.entries(adv).filter(([, v]) => v !== ""));
 
     // Filters as the API takes them (the list, and "select all matching")
     const filters = () => ({
@@ -157,7 +378,7 @@ export default function LeadsBoard({ isAdmin }) {
         source: source || undefined,
         owner_id: ownerId || undefined,
         follow_up: overdueOnly ? "overdue" : undefined,
-        exam: exam || undefined,
+        ...advParams,
     });
     const [selectingAll, setSelectingAll] = useState(false);
     const selectAllMatching = async () => {
@@ -165,7 +386,10 @@ export default function LeadsBoard({ isAdmin }) {
         try {
             const { data: res } = await crmService.list({ ...filters(), ids_only: 1 });
             setSelected(res.data.ids);
-            if (res.data.capped) toast(`Selected the first ${res.data.ids.length} of ${res.data.total}. Move these, then select again.`);
+            if (res.data.capped)
+                toast(
+                    `Selected the first ${res.data.ids.length} of ${res.data.total}. Move these, then select again.`
+                );
         } catch (err) {
             toast.error(apiMessage(err, "Could not select the leads"));
         } finally {
@@ -173,6 +397,7 @@ export default function LeadsBoard({ isAdmin }) {
         }
     };
 
+    const advKey = JSON.stringify(advParams);
     const load = useCallback(async () => {
         try {
             const { data: res } = await crmService.list({
@@ -181,7 +406,7 @@ export default function LeadsBoard({ isAdmin }) {
                 source: source || undefined,
                 owner_id: ownerId || undefined,
                 follow_up: overdueOnly ? "overdue" : undefined,
-                exam: exam || undefined,
+                ...JSON.parse(advKey),
                 page,
                 limit: 25,
             });
@@ -190,7 +415,7 @@ export default function LeadsBoard({ isAdmin }) {
             toast.error(apiMessage(err, "Could not load leads"));
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
-    }, [stage, search, source, ownerId, overdueOnly, exam, page]);
+    }, [stage, search, source, ownerId, overdueOnly, advKey, page]);
 
     useEffect(() => {
         const t = setTimeout(load, search ? 300 : 0);
@@ -198,12 +423,24 @@ export default function LeadsBoard({ isAdmin }) {
     }, [load, search]);
 
     useEffect(() => {
-        if (isAdmin)
+        // Consultant list: Admins and coordinators; coordinator list: Admins and consultants
+        if (isAdmin || isCoordinator)
             crmService
                 .owners()
                 .then(({ data: res }) => setOwners(res.data ?? []))
                 .catch(() => {});
-    }, [isAdmin]);
+        if (!isCoordinator)
+            crmService
+                .examCoordinators()
+                .then(({ data: res }) => setCoordinators(res.data ?? []))
+                .catch(() => {});
+        courseService
+            .getAll({ limit: 100 })
+            .then(({ data: res }) =>
+                setCourses(Array.isArray(res?.data) ? res.data : (res?.data?.courses ?? []))
+            )
+            .catch(() => {});
+    }, [isAdmin, isCoordinator]);
 
     const counts = data?.counts ?? {};
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -225,7 +462,7 @@ export default function LeadsBoard({ isAdmin }) {
                         {isAdmin
                             ? "Every lead across the team. Open a lead to call, log notes, update its status or schedule a follow-up."
                             : isCoordinator
-                              ? "Students assigned to you for the exam. Open one to schedule the exam, mark it completed and then mark Course Done."
+                              ? "Students assigned to you for the exam: Application, Exam Scheduled (schedule, mark done, payment) and Course Done."
                               : "Leads assigned to you. Open a lead to call, log notes, update its status or schedule a follow-up."}
                     </p>
                 </div>
@@ -241,8 +478,18 @@ export default function LeadsBoard({ isAdmin }) {
             </div>
 
             {/* Status tabs */}
-            <div className="no-scrollbar -mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0" role="tablist">
-                {[["", "All", total], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])].map(([k, l, n]) => (
+            <div
+                className="no-scrollbar -mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0"
+                role="tablist"
+            >
+                {(isCoordinator
+                    ? STAGES.filter(([k]) => WORKFLOW_STAGES.includes(k)).map(([k, l]) => [
+                          k,
+                          l,
+                          counts[k] ?? 0,
+                      ])
+                    : [["", "All", total], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])]
+                ).map(([k, l, n]) => (
                     <button
                         key={k || "all"}
                         role="tab"
@@ -250,7 +497,9 @@ export default function LeadsBoard({ isAdmin }) {
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
                             "shrink-0 rounded-full border px-3 py-1.5 text-small font-semibold",
-                            stage === k ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-600"
+                            stage === k
+                                ? "border-action bg-action-soft text-action-soft-ink"
+                                : "border-slate-200 bg-surface text-slate-600"
                         )}
                     >
                         {l} <span className="ml-0.5 text-slate-500">{n}</span>
@@ -261,7 +510,11 @@ export default function LeadsBoard({ isAdmin }) {
             {/* Filters */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
                 <div className="relative w-full sm:w-72">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+                    <Search
+                        size={15}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                        aria-hidden="true"
+                    />
                     <input
                         value={search}
                         onChange={(e) => resetPage(setSearch)(e.target.value)}
@@ -270,7 +523,12 @@ export default function LeadsBoard({ isAdmin }) {
                         className={cn(inputCls, "pl-9")}
                     />
                 </div>
-                <select value={source} onChange={(e) => resetPage(setSource)(e.target.value)} className={cn(inputCls, "w-auto")} aria-label="Source">
+                <select
+                    value={source}
+                    onChange={(e) => resetPage(setSource)(e.target.value)}
+                    className={cn(inputCls, "w-auto")}
+                    aria-label="Source"
+                >
                     <option value="">All sources</option>
                     {SOURCES.map(([v, l]) => (
                         <option key={v} value={v}>
@@ -279,7 +537,12 @@ export default function LeadsBoard({ isAdmin }) {
                     ))}
                 </select>
                 {isAdmin && (
-                    <select value={ownerId} onChange={(e) => resetPage(setOwnerId)(e.target.value)} className={cn(inputCls, "w-auto")} aria-label="Owner">
+                    <select
+                        value={ownerId}
+                        onChange={(e) => resetPage(setOwnerId)(e.target.value)}
+                        className={cn(inputCls, "w-auto")}
+                        aria-label="Owner"
+                    >
                         <option value="">All owners</option>
                         <option value="unassigned">Unassigned</option>
                         {owners.map((o) => (
@@ -289,41 +552,85 @@ export default function LeadsBoard({ isAdmin }) {
                         ))}
                     </select>
                 )}
-                <select value={exam} onChange={(e) => resetPage(setExam)(e.target.value)} className={cn(inputCls, "w-auto")} aria-label="Exam">
-                    <option value="">Any exam status</option>
-                    {Object.entries(EXAM_STATUS).map(([v, [l]]) => (
-                        <option key={v} value={v}>
-                            Exam: {l}
-                        </option>
-                    ))}
-                </select>
+                <button
+                    type="button"
+                    onClick={() => setShowAdv((v) => !v)}
+                    aria-expanded={showAdv}
+                    className={cn(
+                        "inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-ui font-semibold",
+                        showAdv || advCount
+                            ? "border-action bg-action-soft text-action-soft-ink"
+                            : "border-slate-200 bg-surface text-slate-700"
+                    )}
+                >
+                    <SlidersHorizontal size={14} aria-hidden="true" /> Advanced filters
+                    {advCount ? ` (${advCount})` : ""}
+                </button>
+                {stage === "exam_scheduled" && (
+                    <label
+                        className={cn(
+                            "inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-ui font-semibold",
+                            adv.alert
+                                ? "border-red-300 bg-red-50 text-red-700"
+                                : "border-slate-200 bg-surface text-slate-700"
+                        )}
+                    >
+                        <input
+                            type="checkbox"
+                            checked={adv.alert === "1"}
+                            onChange={setA("alert")}
+                            className="accent-red-600"
+                        />
+                        <AlertTriangle size={14} aria-hidden="true" /> Exam done, payment due
+                    </label>
+                )}
                 {!isCoordinator && (
                     <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui text-slate-700">
-                        <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="accent-action" />
+                        <input
+                            type="checkbox"
+                            checked={overdueOnly}
+                            onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)}
+                            className="accent-action"
+                        />
                         Overdue follow-ups
                     </label>
                 )}
                 <div className="ml-auto flex items-center gap-2">
-                    {view === "list" && (
+                    {view === "list" && !workflowTab && (
                         <details className="relative">
                             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui font-semibold text-slate-700 [&::-webkit-details-marker]:hidden">
                                 <Columns3 size={14} aria-hidden="true" /> Columns
                             </summary>
                             <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-surface p-2 shadow-lg">
-                                <p className="px-2 pb-1 text-label font-semibold uppercase tracking-wide text-slate-500">Show in the list</p>
+                                <p className="px-2 pb-1 text-label font-semibold uppercase tracking-wide text-slate-500">
+                                    Show in the list
+                                </p>
                                 <p className="flex items-center gap-2 px-2 py-1 text-ui text-slate-500">
-                                    <input type="checkbox" checked disabled className="accent-action" /> Name (always)
+                                    <input type="checkbox" checked disabled className="accent-action" /> Name
+                                    (always)
                                 </p>
                                 {COLUMNS.filter((c) => !c.admin || isAdmin).map((c) => (
-                                    <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-ui text-slate-700 hover:bg-slate-50">
-                                        <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-action" />
+                                    <label
+                                        key={c.key}
+                                        className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-ui text-slate-700 hover:bg-slate-50"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={columns.includes(c.key)}
+                                            onChange={() => toggleColumn(c.key)}
+                                            className="accent-action"
+                                        />
                                         {c.label}
                                     </label>
                                 ))}
                             </div>
                         </details>
                     )}
-                    <div className="inline-flex rounded-lg border border-slate-200 bg-surface p-0.5" role="group" aria-label="View">
+                    <div
+                        className="inline-flex rounded-lg border border-slate-200 bg-surface p-0.5"
+                        role="group"
+                        aria-label="View"
+                    >
                         {[
                             ["list", "List", List],
                             ["cards", "Cards", LayoutGrid],
@@ -335,7 +642,9 @@ export default function LeadsBoard({ isAdmin }) {
                                 onClick={() => setView(v)}
                                 className={cn(
                                     "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small font-semibold",
-                                    view === v ? "bg-action-soft text-action-soft-ink" : "text-slate-500 hover:text-slate-700"
+                                    view === v
+                                        ? "bg-action-soft text-action-soft-ink"
+                                        : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
                                 <Icon size={14} aria-hidden="true" /> {label}
@@ -344,6 +653,24 @@ export default function LeadsBoard({ isAdmin }) {
                     </div>
                 </div>
             </div>
+
+            {showAdv && (
+                <AdvancedFilters
+                    adv={adv}
+                    setA={setA}
+                    stage={stage}
+                    owners={owners.filter((o) => o.role === "consultant")}
+                    coordinators={coordinators}
+                    courses={courses}
+                    showOwner={isAdmin || isCoordinator}
+                    showCoordinator={!isCoordinator}
+                    onClear={() => {
+                        setAdv(EMPTY_ADV);
+                        setPage(1);
+                    }}
+                    onClose={() => setShowAdv(false)}
+                />
+            )}
 
             {isAdmin && selected.length > 0 && (
                 <div className="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-action bg-action-soft px-4 py-2.5">
@@ -356,12 +683,18 @@ export default function LeadsBoard({ isAdmin }) {
                                 onClick={selectAllMatching}
                                 className="text-small font-semibold text-action underline-offset-2 hover:underline disabled:opacity-60"
                             >
-                                {selectingAll ? "Selecting…" : `Select all ${data.pagination.total} matching leads`}
+                                {selectingAll
+                                    ? "Selecting…"
+                                    : `Select all ${data.pagination.total} matching leads`}
                             </button>
                         )}
                     </p>
                     <div className="flex gap-2">
-                        <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
+                        <button
+                            type="button"
+                            onClick={() => setSelected([])}
+                            className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold"
+                        >
                             Clear
                         </button>
                         <button
@@ -382,7 +715,9 @@ export default function LeadsBoard({ isAdmin }) {
                 </div>
             ) : !data.leads.length ? (
                 <p className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-ui text-slate-500">
-                    {total ? "No leads match these filters." : "No leads yet. Add your first lead to get started."}
+                    {total
+                        ? "No leads match these filters."
+                        : "No leads yet. Add your first lead to get started."}
                 </p>
             ) : view === "list" ? (
                 <div className="overflow-x-auto rounded-xl border border-slate-200 bg-surface">
@@ -398,8 +733,15 @@ export default function LeadsBoard({ isAdmin }) {
                                             onChange={(e) =>
                                                 setSelected((sel) =>
                                                     e.target.checked
-                                                        ? [...new Set([...sel, ...data.leads.map((l) => l.id)])]
-                                                        : sel.filter((id) => !data.leads.some((l) => l.id === id))
+                                                        ? [
+                                                              ...new Set([
+                                                                  ...sel,
+                                                                  ...data.leads.map((l) => l.id),
+                                                              ]),
+                                                          ]
+                                                        : sel.filter(
+                                                              (id) => !data.leads.some((l) => l.id === id)
+                                                          )
                                                 )
                                             }
                                             className="h-4 w-4 accent-action"
@@ -419,7 +761,14 @@ export default function LeadsBoard({ isAdmin }) {
                                 <tr
                                     key={l.id}
                                     onClick={() => setOpenId(l.id)}
-                                    className={cn("cursor-pointer hover:bg-slate-50", selected.includes(l.id) && "bg-action-soft")}
+                                    className={cn(
+                                        "cursor-pointer",
+                                        l.payment_alert
+                                            ? "bg-red-100 text-red-950 shadow-[inset_5px_0_0_#dc2626] hover:bg-red-200 [&_td]:!text-red-900"
+                                            : "hover:bg-slate-50",
+                                        selected.includes(l.id) && !l.payment_alert && "bg-action-soft"
+                                    )}
+                                    title={l.payment_alert ? "Exam done, payment due" : undefined}
                                 >
                                     {isAdmin && (
                                         <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
@@ -443,9 +792,17 @@ export default function LeadsBoard({ isAdmin }) {
                                         >
                                             {l.name}
                                         </button>
+                                        {l.payment_alert && (
+                                            <span className="mt-0.5 inline-flex items-center gap-1 text-label font-bold text-red-700">
+                                                <AlertTriangle size={11} aria-hidden="true" /> Payment due
+                                            </span>
+                                        )}
                                     </td>
                                     {shownColumns.map((c) => (
-                                        <td key={c.key} className="max-w-[240px] truncate whitespace-nowrap px-3 py-2.5 text-slate-600">
+                                        <td
+                                            key={c.key}
+                                            className="max-w-[240px] truncate whitespace-nowrap px-3 py-2.5 text-slate-600"
+                                        >
                                             {c.cell(l)}
                                         </td>
                                     ))}
@@ -471,9 +828,13 @@ export default function LeadsBoard({ isAdmin }) {
                                 type="button"
                                 onClick={() => setOpenId(l.id)}
                                 className={cn(
-                                    "block w-full rounded-xl border bg-surface p-4 text-left transition-colors hover:border-action",
+                                    "block w-full rounded-xl border p-4 text-left transition-colors hover:border-action",
                                     isAdmin && "pl-9",
-                                    selected.includes(l.id) ? "border-action" : "border-slate-200"
+                                    l.payment_alert
+                                        ? "border-red-500 bg-red-100 ring-2 ring-red-400"
+                                        : "bg-surface",
+                                    !l.payment_alert &&
+                                        (selected.includes(l.id) ? "border-action" : "border-slate-200")
                                 )}
                             >
                                 <div className="flex items-start justify-between gap-2">
@@ -486,22 +847,54 @@ export default function LeadsBoard({ isAdmin }) {
                                 </p>
                                 {(l.preferred_time || l.enquiry_message) && (
                                     <p className="mt-1.5 line-clamp-2 text-small text-slate-700">
-                                        {l.preferred_time && <span className="font-semibold text-action-soft-ink">Call: {l.preferred_time}. </span>}
+                                        {l.preferred_time && (
+                                            <span className="font-semibold text-action-soft-ink">
+                                                Call: {l.preferred_time}.{" "}
+                                            </span>
+                                        )}
                                         {l.enquiry_message}
                                     </p>
                                 )}
                                 <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-label text-slate-500">
-                                    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-semibold text-slate-600">{SOURCE_LABEL[l.source] ?? l.source}</span>
+                                    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-semibold text-slate-600">
+                                        {SOURCE_LABEL[l.source] ?? l.source}
+                                    </span>
                                     <span>{ageOf(l.created_at)} old</span>
                                     {l.next_follow_up_at && (
-                                        <span className={cn("inline-flex items-center gap-1", isOverdue(l.next_follow_up_at) && "font-semibold text-red-600")}>
-                                            <CalendarClock size={12} aria-hidden="true" /> {fmtDateTime(l.next_follow_up_at)}
+                                        <span
+                                            className={cn(
+                                                "inline-flex items-center gap-1",
+                                                isOverdue(l.next_follow_up_at) && "font-semibold text-red-600"
+                                            )}
+                                        >
+                                            <CalendarClock size={12} aria-hidden="true" />{" "}
+                                            {fmtDateTime(l.next_follow_up_at)}
                                         </span>
                                     )}
-                                    {l.enrolled && <span className="font-semibold text-emerald-700">Enrolled</span>}
-                                    {l.exam_status && l.exam_status !== "not_scheduled" && <ExamStatusBadge status={l.exam_status} />}
-                                    {l.ticket_size != null && <span className="font-semibold text-slate-700">{fmtMoney(l.ticket_size, l.ticket_currency)}</span>}
-                                    {isAdmin && <span className="ml-auto">{l.owner_name ?? "Unassigned"}</span>}
+                                    {l.enrolled && (
+                                        <span className="font-semibold text-emerald-700">Enrolled</span>
+                                    )}
+                                    {l.exam_status && l.exam_status !== "not_scheduled" && (
+                                        <ExamStatusBadge status={l.exam_status} />
+                                    )}
+                                    {WORKFLOW_STAGES.includes(l.stage) &&
+                                        (l.exam_done || l.payment_status === "done") && (
+                                            <PaymentBadge status={l.payment_status} />
+                                        )}
+                                    {l.payment_alert && (
+                                        <span className="inline-flex items-center gap-1 font-bold text-red-700">
+                                            <AlertTriangle size={12} aria-hidden="true" /> Exam done, payment
+                                            due
+                                        </span>
+                                    )}
+                                    {l.ticket_size != null && (
+                                        <span className="font-semibold text-slate-700">
+                                            {fmtMoney(l.ticket_size, l.ticket_currency)}
+                                        </span>
+                                    )}
+                                    {isAdmin && (
+                                        <span className="ml-auto">{l.owner_name ?? "Unassigned"}</span>
+                                    )}
                                 </div>
                             </button>
                         </li>
@@ -511,7 +904,11 @@ export default function LeadsBoard({ isAdmin }) {
 
             {data?.pagination?.totalPages > 1 && (
                 <div className="mt-4 flex items-center justify-end gap-2 text-ui">
-                    <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg border bg-surface px-3 py-1.5 disabled:opacity-40">
+                    <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => p - 1)}
+                        className="rounded-lg border bg-surface px-3 py-1.5 disabled:opacity-40"
+                    >
                         Previous
                     </button>
                     <span>
@@ -560,5 +957,219 @@ export default function LeadsBoard({ isAdmin }) {
                 />
             )}
         </div>
+    );
+}
+
+const sel = cn(inputCls, "py-1.5");
+
+function Field({ label, children }) {
+    return (
+        <label className="block text-small font-semibold text-slate-600">
+            {label}
+            <span className="mt-1 block">{children}</span>
+        </label>
+    );
+}
+
+function Range({ label, from, to, adv, setA }) {
+    return (
+        <Field label={label}>
+            <span className="flex items-center gap-1.5">
+                <input
+                    type="date"
+                    value={adv[from]}
+                    onChange={setA(from)}
+                    aria-label={`${label} from`}
+                    className={sel}
+                />
+                <span className="text-slate-400">–</span>
+                <input
+                    type="date"
+                    value={adv[to]}
+                    onChange={setA(to)}
+                    aria-label={`${label} to`}
+                    className={sel}
+                />
+            </span>
+        </Field>
+    );
+}
+
+/** Advanced filters: shared ones, plus the fields of the current workflow tab. */
+function AdvancedFilters({
+    adv,
+    setA,
+    stage,
+    owners,
+    coordinators,
+    courses,
+    showOwner,
+    showCoordinator,
+    onClear,
+    onClose,
+}) {
+    const all = !stage || !WORKFLOW_STAGES.includes(stage);
+    return (
+        <section
+            className="mb-4 rounded-xl border border-slate-200 bg-surface p-4"
+            aria-label="Advanced filters"
+        >
+            <div className="mb-3 flex items-center justify-between gap-2">
+                <h2 className="text-ui font-bold text-slate-800">Advanced filters</h2>
+                <span className="flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={onClear}
+                        className="text-small font-semibold text-action hover:underline"
+                    >
+                        Clear all
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close filters"
+                        className="text-slate-500 hover:text-slate-700"
+                    >
+                        <X size={16} />
+                    </button>
+                </span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {showOwner && (
+                    <Field label="Consultant">
+                        <select value={adv.owner_id} onChange={setA("owner_id")} className={sel}>
+                            <option value="">Anyone</option>
+                            {owners.map((o) => (
+                                <option key={o.id} value={o.id}>
+                                    {o.name}
+                                </option>
+                            ))}
+                        </select>
+                    </Field>
+                )}
+                {showCoordinator && (
+                    <Field label="Exam coordinator">
+                        <select
+                            value={adv.exam_coordinator_id}
+                            onChange={setA("exam_coordinator_id")}
+                            className={sel}
+                        >
+                            <option value="">Anyone</option>
+                            <option value="none">Not assigned</option>
+                            {coordinators.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                    </Field>
+                )}
+                <Field label="Course">
+                    <select value={adv.course_id} onChange={setA("course_id")} className={sel}>
+                        <option value="">Any course</option>
+                        {courses.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.title}
+                            </option>
+                        ))}
+                    </select>
+                </Field>
+                <Field label="Ticket size">
+                    <span className="flex items-center gap-1.5">
+                        <select
+                            value={adv.currency}
+                            onChange={setA("currency")}
+                            aria-label="Ticket currency"
+                            className={cn(sel, "w-[84px]")}
+                        >
+                            <option value="">Any</option>
+                            <option value="INR">₹ INR</option>
+                            <option value="USD">$ USD</option>
+                        </select>
+                        <input
+                            type="number"
+                            min="0"
+                            value={adv.ticket_min}
+                            onChange={setA("ticket_min")}
+                            placeholder="Min"
+                            aria-label="Minimum ticket size"
+                            className={sel}
+                        />
+                        <input
+                            type="number"
+                            min="0"
+                            value={adv.ticket_max}
+                            onChange={setA("ticket_max")}
+                            placeholder="Max"
+                            aria-label="Maximum ticket size"
+                            className={sel}
+                        />
+                    </span>
+                </Field>
+
+                {(all || stage === "application") && (
+                    <>
+                        <Field label="Application submitted">
+                            <select
+                                value={adv.app_submitted}
+                                onChange={setA("app_submitted")}
+                                className={sel}
+                            >
+                                <option value="">Any</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </Field>
+                        <Range label="Submitted between" from="app_from" to="app_to" adv={adv} setA={setA} />
+                    </>
+                )}
+                {(all || stage === "exam_scheduled") && (
+                    <>
+                        <Field label="Exam status">
+                            <select value={adv.exam} onChange={setA("exam")} className={sel}>
+                                <option value="">Any</option>
+                                {Object.entries(EXAM_STATUS).map(([v, [l]]) => (
+                                    <option key={v} value={v}>
+                                        {l}
+                                    </option>
+                                ))}
+                            </select>
+                        </Field>
+                        <Range
+                            label="Exam date between"
+                            from="exam_from"
+                            to="exam_to"
+                            adv={adv}
+                            setA={setA}
+                        />
+                    </>
+                )}
+                {(all || stage !== "application") && (
+                    <Field label="Exam done">
+                        <select value={adv.exam_done} onChange={setA("exam_done")} className={sel}>
+                            <option value="">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </Field>
+                )}
+                {(all || stage !== "application") && (
+                    <Field label="Payment status">
+                        <select value={adv.payment} onChange={setA("payment")} className={sel}>
+                            <option value="">Any</option>
+                            {Object.entries(PAYMENT_STATUS).map(([v, [l]]) => (
+                                <option key={v} value={v}>
+                                    {l}
+                                </option>
+                            ))}
+                        </select>
+                    </Field>
+                )}
+                {(all || stage === "course_done") && (
+                    <Range label="Paid between" from="paid_from" to="paid_to" adv={adv} setA={setA} />
+                )}
+                <Range label="Lead added between" from="from" to="to" adv={adv} setA={setA} />
+            </div>
+        </section>
     );
 }

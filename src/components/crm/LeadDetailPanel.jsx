@@ -19,7 +19,7 @@ import crmService from "@/services/crmService";
 import courseService from "@/services/courseService";
 import LeadStudentActions from "./LeadStudentActions";
 import LeadWhatsApp from "./LeadWhatsApp";
-import LeadExamSection, { TicketInputs, TicketSizeField } from "./LeadExamSection";
+import LeadExamSection, { TicketInputs } from "./LeadExamSection";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
 import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, EXAM_RESULT_LABEL, apiMessage, fmtDate, fmtDateTime, fmtMoney, formLabel, inputCls, isOverdue, waLink } from "@/lib/crm";
@@ -66,10 +66,15 @@ const ACTIVITY_TEXT = {
     assignment: () => "Lead assigned",
     updated: (m) => `Details updated (${(m?.fields ?? []).map((f) => FIELD_LABEL[f] ?? f).join(", ")})`,
     status_change: (m) =>
-        `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation ? " (automatic)" : ""}${
+        `${STAGE_LABEL[m?.from] ?? m?.from} → ${STAGE_LABEL[m?.to] ?? m?.to}${m?.automation || m?.automatic ? " (automatic)" : ""}${
             m?.ticket_size ? ` · ticket size ${fmtMoney(m.ticket_size, m.ticket_currency)}` : ""
         }`,
     exam_coordinator: (m) => (m?.to ? "Exam coordinator assigned" : "Exam coordinator removed"),
+    exam_rescheduled: (m) => `Exam rescheduled to ${fmtDateTime(m?.scheduled_at)}`,
+    exam_cancelled: () => "Exam cancelled",
+    application_update: (m) => (m?.submitted ? `Application submitted${m?.submitted_at ? ` on ${fmtDate(m.submitted_at)}` : ""}` : "Application marked not submitted"),
+    payment_done: (m) => `Payment Done${m?.paid_at ? ` on ${fmtDate(m.paid_at)}` : ""}${m?.reference ? ` · ${m.reference}` : ""}`,
+    payment_due: () => "Payment set back to Payment Due",
     exam_scheduled: (m) => `Exam scheduled for ${fmtDateTime(m?.scheduled_at)}`,
     exam_completed: (m) =>
         `Exam completed${m?.completed_at ? ` on ${fmtDate(m.completed_at)}` : ""}${m?.result ? ` · ${EXAM_RESULT_LABEL[m.result]}` : ""}`,
@@ -112,6 +117,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
     const [fu, setFu] = useState({ due_at: "", type: "call", note: "" });
     const [busy, setBusy] = useState(false);
     const [ticket, setTicket] = useState({ amount: "", currency: "INR" });
+    const [examAt, setExamAt] = useState("");
 
     const load = useCallback(
         () =>
@@ -150,8 +156,13 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
         if (needsReason && !reason.trim()) return toast.error("Add a reason");
         const toApplication = stageTarget === "application";
         if (toApplication && !(Number(ticket.amount) > 0)) return toast.error("Enter the ticket size");
-        const ticketBody = toApplication ? { ticket_size: Number(ticket.amount), ticket_currency: ticket.currency } : undefined;
-        if (await run(() => crmService.changeStage(lead.id, stageTarget, reason.trim() || undefined, ticketBody), `Moved to ${STAGE_LABEL[stageTarget]}`)) {
+        if (stageTarget === "exam_scheduled" && !examAt && !lead.exam_scheduled_at) return toast.error("Choose the exam date and time");
+        const extra = toApplication
+            ? { ticket_size: Number(ticket.amount), ticket_currency: ticket.currency }
+            : stageTarget === "exam_scheduled" && examAt
+              ? { exam_scheduled_at: new Date(examAt).toISOString() }
+              : undefined;
+        if (await run(() => crmService.changeStage(lead.id, stageTarget, reason.trim() || undefined, extra), `Moved to ${STAGE_LABEL[stageTarget]}`)) {
             setStageTarget(null);
             setReason("");
         }
@@ -265,14 +276,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     )}
                                     <dt className="text-slate-500">Owner</dt>
                                     <dd className="text-slate-900">{lead.owner_name || "Unassigned"}</dd>
-                                    {(lead.ticket_size != null || ["application", "course_done"].includes(lead.stage)) && (
-                                        <>
-                                            <dt className="text-slate-500">Ticket size</dt>
-                                            <dd className="text-slate-900">
-                                                <TicketSizeField lead={lead} canEdit={access.edit} busy={busy} run={run} />
-                                            </dd>
-                                        </>
-                                    )}
+
                                     <dt className="text-slate-500">Added</dt>
                                     <dd className="text-slate-900">{fmtDateTime(lead.created_at)}</dd>
                                     {lead.source_meta?.campaign && (
@@ -353,8 +357,10 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         {CLOSED_STAGES.includes(lead.stage)
                                             ? "Closed. Only an Admin can reopen it."
                                             : !access.edit && lead.stage !== "course_done"
-                                              ? "The consultant manages the status. Once the exam is completed you can mark Course Done below."
-                                              : "No further status changes."}
+                                              ? "The consultant manages the status. Scheduling the exam moves it to Exam Scheduled; Payment Done moves it to Course Done."
+                                              : lead.stage === "course_done"
+                                                ? "Course Done. Set the payment back to Payment Due to reopen it."
+                                                : "No further status changes."}
                                     </p>
                                 )}
                                 {stageTarget && (
@@ -380,12 +386,11 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                                 />
                                             </div>
                                         )}
-                                        {stageTarget === "course_done" && (
-                                            <p className="mb-2 text-small text-slate-500">
-                                                {lead.exam_status === "completed"
-                                                    ? `Exam completed${lead.exam_result ? ` (${EXAM_RESULT_LABEL[lead.exam_result]})` : ""}. Marks this lead as done.`
-                                                    : "Marks this lead as done. It doesn't check the student's course progress."}
-                                            </p>
+                                        {stageTarget === "exam_scheduled" && (
+                                            <label className="mb-2 block text-small font-semibold text-slate-600">
+                                                Exam date and time {lead.exam_scheduled_at ? "(optional, keeps the current one)" : "(required)"}
+                                                <input type="datetime-local" value={examAt} onChange={(e) => setExamAt(e.target.value)} className={cn(inputCls, "mt-1")} />
+                                            </label>
                                         )}
                                         <div className="flex justify-end gap-2">
                                             <button type="button" onClick={() => setStageTarget(null)} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">

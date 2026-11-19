@@ -289,7 +289,9 @@ export default function CrmReportsPage() {
                                 <Kpi label="Scheduled now" value={data.exams.scheduled_now} sub={data.exams.scheduled_overdue ? `${data.exams.scheduled_overdue} past their date` : undefined} tone={data.exams.scheduled_overdue ? "text-amber-600" : ""} />
                                 <Kpi label="Completed in period" value={data.exams.completed} />
                                 <Kpi label="Passed" value={data.exams.passed} sub={data.exams.passed + data.exams.failed ? `${data.exams.pass_rate}% of known results` : undefined} />
-                                <Kpi label="Awaiting Course Done" value={data.exams.awaiting_course_done} tone={data.exams.awaiting_course_done ? "text-amber-600" : ""} />
+                                <Kpi label="Exam done, payment due" value={data.exams.payment_alerts} tone={data.exams.payment_alerts ? "text-red-600" : ""} />
+                                <Kpi label="Payments done in period" value={data.exams.payments_done} />
+                                <Kpi label="Applications submitted" value={data.exams.applications_submitted} sub={`${data.exams.applications_not_submitted} not yet`} />
                                 <Kpi label="Applications without coordinator" value={data.exams.applications_without_coordinator} tone={data.exams.applications_without_coordinator ? "text-amber-600" : ""} />
                                 {data.money_visible && (
                                     <Kpi label="Open applications" value={money(Object.fromEntries((data.pipeline ?? []).map((x) => [x.currency, x.amount])))} sub={`${(data.pipeline ?? []).reduce((n, x) => n + x.leads, 0)} with a ticket size`} />
@@ -300,25 +302,29 @@ export default function CrmReportsPage() {
                                     <tr>
                                         <th className="py-2 pr-3">Exam coordinator</th>
                                         <th className="py-2 pr-3 text-right">Students</th>
+                                        <th className="py-2 pr-3 text-right">Applications</th>
                                         <th className="py-2 pr-3 text-right">Scheduled now</th>
                                         <th className="py-2 pr-3 text-right">Completed in period</th>
                                         <th className="py-2 pr-3 text-right">Passed</th>
+                                        <th className="py-2 pr-3 text-right">Payment due after exam</th>
                                         <th className="py-2 text-right">Course Done</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {!data.exams.coordinators.length && (
                                         <tr>
-                                            <td colSpan={6} className="py-6 text-center text-slate-500">No exam coordinators yet. Add one in Admin → Team.</td>
+                                            <td colSpan={8} className="py-6 text-center text-slate-500">No exam coordinators yet. Add one in Admin → Team.</td>
                                         </tr>
                                     )}
                                     {data.exams.coordinators.map((c) => (
                                         <tr key={c.id} className={cn(!c.active && "text-slate-500")}>
                                             <td className="py-2 pr-3 font-semibold">{c.name}{!c.active && " (inactive)"}</td>
                                             <td className="py-2 pr-3 text-right">{c.assigned}</td>
+                                            <td className="py-2 pr-3 text-right">{c.applications}</td>
                                             <td className="py-2 pr-3 text-right">{c.scheduled}</td>
                                             <td className="py-2 pr-3 text-right">{c.completed}</td>
                                             <td className="py-2 pr-3 text-right">{c.passed}</td>
+                                            <td className={cn("py-2 pr-3 text-right", c.payment_alerts > 0 && "font-semibold text-red-600")}>{c.payment_alerts}</td>
                                             <td className="py-2 text-right">{c.course_done}</td>
                                         </tr>
                                     ))}

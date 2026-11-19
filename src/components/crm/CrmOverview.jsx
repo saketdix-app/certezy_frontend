@@ -18,6 +18,7 @@ const KPIS = [
     ["overdue_follow_ups", "Overdue follow-ups", "text-red-600"],
     ["in_conversation", "In conversation"],
     ["applications", "Applications"],
+    ["exam_scheduled", "Exam Scheduled"],
     ["enrolled_students", "Enrolled students"],
     ["course_done", "Course done"],
 ];
@@ -25,8 +26,8 @@ const KPIS = [
 const EXAM_KPIS = [
     ["scheduled", "Exams scheduled"],
     ["next_7_days", "Exams in the next 7 days"],
-    ["completed_this_month", "Exams completed this month"],
-    ["awaiting_course_done", "Awaiting Course Done", "text-amber-700"],
+    ["completed_this_month", "Exams done this month"],
+    ["payment_alerts", "Exam done, payment due", "text-red-600"],
 ];
 
 function Kpi({ label, value, tone }) {

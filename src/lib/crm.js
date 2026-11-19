@@ -10,6 +10,7 @@ export const STAGES = [
     ["in_conversation", "In Conversation", "bg-violet-50 text-violet-700 border-violet-200"],
     ["on_hold", "On Hold", "bg-amber-50 text-amber-700 border-amber-200"],
     ["application", "Application", "bg-blue-50 text-blue-700 border-blue-200"],
+    ["exam_scheduled", "Exam Scheduled", "bg-amber-50 text-amber-800 border-amber-200"],
     ["course_done", "Course Done", "bg-emerald-50 text-emerald-700 border-emerald-200"],
     ["not_interested", "Not Interested", "bg-slate-100 text-slate-600 border-slate-200"],
     ["junk", "Junk Lead", "bg-red-50 text-red-700 border-red-200"],
@@ -43,9 +44,17 @@ export const FOLLOW_UP_TYPES = [
 /** Exam progress on a lead (worked by the Exam Coordinator). */
 export const EXAM_STATUS = {
     not_scheduled: ["Not scheduled", "bg-slate-100 text-slate-600 border-slate-200"],
-    scheduled: ["Scheduled", "bg-amber-50 text-amber-800 border-amber-200"],
-    completed: ["Completed", "bg-emerald-50 text-emerald-700 border-emerald-200"],
+    scheduled: ["Scheduled", "bg-sky-50 text-sky-800 border-sky-200"],
+    rescheduled: ["Rescheduled", "bg-amber-50 text-amber-800 border-amber-200"],
+    cancelled: ["Cancelled", "bg-slate-100 text-slate-500 border-slate-300"],
 };
+/** Payment Due (default) → Payment Done, which moves the lead to Course Done. */
+export const PAYMENT_STATUS = {
+    due: ["Payment Due", "bg-amber-50 text-amber-800 border-amber-200"],
+    done: ["Payment Done", "bg-emerald-50 text-emerald-700 border-emerald-200"],
+};
+/** Stages with their own columns and filters (the exam workflow). */
+export const WORKFLOW_STAGES = ["application", "exam_scheduled", "course_done"];
 export const EXAM_RESULT_LABEL = { passed: "Passed", failed: "Not passed" };
 
 export const TICKET_CURRENCIES = ["INR", "USD"];
