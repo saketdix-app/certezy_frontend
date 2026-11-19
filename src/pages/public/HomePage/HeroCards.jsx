@@ -27,13 +27,13 @@ export function PmpCourseCard({ pmp }) {
     return (
         <article
             aria-labelledby="hero-pmp-title"
-            className="w-full max-w-[440px] rounded-lg border-t-4 border-[#3282B8] bg-white px-6 pb-6 pt-5 sm:px-7"
+            className="w-full max-w-[440px] rounded-lg border-t-4 border-[#3A76AA] bg-white px-6 pb-6 pt-5 sm:px-7"
             style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.45)" }}
         >
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <span className="text-label font-bold tracking-[0.09em] text-[#1A5F8A]">PMP® EXAM PREP</span>
-                    <span className="ml-2 rounded bg-[#E6F1FB] px-2 py-0.5 text-label font-semibold text-[#0C447C]">
+                    <span className="text-label font-bold tracking-[0.09em] text-[#1E3F5E]">PMP® EXAM PREP</span>
+                    <span className="ml-2 rounded bg-[#EAF2F9] px-2 py-0.5 text-label font-semibold text-[#0C447C]">
                         Self-paced
                     </span>
                     <p className="mt-1 text-label font-semibold text-slate-500">PMI® Authorized Training Partner</p>
@@ -57,7 +57,7 @@ export function PmpCourseCard({ pmp }) {
             <ul className="mt-4 space-y-1.5 text-ui text-slate-700">
                 {["Certificate with 35 contact hours", "Full-length timed exam simulations"].map((t) => (
                     <li key={t} className="flex items-center gap-2">
-                        <Check size={15} strokeWidth={2.5} className="shrink-0 text-[#3282B8]" aria-hidden="true" />
+                        <Check size={15} strokeWidth={2.5} className="shrink-0 text-[#3A76AA]" aria-hidden="true" />
                         {t}
                     </li>
                 ))}
@@ -99,14 +99,14 @@ export function TopicCards({ topics = {} }) {
                     <Link
                         key={slug}
                         to={`/courses?category=${slug}`}
-                        className="group flex flex-col rounded-lg border-t-[3px] border-[#3282B8] bg-white px-4 py-4 transition-transform hover:-translate-y-1 sm:px-5"
+                        className="group flex flex-col rounded-lg border-t-[3px] border-[#3A76AA] bg-white px-4 py-4 transition-transform hover:-translate-y-1 sm:px-5"
                     >
-                        <Icon size={22} className="text-[#3282B8]" aria-hidden="true" />
+                        <Icon size={22} className="text-[#3A76AA]" aria-hidden="true" />
                         <h3 className="mt-2.5 text-body font-extrabold text-slate-900">{title}</h3>
                         <p className="mt-0.5 min-h-[18px] text-small leading-snug text-slate-500">
                             {info?.subtitle}
                         </p>
-                        <span className="mt-auto inline-flex items-center gap-1 pt-3 text-small font-bold text-[#1A5F8A]">
+                        <span className="mt-auto inline-flex items-center gap-1 pt-3 text-small font-bold text-[#1E3F5E]">
                             {info?.count ? `${info.count} course${info.count === 1 ? "" : "s"}` : "Explore"}
                             <ArrowRight
                                 size={14}

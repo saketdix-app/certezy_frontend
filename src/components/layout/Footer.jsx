@@ -217,7 +217,7 @@ function SupportCard() {
 
             {/* Email */}
             <div className="flex items-start gap-2.5">
-                <span className="mt-0.5" style={{ color: "#3282B8" }}>
+                <span className="mt-0.5" style={{ color: "#86B0D4" }}>
                     <IconMail />
                 </span>
                 <div>
@@ -234,7 +234,7 @@ function SupportCard() {
             {/* Phones — US + India */}
             {SUPPORT_PHONES.map((phone) => (
                 <div key={phone.region} className="flex items-start gap-2.5 mt-3">
-                    <span className="mt-0.5" style={{ color: "#3282B8" }}>
+                    <span className="mt-0.5" style={{ color: "#86B0D4" }}>
                         <IconPhone />
                     </span>
                     <div>
@@ -252,7 +252,7 @@ function SupportCard() {
 // ─── MAIN FOOTER ──────────────────────────────────────────────
 export default function Footer() {
     return (
-        <footer className="relative overflow-hidden" style={{ background: "#0a1628", padding: "60px 0 0" }}>
+        <footer className="relative overflow-hidden" style={{ background: "#15304a", padding: "60px 0 0" }}>
             {/* Dot pattern bg */}
             <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none"

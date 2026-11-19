@@ -49,7 +49,7 @@ export function QuestionRenderer({
                                   ? "bg-red-50 border-red-300"
                                   : "bg-gray-50 border-gray-200"
                             : isSelected
-                              ? "bg-[#EBF4FB] border-blue-300"
+                              ? "bg-[#EAF2F9] border-blue-300"
                               : "bg-white border-gray-200 hover:bg-gray-50"
                     }`}
                 >
@@ -91,7 +91,7 @@ export function QuestionRenderer({
                             {question.question}
                         </h3>
                         <div className="flex items-center gap-4 mt-2 text-ui text-gray-600">
-                            <span className="px-2 py-1 bg-[#DBEAFE] text-[#2A6FA0] rounded-md font-medium">
+                            <span className="px-2 py-1 bg-[#DBEAFE] text-[#2F6496] rounded-md font-medium">
                                 {question.type === "true_false"
                                     ? "True / False"
                                     : isSingleChoice(question)
@@ -119,12 +119,12 @@ export function QuestionRenderer({
             {/* Explanation */}
             {showExplanation && question.explanation && (
                 <div className="px-6 pb-6">
-                    <div className="bg-[#EBF4FB] border border-[#BFDBFE] rounded-lg p-4">
+                    <div className="bg-[#EAF2F9] border border-[#BFDBFE] rounded-lg p-4">
                         <div className="flex items-start gap-2">
-                            <Info size={16} className="text-[#3282B8] mt-0.5" />
+                            <Info size={16} className="text-[#3A76AA] mt-0.5" />
                             <div>
                                 <h4 className="font-semibold text-blue-900 mb-1">Explanation</h4>
-                                <p className="text-[#1E5F8C] text-ui leading-relaxed">
+                                <p className="text-[#275382] text-ui leading-relaxed">
                                     {question.explanation}
                                 </p>
                             </div>
@@ -148,7 +148,7 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
 
     const getGradeColor = (percentage) => {
         if (percentage >= 90) return "text-green-600";
-        if (percentage >= 70) return "text-[#3282B8]";
+        if (percentage >= 70) return "text-[#3A76AA]";
         if (percentage >= 50) return "text-yellow-600";
         return "text-red-600";
     };
@@ -301,14 +301,14 @@ export function ExamResults({ results, questions, onRetry, onBackToCourse }) {
                                         </div>
 
                                         {question.explanation && (
-                                            <div className="mt-3 p-3 bg-[#EBF4FB] border border-[#BFDBFE] rounded">
+                                            <div className="mt-3 p-3 bg-[#EAF2F9] border border-[#BFDBFE] rounded">
                                                 <div className="flex items-start gap-2">
-                                                    <Info size={14} className="text-[#3282B8] mt-0.5" />
+                                                    <Info size={14} className="text-[#3A76AA] mt-0.5" />
                                                     <div>
                                                         <span className="font-medium text-blue-900 text-ui">
                                                             Explanation:{" "}
                                                         </span>
-                                                        <span className="text-[#1E5F8C] text-ui">
+                                                        <span className="text-[#275382] text-ui">
                                                             {question.explanation}
                                                         </span>
                                                     </div>

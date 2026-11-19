@@ -110,7 +110,7 @@ export default function ProfilePage() {
                     {/* Avatar — square rounded-2xl + initials */}
                     <div
                         className="w-[88px] h-[88px] rounded-2xl shrink-0 flex items-center justify-center text-white text-h1 font-extrabold overflow-hidden"
-                        style={{ background: "linear-gradient(135deg, #3282B8 0%, #0a1628 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #3A76AA 0%, #15304a 100%)" }}
                     >
                         {user?.avatar ? (
                             <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
@@ -126,7 +126,7 @@ export default function ProfilePage() {
                             <h2 className="text-h3 font-extrabold text-slate-900 tracking-tight">
                                 {user?.name}
                             </h2>
-                            <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider bg-[#EBF4FF] text-[#3282B8] border border-[#BFDBFE]">
+                            <span className="px-2.5 py-0.5 rounded-full text-label font-bold uppercase tracking-wider bg-[#EBF4FF] text-[#3A76AA] border border-[#BFDBFE]">
                                 {user?.role ?? "student"}
                             </span>
                         </div>
@@ -163,15 +163,15 @@ export default function ProfilePage() {
                         <button
                             onClick={() => setShowEditModal(true)}
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
-                            style={{ background: "#3282B8" }}
-                            onMouseEnter={(e) => (e.currentTarget.style.background = "#2a6fa0")}
-                            onMouseLeave={(e) => (e.currentTarget.style.background = "#3282B8")}
+                            style={{ background: "#3A76AA" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "#2f6496")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "#3A76AA")}
                         >
                             <Edit size={14} /> Edit Profile
                         </button>
                         <button
                             onClick={() => setShowPasswordModal(true)}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold border-2 border-[#3282B8] text-[#3282B8] hover:bg-[#EBF4FF] transition-colors"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold border-2 border-[#3A76AA] text-[#3A76AA] hover:bg-[#EBF4FF] transition-colors"
                         >
                             <Shield size={14} /> Change Password
                         </button>
@@ -184,13 +184,13 @@ export default function ProfilePage() {
                 {[
                     {
                         tag: "ACTIVE",
-                        tagColor: "#3282B8",
+                        tagColor: "#3A76AA",
                         tagBg: "#EBF4FF",
                         label: "Enrolled Courses",
                         value: enrolledCount,
                         icon: BookOpen,
                         ibg: "#EBF4FF",
-                        ic: "#3282B8",
+                        ic: "#3A76AA",
                     },
                     {
                         tag: "EARNED",
@@ -314,7 +314,7 @@ function EditModal({ user, onClose, onSaved }) {
                 <div className="flex flex-col items-center gap-2.5 pb-2">
                     <div
                         className="w-[76px] h-[76px] rounded-2xl flex items-center justify-center text-white text-h1 font-extrabold overflow-hidden"
-                        style={{ background: "linear-gradient(135deg, #3282B8, #0a1628)" }}
+                        style={{ background: "linear-gradient(135deg, #3A76AA, #15304a)" }}
                     >
                         {form.avatar ? (
                             <img src={form.avatar} alt={user?.name} className="w-full h-full object-cover" />
@@ -551,7 +551,7 @@ function PasswordModal({ user, onClose }) {
 // ─── Shared Components ────────────────────────────────────────────────────────
 
 const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-ui text-slate-800 outline-none focus:border-[#3282B8] focus:bg-white focus:ring-2 focus:ring-[#3282B8]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+    "w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-ui text-slate-800 outline-none focus:border-[#3A76AA] focus:bg-white focus:ring-2 focus:ring-[#3A76AA]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
 
 function FieldGroup({ label, children }) {
     return (
@@ -605,12 +605,12 @@ function ModalFooter({ onCancel, loading, disabled, label }) {
                 type="submit"
                 disabled={loading || disabled}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-ui font-bold text-white disabled:opacity-50 transition-colors"
-                style={{ background: "#3282B8" }}
+                style={{ background: "#3A76AA" }}
                 onMouseEnter={(e) => {
-                    if (!loading && !disabled) e.currentTarget.style.background = "#2a6fa0";
+                    if (!loading && !disabled) e.currentTarget.style.background = "#2f6496";
                 }}
                 onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#3282B8";
+                    e.currentTarget.style.background = "#3A76AA";
                 }}
             >
                 {loading ? (

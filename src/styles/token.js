@@ -11,9 +11,9 @@
 
 export const tokens = {
     color: {
-        primary: "#3282B8",
-        primaryHover: "#2a6fa0",
-        primaryLight: "#EBF4FB",
+        primary: "#3A76AA",
+        primaryHover: "#2f6496",
+        primaryLight: "#EAF2F9",
         white: "#FFFFFF",
         page: "#F8F9FA",
         border: "#E5E7EB",

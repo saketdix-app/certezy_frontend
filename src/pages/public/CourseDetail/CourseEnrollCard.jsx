@@ -17,12 +17,12 @@ import { formatDuration as fmtSeconds, getPricing } from "@/lib/format";
 
 const formatDuration = (seconds) => fmtSeconds(seconds) || "Self-paced";
 
-// Single reusable enroll button — color always #3282B8
+// Single reusable enroll button — color always #3A76AA
 function EnrollButton({ onClick, href, children, disabled = false }) {
     const style = {
         width: "100%",
         height: "44px",
-        background: "#236A9E",
+        background: "#2F6496",
         color: "#fff",
         border: "none",
         borderRadius: "12px",
@@ -43,8 +43,8 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
             <Link
                 to={href}
                 style={style}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
             >
                 {children}
             </Link>
@@ -56,8 +56,8 @@ function EnrollButton({ onClick, href, children, disabled = false }) {
             onClick={onClick}
             disabled={disabled}
             style={{ ...style, opacity: disabled ? 0.7 : 1, cursor: disabled ? "wait" : "pointer" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
         >
             {children}
         </button>
@@ -149,7 +149,7 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                             </button>
                         )}
                         {onSyllabus && (
-                            <button type="button" onClick={onSyllabus} className="text-ui font-semibold text-[#236A9E] hover:underline">
+                            <button type="button" onClick={onSyllabus} className="text-ui font-semibold text-[#2F6496] hover:underline">
                                 Download the syllabus
                             </button>
                         )}
@@ -174,7 +174,7 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                 <div className="space-y-3">
                     {META.map((item) => (
                         <div key={item.label} className="flex items-center gap-3">
-                            <item.icon size={14} style={{ color: "#3282B8", flexShrink: 0 }} />
+                            <item.icon size={14} style={{ color: "#3A76AA", flexShrink: 0 }} />
                             <span style={{ fontSize: "12.5px", color: "#64748B", flex: 1 }}>
                                 {item.label}
                             </span>
@@ -193,7 +193,7 @@ export default function CourseEnrollCard({ course, isEnrolled = false, onEnroll,
                             className="flex items-center gap-2.5 rounded-xl px-3.5 py-3"
                             style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}
                         >
-                            <Award size={15} style={{ color: "#3282B8", flexShrink: 0 }} />
+                            <Award size={15} style={{ color: "#3A76AA", flexShrink: 0 }} />
                             <p style={{ fontSize: "12.5px", fontWeight: 600, color: "#1D4ED8" }}>
                                 Certificate of completion included
                             </p>

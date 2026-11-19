@@ -122,7 +122,7 @@ export function ForgotPasswordPage() {
                         placeholder="you@example.com"
                         className={cn(
                             inputCls,
-                            error ? "border-red-300" : "border-slate-200 focus:border-[#3282B8]"
+                            error ? "border-red-300" : "border-slate-200 focus:border-[#3A76AA]"
                         )}
                         aria-invalid={!!error}
                     />
@@ -238,7 +238,7 @@ export function ResetPasswordPage() {
                     className={cn(
                         inputCls,
                         "pr-11",
-                        error ? "border-red-300" : "border-slate-200 focus:border-[#3282B8]"
+                        error ? "border-red-300" : "border-slate-200 focus:border-[#3A76AA]"
                     )}
                     aria-invalid={!!error}
                 />

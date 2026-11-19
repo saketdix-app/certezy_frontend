@@ -140,7 +140,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
         <div
             className="rounded-2xl px-6 py-7 relative overflow-hidden"
             style={{
-                background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
             }}
         >
             {/* dot pattern */}
@@ -191,7 +191,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                         to="/courses"
                         className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg no-underline transition-colors duration-200"
                         style={{
-                            background: "#3282B8",
+                            background: "#3A76AA",
                             color: "#fff",
                             fontSize: "13.5px",
                             fontWeight: 700,
@@ -245,7 +245,7 @@ function StatsRow({ totalEnrolled, totalCompleted, totalCerts, recentAttemptsCou
             label: "Enrolled Courses",
             value: totalEnrolled,
             icon: BookOpen,
-            color: "#3282B8",
+            color: "#3A76AA",
             bg: "#EBF4FF",
         },
         {
@@ -316,7 +316,7 @@ function ContinueLearning({ enrollments, inProgress }) {
                 <Link
                     to="/student/my-courses"
                     className="flex items-center gap-1 no-underline"
-                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
+                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3A76AA" }}
                 >
                     View All <ChevronRight size={14} />
                 </Link>
@@ -414,7 +414,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                         >
                             Progress
                         </span>
-                        <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#3282B8" }}>
+                        <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#3A76AA" }}>
                             {progress}%
                         </span>
                     </div>
@@ -425,7 +425,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                                 width: `${progress}%`,
                                 background: isCompleted
                                     ? "#10B981"
-                                    : "linear-gradient(90deg, #3282B8, #60A5FA)",
+                                    : "linear-gradient(90deg, #3A76AA, #60A5FA)",
                             }}
                         />
                     </div>
@@ -434,7 +434,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                         onClick={onContinue}
                         className="w-full mt-3 flex items-center justify-center gap-2 py-2.5 rounded-xl text-white transition-colors duration-200"
                         style={{
-                            background: isCompleted ? "#10B981" : "#3282B8",
+                            background: isCompleted ? "#10B981" : "#3A76AA",
                             fontSize: "13.5px",
                             fontWeight: 700,
                         }}
@@ -467,7 +467,7 @@ function RecentTests({ attempts, enrollments }) {
                 <Link
                     to="/student/tests"
                     className="no-underline"
-                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
+                    style={{ fontSize: "13.5px", fontWeight: 600, color: "#3A76AA" }}
                 >
                     View All
                 </Link>
@@ -534,7 +534,7 @@ function RecentTests({ attempts, enrollments }) {
                             <Link
                                 to={`/student/tests/${attempt.id}/result`}
                                 className="no-underline"
-                                style={{ fontSize: "12.5px", fontWeight: 600, color: "#3282B8" }}
+                                style={{ fontSize: "12.5px", fontWeight: 600, color: "#3A76AA" }}
                             >
                                 Details
                             </Link>
@@ -566,7 +566,7 @@ function CertificatesSection({ certificates }) {
                     <Link
                         to="/student/certificates"
                         className="no-underline"
-                        style={{ fontSize: "13.5px", fontWeight: 600, color: "#3282B8" }}
+                        style={{ fontSize: "13.5px", fontWeight: 600, color: "#3A76AA" }}
                     >
                         View All
                     </Link>
@@ -656,7 +656,7 @@ function EmptyState({ icon: Icon, title, desc, actionLabel, onAction }) {
                 <button
                     onClick={onAction}
                     className="mt-1 px-4 py-2 rounded-xl text-white transition-colors"
-                    style={{ background: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
+                    style={{ background: "#3A76AA", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     {actionLabel}
                 </button>
@@ -673,7 +673,7 @@ function DashboardSkeleton() {
             {/* Banner */}
             <div
                 className="h-[130px] rounded-2xl"
-                style={{ background: "linear-gradient(135deg, #0a1628, #162d5a)" }}
+                style={{ background: "linear-gradient(135deg, #15304a, #1e3f5e)" }}
             />
 
             {/* Stats */}

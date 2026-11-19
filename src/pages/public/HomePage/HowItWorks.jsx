@@ -16,7 +16,7 @@ const CSS = `
   .hiw-f4 { animation: hiwFadeUp .55s .34s ease both; }
 
   .hiw-card-link { display: block; height: 100%; text-decoration: none; color: inherit; cursor: pointer; border-radius: 22px; text-align: left; width: 100%; }
-  .hiw-card-link:focus-visible { outline: 2px solid #3282B8; outline-offset: 4px; }
+  .hiw-card-link:focus-visible { outline: 2px solid #3A76AA; outline-offset: 4px; }
   .hiw-action { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #60A5FA; margin-top: 14px; }
   .hiw-card-link:hover .hiw-action svg { transform: translateX(3px); }
   .hiw-action svg { transition: transform .2s ease; }
@@ -56,7 +56,7 @@ const CSS = `
     gap: 9px;
     padding: 15px 34px;
     border-radius: 14px;
-    background: #236A9E;
+    background: #2F6496;
     color: #fff;
     font-size: 15px;
     font-weight: 700;
@@ -207,7 +207,7 @@ export default function HowItWorks() {
                 className="hiw-section"
                 aria-label="How CERTEZY works — 3 simple steps"
                 style={{
-                    background: "#0B1120",
+                    background: "#15304A",
                     borderTop: "1px solid rgba(255,255,255,0.05)",
                     padding: "90px 0 100px",
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -242,7 +242,7 @@ export default function HowItWorks() {
                             Start Learning in{" "}
                             <span
                                 style={{
-                                    background: "linear-gradient(90deg, #3282B8 0%, #6C3BD5 100%)",
+                                    background: "linear-gradient(90deg, #3A76AA 0%, #F2A33A 100%)",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
@@ -308,7 +308,7 @@ export default function HowItWorks() {
 
                                                     {/* Icon box */}
                                                     <div className="hiw-icon-box" aria-hidden="true">
-                                                        <Icon size={22} color="#3282B8" strokeWidth={1.8} />
+                                                        <Icon size={22} color="#3A76AA" strokeWidth={1.8} />
                                                     </div>
                                                 </div>
 
@@ -352,7 +352,7 @@ export default function HowItWorks() {
                                                     style={{
                                                         fontSize: "11.5px",
                                                         fontWeight: 700,
-                                                        color: "#4E9CD3",
+                                                        color: "#5B91C0",
                                                         letterSpacing: "0.1em",
                                                         textTransform: "uppercase",
                                                     }}

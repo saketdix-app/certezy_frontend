@@ -25,7 +25,7 @@ const PER_PAGE = 8;
 const initials = (name) => name?.slice(0, 2).toUpperCase() ?? "??";
 
 const ICON_COLORS = [
-    { bg: "#EEF6FC", color: "#236A9E" },
+    { bg: "#EAF2F9", color: "#2F6496" },
     { bg: "#FFF7ED", color: "#F97316" },
     { bg: "#F0FDF4", color: "#16A34A" },
     { bg: "#FDF2F8", color: "#A855F7" },
@@ -156,9 +156,9 @@ export default function CategoriesPage() {
                     <button
                         onClick={openCreate}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
-                        style={{ background: "#236A9E" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                        style={{ background: "#2F6496" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                     >
                         <Plus size={15} />
                         Create Category
@@ -547,12 +547,12 @@ function CategoryFormModal({ editing, parents, onClose, onSaved }) {
                             type="submit"
                             disabled={loading}
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-50 transition-colors"
-                            style={{ background: "#236A9E" }}
+                            style={{ background: "#2F6496" }}
                             onMouseEnter={(e) => {
-                                if (!loading) e.currentTarget.style.background = "#1B5582";
+                                if (!loading) e.currentTarget.style.background = "#275382";
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "#236A9E";
+                                e.currentTarget.style.background = "#2F6496";
                             }}
                         >
                             {loading ? (
@@ -663,7 +663,7 @@ function Pagination({ page, total, onChange }) {
                         "w-8 h-8 rounded-lg text-ui font-bold transition-colors",
                         p === page ? "text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50"
                     )}
-                    style={p === page ? { background: "#236A9E" } : {}}
+                    style={p === page ? { background: "#2F6496" } : {}}
                 >
                     {p}
                 </button>

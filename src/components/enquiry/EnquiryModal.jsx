@@ -27,7 +27,7 @@ const COPY = {
 };
 
 const fieldCls =
-    "w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-ui text-slate-900 placeholder:text-slate-400 focus:border-[#236A9E] focus:outline-none focus:ring-2 focus:ring-[#236A9E]/20";
+    "w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-ui text-slate-900 placeholder:text-slate-400 focus:border-[#2F6496] focus:outline-none focus:ring-2 focus:ring-[#2F6496]/20";
 
 function Field({ id, label, optional, children }) {
     return (
@@ -153,7 +153,7 @@ export default function EnquiryModal({ kind, course, onClose }) {
                                 <button
                                     type="button"
                                     onClick={() => printSyllabus(course.title, done.syllabus)}
-                                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-2.5 text-ui font-bold text-white hover:bg-[#1B5582]"
+                                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#2F6496] px-4 py-2.5 text-ui font-bold text-white hover:bg-[#275382]"
                                 >
                                     <Download size={16} aria-hidden="true" /> Save as PDF
                                 </button>
@@ -220,10 +220,10 @@ export default function EnquiryModal({ kind, course, onClose }) {
                         {/* Honeypot: hidden from people, filled in by bots */}
                         <input type="text" name="website" value={form.website} onChange={set("website")} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 opacity-0" />
                         <label className="flex cursor-pointer items-start gap-2.5 text-small leading-relaxed text-slate-600">
-                            <input type="checkbox" checked={form.consent} onChange={set("consent")} className="mt-0.5 h-4 w-4 shrink-0 accent-[#236A9E]" />
+                            <input type="checkbox" checked={form.consent} onChange={set("consent")} className="mt-0.5 h-4 w-4 shrink-0 accent-[#2F6496]" />
                             <span>
                                 I agree that CERTEZY may contact me about this course by phone, email or WhatsApp. See our{" "}
-                                <Link to={ROUTES.PRIVACY} target="_blank" className="font-semibold text-[#236A9E] underline">
+                                <Link to={ROUTES.PRIVACY} target="_blank" className="font-semibold text-[#2F6496] underline">
                                     Privacy Policy
                                 </Link>
                                 .
@@ -237,7 +237,7 @@ export default function EnquiryModal({ kind, course, onClose }) {
                         <button
                             type="submit"
                             disabled={busy}
-                            className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#236A9E] px-4 py-3 text-body font-bold text-white hover:bg-[#1B5582] disabled:opacity-60"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#2F6496] px-4 py-3 text-body font-bold text-white hover:bg-[#275382] disabled:opacity-60"
                         >
                             {busy && <Loader2 size={16} className="animate-spin" aria-hidden="true" />} {copy.submit}
                         </button>

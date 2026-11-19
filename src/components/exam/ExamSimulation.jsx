@@ -16,15 +16,15 @@ import { cn } from "@/lib/utils";
 
 /**
  * ExamSimulation — full-screen exam pieces in the CERTEZY theme
- * (navy bars like the site header, brand blue #3282B8, Plus Jakarta Sans):
+ * (navy bars like the site header, brand blue #3A76AA, Plus Jakarta Sans):
  * top bar (logo · title · time remaining · "n of N"), question card with
  * answer cards, bottom bar with Flag for review · Previous · Navigator · Next,
  * and a Review screen. Flow mirrors real certification exams.
  */
 
 const FONT = "'Plus Jakarta Sans', system-ui, sans-serif";
-const NAVY = "#0F2545";
-const BLUE = "#3282B8";
+const NAVY = "#183254";
+const BLUE = "#3A76AA";
 
 export function ExamTopBar({ title, secondsLeft, current, total, hasTimer, onExit }) {
     const warning = hasTimer && secondsLeft <= 300;
@@ -41,7 +41,7 @@ export function ExamTopBar({ title, secondsLeft, current, total, hasTimer, onExi
                         <span
                             className={cn(
                                 "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-semibold tabular-nums",
-                                warning ? "bg-[#F59E0B] text-[#0F2545]" : "bg-white/10"
+                                warning ? "bg-[#F59E0B] text-[#183254]" : "bg-white/10"
                             )}
                             title="Time remaining"
                         >
@@ -117,7 +117,7 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                             className={cn(
                                 "flex items-start gap-3.5 rounded-xl border-2 px-4 py-3.5 cursor-pointer transition-colors",
                                 checked
-                                    ? "border-[#3282B8] bg-[#EBF4FB]"
+                                    ? "border-[#3A76AA] bg-[#EAF2F9]"
                                     : "border-[#E2E8F0] bg-white hover:border-[#BFDBFE] hover:bg-[#F8FAFC]"
                             )}
                         >
@@ -131,10 +131,10 @@ export function SimulationQuestion({ question, answer, onAnswerChange, number })
                             <span
                                 aria-hidden="true"
                                 className={cn(
-                                    "mt-px w-7 h-7 shrink-0 flex items-center justify-center text-ui font-bold border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#3282B8]/40",
+                                    "mt-px w-7 h-7 shrink-0 flex items-center justify-center text-ui font-bold border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#3A76AA]/40",
                                     single ? "rounded-full" : "rounded-md",
                                     checked
-                                        ? "border-[#3282B8] bg-action text-white"
+                                        ? "border-[#3A76AA] bg-action text-white"
                                         : "border-[#CBD5E1] text-[#64748B] bg-white"
                                 )}
                             >
@@ -260,8 +260,8 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                                 className={cn(
                                     "rounded-lg border px-3.5 py-1.5 font-semibold transition-colors",
                                     filter === key
-                                        ? "border-[#3282B8] bg-action text-white"
-                                        : "border-[#CBD5E1] bg-white text-[#3282B8] hover:bg-[#EBF4FB]"
+                                        ? "border-[#3A76AA] bg-action text-white"
+                                        : "border-[#CBD5E1] bg-white text-[#3A76AA] hover:bg-[#EAF2F9]"
                                 )}
                             >
                                 {label}
@@ -282,7 +282,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
                                     className={cn(
                                         "relative h-12 rounded-lg border-2 text-ui font-bold transition-colors",
                                         answered
-                                            ? "border-[#3282B8] bg-[#EBF4FB] text-[#1E5F8C] hover:bg-[#DBEAFE]"
+                                            ? "border-[#3A76AA] bg-[#EAF2F9] text-[#275382] hover:bg-[#DBEAFE]"
                                             : "border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE]"
                                     )}
                                 >
@@ -301,7 +301,7 @@ export function ReviewScreen({ questions, answers, flagged, onJump, onClose, onE
 
                     <div className="mt-5 flex flex-wrap gap-4 text-small text-[#64748B]">
                         <span className="flex items-center gap-1.5">
-                            <span className="w-3.5 h-3.5 rounded border-2 border-[#3282B8] bg-[#EBF4FB]" />
+                            <span className="w-3.5 h-3.5 rounded border-2 border-[#3A76AA] bg-[#EAF2F9]" />
                             Answered
                         </span>
                         <span className="flex items-center gap-1.5">

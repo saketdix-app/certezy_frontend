@@ -300,7 +300,7 @@ export default function QuestionsPage() {
                 <ChevronRight size={11} />
                 <span className="text-slate-500 truncate max-w-[100px]">{test?.title ?? "..."}</span>
                 <ChevronRight size={11} />
-                <span style={{ color: "#236A9E" }}>Questions</span>
+                <span style={{ color: "#2F6496" }}>Questions</span>
             </div>
 
             {/* Header */}
@@ -316,9 +316,9 @@ export default function QuestionsPage() {
                 <button
                     onClick={openCreate}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
-                    style={{ background: "#236A9E" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                    style={{ background: "#2F6496" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                 >
                     <Plus size={15} /> Add Question
                 </button>
@@ -332,8 +332,8 @@ export default function QuestionsPage() {
                         value: questions.length,
                         sub: "Total",
                         icon: ClipboardList,
-                        ibg: "#EEF6FC",
-                        ic: "#236A9E",
+                        ibg: "#EAF2F9",
+                        ic: "#2F6496",
                     },
                     {
                         label: "Duration",
@@ -383,7 +383,7 @@ export default function QuestionsPage() {
             {/* Questions list */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
+                    <Loader2 size={28} className="animate-spin" style={{ color: "#2F6496" }} />
                 </div>
             ) : questions.length === 0 ? (
                 <EmptyState onAdd={openCreate} />
@@ -590,12 +590,12 @@ export default function QuestionsPage() {
                                 onClick={handleSaveQuestion}
                                 disabled={savingQ}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60 transition-colors"
-                                style={{ background: "#236A9E" }}
+                                style={{ background: "#2F6496" }}
                                 onMouseEnter={(e) => {
-                                    if (!savingQ) e.currentTarget.style.background = "#1B5582";
+                                    if (!savingQ) e.currentTarget.style.background = "#275382";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = "#236A9E";
+                                    e.currentTarget.style.background = "#2F6496";
                                 }}
                             >
                                 {savingQ ? (
@@ -633,7 +633,7 @@ function QuestionCard({ question, index, expanded, onToggle, onEdit, onDelete, d
                         "w-8 h-8 rounded-xl flex items-center justify-center text-ui font-extrabold shrink-0",
                         expanded ? "text-white" : "bg-slate-100 text-slate-600"
                     )}
-                    style={expanded ? { background: "#236A9E" } : {}}
+                    style={expanded ? { background: "#2F6496" } : {}}
                 >
                     {index + 1}
                 </div>
@@ -776,7 +776,7 @@ function EmptyState({ onAdd }) {
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">
-                <ClipboardList size={26} style={{ color: "#236A9E" }} />
+                <ClipboardList size={26} style={{ color: "#2F6496" }} />
             </div>
             <div>
                 <p className="text-body font-bold text-slate-800">No questions yet</p>
@@ -785,9 +785,9 @@ function EmptyState({ onAdd }) {
             <button
                 onClick={onAdd}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
-                style={{ background: "#236A9E" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                style={{ background: "#2F6496" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
             >
                 <Plus size={15} /> Add Question
             </button>

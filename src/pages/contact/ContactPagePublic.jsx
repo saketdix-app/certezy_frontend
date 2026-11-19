@@ -8,7 +8,7 @@ export default function ContactPagePublic() {
         <div
             style={{
                 minHeight: "100vh",
-                background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)",
+                background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)",
             }}
         >
             <ContactHero />

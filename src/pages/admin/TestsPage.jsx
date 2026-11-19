@@ -43,7 +43,7 @@ const EMPTY_FORM = {
 };
 
 const TYPE_STYLE = {
-    practice: { label: "PRACTICE", bg: "#EEF6FC", color: "#236A9E" },
+    practice: { label: "PRACTICE", bg: "#EAF2F9", color: "#2F6496" },
     certification: { label: "CERTIFICATION", bg: "#F5F3FF", color: "#8B5CF6" },
 };
 
@@ -194,7 +194,7 @@ export default function TestsPage() {
                     {course?.title ?? "..."}
                 </span>
                 <ChevronRight size={11} />
-                <span style={{ color: "#236A9E" }}>Tests</span>
+                <span style={{ color: "#2F6496" }}>Tests</span>
             </div>
 
             {/* Header */}
@@ -210,9 +210,9 @@ export default function TestsPage() {
                 <button
                     onClick={openCreate}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white shrink-0 transition-colors"
-                    style={{ background: "#236A9E" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                    style={{ background: "#2F6496" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
                 >
                     <Plus size={15} /> + Create Test
                 </button>
@@ -226,8 +226,8 @@ export default function TestsPage() {
                         value: totalTests,
                         sub: "",
                         icon: ClipboardList,
-                        ibg: "#EEF6FC",
-                        ic: "#236A9E",
+                        ibg: "#EAF2F9",
+                        ic: "#2F6496",
                     },
                     {
                         label: "Active Now",
@@ -274,7 +274,7 @@ export default function TestsPage() {
             {/* Tests list */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 size={28} className="animate-spin" style={{ color: "#236A9E" }} />
+                    <Loader2 size={28} className="animate-spin" style={{ color: "#2F6496" }} />
                 </div>
             ) : tests.length === 0 ? (
                 <EmptyState onAdd={openCreate} />
@@ -380,12 +380,12 @@ export default function TestsPage() {
                                     type="submit"
                                     disabled={saving}
                                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-ui font-bold text-white disabled:opacity-60"
-                                    style={{ background: "#236A9E" }}
+                                    style={{ background: "#2F6496" }}
                                     onMouseEnter={(e) => {
-                                        if (!saving) e.currentTarget.style.background = "#1B5582";
+                                        if (!saving) e.currentTarget.style.background = "#275382";
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "#236A9E";
+                                        e.currentTarget.style.background = "#2F6496";
                                     }}
                                 >
                                     {saving ? (
@@ -420,7 +420,7 @@ function TestCard({ test, onEdit, onDelete, deleting, onManage }) {
             {/* Icon placeholder */}
             <div
                 className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center text-white text-h2 font-extrabold"
-                style={{ background: "linear-gradient(135deg, #0a1628, #162d5a)" }}
+                style={{ background: "linear-gradient(135deg, #15304a, #1e3f5e)" }}
             >
                 {test.title?.slice(0, 2).toUpperCase()}
             </div>
@@ -504,7 +504,7 @@ function EmptyState({ onAdd }) {
             style={{ boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}
         >
             <div className="w-14 h-14 rounded-2xl bg-action-soft flex items-center justify-center">
-                <ClipboardList size={26} style={{ color: "#236A9E" }} />
+                <ClipboardList size={26} style={{ color: "#2F6496" }} />
             </div>
             <div>
                 <p className="text-body font-bold text-slate-800">No tests yet</p>
@@ -513,9 +513,9 @@ function EmptyState({ onAdd }) {
             <button
                 onClick={onAdd}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white"
-                style={{ background: "#236A9E" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#1B5582")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#236A9E")}
+                style={{ background: "#2F6496" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
             >
                 <Plus size={15} /> Create Test
             </button>

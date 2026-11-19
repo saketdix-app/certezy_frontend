@@ -32,7 +32,7 @@ const PER_PAGE = 10;
 
 const STATUS = {
     active: { label: "Active", bg: "#F0FDF4", color: "#16A34A", icon: Clock },
-    used: { label: "Used", bg: "#EEF6FC", color: "#236A9E", icon: BadgeCheck },
+    used: { label: "Used", bg: "#EAF2F9", color: "#2F6496", icon: BadgeCheck },
     expired: { label: "Expired", bg: "#FEF2F2", color: "#DC2626", icon: TimerOff },
 };
 
@@ -326,7 +326,7 @@ function SendDiscountForm({ onSent }) {
                             </div>
                         ) : selectedStudent ? (
                             <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-[#0a1628] flex items-center justify-center text-white text-ui font-bold shrink-0">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-[#15304a] flex items-center justify-center text-white text-ui font-bold shrink-0">
                                     {selectedStudent.name?.charAt(0)?.toUpperCase()}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -557,7 +557,7 @@ function SentLinks({ refreshKey }) {
 
     const totalPages = Math.ceil(total / PER_PAGE);
     const cards = [
-        { key: "", label: "All links", value: stats?.total, icon: Link2, color: "#236A9E", bg: "#EEF6FC" },
+        { key: "", label: "All links", value: stats?.total, icon: Link2, color: "#2F6496", bg: "#EAF2F9" },
         { key: "active", label: "Active", value: stats?.active, ...STATUS.active },
         { key: "used", label: "Used (discount availed)", value: stats?.used, ...STATUS.used },
         { key: "expired", label: "Expired", value: stats?.expired, ...STATUS.expired },

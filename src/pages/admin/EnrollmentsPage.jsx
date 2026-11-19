@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 10;
 
 const STATUS = {
-    completed: { label: "Completed", bg: "#EEF6FC", color: "#236A9E", bar: "#236A9E" },
+    completed: { label: "Completed", bg: "#EAF2F9", color: "#2F6496", bar: "#2F6496" },
     in_progress: { label: "In progress", bg: "#F0FDF4", color: "#16A34A", bar: "#22C55E" },
     not_started: { label: "Not started", bg: "#F8FAFC", color: "#64748B", bar: "#CBD5E1" },
 };
@@ -170,16 +170,16 @@ export default function EnrollmentsPage() {
             label: "Enrollments",
             value: totals.total,
             icon: Users,
-            bg: "#EEF6FC",
-            color: "#236A9E",
+            bg: "#EAF2F9",
+            color: "#2F6496",
         },
         {
             key: "completed",
             label: "Completed",
             value: totals.completed,
             icon: CheckCircle2,
-            bg: "#EEF6FC",
-            color: "#236A9E",
+            bg: "#EAF2F9",
+            color: "#2F6496",
         },
         {
             key: "in_progress",

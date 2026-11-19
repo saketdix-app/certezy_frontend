@@ -64,7 +64,7 @@ export default function NotificationsMenu({ className }) {
                             <button
                                 type="button"
                                 onClick={() => notificationService.markRead().then(load)}
-                                className="text-small font-semibold text-[#3282B8]"
+                                className="text-small font-semibold text-[#3A76AA]"
                             >
                                 Mark all read
                             </button>

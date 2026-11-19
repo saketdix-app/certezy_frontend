@@ -65,20 +65,20 @@ export default function ContactHero() {
     return (
         <section
             className="px-6 pt-20 pb-0 md:pt-24"
-            style={{ background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)" }}
+            style={{ background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)" }}
         >
             <div className="max-w-screen-2xl mx-auto">
                 {/* ── Hero Text ── */}
                 <div className="text-center mb-14 animate-[fadeUp_0.6s_ease_both]">
                     <span
                         className="inline-block text-small font-bold uppercase tracking-[0.14em] mb-4"
-                        style={{ color: "#4E9CD3" }}
+                        style={{ color: "#5B91C0" }}
                     >
                         Contact Us
                     </span>
 
                     <h1 className="text-h1 md:text-display lg:text-6xl font-extrabold text-slate-100 leading-tight mb-4">
-                        Get in <span style={{ color: "#4E9CD3" }}>Touch</span>
+                        Get in <span style={{ color: "#5B91C0" }}>Touch</span>
                     </h1>
 
                     <p className="text-body text-slate-400 max-w-lg mx-auto leading-relaxed">
@@ -96,7 +96,7 @@ export default function ContactHero() {
                 rounded-2xl p-7
                 text-center
                 border border-white/[0.08] bg-white/[0.04]
-                hover:border-[#3282B8]/40 hover:bg-[#3282B8]/[0.07]
+                hover:border-[#3A76AA]/40 hover:bg-[#3A76AA]/[0.07]
                 hover:-translate-y-1
                 transition-all duration-250
                 group

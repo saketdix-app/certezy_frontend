@@ -65,7 +65,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
                 .legal-body li { color: #475569; font-size: 15px; line-height: 1.7; margin-bottom: 6px; }
                 .legal-body h3 { color: #0F172A; font-size: 16px; font-weight: 700; margin: 18px 0 8px; }
                 .legal-body strong { color: #0F172A; }
-                .legal-body a { color: #236A9E; }
+                .legal-body a { color: #2F6496; }
                 .legal-body table { width: 100%; border-collapse: collapse; font-size: 14px; }
                 .legal-body th, .legal-body td { border: 1px solid #E2E8F0; padding: 10px 12px; text-align: left; vertical-align: top; color: #475569; line-height: 1.6; }
                 .legal-body th { background: #F8FAFC; color: #0F172A; font-weight: 700; }
@@ -74,7 +74,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
             {/* Header */}
             <section
                 className="px-6 pt-16 pb-12"
-                style={{ background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)" }}
+                style={{ background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)" }}
             >
                 <div className="max-w-5xl mx-auto">
                     <p className="text-small font-bold uppercase tracking-widest text-[#38BDF8] mb-3">Legal</p>

@@ -30,7 +30,7 @@ export default function PaymentMethod({ selected, onChange }) {
                             className={cn(
                                 "w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all duration-150",
                                 active
-                                    ? "border-[#3282B8] bg-[#EBF4FF]"
+                                    ? "border-[#3A76AA] bg-[#EBF4FF]"
                                     : "border-[#EEF2F7] bg-white hover:border-[#BFDBFE]"
                             )}
                         >
@@ -38,7 +38,7 @@ export default function PaymentMethod({ selected, onChange }) {
                             <div
                                 className={cn(
                                     "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0",
-                                    active ? "border-[#3282B8]" : "border-slate-300"
+                                    active ? "border-[#3A76AA]" : "border-slate-300"
                                 )}
                             >
                                 {active && <div className="w-2.5 h-2.5 rounded-full bg-action" />}

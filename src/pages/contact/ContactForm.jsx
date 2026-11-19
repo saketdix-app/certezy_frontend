@@ -88,14 +88,14 @@ export default function ContactForm() {
         "w-full rounded-xl px-4 py-3 text-ui text-slate-200",
         "bg-white/5 border border-white/10",
         "placeholder:text-slate-400",
-        "focus:outline-none focus:border-[#3282B8] focus:bg-[#3282B8]/5",
+        "focus:outline-none focus:border-[#3A76AA] focus:bg-[#3A76AA]/5",
         "transition-colors duration-200",
     ].join(" ");
 
     return (
         <section
             className="px-6 pb-20 pt-14"
-            style={{ background: "linear-gradient(135deg, #0a1628 0%, #0f2545 55%, #162d5a 100%)" }}
+            style={{ background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)" }}
         >
             <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 {/* ── LEFT: Form ─────────────────────────────────────── */}
@@ -116,7 +116,7 @@ export default function ContactForm() {
                             <button
                                 type="button"
                                 onClick={() => setSubmittedName(null)}
-                                className="text-ui font-semibold text-[#7FBAE3] hover:brightness-125"
+                                className="text-ui font-semibold text-[#86B0D4] hover:brightness-125"
                             >
                                 Send another message
                             </button>
@@ -219,7 +219,7 @@ export default function ContactForm() {
                                         <option
                                             key={s}
                                             value={s}
-                                            style={{ background: "#0f2545", color: "#e2e8f0" }}
+                                            style={{ background: "#183254", color: "#e2e8f0" }}
                                         >
                                             {s}
                                         </option>
@@ -252,7 +252,7 @@ export default function ContactForm() {
                                 disabled={loading}
                                 className="w-full py-3.5 rounded-xl text-white font-bold text-ui tracking-wide transition-all duration-200 hover:brightness-90 active:scale-[0.99]"
                                 style={{
-                                    background: "#236A9E",
+                                    background: "#2F6496",
                                     opacity: loading ? 0.7 : 1,
                                     cursor: loading ? "not-allowed" : "pointer",
                                     boxShadow: loading ? "none" : "0 4px 20px rgba(50,130,184,0.3)",

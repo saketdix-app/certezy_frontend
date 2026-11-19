@@ -2,25 +2,31 @@
 @import "tailwindcss";
 
 @theme {
-    /* ── Brand blue scale (500 = the logo blue) ── */
-    --color-brand-50: #eef6fc;
-    --color-brand-100: #d7eaf7;
-    --color-brand-200: #b0d5ef;
-    --color-brand-300: #7fbae3;
-    --color-brand-400: #4e9cd3;
-    --color-brand-500: #3282b8;
-    --color-brand-600: #236a9e;
-    --color-brand-700: #1b5582;
-    --color-brand-800: #164569;
-    --color-brand-900: #123852;
-    --color-brand-950: #0a1628;
+    /* ── Brand blue scale, from the CERTEZY brochure (500 = brochure steel blue) ── */
+    --color-brand-50: #eaf2f9;
+    --color-brand-100: #d6e5f2;
+    --color-brand-200: #c9dcec;
+    --color-brand-300: #86b0d4;
+    --color-brand-400: #5b91c0;
+    --color-brand-500: #3a76aa;
+    --color-brand-600: #2f6496;
+    --color-brand-700: #275382;
+    --color-brand-800: #1e3f5e;
+    --color-brand-900: #15304a;
+    --color-brand-950: #0d1f31;
+
+    /* ── Brochure navy (hero panels, footers) and amber highlight ── */
+    --color-navy: #1e3f5e;
+    --color-navy-deep: #15304a;
+    --color-accent: #f2a33a;
+    --color-accent-soft: #ffd08a;
 
     /* ── Actions: buttons, links, focus — brand-600 so small white text
-       passes WCAG AA (5.79 : 1; the logo blue is 4.18) ── */
-    --color-action: #236a9e;
-    --color-action-hover: #1b5582;
-    --color-action-soft: #eef6fc;
-    --color-action-soft-ink: #1b5582;
+       passes WCAG AA (6.2 : 1) ── */
+    --color-action: #2f6496;
+    --color-action-hover: #275382;
+    --color-action-soft: #eaf2f9;
+    --color-action-soft-ink: #275382;
 
     /* ── Type scale: eight sizes (class text-<name>) ── */
     --text-label: 11.5px; /* uppercase labels, badges, table headers */
@@ -38,16 +44,16 @@
     /* ── Surfaces (redefined by the admin dark mode) ── */
     --color-surface: #ffffff;
 
-    /* Links and accents on white: the readable blue (logo blue is brand-500) */
-    --color-primary: #236a9e;
-    --color-primary-hover: #1b5582;
-    --color-primary-light: #ebf4fb;
+    /* Links and accents on white (brochure steel blue family) */
+    --color-primary: #2f6496;
+    --color-primary-hover: #275382;
+    --color-primary-light: #eaf2f9;
     --color-page: #f5f8fb;
     --color-border: #e2e8f0;
-    --color-text-primary: #334155;
-    --color-text-secondary: #475569;
+    --color-text-primary: #1f2a36;
+    --color-text-secondary: #3d4b5a;
     /* was #9ca3af (2.5 : 1 on white); now 5.2 : 1 */
-    --color-text-muted: #5e6e85;
+    --color-text-muted: #5b6b7b;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --spacing-navbar: 64px;
     --shadow-drop: 0 8px 30px rgba(0, 0, 0, 0.18);

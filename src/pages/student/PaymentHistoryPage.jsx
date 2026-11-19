@@ -127,13 +127,13 @@ export default function PaymentHistoryPage() {
                             className="flex items-center gap-3 px-4 py-3 rounded-xl shrink-0"
                             style={{ background: "#EBF4FF", border: "1px solid #BFDBFE" }}
                         >
-                            <CreditCard size={16} style={{ color: "#3282B8" }} />
+                            <CreditCard size={16} style={{ color: "#3A76AA" }} />
                             <div>
                                 <p
                                     style={{
                                         fontSize: "11.5px",
                                         fontWeight: 700,
-                                        color: "#3282B8",
+                                        color: "#3A76AA",
                                         textTransform: "uppercase",
                                         letterSpacing: "0.06em",
                                     }}
@@ -332,7 +332,7 @@ function PaymentRow({ payment, isLast }) {
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-1.5 no-underline px-2.5 py-1.5 rounded-lg w-fit transition-colors"
-                    style={{ fontSize: "11.5px", fontWeight: 700, background: "#EBF4FF", color: "#3282B8" }}
+                    style={{ fontSize: "11.5px", fontWeight: 700, background: "#EBF4FF", color: "#3A76AA" }}
                 >
                     <Download size={11} />
                     PDF
@@ -383,7 +383,7 @@ function PaymentCard({ payment }) {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 py-2.5 rounded-xl no-underline"
-                    style={{ background: "#EBF4FF", color: "#3282B8", fontSize: "13.5px", fontWeight: 700 }}
+                    style={{ background: "#EBF4FF", color: "#3A76AA", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     <Download size={14} />
                     Download Invoice
