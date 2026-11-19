@@ -91,7 +91,7 @@ export default function StudentLayout() {
                                     className={cn(
                                         "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline group relative",
                                         active
-                                            ? "bg-[#EBF4FF] text-[#3A76AA]"
+                                            ? "bg-[#EAF2F9] text-[#3A76AA]"
                                             : "text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
                                     )}
                                 >
@@ -125,7 +125,7 @@ export default function StudentLayout() {
                     {isAdminRole(user?.role) && (
                         <Link
                             to="/admin/dashboard"
-                            className="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] text-[#3A76AA] no-underline hover:bg-[#DBEAFE] transition-colors"
+                            className="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#C9DCEC] bg-[#EAF2F9] text-[#3A76AA] no-underline hover:bg-[#D6E5F2] transition-colors"
                         >
                             <ShieldCheck size={17} className="shrink-0" />
                             <span style={{ fontSize: "13.5px", fontWeight: 700 }}>Admin Panel</span>

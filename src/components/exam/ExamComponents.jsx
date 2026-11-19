@@ -38,7 +38,7 @@ export function ExamTimer({ duration, onTimeUp, isActive }) {
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
                 isWarning
                     ? "bg-red-50 text-red-600 border border-red-200"
-                    : "bg-[#EAF2F9] text-[#3A76AA] border border-[#BFDBFE]"
+                    : "bg-[#EAF2F9] text-[#3A76AA] border border-[#C9DCEC]"
             }`}
         >
             <Clock size={16} />

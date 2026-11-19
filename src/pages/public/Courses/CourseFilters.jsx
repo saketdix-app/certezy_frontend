@@ -105,7 +105,7 @@ function FilterSection({ title, children, isLast = false }) {
         <div className={cn(!isLast && "border-b border-border")}>
             <button
                 onClick={() => setOpen(!open)}
-                className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[#FAFBFF] transition-colors"
+                className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[#F7FAFD] transition-colors"
             >
                 <span className="text-label font-bold text-text-secondary uppercase tracking-widest">
                     {title}
@@ -191,7 +191,7 @@ function OptionGroup({ options, active, onSelect }) {
                             "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left border transition-all duration-150",
                             isActive
                                 ? "border-primary bg-primary-light"
-                                : "border-border bg-white hover:border-primary/30 hover:bg-[#FAFBFF]"
+                                : "border-border bg-white hover:border-primary/30 hover:bg-[#F7FAFD]"
                         )}
                     >
                         <div

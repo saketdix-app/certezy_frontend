@@ -189,7 +189,7 @@ export default function CategoryTabs() {
                                 className={cn(
                                     "flex items-center gap-1.5 h-11 px-3.5 text-ui font-semibold no-underline whitespace-nowrap border-b-2 transition-colors",
                                     isOpen
-                                        ? "text-white border-[#60A5FA] bg-white/5"
+                                        ? "text-white border-[#5B91C0] bg-white/5"
                                         : "text-white/80 border-transparent hover:text-white"
                                 )}
                             >

@@ -24,14 +24,14 @@ import { formatDuration } from "@/lib/format"; // seconds → "1h 30m"
 
 // ── Lesson type → icon + label (blue/white chips, one shade per kind) ──
 const LESSON_TYPES = {
-    video: { icon: PlayCircle, label: "Video", chip: "bg-[#1D4ED8] text-white border-[#1D4ED8]" },
-    pdf: { icon: FileDown, label: "PDF", chip: "bg-white text-[#1D4ED8] border-[#93C5FD]" },
-    article: { icon: FileText, label: "Reading", chip: "bg-[#EFF6FF] text-[#1E40AF] border-[#BFDBFE]" },
-    text: { icon: FileText, label: "Reading", chip: "bg-[#EFF6FF] text-[#1E40AF] border-[#BFDBFE]" },
-    quiz: { icon: HelpCircle, label: "Quiz", chip: "bg-[#DBEAFE] text-[#1E3A8A] border-[#93C5FD]" },
-    link: { icon: Link2, label: "Link", chip: "bg-white text-[#2563EB] border-[#BFDBFE]" },
-    embed: { icon: MonitorPlay, label: "Interactive", chip: "bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]" },
-    audio: { icon: Headphones, label: "Audio", chip: "bg-white text-[#1E40AF] border-[#BFDBFE]" },
+    video: { icon: PlayCircle, label: "Video", chip: "bg-[#275382] text-white border-[#275382]" },
+    pdf: { icon: FileDown, label: "PDF", chip: "bg-white text-[#275382] border-[#86B0D4]" },
+    article: { icon: FileText, label: "Reading", chip: "bg-[#EAF2F9] text-[#275382] border-[#C9DCEC]" },
+    text: { icon: FileText, label: "Reading", chip: "bg-[#EAF2F9] text-[#275382] border-[#C9DCEC]" },
+    quiz: { icon: HelpCircle, label: "Quiz", chip: "bg-[#D6E5F2] text-[#1E3F5E] border-[#86B0D4]" },
+    link: { icon: Link2, label: "Link", chip: "bg-white text-[#2F6496] border-[#C9DCEC]" },
+    embed: { icon: MonitorPlay, label: "Interactive", chip: "bg-[#EAF2F9] text-[#275382] border-[#C9DCEC]" },
+    audio: { icon: Headphones, label: "Audio", chip: "bg-white text-[#275382] border-[#C9DCEC]" },
 };
 const typeOf = (type) => LESSON_TYPES[type] || LESSON_TYPES.video;
 
@@ -68,7 +68,7 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
             })}
             className={cn(
                 "flex items-center gap-3 px-4 sm:px-5 py-3 border-t border-[#EEF4FF] first:border-t-0",
-                canPreview && "cursor-pointer group transition-colors duration-150 hover:bg-[#F5F9FF]"
+                canPreview && "cursor-pointer group transition-colors duration-150 hover:bg-[#F3F8FC]"
             )}
         >
             <span className="w-6 shrink-0 text-right text-label font-semibold text-slate-500 tabular-nums">
@@ -83,14 +83,14 @@ function LessonRow({ lesson, index, isEnrolled, onPreview }) {
                 className={cn(
                     "flex-1 min-w-0 truncate text-ui leading-snug",
                     isLocked ? "text-slate-500" : "text-slate-900 font-medium",
-                    canPreview && "group-hover:text-[#1D4ED8]"
+                    canPreview && "group-hover:text-[#275382]"
                 )}
             >
                 {lesson.title}
             </span>
 
             {canPreview ? (
-                <span className="flex items-center gap-1 shrink-0 rounded-full bg-[#2563EB] px-2.5 py-1 text-label font-bold text-white">
+                <span className="flex items-center gap-1 shrink-0 rounded-full bg-[#2F6496] px-2.5 py-1 text-label font-bold text-white">
                     <Eye size={11} /> Preview
                 </span>
             ) : isLocked ? (
@@ -155,7 +155,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
             className={cn(
                 "rounded-2xl overflow-hidden bg-white transition-shadow duration-200",
                 open
-                    ? "border border-[#BFDBFE] shadow-[0_6px_20px_rgba(37,99,235,0.08)]"
+                    ? "border border-[#C9DCEC] shadow-[0_6px_20px_rgba(47,100,150,0.08)]"
                     : "border border-[#E2E8F0]"
             )}
         >
@@ -165,13 +165,13 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                 aria-expanded={open}
                 className={cn(
                     "w-full flex items-center gap-4 px-4 sm:px-5 py-4 text-left transition-colors duration-150",
-                    open ? "bg-[#EFF6FF]" : "bg-white hover:bg-[#F8FAFF]"
+                    open ? "bg-[#EAF2F9]" : "bg-white hover:bg-[#F4F8FC]"
                 )}
             >
                 <span
                     className={cn(
                         "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-ui font-extrabold",
-                        open ? "bg-[#2563EB] text-white" : "bg-[#EFF6FF] text-[#2563EB]"
+                        open ? "bg-[#2F6496] text-white" : "bg-[#EAF2F9] text-[#2F6496]"
                     )}
                 >
                     {String(index + 1).padStart(2, "0")}
@@ -184,7 +184,7 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
                     <p
                         className={cn(
                             "truncate text-body font-bold leading-snug",
-                            open ? "text-[#1E3A8A]" : "text-slate-900"
+                            open ? "text-[#1E3F5E]" : "text-slate-900"
                         )}
                     >
                         {section.title}
@@ -210,14 +210,14 @@ function SectionRow({ section, index, isEnrolled, onPreview, expandAll }) {
 
             {/* Lessons list */}
             {open && (
-                <div className="bg-white border-t border-[#DBEAFE]">
+                <div className="bg-white border-t border-[#D6E5F2]">
                     {loading ? (
                         <div className="px-5 py-4 space-y-3">
                             {Array(3)
                                 .fill(0)
                                 .map((_, i) => (
                                     <div key={i} className="flex items-center gap-3 animate-pulse">
-                                        <div className="w-[92px] h-6 rounded-md bg-[#EFF6FF] shrink-0" />
+                                        <div className="w-[92px] h-6 rounded-md bg-[#EAF2F9] shrink-0" />
                                         <div className="h-3 bg-[#F1F5F9] rounded-full flex-1" />
                                         <div className="h-3 bg-[#F1F5F9] rounded-full w-10 shrink-0" />
                                     </div>

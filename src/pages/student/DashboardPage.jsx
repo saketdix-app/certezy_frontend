@@ -215,7 +215,7 @@ function WelcomeBanner({ firstName, totalEnrolled }) {
                         className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                         style={{ background: "rgba(50,130,184,0.25)" }}
                     >
-                        <TrendingUp size={20} style={{ color: "#60A5FA" }} />
+                        <TrendingUp size={20} style={{ color: "#5B91C0" }} />
                     </div>
                     <div>
                         <p
@@ -246,7 +246,7 @@ function StatsRow({ totalEnrolled, totalCompleted, totalCerts, recentAttemptsCou
             value: totalEnrolled,
             icon: BookOpen,
             color: "#3A76AA",
-            bg: "#EBF4FF",
+            bg: "#EAF2F9",
         },
         {
             label: "Completed",
@@ -425,7 +425,7 @@ function CourseProgressCard({ enrollment, onContinue }) {
                                 width: `${progress}%`,
                                 background: isCompleted
                                     ? "#10B981"
-                                    : "linear-gradient(90deg, #3A76AA, #60A5FA)",
+                                    : "linear-gradient(90deg, #3A76AA, #5B91C0)",
                             }}
                         />
                     </div>

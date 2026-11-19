@@ -77,7 +77,7 @@ export default function LegalLayout({ title, intro, sections, effectiveDate = LE
                 style={{ background: "linear-gradient(135deg, #15304a 0%, #183254 55%, #1e3f5e 100%)" }}
             >
                 <div className="max-w-5xl mx-auto">
-                    <p className="text-small font-bold uppercase tracking-widest text-[#38BDF8] mb-3">Legal</p>
+                    <p className="text-small font-bold uppercase tracking-widest text-[#5B91C0] mb-3">Legal</p>
                     <h1 className="text-h1 md:text-display font-extrabold text-white tracking-tight mb-3">
                         {title}
                     </h1>

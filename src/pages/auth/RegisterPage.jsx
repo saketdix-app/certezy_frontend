@@ -60,7 +60,7 @@ export default function RegisterPage() {
         { label: "", color: "#E2E8F0" },
         { label: "Weak", color: "#EF4444" },
         { label: "Fair", color: "#F59E0B" },
-        { label: "Good", color: "#3B82F6" },
+        { label: "Good", color: "#3A76AA" },
         { label: "Strong", color: "#10B981" },
     ];
 

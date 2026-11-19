@@ -17,7 +17,7 @@ const CSS = `
 
   .hiw-card-link { display: block; height: 100%; text-decoration: none; color: inherit; cursor: pointer; border-radius: 22px; text-align: left; width: 100%; }
   .hiw-card-link:focus-visible { outline: 2px solid #3A76AA; outline-offset: 4px; }
-  .hiw-action { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #60A5FA; margin-top: 14px; }
+  .hiw-action { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #5B91C0; margin-top: 14px; }
   .hiw-card-link:hover .hiw-action svg { transform: translateX(3px); }
   .hiw-action svg { transition: transform .2s ease; }
 

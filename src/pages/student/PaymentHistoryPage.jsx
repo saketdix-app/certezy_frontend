@@ -125,7 +125,7 @@ export default function PaymentHistoryPage() {
                     {!loading && payments.length > 0 && (
                         <div
                             className="flex items-center gap-3 px-4 py-3 rounded-xl shrink-0"
-                            style={{ background: "#EBF4FF", border: "1px solid #BFDBFE" }}
+                            style={{ background: "#EAF2F9", border: "1px solid #C9DCEC" }}
                         >
                             <CreditCard size={16} style={{ color: "#3A76AA" }} />
                             <div>
@@ -332,7 +332,7 @@ function PaymentRow({ payment, isLast }) {
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-1.5 no-underline px-2.5 py-1.5 rounded-lg w-fit transition-colors"
-                    style={{ fontSize: "11.5px", fontWeight: 700, background: "#EBF4FF", color: "#3A76AA" }}
+                    style={{ fontSize: "11.5px", fontWeight: 700, background: "#EAF2F9", color: "#3A76AA" }}
                 >
                     <Download size={11} />
                     PDF
@@ -383,7 +383,7 @@ function PaymentCard({ payment }) {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 py-2.5 rounded-xl no-underline"
-                    style={{ background: "#EBF4FF", color: "#3A76AA", fontSize: "13.5px", fontWeight: 700 }}
+                    style={{ background: "#EAF2F9", color: "#3A76AA", fontSize: "13.5px", fontWeight: 700 }}
                 >
                     <Download size={14} />
                     Download Invoice
