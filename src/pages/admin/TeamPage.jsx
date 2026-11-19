@@ -11,6 +11,7 @@ import {
     SlidersHorizontal,
     Loader2,
     Mail,
+    Pencil,
     Search,
     ShieldCheck,
     ShieldOff,
@@ -53,6 +54,7 @@ const ACTION_LABELS = {
     "super_admin.create": "Created Super Admin",
     "super_admin.promote": "Made Super Admin",
     "user.role_change": "Changed role",
+    "user.update": "Edited details",
     "user.activate": "Unblocked account",
     "user.deactivate": "Blocked account",
     "user.delete": "Deleted account",
@@ -465,6 +467,82 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                     >
                         {busy && <Loader2 size={15} className="animate-spin" />}
                         Send invitation
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function EditMemberModal({ member, isSelf, onClose, onDone }) {
+    const [form, setForm] = useState({ name: member.name ?? "", email: member.email ?? "", mobile: member.mobile ?? "" });
+    const [password, setPassword] = useState("");
+    const [busy, setBusy] = useState(false);
+    const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+    const emailChanged = form.email.trim().toLowerCase() !== String(member.email ?? "").toLowerCase();
+    // Same rule as the server: your own email, or an Admin's / Super Admin's
+    const needsPassword = emailChanged && (isSelf || ["super_admin", "admin"].includes(member.role));
+
+    const submit = async (e) => {
+        e.preventDefault();
+        if (form.name.trim().length < 2) return toast.error("Enter the person's name");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return toast.error("Enter a valid email");
+        if (needsPassword && !password) return toast.error("Enter your password to change this email");
+        const body = {};
+        if (form.name.trim() !== member.name) body.name = form.name.trim();
+        if (emailChanged) body.email = form.email.trim();
+        if (form.mobile.trim() !== (member.mobile ?? "")) body.mobile = form.mobile.trim();
+        if (!Object.keys(body).length) return onClose();
+        setBusy(true);
+        try {
+            await teamService.update(member.id, { ...body, ...(needsPassword && { password }) });
+            toast.success(emailChanged ? "Details saved. Both email addresses have been notified." : "Details saved");
+            onDone();
+            onClose();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not save the changes"));
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <Modal title={`Edit details — ${member.name}`} onClose={onClose}>
+            <form onSubmit={submit} className="space-y-3">
+                <label className="block">
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Full name</span>
+                    <input value={form.name} onChange={set("name")} className={inputCls} autoFocus />
+                </label>
+                <label className="block">
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Email (used to sign in)</span>
+                    <input type="email" value={form.email} onChange={set("email")} className={inputCls} />
+                </label>
+                {emailChanged && (
+                    <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-ui text-amber-900">
+                        <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+                        <span>
+                            {isSelf ? "You" : "They"} will sign in with <b>{form.email.trim() || "the new email"}</b> from now on. The old and
+                            the new address both get an email about this change.
+                        </span>
+                    </div>
+                )}
+                <label className="block">
+                    <span className="mb-1 block text-ui font-semibold text-slate-700">Phone (optional)</span>
+                    <input value={form.mobile} onChange={set("mobile")} placeholder="+91 98765 43210" className={inputCls} />
+                </label>
+                {needsPassword && <PasswordField value={password} onChange={setPassword} />}
+                <p className="text-small text-slate-500">To change the role, use Change role. Every change is recorded in the audit log.</p>
+                <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={busy}
+                        className="inline-flex items-center gap-2 rounded-lg bg-action px-4 py-2 text-ui font-bold text-white hover:bg-action-hover disabled:opacity-60"
+                    >
+                        {busy && <Loader2 size={15} className="animate-spin" />}
+                        Save changes
                     </button>
                 </div>
             </form>
@@ -893,6 +971,9 @@ export default function TeamPage() {
                                             <td className="px-4 py-3">
                                                 <div className="flex flex-wrap justify-end gap-1.5">
                                                     <ActionBtn icon={History} label="History" onClick={() => setModal({ type: "history", member: m })} />
+                                                    {(canManage(m) || m.id === me?.id) && (
+                                                        <ActionBtn icon={Pencil} label="Edit" onClick={() => setModal({ type: "edit", member: m })} />
+                                                    )}
                                                     {isSuper && m.role === "admin" && m.is_active && (
                                                         <ActionBtn
                                                             icon={m.super_admin_grant ? ShieldOff : ShieldCheck}
@@ -956,6 +1037,9 @@ export default function TeamPage() {
             )}
             {modal?.type === "allocation" && <AllocationModal member={modal.member} onClose={close} onDone={load} />}
             {modal?.type === "history" && <HistoryModal member={modal.member} onClose={close} />}
+            {modal?.type === "edit" && (
+                <EditMemberModal member={modal.member} isSelf={modal.member.id === me?.id} onClose={close} onDone={load} />
+            )}
             {modal?.type === "role" && (
                 <ChangeRoleModal member={modal.member} roles={caps.can_create_roles} onClose={close} onDone={load} />
             )}
