@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Info, Mail } from "lucide-react";
+import { BadgeCheck, ChevronDown, Info, Mail } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
  */
 
 const ABOUT = { label: "About Us", to: "/about", icon: Info, desc: "Our story and mission" };
+const ATP = { label: "PMI ATP · Live batches", to: "/pmi-authorized-training-partner", icon: BadgeCheck, desc: "PMP® program and upcoming batches" };
 const CONTACT = { label: "Contact", to: "/contact-us", icon: Mail, desc: "Get in touch with us" };
 
 export default function NavLinks({ megaOpen, onToggleMega, navH = "h-[70px]" }) {
@@ -29,7 +30,10 @@ export default function NavLinks({ megaOpen, onToggleMega, navH = "h-[70px]" }) 
 
             <AllCoursesLink isOpen={megaOpen} onClick={onToggleMega} navH={navH} />
 
-            {/* About + Contact — inline from lg+ */}
+            {/* PMI ATP + About + Contact — inline from lg+ */}
+            <span className="hidden lg:block">
+                <NavLink to={ATP.to} label="PMI ATP · Live batches" isActive={pathname === ATP.to} navH={navH} />
+            </span>
             <span className="hidden lg:block">
                 <NavLink to="/about" label="About Us" isActive={pathname === "/about"} navH={navH} />
             </span>
@@ -39,7 +43,7 @@ export default function NavLinks({ megaOpen, onToggleMega, navH = "h-[70px]" }) 
 
             {/* md only — collapse About + Contact into More */}
             <span className="hidden md:block lg:hidden">
-                <MoreDropdown items={[ABOUT, CONTACT]} navH={navH} />
+                <MoreDropdown items={[ATP, ABOUT, CONTACT]} navH={navH} />
             </span>
         </nav>
     );

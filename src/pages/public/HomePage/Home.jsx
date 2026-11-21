@@ -1,4 +1,6 @@
 import HeroSection from "./HeroSection";
+import AtpStrip from "./AtpStrip";
+import UpcomingBatches from "@/components/batches/UpcomingBatches";
 import LearningSection from "./LearningSection";
 import HowItWorks from "./HowItWorks";
 import Testimonials from "./Testimonials";
@@ -19,6 +21,9 @@ export default function Home() {
     return (
         <main>
             <HeroSection />
+            <AtpStrip />
+            {/* Shown once a live batch is published in Admin → Live batches */}
+            <UpcomingBatches hideWhenEmpty className="bg-[#F6F9FC] pt-4" />
             <LearningSection />
             {/* <FeaturedCourses/> */}
             <HowItWorks />
