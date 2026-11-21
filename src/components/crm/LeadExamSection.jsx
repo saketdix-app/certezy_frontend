@@ -7,6 +7,7 @@ import {
     IndianRupee,
     Pencil,
     UserRound,
+    XCircle,
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
@@ -235,9 +236,10 @@ const Row = ({ label, children }) => (
 export default function LeadExamSection({ lead, busy, run }) {
     const access = lead.access ?? {};
     const [coordinators, setCoordinators] = useState(null);
-    const [examForm, setExamForm] = useState(null); // { status, when, done, doneOn, result, note }
+    const [examForm, setExamForm] = useState(null); // { mode: schedule | cancel, when, note }
     const [payForm, setPayForm] = useState(null); // { paidOn, reference }
     const [appDate, setAppDate] = useState(null); // editing the submission date
+    const [openedAt] = useState(() => Date.now()); // "has the exam time passed?" as of opening the lead
 
     useEffect(() => {
         if (!access.assign_exam_coordinator) return;
@@ -251,45 +253,42 @@ export default function LeadExamSection({ lead, busy, run }) {
     const inWorkflow = ["application", "exam_scheduled", "course_done"].includes(lead.stage);
     const showExam = inWorkflow || status !== "not_scheduled" || lead.exam_done;
 
-    const openExam = () =>
+    const live = ["scheduled", "rescheduled"].includes(status);
+    const examPassed = lead.exam_scheduled_at && new Date(lead.exam_scheduled_at).getTime() <= openedAt;
+    // { mode: "schedule" | "cancel", when, note }
+    const openExam = (mode) =>
         setExamForm({
-            status: status === "not_scheduled" ? "scheduled" : status,
-            when: toLocalInput(lead.exam_scheduled_at),
-            done: Boolean(lead.exam_done),
-            doneOn: lead.exam_completed_at ? toLocalInput(lead.exam_completed_at).slice(0, 10) : todayInput(),
-            result: lead.exam_result ?? "",
-            note: lead.exam_note ?? "",
+            mode,
+            when: mode === "schedule" && live ? toLocalInput(lead.exam_scheduled_at) : "",
+            note: "",
         });
-    const setE = (k, v) =>
-        setExamForm((f) => {
-            const next = { ...f, [k]: v };
-            // Changing the date of an exam that already had one → Rescheduled
-            if (
-                k === "when" &&
-                lead.exam_scheduled_at &&
-                v &&
-                v !== toLocalInput(lead.exam_scheduled_at) &&
-                f.status === "scheduled"
-            )
-                next.status = "rescheduled";
-            if (k === "status" && v === "cancelled") next.done = false;
-            return next;
-        });
+    const setE = (k, v) => setExamForm((f) => ({ ...f, [k]: v }));
     const saveExam = async () => {
         const f = examForm;
-        if (f.status !== "cancelled" && !f.when) return;
-        const body = {
-            status: f.status,
-            ...(f.when && { scheduled_at: new Date(f.when).toISOString() }),
-            exam_done: f.done,
-            ...(f.done && { completed_at: dayToIso(f.doneOn || todayInput()), result: f.result || null }),
-            note: f.note.trim() || null,
-        };
-        const moving = lead.stage === "application" && ["scheduled", "rescheduled"].includes(f.status);
+        if (f.mode === "cancel") {
+            if (!f.note.trim()) return;
+            const back = lead.stage === "exam_scheduled";
+            if (
+                await run(
+                    () => crmService.updateExam(lead.id, { status: "cancelled", note: f.note.trim() }),
+                    back ? "Exam cancelled — moved back to Application" : "Exam cancelled"
+                )
+            )
+                setExamForm(null);
+            return;
+        }
+        if (!f.when) return;
+        const moved = live && lead.exam_scheduled_at && f.when !== toLocalInput(lead.exam_scheduled_at);
+        const moving = lead.stage === "application";
         if (
             await run(
-                () => crmService.updateExam(lead.id, body),
-                moving ? "Exam scheduled — moved to Exam Scheduled" : "Exam updated"
+                () =>
+                    crmService.updateExam(lead.id, {
+                        status: "scheduled",
+                        scheduled_at: new Date(f.when).toISOString(),
+                        note: f.note.trim() || null,
+                    }),
+                moving ? "Exam scheduled — moved to Exam Scheduled" : moved ? "Exam rescheduled" : "Exam updated"
             )
         )
             setExamForm(null);
@@ -485,62 +484,102 @@ export default function LeadExamSection({ lead, busy, run }) {
                 <Block icon={CalendarCheck2} title="Exam" badge={<ExamStatusBadge status={status} />}>
                     {!examForm ? (
                         <>
-                            <Row label="Date & time">
+                            <Row label={status === "cancelled" ? "Was scheduled for" : "Date & time"}>
                                 {lead.exam_scheduled_at ? (
-                                    <b className="font-semibold">{fmtDateTime(lead.exam_scheduled_at)}</b>
+                                    <b className={cn("font-semibold", status === "cancelled" && "text-slate-500 line-through")}>
+                                        {fmtDateTime(lead.exam_scheduled_at)}
+                                    </b>
                                 ) : (
                                     <span className="text-slate-500">Not set</span>
                                 )}
                             </Row>
-                            <Row label="Exam done">
-                                {lead.exam_done ? (
-                                    <b className="font-semibold text-emerald-700">
-                                        Yes{lead.exam_completed_at && `, ${fmtDate(lead.exam_completed_at)}`}
-                                        {lead.exam_result && ` · ${EXAM_RESULT_LABEL[lead.exam_result]}`}
-                                    </b>
-                                ) : (
-                                    <span className="text-slate-500">No</span>
-                                )}
-                            </Row>
+                            {status !== "cancelled" && (
+                                <Row label="Exam done">
+                                    {lead.exam_done ? (
+                                        <b className="font-semibold text-emerald-700">
+                                            Yes{lead.exam_completed_at && `, ${fmtDate(lead.exam_completed_at)}`}
+                                            {lead.exam_result && ` · ${EXAM_RESULT_LABEL[lead.exam_result]}`}
+                                        </b>
+                                    ) : live && !examPassed ? (
+                                        <span className="text-slate-500">Not yet · marked done once the exam time passes</span>
+                                    ) : live ? (
+                                        <span className="text-slate-500">Updating…</span>
+                                    ) : (
+                                        <span className="text-slate-500">No</span>
+                                    )}
+                                </Row>
+                            )}
                             {lead.exam_note && (
-                                <p className="pt-1 text-small text-slate-600">{lead.exam_note}</p>
+                                <p
+                                    className={cn(
+                                        "mt-1 rounded-lg px-2.5 py-1.5 text-small",
+                                        status === "cancelled" ? "bg-red-50 text-red-800" : "bg-slate-50 text-slate-600"
+                                    )}
+                                >
+                                    {status === "cancelled" && <b className="font-semibold">Cancellation remark: </b>}
+                                    {lead.exam_note}
+                                </p>
                             )}
                             {access.update_exam && lead.stage !== "course_done" && (
-                                <button
-                                    type="button"
-                                    onClick={openExam}
-                                    className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-small font-semibold text-slate-700 hover:bg-slate-50"
-                                >
-                                    <Pencil size={13} aria-hidden="true" />{" "}
-                                    {status === "not_scheduled" ? "Schedule exam" : "Update exam"}
-                                </button>
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => openExam("schedule")}
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-small font-semibold text-slate-700 hover:bg-slate-50"
+                                    >
+                                        <Pencil size={13} aria-hidden="true" /> {live ? "Change date" : "Schedule exam"}
+                                    </button>
+                                    {live && (
+                                        <button
+                                            type="button"
+                                            onClick={() => openExam("cancel")}
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-small font-semibold text-red-700 hover:bg-red-50"
+                                        >
+                                            <XCircle size={13} aria-hidden="true" /> Cancel exam
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </>
+                    ) : examForm.mode === "cancel" ? (
+                        <div className="space-y-2.5">
+                            <p className="rounded-lg bg-red-50 px-3 py-2 text-small text-red-800">
+                                The exam{lead.exam_scheduled_at ? ` on ${fmtDateTime(lead.exam_scheduled_at)}` : ""} will be
+                                cancelled{lead.stage === "exam_scheduled" ? " and the lead moved back to Application" : ""}. The date
+                                and your remark stay in the activity history, and the consultant is notified.
+                            </p>
+                            <label className="block text-small font-semibold text-slate-600">
+                                Cancellation remark
+                                <textarea
+                                    value={examForm.note}
+                                    onChange={(e) => setE("note", e.target.value)}
+                                    placeholder="Why was the exam cancelled?"
+                                    maxLength={255}
+                                    rows={2}
+                                    autoFocus
+                                    className={cn(inputCls, "mt-1 resize-none")}
+                                />
+                            </label>
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setExamForm(null)}
+                                    className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold"
+                                >
+                                    Keep exam
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={busy || !examForm.note.trim()}
+                                    onClick={saveExam}
+                                    className="rounded-lg bg-red-600 px-3 py-1.5 text-small font-bold text-white hover:bg-red-700 disabled:opacity-60"
+                                >
+                                    Cancel exam
+                                </button>
+                            </div>
+                        </div>
                     ) : (
                         <div className="space-y-2.5">
-                            <div
-                                className="flex flex-wrap gap-1.5"
-                                role="radiogroup"
-                                aria-label="Exam status"
-                            >
-                                {["scheduled", "rescheduled", "cancelled"].map((v) => (
-                                    <button
-                                        key={v}
-                                        type="button"
-                                        role="radio"
-                                        aria-checked={examForm.status === v}
-                                        onClick={() => setE("status", v)}
-                                        className={cn(
-                                            "rounded-full border px-3 py-1 text-small font-semibold",
-                                            examForm.status === v
-                                                ? "border-action bg-action-soft text-action-soft-ink"
-                                                : "border-slate-200 text-slate-600"
-                                        )}
-                                    >
-                                        {EXAM_STATUS[v][0]}
-                                    </button>
-                                ))}
-                            </div>
                             <label className="block text-small font-semibold text-slate-600">
                                 Exam date and time
                                 <input
@@ -548,43 +587,14 @@ export default function LeadExamSection({ lead, busy, run }) {
                                     value={examForm.when}
                                     onChange={(e) => setE("when", e.target.value)}
                                     className={cn(inputCls, "mt-1")}
+                                    autoFocus
                                 />
                             </label>
-                            {examForm.status !== "cancelled" && (
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <span className="text-small font-semibold text-slate-600">Exam done</span>
-                                    <YesNo
-                                        label="Exam done"
-                                        value={examForm.done}
-                                        onChange={(v) => setE("done", v)}
-                                    />
-                                </div>
-                            )}
-                            {examForm.done && (
-                                <div className="grid gap-2 sm:grid-cols-2">
-                                    <label className="block text-small font-semibold text-slate-600">
-                                        Taken on
-                                        <input
-                                            type="date"
-                                            value={examForm.doneOn}
-                                            max={todayInput()}
-                                            onChange={(e) => setE("doneOn", e.target.value)}
-                                            className={cn(inputCls, "mt-1")}
-                                        />
-                                    </label>
-                                    <label className="block text-small font-semibold text-slate-600">
-                                        Result (optional)
-                                        <select
-                                            value={examForm.result}
-                                            onChange={(e) => setE("result", e.target.value)}
-                                            className={cn(inputCls, "mt-1")}
-                                        >
-                                            <option value="">Not known</option>
-                                            <option value="passed">Passed</option>
-                                            <option value="failed">Not passed</option>
-                                        </select>
-                                    </label>
-                                </div>
+                            {live && lead.exam_scheduled_at && (
+                                <p className="text-small text-slate-500">
+                                    Currently {fmtDateTime(lead.exam_scheduled_at)}. A new date is saved as a reschedule; the old
+                                    date stays in the history.
+                                </p>
                             )}
                             <input
                                 value={examForm.note}
@@ -603,7 +613,7 @@ export default function LeadExamSection({ lead, busy, run }) {
                                 </button>
                                 <button
                                     type="button"
-                                    disabled={busy || (examForm.status !== "cancelled" && !examForm.when)}
+                                    disabled={busy || !examForm.when}
                                     onClick={saveExam}
                                     className="rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white disabled:opacity-60"
                                 >

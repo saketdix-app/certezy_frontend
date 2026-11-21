@@ -70,14 +70,17 @@ const ACTIVITY_TEXT = {
             m?.ticket_size ? ` · ticket size ${fmtMoney(m.ticket_size, m.ticket_currency)}` : ""
         }`,
     exam_coordinator: (m) => (m?.to ? "Exam coordinator assigned" : "Exam coordinator removed"),
-    exam_rescheduled: (m) => `Exam rescheduled to ${fmtDateTime(m?.scheduled_at)}`,
-    exam_cancelled: () => "Exam cancelled",
+    exam_rescheduled: (m) =>
+        `Exam rescheduled${m?.previous_at ? ` from ${fmtDateTime(m.previous_at)}` : ""} to ${fmtDateTime(m?.scheduled_at)}`,
+    exam_cancelled: (m) => `Exam cancelled${m?.scheduled_at ? ` (was scheduled for ${fmtDateTime(m.scheduled_at)})` : ""}`,
     application_update: (m) => (m?.submitted ? `Application submitted${m?.submitted_at ? ` on ${fmtDate(m.submitted_at)}` : ""}` : "Application marked not submitted"),
     payment_done: (m) => `Payment Done${m?.paid_at ? ` on ${fmtDate(m.paid_at)}` : ""}${m?.reference ? ` · ${m.reference}` : ""}`,
     payment_due: () => "Payment set back to Payment Due",
     exam_scheduled: (m) => `Exam scheduled for ${fmtDateTime(m?.scheduled_at)}`,
     exam_completed: (m) =>
-        `Exam completed${m?.completed_at ? ` on ${fmtDate(m.completed_at)}` : ""}${m?.result ? ` · ${EXAM_RESULT_LABEL[m.result]}` : ""}`,
+        `Exam done${m?.completed_at ? ` on ${fmtDate(m.completed_at)}` : ""}${m?.automatic ? " (exam time passed)" : ""}${
+            m?.result ? ` · ${EXAM_RESULT_LABEL[m.result]}` : ""
+        }`,
     exam_cleared: () => "Exam reset to not scheduled",
     note: () => "Note",
     call: () => "Call",

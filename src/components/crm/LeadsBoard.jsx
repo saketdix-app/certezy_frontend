@@ -479,7 +479,7 @@ export default function LeadsBoard({ isAdmin }) {
 
             {/* Status tabs */}
             <div
-                className="no-scrollbar -mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0"
+                className="-mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:thin] sm:mx-0 sm:px-0"
                 role="tablist"
             >
                 {(isCoordinator
@@ -496,7 +496,9 @@ export default function LeadsBoard({ isAdmin }) {
                         aria-selected={stage === k}
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
-                            "shrink-0 rounded-full border px-3 py-1.5 text-small font-semibold",
+                            "shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-small font-semibold",
+                            // Closed stages sit apart at the end of the row
+                            k === "not_interested" && "ml-2",
                             stage === k
                                 ? "border-action bg-action-soft text-action-soft-ink"
                                 : "border-slate-200 bg-surface text-slate-600"
@@ -509,7 +511,7 @@ export default function LeadsBoard({ isAdmin }) {
 
             {/* Filters */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
-                <div className="relative w-full sm:w-72">
+                <div className="relative w-full sm:w-auto sm:min-w-[220px] sm:flex-1">
                     <Search
                         size={15}
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
@@ -962,25 +964,26 @@ export default function LeadsBoard({ isAdmin }) {
 
 const sel = cn(inputCls, "py-1.5");
 
-function Field({ label, children }) {
+function Field({ label, children, className }) {
     return (
-        <label className="block text-small font-semibold text-slate-600">
+        <label className={cn("block min-w-0 text-small font-semibold text-slate-600", className)}>
             {label}
             <span className="mt-1 block">{children}</span>
         </label>
     );
 }
 
+/** Two dates side by side: takes two grid columns so the date pickers never overlap the next field. */
 function Range({ label, from, to, adv, setA }) {
     return (
-        <Field label={label}>
+        <Field label={label} className="sm:col-span-2">
             <span className="flex items-center gap-1.5">
                 <input
                     type="date"
                     value={adv[from]}
                     onChange={setA(from)}
                     aria-label={`${label} from`}
-                    className={sel}
+                    className={cn(sel, "min-w-0 flex-1")}
                 />
                 <span className="text-slate-400">–</span>
                 <input
@@ -988,7 +991,7 @@ function Range({ label, from, to, adv, setA }) {
                     value={adv[to]}
                     onChange={setA(to)}
                     aria-label={`${label} to`}
-                    className={sel}
+                    className={cn(sel, "min-w-0 flex-1")}
                 />
             </span>
         </Field>
@@ -1080,7 +1083,7 @@ function AdvancedFilters({
                             value={adv.currency}
                             onChange={setA("currency")}
                             aria-label="Ticket currency"
-                            className={cn(sel, "w-[84px]")}
+                            className={cn(sel, "w-[84px] shrink-0")}
                         >
                             <option value="">Any</option>
                             <option value="INR">₹ INR</option>
@@ -1093,7 +1096,7 @@ function AdvancedFilters({
                             onChange={setA("ticket_min")}
                             placeholder="Min"
                             aria-label="Minimum ticket size"
-                            className={sel}
+                            className={cn(sel, "min-w-0 flex-1")}
                         />
                         <input
                             type="number"
@@ -1102,7 +1105,7 @@ function AdvancedFilters({
                             onChange={setA("ticket_max")}
                             placeholder="Max"
                             aria-label="Maximum ticket size"
-                            className={sel}
+                            className={cn(sel, "min-w-0 flex-1")}
                         />
                     </span>
                 </Field>
