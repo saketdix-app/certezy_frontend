@@ -21,6 +21,12 @@ export const PMI_ATP = {
     badge: "/brand/pmi-atp-badge.png",
     alt: "PMI Authorized Training Partner",
     notice: "The PMI Authorized Training Partner logo is a registered mark of Project Management Institute, Inc. PMI, PMP, CAPM and PMBOK are registered marks of Project Management Institute, Inc.",
+    // Our Premier ATP badge on Credly: anyone can verify it there
+    premierBadge: "/brand/pmi-atp-premier.png",
+    tier: "Premier",
+    credlyUrl: "https://www.credly.com/badges/3b777c46-a5b6-4a4e-b054-a48cadbf33d3",
+    // PMP® exam prep course ID registered with PMI
+    courseId: "CERTEZYPM35H2026",
 };
 
 /**
@@ -88,6 +94,7 @@ export const ROUTES = {
     PRIVACY: "/privacy-policy",
     TERMS: "/terms-of-service",
     COMPLAINTS: "/complaints-policy",
+    PMI_ATP: "/pmi-authorized-training-partner",
 };
 
 export const AUTH_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.OAUTH_CALLBACK];

@@ -15,6 +15,7 @@ const CoursesPage = lazy(() => import("@/pages/public/Courses/CoursesPage"));
 const CourseDetailPage = lazy(() => import("@/pages/public/CourseDetail/CourseDetailIndex"));
 const VerifyCertificatePage = lazy(() => import("@/pages/public/VerifyCertificate/VerifyCertificatePage"));
 const OfferPage = lazy(() => import("@/pages/public/Offer/OfferPage"));
+const PmiAtpPage = lazy(() => import("@/pages/public/PmiAtp/PmiAtpPage"));
 const ContactPagePublic = lazy(() => import("@/pages/contact/ContactPagePublic"));
 const PrivacyPolicyPage = lazy(() => import("@/pages/legal/PrivacyPolicyPage"));
 const TermsOfServicePage = lazy(() => import("@/pages/legal/TermsOfServicePage"));
@@ -50,6 +51,7 @@ const AdminLayout = lazy(() => import("@/components/layout/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
 const AssignCoursesPage = lazy(() => import("@/pages/admin/AssignCoursesPage"));
+const LiveBatchesPage = lazy(() => import("@/pages/admin/LiveBatchesPage"));
 const AdminCoursesPage = lazy(() => import("@/pages/admin/CoursesPage"));
 const BulkImportPage = lazy(() => import("@/pages/admin/BulkImportPage"));
 const CurriculumPage = lazy(() => import("@/pages/admin/CurriculumPage"));
@@ -180,6 +182,9 @@ export default function AppRoutes() {
                     <Route path="/terms" element={<Navigate to={ROUTES.TERMS} replace />} />
                     <Route path="/contact" element={<Navigate to={ROUTES.CONTACT} replace />} />
                     <Route path={ROUTES.ABOUT} element={<About />} />
+                    <Route path={ROUTES.PMI_ATP} element={<PmiAtpPage />} />
+                    <Route path="/pmp" element={<Navigate to={ROUTES.PMI_ATP} replace />} />
+                    <Route path="/live-batches" element={<Navigate to={`${ROUTES.PMI_ATP}#live-batches`} replace />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
 
@@ -255,6 +260,14 @@ export default function AppRoutes() {
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="assign-courses" element={<AssignCoursesPage />} />
+                    <Route
+                        path="live-batches"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                                <LiveBatchesPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route path="courses" element={<AdminCoursesPage />} />
                     <Route path="import" element={<BulkImportPage />} />
                     <Route path="courses/:courseId/curriculum" element={<CurriculumPage />} />

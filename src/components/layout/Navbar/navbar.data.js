@@ -14,6 +14,7 @@ export const NAV_LINKS = [
 
 // ── "More" dropdown items ──────────────────────────────────
 export const MORE_ITEMS = [
+    { label: "PMI ATP · Live batches", to: "/pmi-authorized-training-partner" },
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact-us" },
 ];
