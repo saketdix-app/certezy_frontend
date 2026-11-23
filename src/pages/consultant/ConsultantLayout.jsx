@@ -9,7 +9,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle";
 import { usePortalTheme } from "@/lib/portalTheme";
 import { logoutUser, selectUser } from "@/features/auth/authSlice";
 import { useNewLeads } from "@/lib/newLeads";
-import RedDot from "@/components/crm/RedDot";
+import { CountBadge } from "@/components/crm/RedDot";
 import { cn } from "@/lib/utils";
 
 // PRD §4.1 left navigation. Phones show the first four as tabs, the rest under "More".
@@ -42,7 +42,7 @@ export default function ConsultantLayout() {
     const NAV_ITEMS = isCoordinator ? EXAM_NAV : NAV;
     // New leads assigned to me that I haven't opened: red dot on the tab and on "My Leads"
     const newLeads = useNewLeads(!isCoordinator);
-    const dotFor = (to) => (to === "/consultant/leads" && newLeads > 0 ? <RedDot label={`${newLeads} new leads`} className="ml-auto" /> : null);
+    const dotFor = (to) => (to === "/consultant/leads" ? <CountBadge count={newLeads} label={`${newLeads} new leads assigned to you`} className="ml-auto" /> : null);
     const TABS = NAV_ITEMS.slice(0, 4);
     const MORE = NAV_ITEMS.slice(4);
     const logout = async () => {
@@ -141,7 +141,7 @@ export default function ConsultantLayout() {
                     >
                         <span className="relative">
                             <Icon size={20} aria-hidden="true" />
-                            {to === "/consultant/leads" && newLeads > 0 && <RedDot label={`${newLeads} new leads`} className="absolute -right-1.5 -top-1" />}
+                            {to === "/consultant/leads" && <CountBadge count={newLeads} label={`${newLeads} new leads assigned to you`} className="absolute -right-3 -top-2" />}
                         </span>
                         {label}
                     </NavLink>

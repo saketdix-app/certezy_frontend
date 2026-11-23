@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TwoFactorDialog from "@/components/security/TwoFactorDialog";
 import { useNewLeads } from "@/lib/newLeads";
-import RedDot from "@/components/crm/RedDot";
+import { CountBadge } from "@/components/crm/RedDot";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -194,7 +194,7 @@ export default function AdminLayout() {
                                                 >
                                                     <item.icon size={17} aria-hidden="true" />
                                                     <span>{item.label}</span>
-                                                    {item.to === "/admin/leads" && newLeads > 0 && <RedDot label={`${newLeads} new leads`} className="ml-auto" />}
+                                                    {item.to === "/admin/leads" && <CountBadge count={newLeads} label={`${newLeads} new leads assigned to you`} className="ml-auto" />}
                                                 </Link>
                                             </li>
                                         );
