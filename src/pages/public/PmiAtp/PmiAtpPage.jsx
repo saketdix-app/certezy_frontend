@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-    ArrowRight,
     BadgeCheck,
     BookOpenCheck,
     CalendarDays,
+    Download,
     ExternalLink,
     GraduationCap,
     Layers,
@@ -33,6 +33,9 @@ const MORE = [
     { Icon: ListChecks, title: "Practice and revision", body: "Practice questions, knowledge checks and real-world scenarios before your exam." },
     { Icon: CalendarDays, title: "Live or on-demand", body: "Join an upcoming live batch, or study the on-demand course at your own pace." },
 ];
+
+// The 35-hour PMP® exam prep brochure (public/brochures)
+const BROCHURE_URL = "/brochures/CERTEZY-PMP-35-Hour-Brochure.pdf";
 
 const STATS = [
     ["35", "Training hours"],
@@ -79,12 +82,14 @@ export default function PmiAtpPage() {
                             >
                                 <CalendarDays size={16} aria-hidden="true" /> Upcoming live batches
                             </a>
-                            <Link
-                                to={`/courses/${PMP_SLUG}`}
+                            <a
+                                href={BROCHURE_URL}
+                                download="CERTEZY-PMP-35-Hour-Brochure.pdf"
                                 className="inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-3 text-ui font-bold text-white hover:bg-white/10"
                             >
-                                View the PMP® course <ArrowRight size={16} aria-hidden="true" />
-                            </Link>
+                                <Download size={16} aria-hidden="true" /> Download course brochure
+                                <span className="text-small font-semibold text-[#C9DCEC]">PDF</span>
+                            </a>
                         </div>
                     </div>
 
