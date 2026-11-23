@@ -19,7 +19,7 @@ const STATUS = {
     duplicate: ["Already a lead", "bg-amber-50 text-amber-800"],
     error: ["Can't import", "bg-red-50 text-red-700"],
 };
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 50 * 1024 * 1024;
 
 /**
  * Upload leads from a CSV. "Check file" shows which columns were recognised and
@@ -29,7 +29,7 @@ const MAX_BYTES = 5 * 1024 * 1024;
 export default function ImportLeadsModal({ isManager, canAssign, owners = [], courses = [], onClose, onDone }) {
     const fileRef = useRef(null);
     const [file, setFile] = useState(null); // { name, text }
-    const [opts, setOpts] = useState({ default_source: "manual", course_id: "", owner_mode: isManager ? "unassigned" : "me", owner_id: "" });
+    const [opts, setOpts] = useState({ default_source: "manual", course_id: "", owner_mode: isManager ? "unassigned" : "me", owner_id: "", as_backlog: false });
     const [check, setCheck] = useState(null);
     const [result, setResult] = useState(null);
     const [busy, setBusy] = useState(false);
@@ -41,7 +41,7 @@ export default function ImportLeadsModal({ isManager, canAssign, owners = [], co
     const pick = (f) => {
         if (!f) return;
         if (!/\.csv$/i.test(f.name) && f.type !== "text/csv") return toast.error("Choose a .csv file (in Excel: File → Save as → CSV)");
-        if (f.size > MAX_BYTES) return toast.error("The file is too big (5 MB max) — split it");
+        if (f.size > MAX_BYTES) return toast.error("The file is too big (50 MB max) — split it");
         const reader = new FileReader();
         reader.onload = () => {
             setFile({ name: f.name, text: String(reader.result ?? "") });
@@ -59,6 +59,7 @@ export default function ImportLeadsModal({ isManager, canAssign, owners = [], co
         course_id: opts.course_id ? Number(opts.course_id) : null,
         owner_mode: isManager ? opts.owner_mode : "me",
         owner_id: opts.owner_mode === "owner" && opts.owner_id ? Number(opts.owner_id) : null,
+        as_backlog: opts.as_backlog,
     });
 
     const run = async (dry) => {
@@ -126,7 +127,7 @@ export default function ImportLeadsModal({ isManager, canAssign, owners = [], co
                         <FileUp size={22} className="text-action" aria-hidden="true" />
                         <div className="min-w-0 flex-1">
                             <p className="truncate text-ui font-semibold text-slate-800">{file ? file.name : "Drop a CSV here, or choose one"}</p>
-                            <p className="text-small text-slate-500">Up to 2,000 leads and 5 MB per file</p>
+                            <p className="text-small text-slate-500">Up to 10,000 leads and 50 MB per file</p>
                         </div>
                         <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
                         <button type="button" onClick={() => fileRef.current?.click()} className="rounded-lg border border-slate-200 bg-surface px-3 py-2 text-ui font-semibold text-slate-700">
@@ -190,6 +191,30 @@ export default function ImportLeadsModal({ isManager, canAssign, owners = [], co
                             <p className="self-end text-small text-slate-500 sm:col-span-2">The leads are added to your list.</p>
                         )}
                     </div>
+
+                    <label
+                        className={cn(
+                            "flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2.5",
+                            opts.as_backlog ? "border-action bg-action-soft" : "border-slate-200"
+                        )}
+                    >
+                        <input
+                            type="checkbox"
+                            checked={opts.as_backlog}
+                            onChange={(e) => {
+                                setOpts((o) => ({ ...o, as_backlog: e.target.checked }));
+                                setCheck(null);
+                            }}
+                            className="mt-0.5 h-4 w-4 accent-action"
+                        />
+                        <span>
+                            <span className="block text-ui font-semibold text-slate-800">Add as Backlog</span>
+                            <span className="block text-small text-slate-500">
+                                The leads wait in the <b>Backlog</b> tab (no red dot); the consultant moves them to Attempting Contact when they
+                                have time. Stages in the file are ignored.
+                            </span>
+                        </span>
+                    </label>
 
                     {check && (
                         <div className="space-y-3 rounded-xl border border-slate-200 p-3">

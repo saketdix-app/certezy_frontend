@@ -18,6 +18,7 @@ import {
     SlidersHorizontal,
     X,
     Trash2,
+    Play,
     Upload,
 } from "lucide-react";
 
@@ -320,6 +321,8 @@ export default function LeadsBoard({ isAdmin }) {
     // Sub-Admins assign only with "Lead assignment" (Team → Permissions)
     const canAssign = me?.role !== "sub_admin" || Boolean(me?.permissions?.can_assign_leads);
     const [deleting, setDeleting] = useState(null); // lead ids
+    // Backlog → Attempting Contact in one click
+    const [starting, setStarting] = useState(null);
     const [adv, setAdv] = useState(EMPTY_ADV);
     const [showAdv, setShowAdv] = useState(false);
     const [coordinators, setCoordinators] = useState([]);
@@ -432,6 +435,20 @@ export default function LeadsBoard({ isAdmin }) {
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
     }, [stage, search, source, ownerId, overdueOnly, newOnly, advKey, page]);
+
+    const startLead = async (e, l) => {
+        e.stopPropagation();
+        setStarting(l.id);
+        try {
+            await crmService.changeStage(l.id, "attempting_contact");
+            toast.success(`${l.name} moved to Attempting Contact`);
+            load();
+        } catch (err) {
+            toast.error(apiMessage(err, "Could not move the lead"));
+        } finally {
+            setStarting(null);
+        }
+    };
 
     // A lead was opened (its red dot is gone): refresh the list
     useEffect(() => {
@@ -852,6 +869,9 @@ export default function LeadsBoard({ isAdmin }) {
                                                 <AlertTriangle size={11} aria-hidden="true" /> Payment due
                                             </span>
                                         )}
+                                        {l.stage === "backlog" && !isCoordinator && (
+                                            <StartButton busy={starting === l.id} onClick={(e) => startLead(e, l)} />
+                                        )}
                                     </td>
                                     {shownColumns.map((c) => (
                                         <td
@@ -899,6 +919,9 @@ export default function LeadsBoard({ isAdmin }) {
                                     </p>
                                     <StageBadge stage={l.stage} />
                                 </div>
+                                {l.stage === "backlog" && !isCoordinator && (
+                                    <StartButton busy={starting === l.id} onClick={(e) => startLead(e, l)} />
+                                )}
                                 <p className="mt-0.5 truncate text-small text-slate-500">
                                     {maskPhone(l.phone) || l.email}
                                     {l.course_title && ` · ${l.course_title}`}
@@ -1038,6 +1061,20 @@ export default function LeadsBoard({ isAdmin }) {
                 />
             )}
         </div>
+    );
+}
+
+/** Backlog lead: start working it (→ Attempting Contact). */
+function StartButton({ busy, onClick }) {
+    return (
+        <button
+            type="button"
+            disabled={busy}
+            onClick={onClick}
+            className="mt-1 inline-flex items-center gap-1 rounded-md border border-action/40 bg-action-soft px-2 py-0.5 text-label font-bold text-action-soft-ink hover:bg-action hover:text-white disabled:opacity-60"
+        >
+            {busy ? <Loader2 size={11} className="animate-spin" aria-hidden="true" /> : <Play size={11} aria-hidden="true" />} Start: Attempting Contact
+        </button>
     );
 }
 
