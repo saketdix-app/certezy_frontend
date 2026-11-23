@@ -10,6 +10,7 @@ import courseService from "@/services/courseService";
 import { cn } from "@/lib/utils";
 import { apiMessage, fmtDateTime, inputCls } from "@/lib/crm";
 import { selectUser } from "@/features/auth/authSlice";
+import AppReleaseCard from "@/components/admin/AppReleaseCard";
 
 /**
  * Admin → Integrations (2.0 phase 7, PRD §8): Meta and LinkedIn lead forms
@@ -771,6 +772,8 @@ export default function IntegrationsPage() {
             </div>
 
             <ConnectResult result={connectResult} onChoose={chooseConnect} onClose={() => setConnectResult(null)} />
+
+            <AppReleaseCard />
 
             <div className="grid gap-4 md:grid-cols-2">
                 {data.integrations.map((i) => {

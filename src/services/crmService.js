@@ -39,6 +39,16 @@ const crmService = {
     updatePayment: (id, data) => api.put(`/crm/leads/${id}/payment`, data),
     // Super Admin only: delete leads for good (password required)
     deleteLeads: (lead_ids, password) => api.post("/crm/leads/delete", { lead_ids, password }),
+    // My leads I haven't opened since they were assigned (red dot); a background poll
+    newCount: () => api.get("/crm/leads/new-count", { background: true }),
+    // Saved WhatsApp / email messages ({ channel, title, subject?, body, shared? })
+    templates: () => api.get("/crm/templates"),
+    createTemplate: (data) => api.post("/crm/templates", data),
+    updateTemplate: (id, data) => api.put(`/crm/templates/${id}`, data),
+    deleteTemplate: (id) => api.delete(`/crm/templates/${id}`),
+    // CERTEZY Team app: latest APK ({ version, version_code, apk_url, notes })
+    appRelease: () => api.get("/crm/app-release"),
+    saveAppRelease: (data) => api.put("/crm/app-release", data),
     // Upload leads from a CSV: { csv, dry_run, default_source, course_id, owner_mode, owner_id }
     importLeads: (data) => api.post("/crm/leads/import", data),
     examCoordinators: () => api.get("/crm/exam-coordinators"),
