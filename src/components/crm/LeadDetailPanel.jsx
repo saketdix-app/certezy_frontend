@@ -13,6 +13,7 @@ import {
     StickyNote,
     X,
     XCircle,
+    Trash2,
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
@@ -110,7 +111,7 @@ const QUICK_LOG = [
 ];
 
 /** Slide-over panel: everything about one lead, and the actions allowed on it. */
-export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, onMove }) {
+export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, onMove, onDelete }) {
     const [lead, setLead] = useState(null);
     const [stageTarget, setStageTarget] = useState(null);
     const [reason, setReason] = useState("");
@@ -250,6 +251,15 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-ui font-bold text-slate-700"
                                         >
                                             <Shuffle size={14} aria-hidden="true" /> {lead.owner_id ? "Transfer" : "Assign"}
+                                        </button>
+                                    )}
+                                    {onDelete && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onDelete(lead.id)}
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-ui font-bold text-red-700 hover:bg-red-50"
+                                        >
+                                            <Trash2 size={14} aria-hidden="true" /> Delete
                                         </button>
                                     )}
                                     {lead.email && (

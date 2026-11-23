@@ -25,12 +25,17 @@ export const injectStore = (store) => {
 // Endpoints that must never trigger a refresh attempt
 const NO_REFRESH_ENDPOINTS = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"];
 
+// Why the session ended (from the API), so the login page can say so
+const IDLE_CODES = ["SESSION_IDLE"];
+
 const isProtectedPath = (pathname) => PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
 // ── Request: attach access token ─────────────────────────
 api.interceptors.request.use((config) => {
     const token = injectedStore?.getState().auth.accessToken;
     if (token) config.headers.Authorization = `Bearer ${token}`;
+    // Polls (notifications, alerts) don't count as activity for idle sign-out
+    if (config.background) config.headers["X-Activity"] = "background";
     return config;
 });
 
@@ -43,7 +48,7 @@ const processQueue = (error, token = null) => {
     failedQueue = [];
 };
 
-const handleRefreshFailure = async () => {
+const handleRefreshFailure = async (reason) => {
     if (injectedStore) {
         const { clearAuth } = await import("@/features/auth/authSlice");
         injectedStore.dispatch(clearAuth());
@@ -53,7 +58,7 @@ const handleRefreshFailure = async () => {
     if (AUTH_PATHS.includes(pathname) || !isProtectedPath(pathname)) return;
 
     const redirect = encodeURIComponent(pathname + search);
-    window.location.assign(`${ROUTES.LOGIN}?redirect=${redirect}`);
+    window.location.assign(`${ROUTES.LOGIN}?redirect=${redirect}${reason ? `&reason=${reason}` : ""}`);
 };
 
 api.interceptors.response.use(
@@ -96,7 +101,8 @@ api.interceptors.response.use(
             processQueue(refreshError, null);
             // Guests have no session — a failed refresh during the boot-time
             // session check is expected and must not navigate anywhere.
-            if (!url.includes("/auth/me")) await handleRefreshFailure();
+            const code = refreshError?.response?.data?.code || error.response?.data?.code;
+            if (!url.includes("/auth/me")) await handleRefreshFailure(IDLE_CODES.includes(code) ? "idle" : null);
             else if (injectedStore) {
                 const { clearAuth } = await import("@/features/auth/authSlice");
                 injectedStore.dispatch(clearAuth());

@@ -10,7 +10,7 @@ import { ROUTES, homeForRole } from "@/config/app";
  * - Wrong role           → the user's own dashboard
  * - Sub-admin 1st login  → /change-password (forced)
  */
-export function ProtectedRoute({ children, allowedRoles = [], skipFirstLoginCheck = false }) {
+export function ProtectedRoute({ children, allowedRoles = [], perm, skipFirstLoginCheck = false }) {
     const location = useLocation();
     const { isLoggedIn, user, isFirstLogin, isInitializing } = useSelector((state) => state.auth);
 
@@ -32,7 +32,9 @@ export function ProtectedRoute({ children, allowedRoles = [], skipFirstLoginChec
         return <Navigate to="/change-password" replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
+    // Sub-Admins reach Admin pages they have the permission for (Team → Permissions)
+    const viaPermission = perm && user?.role === "sub_admin" && [].concat(perm).every((p) => user?.permissions?.[p]);
+    if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role) && !viaPermission) {
         return <Navigate to={homeForRole(user?.role)} replace />;
     }
 

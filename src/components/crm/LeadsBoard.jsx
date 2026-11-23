@@ -17,12 +17,14 @@ import {
     Shuffle,
     SlidersHorizontal,
     X,
+    Trash2,
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
 import { cn } from "@/lib/utils";
 import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
+import DeleteLeadsModal from "./DeleteLeadsModal";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
 import {
@@ -308,7 +310,12 @@ const writePref = (key, value) => {
  * own leads; Admins get everyone's, plus an owner filter.
  */
 export default function LeadsBoard({ isAdmin }) {
-    const isCoordinator = useSelector(selectUser)?.role === "exam_coordinator";
+    const me = useSelector(selectUser);
+    const isCoordinator = me?.role === "exam_coordinator";
+    const isSuperAdmin = me?.role === "super_admin";
+    // Sub-Admins assign only with "Lead assignment" (Team → Permissions)
+    const canAssign = me?.role !== "sub_admin" || Boolean(me?.permissions?.can_assign_leads);
+    const [deleting, setDeleting] = useState(null); // lead ids
     const [adv, setAdv] = useState(EMPTY_ADV);
     const [showAdv, setShowAdv] = useState(false);
     const [coordinators, setCoordinators] = useState([]);
@@ -699,13 +706,24 @@ export default function LeadsBoard({ isAdmin }) {
                         >
                             Clear
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => setMoving(selected)}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white"
-                        >
-                            <Shuffle size={13} aria-hidden="true" /> Assign / transfer
-                        </button>
+                        {canAssign && (
+                            <button
+                                type="button"
+                                onClick={() => setMoving(selected)}
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white"
+                            >
+                                <Shuffle size={13} aria-hidden="true" /> Assign / transfer
+                            </button>
+                        )}
+                        {isSuperAdmin && (
+                            <button
+                                type="button"
+                                onClick={() => setDeleting(selected)}
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-surface px-3 py-1.5 text-small font-bold text-red-700 hover:bg-red-50"
+                            >
+                                <Trash2 size={13} aria-hidden="true" /> Delete
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
@@ -944,7 +962,20 @@ export default function LeadsBoard({ isAdmin }) {
                     isAdmin={isAdmin}
                     onClose={() => setOpenId(null)}
                     onChanged={load}
-                    onMove={(id) => setMoving([id])}
+                    onMove={canAssign ? (id) => setMoving([id]) : undefined}
+                    onDelete={isSuperAdmin ? (id) => setDeleting([id]) : undefined}
+                />
+            )}
+            {deleting && (
+                <DeleteLeadsModal
+                    leadIds={deleting}
+                    names={(data?.leads ?? []).filter((l) => deleting.includes(l.id)).map((l) => l.name)}
+                    onClose={() => setDeleting(null)}
+                    onDeleted={(ids) => {
+                        setSelected((sel) => sel.filter((x) => !ids.includes(x)));
+                        if (ids.includes(openId)) setOpenId(null);
+                        load();
+                    }}
                 />
             )}
             {moving && (

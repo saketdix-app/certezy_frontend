@@ -263,7 +263,7 @@ export default function AppRoutes() {
                     <Route
                         path="live-batches"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_manage_batches">
                                 <LiveBatchesPage />
                             </ProtectedRoute>
                         }
@@ -282,7 +282,7 @@ export default function AppRoutes() {
                     <Route
                         path="leads"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
                                 <AdminLeadsPage />
                             </ProtectedRoute>
                         }
@@ -290,7 +290,7 @@ export default function AppRoutes() {
                     <Route
                         path="by-consultant"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
                                 <AdminConsultantLeadsPage />
                             </ProtectedRoute>
                         }
@@ -298,7 +298,7 @@ export default function AppRoutes() {
                     <Route
                         path="follow-ups"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
                                 <AdminFollowUpsPage />
                             </ProtectedRoute>
                         }
@@ -306,7 +306,7 @@ export default function AppRoutes() {
                     <Route
                         path="sales"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
                                 <AdminSalesPage />
                             </ProtectedRoute>
                         }
@@ -314,7 +314,7 @@ export default function AppRoutes() {
                     <Route
                         path="crm-discount-links"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
                                 <AdminCrmDiscountsPage />
                             </ProtectedRoute>
                         }
@@ -339,7 +339,7 @@ export default function AppRoutes() {
                     <Route
                         path="crm-reports"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_view_crm_reports">
                                 <CrmReportsPage />
                             </ProtectedRoute>
                         }
@@ -347,7 +347,7 @@ export default function AppRoutes() {
                     <Route
                         path="distribution"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm={["can_access_crm", "can_assign_leads"]}>
                                 <DistributionPage />
                             </ProtectedRoute>
                         }
@@ -355,7 +355,7 @@ export default function AppRoutes() {
                     <Route
                         path="team"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_manage_team">
                                 <TeamPage />
                             </ProtectedRoute>
                         }

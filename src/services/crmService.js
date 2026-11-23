@@ -37,6 +37,8 @@ const crmService = {
     updateApplication: (id, data) => api.put(`/crm/leads/${id}/application`, data),
     // { status: due|done, paid_at?, reference? } — Payment Done moves the lead to Course Done
     updatePayment: (id, data) => api.put(`/crm/leads/${id}/payment`, data),
+    // Super Admin only: delete leads for good (password required)
+    deleteLeads: (lead_ids, password) => api.post("/crm/leads/delete", { lead_ids, password }),
     examCoordinators: () => api.get("/crm/exam-coordinators"),
     setExamCoordinator: (id, exam_coordinator_id) => api.put(`/crm/leads/${id}/exam-coordinator`, { exam_coordinator_id }),
     // { status: not_scheduled|scheduled|rescheduled|cancelled, scheduled_at?, exam_done?, completed_at?, result?, note? }
