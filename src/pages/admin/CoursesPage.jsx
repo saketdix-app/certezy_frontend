@@ -222,7 +222,7 @@ export default function CoursesPage() {
             pricing_type: course.pricing_type ?? (Number(course.price) > 0 ? "paid" : "free"),
             price: course.price ?? "",
             original_price: course.original_price ?? "",
-            inr_enabled: Boolean(course.inr_enabled),
+            inr_enabled: Boolean(course.saved_inr_enabled ?? course.inr_enabled),
             // The admin's own rupee prices (kept even while rupees are off)
             price_inr: course.saved_price_inr ?? "",
             original_price_inr: course.saved_original_price_inr ?? "",
@@ -1035,6 +1035,13 @@ export default function CoursesPage() {
                                             PayPal. On: visitors from India see the ₹ price and pay with
                                             Razorpay.
                                         </span>
+                                        {courses.some((c) => c.rupee_checkout_available === false) && (
+                                            <span className="mt-1 block text-small font-semibold text-amber-700">
+                                                Razorpay isn't set up on the server yet, so for now everyone pays
+                                                the US$ price with PayPal. This setting is kept and works once
+                                                Razorpay is set up.
+                                            </span>
+                                        )}
                                     </span>
                                 </label>
                             )}
