@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
     ArrowRight,
@@ -23,7 +23,10 @@ import LeadWhatsApp from "./LeadWhatsApp";
 import LeadExamSection, { TicketInputs } from "./LeadExamSection";
 import { cn } from "@/lib/utils";
 import { StageBadge } from "./crmShared";
-import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, EXAM_RESULT_LABEL, apiMessage, fmtDate, fmtDateTime, fmtMoney, formLabel, inputCls, isOverdue, waLink } from "@/lib/crm";
+import MessageComposer from "./MessageComposer";
+import { whatsappNumberOf } from "@/lib/leadMessages";
+import { LEADS_SEEN_EVENT } from "@/lib/newLeads";
+import { CLOSED_STAGES, ENROLLMENT_LABEL, FOLLOW_UP_TYPES, REASON_STAGES, SOURCE_LABEL, STAGE_LABEL, answerEntries, EXAM_RESULT_LABEL, apiMessage, fmtDate, fmtDateTime, fmtMoney, formLabel, inputCls, isOverdue } from "@/lib/crm";
 
 /** Any course, or none — change it whenever the lead's interest changes. */
 function CourseSelect({ lead, disabled, onChange }) {
@@ -122,17 +125,32 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
     const [busy, setBusy] = useState(false);
     const [ticket, setTicket] = useState({ amount: "", currency: "INR" });
     const [examAt, setExamAt] = useState("");
+    const [compose, setCompose] = useState(null); // "whatsapp" | "email"
+    const [waEdit, setWaEdit] = useState(null); // editing the WhatsApp number
 
+    // Keep the latest close handler without reloading the lead when it changes
+    const onCloseRef = useRef(onClose);
+    useEffect(() => {
+        onCloseRef.current = onClose;
+    }, [onClose]);
+    const announced = useRef(null);
     const load = useCallback(
         () =>
             crmService
                 .get(leadId)
-                .then(({ data }) => setLead(data.data))
+                .then(({ data }) => {
+                    setLead(data.data);
+                    // First open: the "new lead" red dot goes (tab, menu, list) — once per lead
+                    if (announced.current !== leadId) {
+                        announced.current = leadId;
+                        window.dispatchEvent(new Event(LEADS_SEEN_EVENT));
+                    }
+                })
                 .catch((err) => {
                     toast.error(apiMessage(err, "Could not open this lead"));
-                    onClose();
+                    onCloseRef.current?.();
                 }),
-        [leadId, onClose]
+        [leadId]
     );
     useEffect(() => {
         load();
@@ -235,14 +253,18 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                             <section>
                                 <div className="flex flex-wrap gap-2">
                                     {lead.phone && (
-                                        <>
-                                            <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-2 text-ui font-bold text-white">
-                                                <Phone size={14} aria-hidden="true" /> Call
-                                            </a>
-                                            <a href={waLink(lead.phone)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-ui font-bold text-emerald-700">
-                                                <MessageCircle size={14} aria-hidden="true" /> WhatsApp
-                                            </a>
-                                        </>
+                                        <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F6496] px-3 py-2 text-ui font-bold text-white hover:bg-[#275382]">
+                                            <Phone size={14} aria-hidden="true" /> Call
+                                        </a>
+                                    )}
+                                    {whatsappNumberOf(lead) && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setCompose("whatsapp")}
+                                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#0F7A42] px-3 py-2 text-ui font-bold text-white hover:bg-[#0c6636]"
+                                        >
+                                            <MessageCircle size={14} aria-hidden="true" /> WhatsApp
+                                        </button>
                                     )}
                                     {isAdmin && onMove && (
                                         <button
@@ -263,14 +285,58 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                         </button>
                                     )}
                                     {lead.email && (
-                                        <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-ui font-bold text-slate-700">
+                                        <button
+                                            type="button"
+                                            onClick={() => setCompose("email")}
+                                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#B45309] px-3 py-2 text-ui font-bold text-white hover:bg-[#92400e]"
+                                        >
                                             <Mail size={14} aria-hidden="true" /> Email
-                                        </a>
+                                        </button>
                                     )}
                                 </div>
                                 <dl className="mt-3 grid grid-cols-[110px_1fr] gap-x-3 gap-y-1.5 text-ui">
                                     <dt className="text-slate-500">Phone</dt>
-                                    <dd className="text-slate-900">{lead.phone || "—"}</dd>
+                                    <dd className="text-slate-900">
+                                        {lead.phone || "—"}
+                                        {lead.phone && !access.edit_phone && <span className="ml-1.5 text-small text-slate-400">(from lead source)</span>}
+                                    </dd>
+                                    <dt className="text-slate-500">WhatsApp</dt>
+                                    <dd className="text-slate-900">
+                                        {waEdit !== null ? (
+                                            <span className="flex flex-wrap items-center gap-1.5">
+                                                <input
+                                                    value={waEdit}
+                                                    onChange={(e) => setWaEdit(e.target.value)}
+                                                    placeholder="+91 98765 43210"
+                                                    aria-label="WhatsApp number"
+                                                    autoFocus
+                                                    className={cn(inputCls, "w-44 py-1")}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    disabled={busy}
+                                                    onClick={async () => {
+                                                        if (await run(() => crmService.update(lead.id, { whatsapp_number: waEdit.trim() || null }), "WhatsApp number saved")) setWaEdit(null);
+                                                    }}
+                                                    className="rounded-lg bg-action px-2.5 py-1 text-small font-bold text-white disabled:opacity-60"
+                                                >
+                                                    Save
+                                                </button>
+                                                <button type="button" onClick={() => setWaEdit(null)} className="rounded-lg border border-slate-200 px-2.5 py-1 text-small font-semibold">
+                                                    Cancel
+                                                </button>
+                                            </span>
+                                        ) : (
+                                            <span className="flex flex-wrap items-center gap-2">
+                                                {lead.whatsapp_number || <span className="text-slate-500">{lead.phone ? "Same as phone" : "—"}</span>}
+                                                {access.edit && (
+                                                    <button type="button" onClick={() => setWaEdit(lead.whatsapp_number ?? "")} className="text-small font-semibold text-action hover:underline">
+                                                        {lead.whatsapp_number ? "Change" : "Add WhatsApp number"}
+                                                    </button>
+                                                )}
+                                            </span>
+                                        )}
+                                    </dd>
                                     <dt className="text-slate-500">Email</dt>
                                     <dd className="break-all text-slate-900">{lead.email || "—"}</dd>
                                     <dt className="text-slate-500">Course</dt>
@@ -568,6 +634,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                     </>
                 )}
             </aside>
+            {compose && <MessageComposer lead={lead} channel={compose} onClose={() => setCompose(null)} />}
         </div>
     );
 }

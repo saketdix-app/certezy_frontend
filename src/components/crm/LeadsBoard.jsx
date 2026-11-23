@@ -26,6 +26,8 @@ import { cn } from "@/lib/utils";
 import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
 import DeleteLeadsModal from "./DeleteLeadsModal";
+import { LEADS_SEEN_EVENT } from "@/lib/newLeads";
+import RedDot from "./RedDot";
 import ImportLeadsModal from "./ImportLeadsModal";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
@@ -333,6 +335,8 @@ export default function LeadsBoard({ isAdmin }) {
     const [moving, setMoving] = useState(null); // lead ids
     const [panelKey, setPanelKey] = useState(0);
     const [overdueOnly, setOverdueOnly] = useState(false);
+    // Only my leads I haven't opened yet (red dot)
+    const [newOnly, setNewOnly] = useState(false);
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [owners, setOwners] = useState([]);
@@ -388,6 +392,7 @@ export default function LeadsBoard({ isAdmin }) {
         source: source || undefined,
         owner_id: ownerId || undefined,
         follow_up: overdueOnly ? "overdue" : undefined,
+        new: newOnly ? "1" : undefined,
         ...advParams,
     });
     const [selectingAll, setSelectingAll] = useState(false);
@@ -416,6 +421,7 @@ export default function LeadsBoard({ isAdmin }) {
                 source: source || undefined,
                 owner_id: ownerId || undefined,
                 follow_up: overdueOnly ? "overdue" : undefined,
+                new: newOnly ? "1" : undefined,
                 ...JSON.parse(advKey),
                 page,
                 limit: 25,
@@ -425,8 +431,13 @@ export default function LeadsBoard({ isAdmin }) {
             toast.error(apiMessage(err, "Could not load leads"));
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
-    }, [stage, search, source, ownerId, overdueOnly, advKey, page]);
+    }, [stage, search, source, ownerId, overdueOnly, newOnly, advKey, page]);
 
+    // A lead was opened (its red dot is gone): refresh the list
+    useEffect(() => {
+        window.addEventListener(LEADS_SEEN_EVENT, load);
+        return () => window.removeEventListener(LEADS_SEEN_EVENT, load);
+    }, [load]);
     useEffect(() => {
         const t = setTimeout(load, search ? 300 : 0);
         return () => clearTimeout(t);
@@ -614,6 +625,17 @@ export default function LeadsBoard({ isAdmin }) {
                             className="accent-action"
                         />
                         Overdue follow-ups
+                    </label>
+                )}
+                {!isCoordinator && (
+                    <label
+                        className={cn(
+                            "inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-ui",
+                            newOnly ? "border-red-300 bg-red-50 font-semibold text-red-700" : "border-slate-200 bg-surface text-slate-700"
+                        )}
+                    >
+                        <input type="checkbox" checked={newOnly} onChange={(e) => resetPage(setNewOnly)(e.target.checked)} className="accent-red-600" />
+                        <RedDot label="" /> New (not opened)
                     </label>
                 )}
                 <div className="ml-auto flex items-center gap-2">
@@ -822,6 +844,7 @@ export default function LeadsBoard({ isAdmin }) {
                                             }}
                                             className="block max-w-full truncate text-left font-semibold text-slate-900 hover:text-action"
                                         >
+                                            {l.is_new && <RedDot label="New lead — not opened yet" className="mr-1.5 align-middle" />}
                                             {l.name}
                                         </button>
                                         {l.payment_alert && (
@@ -870,7 +893,10 @@ export default function LeadsBoard({ isAdmin }) {
                                 )}
                             >
                                 <div className="flex items-start justify-between gap-2">
-                                    <p className="truncate text-body font-bold text-slate-900">{l.name}</p>
+                                    <p className="flex min-w-0 items-center gap-1.5 truncate text-body font-bold text-slate-900">
+                                        {l.is_new && <RedDot label="New lead — not opened yet" />}
+                                        <span className="truncate">{l.name}</span>
+                                    </p>
                                     <StageBadge stage={l.stage} />
                                 </div>
                                 <p className="mt-0.5 truncate text-small text-slate-500">

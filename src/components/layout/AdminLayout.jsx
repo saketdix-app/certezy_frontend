@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import TwoFactorDialog from "@/components/security/TwoFactorDialog";
+import { useNewLeads } from "@/lib/newLeads";
+import RedDot from "@/components/crm/RedDot";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -96,6 +98,8 @@ export default function AdminLayout() {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const [theme, setTheme] = usePortalTheme();
+    // Leads assigned to me that I haven't opened: red dot on the tab and on "Leads"
+    const newLeads = useNewLeads(["super_admin", "admin"].includes(user?.role) || Boolean(user?.permissions?.can_access_crm));
     // Two-step sign-in: settings, and a once-per-session suggestion for Super Admins without it
     const [security, setSecurity] = useState(null); // null | "settings" | "suggest"
     useEffect(() => {
@@ -190,6 +194,7 @@ export default function AdminLayout() {
                                                 >
                                                     <item.icon size={17} aria-hidden="true" />
                                                     <span>{item.label}</span>
+                                                    {item.to === "/admin/leads" && newLeads > 0 && <RedDot label={`${newLeads} new leads`} className="ml-auto" />}
                                                 </Link>
                                             </li>
                                         );
