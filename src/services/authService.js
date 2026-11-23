@@ -12,6 +12,15 @@ const authService = {
     // Local auth
     register: (data) => api.post("/auth/register", data),
     login: (data) => api.post("/auth/login", data),
+    // Two-step sign-in: { challenge, code } → session; resend a new code
+    verifyLogin: (data) => api.post("/auth/login/verify", data),
+    resendLoginCode: (challenge) => api.post("/auth/login/resend", { challenge }),
+    // Account security: turn two-step sign-in on (emailed code) or off (password)
+    twoFactorSetup: () => api.post("/auth/2fa/setup"),
+    twoFactorEnable: (data) => api.post("/auth/2fa/enable", data),
+    twoFactorDisable: (password) => api.post("/auth/2fa/disable", { password }),
+    // "Still here": someone is using the page (idle sign-out)
+    activity: () => api.post("/auth/activity"),
     refresh: () => api.post("/auth/refresh"),
     logout: () => api.post("/auth/logout"),
     changePassword: (data) => api.post("/auth/change-password", data),

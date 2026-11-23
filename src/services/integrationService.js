@@ -15,7 +15,8 @@ import api from "./api";
 const integrationService = {
     status: () => api.get("/integrations"),
     save: (source, data) => api.put(`/integrations/${source}`, data),
-    alerts: () => api.get("/integrations/alerts"),
+    // background: a poll, not someone using the page (doesn't keep the session alive)
+    alerts: () => api.get("/integrations/alerts", { background: true }),
     forms: (source) => api.get(`/integrations/${source}/forms`),
     retry: (eventId) => api.post(`/integrations/events/${eventId}/retry`),
     retryFailed: (source) => api.post(`/integrations/${source}/retry-failed`),

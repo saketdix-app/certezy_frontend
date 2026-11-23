@@ -29,6 +29,16 @@ export const loginUser = createAsyncThunk("auth/login", async (credentials, { re
     }
 });
 
+// POST /api/v1/auth/login/verify — second step when two-step sign-in is on
+export const verifyLoginCode = createAsyncThunk("auth/verify", async (body, { rejectWithValue }) => {
+    try {
+        const { data } = await authService.verifyLogin(body);
+        return data.data;
+    } catch (err) {
+        return rejectWithValue(err.response?.data?.message || "That code didn't work");
+    }
+});
+
 // POST /api/v1/auth/logout
 export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
     try {
@@ -88,6 +98,10 @@ const authSlice = createSlice({
             state.error = null;
         },
         clearAuth: () => ({ ...initialState, isInitializing: false }),
+        // e.g. two-step sign-in turned on
+        patchUser: (state, action) => {
+            if (state.user) state.user = { ...state.user, ...action.payload };
+        },
     },
 
     extraReducers: (builder) => {
@@ -97,7 +111,20 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(loginUser.fulfilled, (state, action) => setSession(state, action.payload))
+            .addCase(loginUser.fulfilled, (state, action) => {
+                // Two-step sign-in: no session yet, the login page asks for the code
+                if (action.payload?.two_factor_required) state.loading = false;
+                else setSession(state, action.payload);
+            })
+            .addCase(verifyLoginCode.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(verifyLoginCode.fulfilled, (state, action) => setSession(state, action.payload))
+            .addCase(verifyLoginCode.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 state.isInitializing = false;
@@ -117,7 +144,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { setToken, setAuthFromOAuth, clearError, clearAuth } = authSlice.actions;
+export const { setToken, setAuthFromOAuth, clearError, clearAuth, patchUser } = authSlice.actions;
 
 // ── Selectors ─────────────────────────────────────────────
 export const selectUser = (state) => state.auth.user;

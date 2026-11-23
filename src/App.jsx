@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import IdleSession from "@/components/security/IdleSession";
 
 import { fetchMe } from "@/features/auth/authSlice";
 import RouterProgress from "@/components/shared/RouterProgress";
@@ -28,6 +29,7 @@ export default function App() {
             <Toaster position="top-right" toastOptions={TOAST_OPTIONS} />
             <RouterProgress />
             <AppRoutes />
+            <IdleSession />
         </>
     );
 }

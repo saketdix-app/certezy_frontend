@@ -13,6 +13,7 @@ import {
 import SocialButtons from "@/components/auth/SocialButtons";
 import { homeForRole, safeRedirect } from "@/config/app";
 import BrandLogo from "@/components/shared/Logo";
+import LoginCodeStep from "@/components/auth/LoginCodeStep";
 
 export default function LoginPage() {
     const dispatch = useDispatch();
@@ -26,6 +27,8 @@ export default function LoginPage() {
     const [form, setForm] = useState({ email: params.get("email") || "", password: "" });
     const [showPassword, setShowPass] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
+    // Two-step sign-in: { challenge, email_hint } after a correct password
+    const [twoStep, setTwoStep] = useState(null);
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -43,6 +46,11 @@ export default function LoginPage() {
             toast.error("Social sign-in failed. Please try again.");
         } else if (params.get("error") === "account_deleted") {
             toast.error("This account has been deleted. Contact support to restore it.");
+        } else if (params.get("error") === "two_factor") {
+            toast.error("Two-step sign-in is on for this account. Sign in with your email and password.");
+        }
+        if (params.get("reason") === "idle") {
+            toast("You were signed out after a period without activity. Please sign in again.", { icon: "🔒", duration: 6000 });
         }
     }, []);
 
@@ -62,15 +70,21 @@ export default function LoginPage() {
         if (fieldErrors[name]) setFieldErrors((p) => ({ ...p, [name]: "" }));
     };
 
+    const signedIn = (result) => {
+        toast.success(`Welcome back, ${result.user?.name?.split(" ")[0]}!`);
+        navigate(safeRedirect(params.get("redirect")) || homeForRole(result.user?.role), { replace: true });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
         try {
             const result = await dispatch(loginUser(form)).unwrap();
-            toast.success(`Welcome back, ${result.user?.name?.split(" ")[0]}!`);
-            navigate(safeRedirect(params.get("redirect")) || homeForRole(result.user?.role), {
-                replace: true,
-            });
+            if (result.two_factor_required) {
+                setTwoStep({ challenge: result.challenge, email_hint: result.email_hint });
+                return;
+            }
+            signedIn(result);
         } catch (err) {
             toast.error(err || "Login failed. Please try again.");
         }
@@ -206,6 +220,15 @@ export default function LoginPage() {
                             <Logo to="/" size="sm" />
                         </div>
 
+                        {twoStep ? (
+                            <LoginCodeStep
+                                challenge={twoStep.challenge}
+                                emailHint={twoStep.email_hint}
+                                onDone={signedIn}
+                                onBack={() => setTwoStep(null)}
+                            />
+                        ) : (
+                        <>
                         <h1
                             style={{
                                 fontSize: "30px",
@@ -310,6 +333,8 @@ export default function LoginPage() {
                                 Sign up free
                             </Link>
                         </p>
+                        </>
+                        )}
                     </div>
                 </div>
             </div>

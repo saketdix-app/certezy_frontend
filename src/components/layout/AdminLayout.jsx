@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import TwoFactorDialog from "@/components/security/TwoFactorDialog";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,6 +29,7 @@ import {
     TrendingUp,
     BarChart3,
     Plug,
+    ShieldCheck,
     UsersRound,
 } from "lucide-react";
 
@@ -47,12 +49,12 @@ const ADMIN_NAV_GROUPS = [
     {
         label: "CRM",
         items: [
-            { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES },
-            { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant", roles: TEAM_MANAGER_ROLES },
-            { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES },
-            { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES },
-            { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES },
-            { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports", roles: TEAM_MANAGER_ROLES },
+            { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
+            { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
+            { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
+            { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES, perm: ["can_access_crm", "can_assign_leads"] },
+            { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
+            { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports", roles: TEAM_MANAGER_ROLES, perm: "can_view_crm_reports" },
         ],
     },
     {
@@ -62,7 +64,7 @@ const ADMIN_NAV_GROUPS = [
             { label: "Categories", icon: Tag, to: "/admin/categories" },
             { label: "Enrollments", icon: Users, to: "/admin/enrollments" },
             { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
-            { label: "Live batches", icon: CalendarDays, to: "/admin/live-batches", roles: TEAM_MANAGER_ROLES },
+            { label: "Live batches", icon: CalendarDays, to: "/admin/live-batches", roles: TEAM_MANAGER_ROLES, perm: "can_manage_batches" },
             { label: "Certificates", icon: Award, to: "/admin/certificates" },
             { label: "Reviews", icon: MessageSquare, to: "/admin/reviews" },
             { label: "Bulk Import", icon: FileUp, to: "/admin/import" },
@@ -73,14 +75,14 @@ const ADMIN_NAV_GROUPS = [
         items: [
             { label: "Payments", icon: CreditCard, to: "/admin/payments" },
             { label: "Discounts", icon: Percent, to: "/admin/discounts" },
-            { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links", roles: TEAM_MANAGER_ROLES },
+            { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
         ],
     },
     {
         label: "Settings",
         items: [
             { label: "Users", icon: Users, to: "/admin/users" },
-            { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES },
+            { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES, perm: "can_manage_team" },
             { label: "Integrations", icon: Plug, to: "/admin/integrations", roles: TEAM_MANAGER_ROLES },
             { label: "Contact messages", icon: MessageSquare, to: "/admin/contact" },
         ],
@@ -94,9 +96,28 @@ export default function AdminLayout() {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const [theme, setTheme] = usePortalTheme();
+    // Two-step sign-in: settings, and a once-per-session suggestion for Super Admins without it
+    const [security, setSecurity] = useState(null); // null | "settings" | "suggest"
+    useEffect(() => {
+        if (user?.role !== "super_admin" || user?.two_factor_enabled) return;
+        const key = `certezy.2fa-suggested.${user.id}`;
+        try {
+            if (sessionStorage.getItem(key)) return;
+            sessionStorage.setItem(key, "1");
+        } catch {
+            /* private mode: suggest anyway */
+        }
+        setSecurity("suggest");
+    }, [user?.id, user?.role, user?.two_factor_enabled]);
     const groups = ADMIN_NAV_GROUPS.map((g) => ({
         ...g,
-        items: g.items.filter((item) => !item.roles || item.roles.includes(user?.role)),
+        // Sub-Admins also see the areas ticked for them in Team → Permissions
+        items: g.items.filter(
+            (item) =>
+                !item.roles ||
+                item.roles.includes(user?.role) ||
+                (item.perm && user?.role === "sub_admin" && [].concat(item.perm).every((k) => user?.permissions?.[k]))
+        ),
     })).filter((g) => g.items.length);
     const isActive = (to) => location.pathname === to || location.pathname.startsWith(`${to}/`);
     const current = groups.flatMap((g) => g.items.map((item) => ({ ...item, group: g.label }))).find((item) => isActive(item.to));
@@ -203,6 +224,14 @@ export default function AdminLayout() {
                         <span>Learner view</span>
                     </Link>
                     <button
+                        type="button"
+                        onClick={() => setSecurity("settings")}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-ui font-medium text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                    >
+                        <ShieldCheck size={18} className={user?.two_factor_enabled ? "text-emerald-600" : "text-amber-500"} />
+                        <span>Two-step sign-in: {user?.two_factor_enabled ? "On" : "Off"}</span>
+                    </button>
+                    <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-3 py-2 text-ui font-medium text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors"
                     >
@@ -241,6 +270,7 @@ export default function AdminLayout() {
                     <Outlet />
                 </main>
             </div>
+            {security && <TwoFactorDialog suggest={security === "suggest"} onClose={() => setSecurity(null)} />}
         </div>
     );
 }

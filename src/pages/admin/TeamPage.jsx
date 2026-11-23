@@ -77,7 +77,16 @@ const PERMISSION_INFO = {
     can_view_payments: ["Payments", "View payments and revenue"],
     can_manage_courses: ["Courses", "Create and edit courses, curriculum and reviews"],
     can_manage_tests: ["Tests", "Create and edit quizzes and exams"],
+    // Sub-Admin feature areas
+    can_access_crm: ["CRM", "Leads, follow-ups, By consultant and Sales — work every lead like an Admin"],
+    can_assign_leads: ["Lead assignment", "Distribution, assign and transfer leads, hand over (needs CRM)"],
+    can_view_crm_reports: ["CRM reports", "Conversion, sources, consultants and exams (revenue stays Super Admin only)"],
+    can_manage_team: ["Account management", "Add and manage Consultants and Exam Coordinators in Team"],
+    can_manage_batches: ["Live batches", "Add and publish live batches, see enrollments"],
 };
+// Shown for Sub-Admins only (Consultants work their own leads)
+const SUB_ADMIN_ONLY = ["can_access_crm", "can_assign_leads", "can_view_crm_reports", "can_manage_team", "can_manage_batches"];
+const keysFor = (role, keys) => (role === "sub_admin" ? keys : keys.filter((k) => !SUB_ADMIN_ONLY.includes(k)));
 
 const ALLOCATION_BADGE = {
     receiving: ["Receiving leads", "text-emerald-700"],
@@ -208,9 +217,14 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
 }
 
 function PermissionChecklist({ keys, value, onChange }) {
-    return (
-        <fieldset className="space-y-1.5">
-            {keys.map((k) => (
+    const groups = [
+        ["Learning & students", keys.filter((k) => !SUB_ADMIN_ONLY.includes(k))],
+        ["CRM, team & batches", keys.filter((k) => SUB_ADMIN_ONLY.includes(k))],
+    ].filter(([, list]) => list.length);
+    return groups.map(([title, list]) => (
+        <fieldset key={title} className="mb-3 space-y-1.5">
+            {groups.length > 1 && <legend className="mb-1 text-label font-bold uppercase tracking-wide text-slate-500">{title}</legend>}
+            {list.map((k) => (
                 <label key={k} className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
                     <input
                         type="checkbox"
@@ -225,7 +239,7 @@ function PermissionChecklist({ keys, value, onChange }) {
                 </label>
             ))}
         </fieldset>
-    );
+    ));
 }
 
 function PermissionsModal({ member, keys, onClose, onDone }) {
@@ -235,7 +249,9 @@ function PermissionsModal({ member, keys, onClose, onDone }) {
         e.preventDefault();
         setBusy(true);
         try {
-            await teamService.setPermissions(member.id, Object.fromEntries(keys.map((k) => [k, Boolean(value[k])])));
+            // Every key is sent; areas not shown for this role stay off
+            const shown = keysFor(member.role, keys);
+            await teamService.setPermissions(member.id, Object.fromEntries(keys.map((k) => [k, shown.includes(k) && Boolean(value[k])])));
             toast.success("Permissions updated");
             onDone();
             onClose();
@@ -252,7 +268,7 @@ function PermissionsModal({ member, keys, onClose, onDone }) {
                     What this {ROLE_LABELS[member.role]} can do. Changes apply on their next action and are recorded
                     in the audit log.
                 </p>
-                <PermissionChecklist keys={keys} value={value} onChange={setValue} />
+                <PermissionChecklist keys={keysFor(member.role, keys)} value={value} onChange={setValue} />
                 <div className="mt-5 flex justify-end gap-2">
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
@@ -436,7 +452,7 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                     <div>
                         <span className="mb-1 block text-ui font-semibold text-slate-700">Permissions</span>
                         <PermissionChecklist
-                            keys={permissionKeys}
+                            keys={keysFor(form.role, permissionKeys)}
                             value={shownPerms}
                             onChange={(v) => setPerms((p) => ({ ...p, [form.role]: v }))}
                         />
