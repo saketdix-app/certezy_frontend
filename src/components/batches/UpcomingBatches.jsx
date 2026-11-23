@@ -128,7 +128,14 @@ function BatchCard({ b, onEnroll }) {
     return (
         <article className="flex flex-col rounded-3xl border border-[#C9DCEC] bg-white p-6 shadow-[0_10px_30px_rgba(30,63,94,0.06)]">
             <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-[#EAF2F9] px-3 py-1 text-label font-bold uppercase tracking-wide text-[#275382]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#EAF2F9] px-3 py-1 text-label font-bold uppercase tracking-wide text-[#275382]">
+                    {/* Live classes (online / hybrid): a blinking green dot */}
+                    {b.mode !== "classroom" && (
+                        <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#16A34A] opacity-75 motion-reduce:animate-none" />
+                            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
+                        </span>
+                    )}
                     {MODE[b.mode] ?? "Live online"}
                 </span>
                 {b.seats_left != null && (
