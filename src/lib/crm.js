@@ -5,6 +5,8 @@
 
 /** Pipeline stages (PRD §4.2), in order, with their colours. */
 export const STAGES = [
+    // Uploaded in bulk; worked in by the consultant when they have time
+    ["backlog", "Backlog", "bg-stone-100 text-stone-700 border-stone-300"],
     ["new", "New Leads", "bg-sky-50 text-sky-700 border-sky-200"],
     ["attempting_contact", "Attempting Contact", "bg-indigo-50 text-indigo-700 border-indigo-200"],
     ["in_conversation", "In Conversation", "bg-violet-50 text-violet-700 border-violet-200"],
