@@ -28,7 +28,12 @@ export default function LoginPage() {
     const [showPassword, setShowPass] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
     // Two-step sign-in: { challenge, email_hint } after a correct password
-    const [twoStep, setTwoStep] = useState(null);
+    // …also when coming back from Google / GitHub with two-step on (?two_step=…&hint=…)
+    const [twoStep, setTwoStep] = useState(() =>
+        /^[0-9a-f]{48}$/.test(params.get("two_step") ?? "")
+            ? { challenge: params.get("two_step"), email_hint: params.get("hint") ?? "your email" }
+            : null
+    );
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -46,8 +51,8 @@ export default function LoginPage() {
             toast.error("Social sign-in failed. Please try again.");
         } else if (params.get("error") === "account_deleted") {
             toast.error("This account has been deleted. Contact support to restore it.");
-        } else if (params.get("error") === "two_factor") {
-            toast.error("Two-step sign-in is on for this account. Sign in with your email and password.");
+        } else if (params.get("error") === "code_email") {
+            toast.error("We couldn't send your sign-in code. Please try again in a minute.");
         }
         if (params.get("reason") === "idle") {
             toast("You were signed out after a period without activity. Please sign in again.", { icon: "🔒", duration: 6000 });
