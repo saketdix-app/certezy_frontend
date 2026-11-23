@@ -39,6 +39,8 @@ const crmService = {
     updatePayment: (id, data) => api.put(`/crm/leads/${id}/payment`, data),
     // Super Admin only: delete leads for good (password required)
     deleteLeads: (lead_ids, password) => api.post("/crm/leads/delete", { lead_ids, password }),
+    // Upload leads from a CSV: { csv, dry_run, default_source, course_id, owner_mode, owner_id }
+    importLeads: (data) => api.post("/crm/leads/import", data),
     examCoordinators: () => api.get("/crm/exam-coordinators"),
     setExamCoordinator: (id, exam_coordinator_id) => api.put(`/crm/leads/${id}/exam-coordinator`, { exam_coordinator_id }),
     // { status: not_scheduled|scheduled|rescheduled|cancelled, scheduled_at?, exam_done?, completed_at?, result?, note? }

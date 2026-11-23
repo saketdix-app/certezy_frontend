@@ -18,6 +18,7 @@ import {
     SlidersHorizontal,
     X,
     Trash2,
+    Upload,
 } from "lucide-react";
 
 import crmService from "@/services/crmService";
@@ -25,6 +26,7 @@ import { cn } from "@/lib/utils";
 import AddLeadModal from "./AddLeadModal";
 import LeadDetailPanel from "./LeadDetailPanel";
 import DeleteLeadsModal from "./DeleteLeadsModal";
+import ImportLeadsModal from "./ImportLeadsModal";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
 import {
@@ -336,6 +338,7 @@ export default function LeadsBoard({ isAdmin }) {
     const [owners, setOwners] = useState([]);
     const [openId, setOpenId] = useState(Number(params.get("lead")) || null);
     const [adding, setAdding] = useState(false);
+    const [importing, setImporting] = useState(false);
     const [view, setViewState] = useState(() =>
         readPref("crm.leads.view", "list") === "cards" ? "cards" : "list"
     );
@@ -474,13 +477,22 @@ export default function LeadsBoard({ isAdmin }) {
                     </p>
                 </div>
                 {!isCoordinator && (
-                    <button
-                        type="button"
-                        onClick={() => setAdding(true)}
-                        className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
-                    >
-                        <Plus size={16} aria-hidden="true" /> Add lead
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setImporting(true)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-surface px-4 py-2.5 text-ui font-bold text-slate-700 hover:border-action hover:text-action"
+                        >
+                            <Upload size={16} aria-hidden="true" /> Import CSV
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setAdding(true)}
+                            className="inline-flex items-center gap-2 rounded-xl bg-action px-4 py-2.5 text-ui font-bold text-white hover:bg-action-hover"
+                        >
+                            <Plus size={16} aria-hidden="true" /> Add lead
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -964,6 +976,16 @@ export default function LeadsBoard({ isAdmin }) {
                     onChanged={load}
                     onMove={canAssign ? (id) => setMoving([id]) : undefined}
                     onDelete={isSuperAdmin ? (id) => setDeleting([id]) : undefined}
+                />
+            )}
+            {importing && (
+                <ImportLeadsModal
+                    isManager={Boolean(isAdmin)}
+                    canAssign={canAssign}
+                    owners={owners}
+                    courses={courses}
+                    onClose={() => setImporting(false)}
+                    onDone={load}
                 />
             )}
             {deleting && (
