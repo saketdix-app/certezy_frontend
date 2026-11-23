@@ -13,6 +13,7 @@ import { apiMessage, fmtDateTime, fmtMoney } from "@/lib/crm";
 
 const KPIS = [
     ["open_leads", "Open leads"],
+    ["backlog", "Backlog"],
     ["new_leads", "New leads"],
     ["follow_ups_today", "Follow-ups today"],
     ["overdue_follow_ups", "Overdue follow-ups", "text-red-600"],

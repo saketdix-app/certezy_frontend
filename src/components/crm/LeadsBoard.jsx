@@ -482,6 +482,8 @@ export default function LeadsBoard({ isAdmin }) {
 
     const counts = data?.counts ?? {};
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    // "All" leaves out the Backlog (it has its own tab); a search still includes it
+    const allCount = search.trim() ? total : total - (counts.backlog ?? 0);
     const resetPage = (fn) => (v) => {
         fn(v);
         setPage(1);
@@ -535,7 +537,7 @@ export default function LeadsBoard({ isAdmin }) {
                           l,
                           counts[k] ?? 0,
                       ])
-                    : [["", "All", total], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])]
+                    : [["", "All", allCount], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])]
                 ).map(([k, l, n]) => (
                     <button
                         key={k || "all"}
