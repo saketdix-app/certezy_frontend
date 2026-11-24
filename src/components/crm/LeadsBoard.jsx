@@ -528,7 +528,7 @@ export default function LeadsBoard({ isAdmin }) {
 
             {/* Status tabs */}
             <div
-                className="-mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:thin] sm:mx-0 sm:px-0"
+                className="-mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:thin] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
                 role="tablist"
             >
                 {(isCoordinator
@@ -537,7 +537,7 @@ export default function LeadsBoard({ isAdmin }) {
                           l,
                           counts[k] ?? 0,
                       ])
-                    : [["", "All", allCount], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])]
+                    : [["", "All Leads", allCount], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])]
                 ).map(([k, l, n]) => (
                     <button
                         key={k || "all"}
@@ -546,8 +546,6 @@ export default function LeadsBoard({ isAdmin }) {
                         onClick={() => resetPage(setStage)(k)}
                         className={cn(
                             "shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-small font-semibold",
-                            // Closed stages sit apart at the end of the row
-                            k === "not_interested" && "ml-2",
                             stage === k
                                 ? "border-action bg-action-soft text-action-soft-ink"
                                 : "border-slate-200 bg-surface text-slate-600"
