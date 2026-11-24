@@ -64,7 +64,7 @@ function TemplateForm({ channel, initial, isAdmin, onSaved, onCancel }) {
  * lead's details are filled in, edit if needed, then open WhatsApp / your email
  * app with it ready to send. Saved messages can be added, edited and deleted here.
  */
-export default function MessageComposer({ lead, channel, onClose }) {
+export default function MessageComposer({ lead, channel, onClose, onLogged }) {
     const me = useSelector(selectUser);
     const isAdmin = ["admin", "super_admin"].includes(me?.role);
     const [templates, setTemplates] = useState(null);
@@ -202,7 +202,16 @@ export default function MessageComposer({ lead, channel, onClose }) {
                     href={href}
                     target={isWa ? "_blank" : undefined}
                     rel="noreferrer"
-                    onClick={() => setTimeout(onClose, 300)}
+                    onClick={() => {
+                        // Recorded in the lead's history (we can't see whether it was then sent)
+                        const what = isWa ? "WhatsApp" : "Email";
+                        const body = `${what} opened from the CRM${!isWa && subject.trim() ? ` · ${subject.trim()}` : ""}${text.trim() ? `:\n${text.trim()}` : ""}`.slice(0, 5000);
+                        crmService
+                            .logActivity(lead.id, { type: isWa ? "whatsapp" : "email", body })
+                            .then(() => onLogged?.())
+                            .catch(() => {});
+                        setTimeout(onClose, 300);
+                    }}
                     className={cn(
                         "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-ui font-bold text-white",
                         isWa ? "bg-[#0F7A42] hover:bg-[#0c6636]" : "bg-[#B45309] hover:bg-[#92400e]"
