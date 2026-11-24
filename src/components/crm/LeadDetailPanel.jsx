@@ -632,7 +632,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                     </>
                 )}
             </aside>
-            {compose && <MessageComposer lead={lead} channel={compose} onClose={() => setCompose(null)} />}
+            {compose && <MessageComposer lead={lead} channel={compose} onClose={() => setCompose(null)} onLogged={load} />}
         </div>
     );
 }
