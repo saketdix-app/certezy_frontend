@@ -433,9 +433,7 @@ export default function LeadDetailPanel({ leadId, onClose, onChanged, isAdmin, o
                                     </div>
                                 ) : (
                                     <p className="text-ui text-slate-500">
-                                        {CLOSED_STAGES.includes(lead.stage)
-                                            ? "Closed. Only an Admin can reopen it."
-                                            : !access.edit && lead.stage !== "course_done"
+                                        {!access.edit && lead.stage !== "course_done"
                                               ? "The consultant manages the status. Scheduling the exam moves it to Exam Scheduled; Payment Done moves it to Course Done."
                                               : lead.stage === "course_done"
                                                 ? "Course Done. Set the payment back to Payment Due to reopen it."

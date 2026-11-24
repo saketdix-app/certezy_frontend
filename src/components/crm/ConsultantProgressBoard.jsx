@@ -26,7 +26,9 @@ import MoveLeadsModal from "./MoveLeadsModal";
 
 /** Solid colour per stage for the progress bar (same hues as the stage badges). */
 const STAGE_BAR = {
+    backlog: "bg-stone-300",
     new: "bg-sky-400",
+    no_response: "bg-orange-400",
     attempting_contact: "bg-indigo-400",
     in_conversation: "bg-violet-400",
     on_hold: "bg-amber-300",
