@@ -29,6 +29,7 @@ import CourseThumbnail from "@/components/shared/CourseThumbnail";
 import PriceTag from "@/components/shared/PriceTag";
 import { formatCount } from "@/lib/format";
 import { parseFaqs } from "@/lib/courseLeads";
+import useCan from "@/lib/useCan";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -82,6 +83,7 @@ const fmt = formatCount;
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function CoursesPage() {
+    const can = useCan();
     const [courses, setCourses] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -315,9 +317,7 @@ export default function CoursesPage() {
                 certificate_eligible: Number(form.certificate_eligible) || 0,
                 ...(pageContent === "ready" && {
                     exam_info: form.exam_info?.trim() ?? "",
-                    faqs: form.faqs
-                        .map((f) => ({ q: f.q.trim(), a: f.a.trim() }))
-                        .filter((f) => f.q && f.a),
+                    faqs: form.faqs.map((f) => ({ q: f.q.trim(), a: f.a.trim() })).filter((f) => f.q && f.a),
                 }),
             };
 
@@ -420,15 +420,17 @@ export default function CoursesPage() {
                     <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
                         <Download size={15} /> Export
                     </button>
-                    <button
-                        onClick={openCreate}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors whitespace-nowrap"
-                        style={{ background: "#2F6496" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
-                    >
-                        <Plus size={16} /> Create Course
-                    </button>
+                    {can("can_manage_courses") && (
+                        <button
+                            onClick={openCreate}
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors whitespace-nowrap"
+                            style={{ background: "#2F6496" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
+                        >
+                            <Plus size={16} /> Create Course
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -604,13 +606,15 @@ export default function CoursesPage() {
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
                         <BookOpen size={32} className="text-slate-300" />
                         <p className="text-ui font-medium text-slate-500">No courses found</p>
-                        <button
-                            onClick={openCreate}
-                            className="px-4 py-2 rounded-xl text-ui font-bold text-white"
-                            style={{ background: "#2F6496" }}
-                        >
-                            Create First Course
-                        </button>
+                        {can("can_manage_courses") && (
+                            <button
+                                onClick={openCreate}
+                                className="px-4 py-2 rounded-xl text-ui font-bold text-white"
+                                style={{ background: "#2F6496" }}
+                            >
+                                Create First Course
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -728,31 +732,39 @@ export default function CoursesPage() {
                                             {/* Actions */}
                                             <td className="py-3.5 px-4">
                                                 <div className="flex items-center gap-1">
-                                                    <button
-                                                        onClick={() =>
-                                                            navigate(`/admin/courses/${course.id}/curriculum`)
-                                                        }
-                                                        className="p-1.5 rounded-lg text-slate-500 hover:bg-purple-50 hover:text-purple-600 transition-colors"
-                                                        title="Curriculum"
-                                                    >
-                                                        <BookOpen size={14} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() =>
-                                                            navigate(`/admin/courses/${course.id}/tests`)
-                                                        }
-                                                        className="p-1.5 rounded-lg text-slate-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                                                        title="Tests"
-                                                    >
-                                                        <ClipboardList size={14} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => openEdit(course)}
-                                                        className="p-1.5 rounded-lg text-slate-500 hover:bg-action-soft hover:text-action transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit2 size={14} />
-                                                    </button>
+                                                    {can("can_manage_courses") && (
+                                                        <button
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    `/admin/courses/${course.id}/curriculum`
+                                                                )
+                                                            }
+                                                            className="p-1.5 rounded-lg text-slate-500 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+                                                            title="Curriculum"
+                                                        >
+                                                            <BookOpen size={14} />
+                                                        </button>
+                                                    )}
+                                                    {can("can_manage_tests") && (
+                                                        <button
+                                                            onClick={() =>
+                                                                navigate(`/admin/courses/${course.id}/tests`)
+                                                            }
+                                                            className="p-1.5 rounded-lg text-slate-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                                                            title="Tests"
+                                                        >
+                                                            <ClipboardList size={14} />
+                                                        </button>
+                                                    )}
+                                                    {can("can_manage_courses") && (
+                                                        <button
+                                                            onClick={() => openEdit(course)}
+                                                            className="p-1.5 rounded-lg text-slate-500 hover:bg-action-soft hover:text-action transition-colors"
+                                                            title="Edit"
+                                                        >
+                                                            <Edit2 size={14} />
+                                                        </button>
+                                                    )}
                                                     <button
                                                         onClick={() => handleDelete(course)}
                                                         disabled={deleting === course.id}
@@ -1037,9 +1049,9 @@ export default function CoursesPage() {
                                         </span>
                                         {courses.some((c) => c.rupee_checkout_available === false) && (
                                             <span className="mt-1 block text-small font-semibold text-amber-700">
-                                                Razorpay isn't set up on the server yet, so for now everyone pays
-                                                the US$ price with PayPal. This setting is kept and works once
-                                                Razorpay is set up.
+                                                Razorpay isn't set up on the server yet, so for now everyone
+                                                pays the US$ price with PayPal. This setting is kept and works
+                                                once Razorpay is set up.
                                             </span>
                                         )}
                                     </span>
@@ -1163,16 +1175,16 @@ export default function CoursesPage() {
                                 <div>
                                     <p className="text-ui font-bold text-slate-800">Course page content</p>
                                     <p className="text-small text-slate-500">
-                                        Shown on the course page. Leave empty to hide a section. Check exam facts against the
-                                        official source before publishing.
+                                        Shown on the course page. Leave empty to hide a section. Check exam
+                                        facts against the official source before publishing.
                                     </p>
                                 </div>
                                 {pageContent === "loading" ? (
                                     <p className="text-small text-slate-500">Loading…</p>
                                 ) : pageContent === "failed" ? (
                                     <p className="text-small text-amber-700">
-                                        Couldn't load this course's exam info and FAQs, so they won't be changed. Close and open the
-                                        course again to edit them.
+                                        Couldn't load this course's exam info and FAQs, so they won't be
+                                        changed. Close and open the course again to edit them.
                                     </p>
                                 ) : (
                                     <>
@@ -1186,14 +1198,26 @@ export default function CoursesPage() {
                                             />
                                         </Field>
                                         <div className="space-y-2">
-                                            <p className="text-label font-bold tracking-wider text-slate-500">FAQS ({form.faqs.length})</p>
+                                            <p className="text-label font-bold tracking-wider text-slate-500">
+                                                FAQS ({form.faqs.length})
+                                            </p>
                                             {form.faqs.map((f, i) => (
-                                                <div key={i} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                                                <div
+                                                    key={i}
+                                                    className="rounded-lg border border-slate-200 p-3 space-y-2"
+                                                >
                                                     <div className="flex items-center gap-2">
                                                         <input
                                                             value={f.q}
                                                             onChange={(e) =>
-                                                                setF("faqs", form.faqs.map((x, j) => (j === i ? { ...x, q: e.target.value } : x)))
+                                                                setF(
+                                                                    "faqs",
+                                                                    form.faqs.map((x, j) =>
+                                                                        j === i
+                                                                            ? { ...x, q: e.target.value }
+                                                                            : x
+                                                                    )
+                                                                )
                                                             }
                                                             className={inputCls}
                                                             placeholder="Question"
@@ -1201,7 +1225,12 @@ export default function CoursesPage() {
                                                         />
                                                         <button
                                                             type="button"
-                                                            onClick={() => setF("faqs", form.faqs.filter((_, j) => j !== i))}
+                                                            onClick={() =>
+                                                                setF(
+                                                                    "faqs",
+                                                                    form.faqs.filter((_, j) => j !== i)
+                                                                )
+                                                            }
                                                             className="shrink-0 rounded-lg px-2 py-1 text-small font-semibold text-red-600 hover:bg-red-50"
                                                         >
                                                             Remove
@@ -1211,7 +1240,12 @@ export default function CoursesPage() {
                                                         value={f.a}
                                                         rows={2}
                                                         onChange={(e) =>
-                                                            setF("faqs", form.faqs.map((x, j) => (j === i ? { ...x, a: e.target.value } : x)))
+                                                            setF(
+                                                                "faqs",
+                                                                form.faqs.map((x, j) =>
+                                                                    j === i ? { ...x, a: e.target.value } : x
+                                                                )
+                                                            )
                                                         }
                                                         className={inputCls}
                                                         placeholder="Answer"
@@ -1314,9 +1348,7 @@ export default function CoursesPage() {
                                     >
                                         <span className="text-h3">{opt.icon}</span>
                                         <div>
-                                            <p className="text-ui font-bold text-slate-800">
-                                                {opt.label}
-                                            </p>
+                                            <p className="text-ui font-bold text-slate-800">{opt.label}</p>
                                             <p className="text-label text-slate-500 mt-0.5">{opt.desc}</p>
                                         </div>
                                     </button>

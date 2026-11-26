@@ -26,6 +26,7 @@ import enrollmentService from "@/services/enrollmentService";
 import SearchPicker from "@/components/admin/SearchPicker";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
+import useCan from "@/lib/useCan";
 
 const PER_PAGE = 10;
 
@@ -71,9 +72,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
     if (!withTraining) {
         return (
             <label className="block">
-                <span className="block text-small font-semibold text-slate-700 mb-1.5">
-                    Completion date
-                </span>
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">Completion date</span>
                 <input
                     type="date"
                     value={value.issueDate}
@@ -90,9 +89,7 @@ function CertificateDates({ value, onChange, withTraining = true }) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <label className="block">
-                <span className="block text-small font-semibold text-slate-700 mb-1.5">
-                    Training start
-                </span>
+                <span className="block text-small font-semibold text-slate-700 mb-1.5">Training start</span>
                 <input
                     type="date"
                     value={value.trainingStart}
@@ -140,6 +137,7 @@ const copy = async (text) => {
 };
 
 export default function CertificatesPage() {
+    const can = useCan();
     const [rows, setRows] = useState([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -198,12 +196,14 @@ export default function CertificatesPage() {
                         issue one yourself.
                     </p>
                 </div>
-                <button
-                    onClick={() => setIssueOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white bg-action hover:bg-action-hover shrink-0"
-                >
-                    <Plus size={15} /> Issue certificate
-                </button>
+                {can("can_issue_certificates") && (
+                    <button
+                        onClick={() => setIssueOpen(true)}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white bg-action hover:bg-action-hover shrink-0"
+                    >
+                        <Plus size={15} /> Issue certificate
+                    </button>
+                )}
             </div>
 
             <div className="relative">
@@ -573,9 +573,7 @@ function IssueCertificateModal({ onClose, onIssued }) {
                                 onSelect={setCourse}
                                 emptyText="No courses with a certificate match"
                                 renderItem={(c) => (
-                                    <p className="text-ui font-medium text-slate-800 truncate">
-                                        {c.title}
-                                    </p>
+                                    <p className="text-ui font-medium text-slate-800 truncate">{c.title}</p>
                                 )}
                             />
                         )}

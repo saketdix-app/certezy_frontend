@@ -21,6 +21,7 @@ import {
 
 import teamService from "@/services/teamService";
 import HandoverDialog from "@/components/team/HandoverDialog";
+import PermissionPicker from "@/components/team/PermissionPicker";
 import { selectUser } from "@/features/auth/authSlice";
 import { ROLE_LABELS } from "@/config/app";
 import { cn } from "@/lib/utils";
@@ -83,10 +84,27 @@ const PERMISSION_INFO = {
     can_view_crm_reports: ["CRM reports", "Conversion, sources, consultants and exams (revenue stays Super Admin only)"],
     can_manage_team: ["Account management", "Add and manage Consultants and Exam Coordinators in Team"],
     can_manage_batches: ["Live batches", "Add and publish live batches, see enrollments"],
+    can_view_dashboard: ["Dashboard", ""],
+    can_view_consultant_progress: ["By consultant", ""],
+    can_view_sales: ["Sales", ""],
+    can_import_leads: ["Import leads", ""],
+    can_view_courses: ["Courses tab", ""],
+    can_view_categories: ["Categories tab", ""],
+    can_manage_categories: ["Edit categories", ""],
+    can_view_enrollments: ["Enrollments tab", ""],
+    can_export_enrollments: ["Export enrollments", ""],
+    can_view_certificates: ["Certificates tab", ""],
+    can_view_reviews: ["Reviews tab", ""],
+    can_manage_reviews: ["Manage reviews", ""],
+    can_bulk_import: ["Bulk Import", ""],
+    can_view_discounts: ["Discounts tab", ""],
+    can_view_contact: ["Contact messages", ""],
+    can_reply_contact: ["Reply to messages", ""],
 };
-// Shown for Sub-Admins only (Consultants work their own leads)
-const SUB_ADMIN_ONLY = ["can_access_crm", "can_assign_leads", "can_view_crm_reports", "can_manage_team", "can_manage_batches"];
-const keysFor = (role, keys) => (role === "sub_admin" ? keys : keys.filter((k) => !SUB_ADMIN_ONLY.includes(k)));
+// Consultants can get only these (everything else is a Sub-Admin tab or option)
+const CONSULTANT_KEYS = ["can_assign_courses", "can_send_discounts", "can_issue_certificates", "can_manage_students", "can_view_payments", "can_manage_courses", "can_manage_tests"];
+const SUB_ADMIN_ONLY = Object.keys(PERMISSION_INFO).filter((k) => !CONSULTANT_KEYS.includes(k));
+const keysFor = (role, keys) => (role === "sub_admin" ? keys : keys.filter((k) => CONSULTANT_KEYS.includes(k)));
 
 const ALLOCATION_BADGE = {
     receiving: ["Receiving leads", "text-emerald-700"],
@@ -216,7 +234,9 @@ function ConfirmModal({ title, warning, confirmLabel, danger, needsPassword, onC
     );
 }
 
-function PermissionChecklist({ keys, value, onChange }) {
+function PermissionChecklist({ keys, value, onChange, role, catalog }) {
+    // Sub-Admins: by menu section → tab → options inside the tab
+    if (role === "sub_admin" && catalog?.length) return <PermissionPicker catalog={catalog} keys={keys} value={value} onChange={onChange} />;
     const groups = [
         ["Learning & students", keys.filter((k) => !SUB_ADMIN_ONLY.includes(k))],
         ["CRM, team & batches", keys.filter((k) => SUB_ADMIN_ONLY.includes(k))],
@@ -242,7 +262,7 @@ function PermissionChecklist({ keys, value, onChange }) {
     ));
 }
 
-function PermissionsModal({ member, keys, onClose, onDone }) {
+function PermissionsModal({ member, keys, catalog, onClose, onDone }) {
     const [value, setValue] = useState(member.permissions ?? {});
     const [busy, setBusy] = useState(false);
     const submit = async (e) => {
@@ -262,13 +282,13 @@ function PermissionsModal({ member, keys, onClose, onDone }) {
         }
     };
     return (
-        <Modal title={`Permissions — ${member.name}`} onClose={onClose}>
+        <Modal title={`Permissions — ${member.name}`} onClose={onClose} wide={member.role === "sub_admin"}>
             <form onSubmit={submit}>
                 <p className="mb-3 text-ui text-slate-500">
                     What this {ROLE_LABELS[member.role]} can do. Changes apply on their next action and are recorded
                     in the audit log.
                 </p>
-                <PermissionChecklist keys={keysFor(member.role, keys)} value={value} onChange={setValue} />
+                <PermissionChecklist keys={keysFor(member.role, keys)} value={value} onChange={setValue} role={member.role} catalog={catalog} />
                 <div className="mt-5 flex justify-end gap-2">
                     <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2 text-ui font-semibold text-slate-700">
                         Cancel
@@ -388,7 +408,7 @@ function AllocationModal({ member, onClose, onDone }) {
     );
 }
 
-function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose, onCreated }) {
+function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, catalog, onClose, onCreated }) {
     const [form, setForm] = useState({ name: "", email: "", mobile: "", role: roles[roles.length - 1] ?? "" });
     const [password, setPassword] = useState("");
     const [busy, setBusy] = useState(false);
@@ -424,7 +444,7 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
     };
 
     return (
-        <Modal title="Add team member" onClose={onClose}>
+        <Modal title="Add team member" onClose={onClose} wide={form.role === "sub_admin"}>
             <form onSubmit={submit} className="space-y-3">
                 <label className="block">
                     <span className="mb-1 block text-ui font-semibold text-slate-700">Full name</span>
@@ -452,6 +472,8 @@ function CreateMemberModal({ roles, permissionKeys = [], defaults = {}, onClose,
                     <div>
                         <span className="mb-1 block text-ui font-semibold text-slate-700">Permissions</span>
                         <PermissionChecklist
+                            role={form.role}
+                            catalog={catalog}
                             keys={keysFor(form.role, permissionKeys)}
                             value={shownPerms}
                             onChange={(v) => setPerms((p) => ({ ...p, [form.role]: v }))}
@@ -1044,12 +1066,13 @@ export default function TeamPage() {
                     roles={caps.can_create_roles}
                     permissionKeys={caps.permission_keys}
                     defaults={caps.default_permissions}
+                    catalog={caps.permission_catalog}
                     onClose={close}
                     onCreated={load}
                 />
             )}
             {modal?.type === "permissions" && (
-                <PermissionsModal member={modal.member} keys={caps.permission_keys ?? []} onClose={close} onDone={load} />
+                <PermissionsModal member={modal.member} keys={caps.permission_keys ?? []} catalog={caps.permission_catalog} onClose={close} onDone={load} />
             )}
             {modal?.type === "allocation" && <AllocationModal member={modal.member} onClose={close} onDone={load} />}
             {modal?.type === "history" && <HistoryModal member={modal.member} onClose={close} />}

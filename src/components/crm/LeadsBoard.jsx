@@ -410,7 +410,11 @@ export default function LeadsBoard({ isAdmin }) {
     const [customRange, setCustomRange] = useState(false);
     const pickAdded = (v) => {
         setCustomRange(v === "custom");
-        setAdv((a) => ({ ...a, added: v === "custom" ? "" : v, ...(v === "custom" ? {} : { from: "", to: "" }) }));
+        setAdv((a) => ({
+            ...a,
+            added: v === "custom" ? "" : v,
+            ...(v === "custom" ? {} : { from: "", to: "" }),
+        }));
         setPage(1);
         setSelected([]);
     };
@@ -538,13 +542,15 @@ export default function LeadsBoard({ isAdmin }) {
                 </div>
                 {!isCoordinator && (
                     <div className="flex flex-wrap gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setImporting(true)}
-                            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-surface px-4 py-2.5 text-ui font-bold text-slate-700 hover:border-action hover:text-action"
-                        >
-                            <Upload size={16} aria-hidden="true" /> Import CSV
-                        </button>
+                        {(me?.role !== "sub_admin" || me?.permissions?.can_import_leads) && (
+                            <button
+                                type="button"
+                                onClick={() => setImporting(true)}
+                                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-surface px-4 py-2.5 text-ui font-bold text-slate-700 hover:border-action hover:text-action"
+                            >
+                                <Upload size={16} aria-hidden="true" /> Import CSV
+                            </button>
+                        )}
                         <button
                             type="button"
                             onClick={() => setAdding(true)}
@@ -661,10 +667,16 @@ export default function LeadsBoard({ isAdmin }) {
                     type="button"
                     onClick={() => resetPage(setSort)(sort === "oldest" ? "newest" : "oldest")}
                     title="Change the order"
-                    aria-label={sort === "oldest" ? "Oldest leads first. Switch to newest first" : "Newest leads first. Switch to oldest first"}
+                    aria-label={
+                        sort === "oldest"
+                            ? "Oldest leads first. Switch to newest first"
+                            : "Newest leads first. Switch to oldest first"
+                    }
                     className={cn(
                         "inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-ui font-semibold",
-                        sort ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-700"
+                        sort
+                            ? "border-action bg-action-soft text-action-soft-ink"
+                            : "border-slate-200 bg-surface text-slate-700"
                     )}
                 >
                     {sort === "oldest" ? (
@@ -672,7 +684,11 @@ export default function LeadsBoard({ isAdmin }) {
                     ) : (
                         <ArrowDownWideNarrow size={15} aria-hidden="true" />
                     )}
-                    {sort === "oldest" ? "Oldest first" : sort === "newest" || !workflowTab ? "Newest first" : "Sort by added"}
+                    {sort === "oldest"
+                        ? "Oldest first"
+                        : sort === "newest" || !workflowTab
+                          ? "Newest first"
+                          : "Sort by added"}
                 </button>
                 {isAdmin && (
                     <select
@@ -737,10 +753,17 @@ export default function LeadsBoard({ isAdmin }) {
                     <label
                         className={cn(
                             "inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-ui",
-                            newOnly ? "border-red-300 bg-red-50 font-semibold text-red-700" : "border-slate-200 bg-surface text-slate-700"
+                            newOnly
+                                ? "border-red-300 bg-red-50 font-semibold text-red-700"
+                                : "border-slate-200 bg-surface text-slate-700"
                         )}
                     >
-                        <input type="checkbox" checked={newOnly} onChange={(e) => resetPage(setNewOnly)(e.target.checked)} className="accent-red-600" />
+                        <input
+                            type="checkbox"
+                            checked={newOnly}
+                            onChange={(e) => resetPage(setNewOnly)(e.target.checked)}
+                            className="accent-red-600"
+                        />
                         <RedDot label="" /> New (not opened)
                     </label>
                 )}
@@ -950,7 +973,12 @@ export default function LeadsBoard({ isAdmin }) {
                                             }}
                                             className="block max-w-full truncate text-left font-semibold text-slate-900 hover:text-action"
                                         >
-                                            {l.is_new && <RedDot label="New lead — not opened yet" className="mr-1.5 align-middle" />}
+                                            {l.is_new && (
+                                                <RedDot
+                                                    label="New lead — not opened yet"
+                                                    className="mr-1.5 align-middle"
+                                                />
+                                            )}
                                             {l.name}
                                         </button>
                                         {l.payment_alert && (
@@ -959,7 +987,10 @@ export default function LeadsBoard({ isAdmin }) {
                                             </span>
                                         )}
                                         {l.stage === "backlog" && !isCoordinator && (
-                                            <StartButton busy={starting === l.id} onClick={(e) => startLead(e, l)} />
+                                            <StartButton
+                                                busy={starting === l.id}
+                                                onClick={(e) => startLead(e, l)}
+                                            />
                                         )}
                                     </td>
                                     {shownColumns.map((c) => (
@@ -1162,7 +1193,12 @@ function StartButton({ busy, onClick }) {
             onClick={onClick}
             className="mt-1 inline-flex items-center gap-1 rounded-md border border-action/40 bg-action-soft px-2 py-0.5 text-label font-bold text-action-soft-ink hover:bg-action hover:text-white disabled:opacity-60"
         >
-            {busy ? <Loader2 size={11} className="animate-spin" aria-hidden="true" /> : <Play size={11} aria-hidden="true" />} Start: Attempting Contact
+            {busy ? (
+                <Loader2 size={11} className="animate-spin" aria-hidden="true" />
+            ) : (
+                <Play size={11} aria-hidden="true" />
+            )}{" "}
+            Start: Attempting Contact
         </button>
     );
 }

@@ -51,10 +51,12 @@ const contactService = {
 };
 
 import api from "@/services/api";
+import useCan from "@/lib/useCan";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ContactPage() {
+    const can = useCan();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -668,13 +670,15 @@ export default function ContactPage() {
                                             </button>
                                         </>
                                     ) : (
-                                        <button
-                                            onClick={() => setReplyOpen(true)}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover transition-colors"
-                                        >
-                                            <Reply size={16} />
-                                            Reply
-                                        </button>
+                                        can("can_reply_contact") && (
+                                            <button
+                                                onClick={() => setReplyOpen(true)}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover transition-colors"
+                                            >
+                                                <Reply size={16} />
+                                                Reply
+                                            </button>
+                                        )
                                     )}
                                 </div>
                             </div>
