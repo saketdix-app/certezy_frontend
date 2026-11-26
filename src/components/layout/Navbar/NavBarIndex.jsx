@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Menu, X } from "lucide-react";
 
@@ -27,22 +27,43 @@ import Logo from "@/components/shared/Logo";
 const NAV_H = "h-[70px]";
 
 function NavBarIndex() {
-    const [megaOpen, setMegaOpen] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
+    // Menus remember the page they were opened on: going to another page closes them
+    const { pathname, search } = useLocation();
+    const page = pathname + search;
+    const [megaOn, setMegaOn] = useState(null);
+    const [mobileOn, setMobileOn] = useState(null);
+    const megaOpen = megaOn === page;
+    const mobileOpen = mobileOn === page;
 
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const user = useSelector(selectUser);
 
     const toggleMega = () => {
-        setMegaOpen((p) => !p);
-        setMobileOpen(false);
+        setMegaOn(megaOpen ? null : page);
+        setMobileOn(null);
     };
     const toggleMobile = () => {
-        setMobileOpen((p) => !p);
-        setMegaOpen(false);
+        setMobileOn(mobileOpen ? null : page);
+        setMegaOn(null);
     };
-    const closeMega = () => setMegaOpen(false);
-    const closeMobile = () => setMobileOpen(false);
+    const closeMega = () => setMegaOn(null);
+    const closeMobile = () => setMobileOn(null);
+
+    // All Courses also closes on Esc or a click anywhere outside it (another
+    // menu link, the category bar, search…) so it never stays highlighted
+    useEffect(() => {
+        if (!megaOpen) return;
+        const onPointer = (e) => {
+            if (!e.target.closest?.("[data-mega-panel], [data-mega-toggle]")) setMegaOn(null);
+        };
+        const onKey = (e) => e.key === "Escape" && setMegaOn(null);
+        document.addEventListener("pointerdown", onPointer);
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("pointerdown", onPointer);
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [megaOpen]);
 
     return (
         <>

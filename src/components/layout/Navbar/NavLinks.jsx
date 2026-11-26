@@ -77,7 +77,10 @@ function NavLink({ to, label, isActive, navH }) {
 function AllCoursesLink({ isOpen, onClick, navH }) {
     return (
         <button
+            type="button"
             onClick={onClick}
+            data-mega-toggle
+            aria-expanded={isOpen}
             className={cn(
                 "relative flex items-center gap-1 px-3 outline-none",
                 navH,
