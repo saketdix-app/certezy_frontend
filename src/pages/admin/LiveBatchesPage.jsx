@@ -35,7 +35,7 @@ const MODES = [
     ["classroom", "Classroom"],
     ["hybrid", "Hybrid"],
 ];
-const fmtDay = (d) => (d ? new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
+const fmtDay = (d) => (d ? new Date(`${d}T00:00:00+05:30`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
 const money = (a, c) =>
     a == null ? "—" : new Intl.NumberFormat(c === "USD" ? "en-US" : "en-IN", { style: "currency", currency: c || "INR", maximumFractionDigits: 0 }).format(a);
 
