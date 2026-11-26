@@ -7,6 +7,8 @@ import courseService from "@/services/courseService";
 import toast from "react-hot-toast";
 import {
     AlertTriangle,
+    ArrowDownWideNarrow,
+    ArrowUpNarrowWide,
     CalendarClock,
     CalendarRange,
     Columns3,
@@ -351,6 +353,8 @@ export default function LeadsBoard({ isAdmin }) {
     const [overdueOnly, setOverdueOnly] = useState(false);
     // Only my leads I haven't opened yet (red dot)
     const [newOnly, setNewOnly] = useState(false);
+    // Sort arrow: "" = the tab's usual order, else newest / oldest added first
+    const [sort, setSort] = useState("");
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [owners, setOwners] = useState([]);
@@ -420,6 +424,7 @@ export default function LeadsBoard({ isAdmin }) {
         owner_id: ownerId || undefined,
         follow_up: overdueOnly ? "overdue" : undefined,
         new: newOnly ? "1" : undefined,
+        sort: sort || undefined,
         ...advParams,
     });
     const [selectingAll, setSelectingAll] = useState(false);
@@ -449,6 +454,7 @@ export default function LeadsBoard({ isAdmin }) {
                 owner_id: ownerId || undefined,
                 follow_up: overdueOnly ? "overdue" : undefined,
                 new: newOnly ? "1" : undefined,
+                sort: sort || undefined,
                 ...JSON.parse(advKey),
                 page,
                 limit: 25,
@@ -458,7 +464,7 @@ export default function LeadsBoard({ isAdmin }) {
             toast.error(apiMessage(err, "Could not load leads"));
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
-    }, [stage, search, source, ownerId, overdueOnly, newOnly, advKey, page]);
+    }, [stage, search, source, ownerId, overdueOnly, newOnly, sort, advKey, page]);
 
     const startLead = async (e, l) => {
         e.stopPropagation();
@@ -651,6 +657,23 @@ export default function LeadsBoard({ isAdmin }) {
                         />
                     </span>
                 )}
+                <button
+                    type="button"
+                    onClick={() => resetPage(setSort)(sort === "oldest" ? "newest" : "oldest")}
+                    title="Change the order"
+                    aria-label={sort === "oldest" ? "Oldest leads first. Switch to newest first" : "Newest leads first. Switch to oldest first"}
+                    className={cn(
+                        "inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-ui font-semibold",
+                        sort ? "border-action bg-action-soft text-action-soft-ink" : "border-slate-200 bg-surface text-slate-700"
+                    )}
+                >
+                    {sort === "oldest" ? (
+                        <ArrowUpNarrowWide size={15} aria-hidden="true" />
+                    ) : (
+                        <ArrowDownWideNarrow size={15} aria-hidden="true" />
+                    )}
+                    {sort === "oldest" ? "Oldest first" : sort === "newest" || !workflowTab ? "Newest first" : "Sort by added"}
+                </button>
                 {isAdmin && (
                     <select
                         value={ownerId}
