@@ -86,6 +86,9 @@ const crmService = {
     // Phase 6 — reports (Admins)
     reportOverview: (params) => api.get("/crm/reports/overview", { params }),
     exportLeads: (params) => api.get("/crm/reports/leads.csv", { params, responseType: "blob" }),
+    reportCalls: (params) => api.get("/crm/reports/calls", { params }),
+    reportFollowUps: (params) => api.get("/crm/reports/follow-ups", { params }),
+    reportTeam: (params) => api.get("/crm/reports/team", { params }),
     saveSettings: (data) => api.put("/crm/settings", data),
     setRoundRobin: (enabled) => api.put("/crm/distribution/settings", { round_robin_enabled: enabled }),
     savePool: (id, data) => (id ? api.put(`/crm/distribution/pools/${id}`, data) : api.post("/crm/distribution/pools", data)),

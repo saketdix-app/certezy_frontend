@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Download, Loader2 } from "lucide-react";
+import { BarChart3, Download, LayoutDashboard, ListChecks, Loader2, PhoneCall } from "lucide-react";
+import CallReport from "@/components/crm/reports/CallReport";
+import FollowUpReport from "@/components/crm/reports/FollowUpReport";
+import TeamBoard from "@/components/crm/reports/TeamBoard";
 
 import crmService from "@/services/crmService";
 import { cn } from "@/lib/utils";
@@ -100,7 +104,7 @@ function Breakdown({ rows, labelOf }) {
     );
 }
 
-export default function CrmReportsPage() {
+function OverviewReport() {
     const [from, setFrom] = useState(dayStr(Date.now() - 29 * 86400e3));
     const [to, setTo] = useState(dayStr(Date.now()));
     const [group, setGroup] = useState("day");
@@ -385,6 +389,41 @@ export default function CrmReportsPage() {
                     </div>
                 </>
             )}
+        </div>
+    );
+}
+
+const TABS = [
+    ["team", "Team board", LayoutDashboard, TeamBoard],
+    ["calls", "Call report", PhoneCall, CallReport],
+    ["follow-ups", "Assigned vs follow-up", ListChecks, FollowUpReport],
+    ["overview", "Overview", BarChart3, OverviewReport],
+];
+
+/** Admin → CRM Reports: team board, calls, assigned vs follow-up, and the overview. */
+export default function CrmReportsPage() {
+    const [params, setParams] = useSearchParams();
+    const tab = TABS.find(([k]) => k === params.get("tab")) ?? TABS[0];
+    const Body = tab[3];
+    return (
+        <div className="mx-auto max-w-[1400px] space-y-5">
+            <nav className="flex flex-wrap gap-1 border-b border-slate-200" aria-label="Reports">
+                {TABS.map(([k, label, Icon]) => (
+                    <button
+                        key={k}
+                        type="button"
+                        onClick={() => setParams({ tab: k }, { replace: true })}
+                        aria-current={tab[0] === k ? "page" : undefined}
+                        className={cn(
+                            "-mb-px inline-flex items-center gap-1.5 border-b-2 px-3 py-2 text-ui font-semibold",
+                            tab[0] === k ? "border-action text-action" : "border-transparent text-slate-500 hover:text-slate-800"
+                        )}
+                    >
+                        <Icon size={15} aria-hidden="true" /> {label}
+                    </button>
+                ))}
+            </nav>
+            <Body />
         </div>
     );
 }
