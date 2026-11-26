@@ -259,6 +259,15 @@ export default function AppRoutes() {
                 >
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route
+                        path="no-access"
+                        element={
+                            <div className="mx-auto max-w-md py-20 text-center">
+                                <h1 className="text-h3 font-extrabold text-slate-900">No pages yet</h1>
+                                <p className="mt-2 text-ui text-slate-500">Your account doesn't have any admin pages turned on. Ask an Admin to give you access in Team → Permissions.</p>
+                            </div>
+                        }
+                    />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="assign-courses" element={<AssignCoursesPage />} />
                     <Route
@@ -291,7 +300,7 @@ export default function AppRoutes() {
                     <Route
                         path="by-consultant"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm={["can_access_crm", "can_view_consultant_progress"]}>
                                 <AdminConsultantLeadsPage />
                             </ProtectedRoute>
                         }
@@ -307,7 +316,7 @@ export default function AppRoutes() {
                     <Route
                         path="sales"
                         element={
-                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm="can_access_crm">
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm={["can_access_crm", "can_view_sales"]}>
                                 <AdminSalesPage />
                             </ProtectedRoute>
                         }

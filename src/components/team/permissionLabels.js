@@ -1,0 +1,46 @@
+/** What each permission means, as shown in Team → Permissions. */
+export const PERMISSION_LABELS = {
+    can_view_dashboard: ["Open Dashboard", "Overview numbers for the whole platform"],
+    can_access_crm: [
+        "Open Leads & Follow-ups",
+        "See and work every lead like an Admin. Needed for By consultant, Distribution, Sales and Lead discount links",
+    ],
+    can_import_leads: ["Import leads (CSV)", "Upload leads from a spreadsheet"],
+    can_view_consultant_progress: [
+        "Open By consultant",
+        "Each consultant's leads, progress and client discussion",
+    ],
+    can_assign_leads: ["Open Distribution", "Assign and transfer leads, Round Robin, hand over"],
+    can_view_sales: ["Open Sales", "Sales by consultant (revenue stays Super Admin only)"],
+    can_view_crm_reports: [
+        "Open CRM Reports",
+        "Team board, call report, follow-ups and overview — works without lead access",
+    ],
+    can_view_courses: ["Open Courses", "See all courses"],
+    can_manage_courses: [
+        "Create and edit courses",
+        "Courses, curriculum (sections and lessons) and course imports",
+    ],
+    can_manage_tests: ["Tests and quizzes", "Create and edit tests, questions and quiz imports"],
+    can_view_categories: ["Open Categories", "See course categories"],
+    can_manage_categories: ["Create and edit categories", "Deleting stays Admin only"],
+    can_view_enrollments: ["Open Enrollments", "Who is enrolled in what, and their progress"],
+    can_export_enrollments: ["Export enrollments (CSV)", "Download the enrollment list"],
+    can_assign_courses: ["Open Assign Courses", "Give students access to courses"],
+    can_manage_batches: ["Open Live batches", "Add and publish live batches, see their enrollments"],
+    can_view_certificates: ["Open Certificates", "See issued certificates"],
+    can_issue_certificates: ["Issue certificates", "Issue and regenerate certificates for eligible students"],
+    can_view_reviews: ["Open Reviews", "See student and imported reviews"],
+    can_manage_reviews: [
+        "Add and approve reviews",
+        "Approve or hide student reviews, add reviews from outside the site",
+    ],
+    can_bulk_import: ["Open Bulk Import", "Upload CSV templates"],
+    can_view_payments: ["Open Payments", "See payments"],
+    can_view_discounts: ["Open Discounts", "See discount links"],
+    can_send_discounts: ["Create and send discount links", ""],
+    can_manage_students: ["Open Users", "See and manage student accounts"],
+    can_manage_team: ["Open Team", "Add and manage Consultants and Exam Coordinators"],
+    can_view_contact: ["Open Contact messages", "Read messages from the website's contact form"],
+    can_reply_contact: ["Reply to messages", "Reply and change a message's status"],
+};

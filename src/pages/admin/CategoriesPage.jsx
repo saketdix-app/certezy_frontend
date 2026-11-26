@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import categoryService from "@/services/categoryService";
 import { cn } from "@/lib/utils";
 import FileUpload from "@/components/admin/FileUpload";
+import useCan from "@/lib/useCan";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PER_PAGE = 8;
@@ -41,6 +42,7 @@ const fieldCls =
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function CategoriesPage() {
+    const can = useCan();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -153,16 +155,18 @@ export default function CategoriesPage() {
                         <Download size={15} />
                         Export
                     </button>
-                    <button
-                        onClick={openCreate}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
-                        style={{ background: "#2F6496" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
-                    >
-                        <Plus size={15} />
-                        Create Category
-                    </button>
+                    {can("can_manage_categories") && (
+                        <button
+                            onClick={openCreate}
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-ui font-bold text-white transition-colors"
+                            style={{ background: "#2F6496" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "#275382")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6496")}
+                        >
+                            <Plus size={15} />
+                            Create Category
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -289,6 +293,7 @@ export default function CategoriesPage() {
 // ─── Category Row ─────────────────────────────────────────────────────────────
 
 function CategoryRow({ cat, onEdit, onDelete }) {
+    const can = useCan();
     const isChild = cat._level === 1;
     const isActive = cat.is_active === 1;
     const { bg, color } = colorFor(cat.id);
@@ -378,13 +383,15 @@ function CategoryRow({ cat, onEdit, onDelete }) {
 
             {/* Actions */}
             <div className="flex items-center gap-1">
-                <button
-                    onClick={onEdit}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-action hover:bg-action-soft transition-colors"
-                    title="Edit"
-                >
-                    <Edit2 size={15} />
-                </button>
+                {can("can_manage_categories") && (
+                    <button
+                        onClick={onEdit}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-action hover:bg-action-soft transition-colors"
+                        title="Edit"
+                    >
+                        <Edit2 size={15} />
+                    </button>
+                )}
                 <button
                     onClick={onDelete}
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors"
@@ -592,9 +599,7 @@ function DeleteModal({ cat, onClose, onConfirm }) {
 
                 <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 mb-5">
                     <p className="text-ui font-bold text-slate-800">{cat.name}</p>
-                    {cat.description && (
-                        <p className="text-small text-slate-500 mt-0.5">{cat.description}</p>
-                    )}
+                    {cat.description && <p className="text-small text-slate-500 mt-0.5">{cat.description}</p>}
                 </div>
 
                 <p className="text-small text-slate-500 mb-5">

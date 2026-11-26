@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 
 import enrollmentService from "@/services/enrollmentService";
 import { cn } from "@/lib/utils";
+import useCan from "@/lib/useCan";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -73,6 +74,7 @@ const activeParams = (filters) => Object.fromEntries(Object.entries(filters).fil
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function EnrollmentsPage() {
+    const can = useCan();
     const [enrollments, setEnrollments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [exporting, setExporting] = useState(false);
@@ -217,14 +219,16 @@ export default function EnrollmentsPage() {
                         Track who enrolled, where they are from and how far they have got.
                     </p>
                 </div>
-                <button
-                    onClick={handleExport}
-                    disabled={exporting}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
-                >
-                    {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-                    Export CSV{hasFilters ? " (filtered)" : ""}
-                </button>
+                {can("can_export_enrollments") && (
+                    <button
+                        onClick={handleExport}
+                        disabled={exporting}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-ui font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                    >
+                        {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                        Export CSV{hasFilters ? " (filtered)" : ""}
+                    </button>
+                )}
             </div>
 
             {/* Status cards — click to filter */}

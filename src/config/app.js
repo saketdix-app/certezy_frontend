@@ -125,6 +125,45 @@ export const LEARNER_ROLES = ["student", ...ADMIN_ROLES];
 
 export const isAdminRole = (role) => ADMIN_ROLES.includes(role);
 
+/**
+ * Admin tabs and the permission a Sub-Admin needs to open each (Team →
+ * Permissions), in menu order. Admins and Super Admins open them all.
+ * An array means all of them.
+ */
+export const ADMIN_TAB_PERMS = [
+    ["/admin/dashboard", "can_view_dashboard"],
+    ["/admin/leads", "can_access_crm"],
+    ["/admin/by-consultant", ["can_access_crm", "can_view_consultant_progress"]],
+    ["/admin/follow-ups", "can_access_crm"],
+    ["/admin/distribution", ["can_access_crm", "can_assign_leads"]],
+    ["/admin/sales", ["can_access_crm", "can_view_sales"]],
+    ["/admin/crm-reports", "can_view_crm_reports"],
+    ["/admin/courses", "can_view_courses"],
+    ["/admin/categories", "can_view_categories"],
+    ["/admin/enrollments", "can_view_enrollments"],
+    ["/admin/assign-courses", "can_assign_courses"],
+    ["/admin/live-batches", "can_manage_batches"],
+    ["/admin/certificates", "can_view_certificates"],
+    ["/admin/reviews", "can_view_reviews"],
+    ["/admin/import", "can_bulk_import"],
+    ["/admin/payments", "can_view_payments"],
+    ["/admin/discounts", "can_view_discounts"],
+    ["/admin/crm-discount-links", "can_access_crm"],
+    ["/admin/users", "can_manage_students"],
+    ["/admin/team", "can_manage_team"],
+    ["/admin/contact", "can_view_contact"],
+];
+export const tabPerm = (path) => ADMIN_TAB_PERMS.find(([p]) => p === path)?.[1];
+
+/** Admin, or a Sub-Admin with every permission given. */
+export const hasPerm = (user, perm) =>
+    ["super_admin", "admin"].includes(user?.role) ||
+    (user?.role === "sub_admin" && [].concat(perm).every((k) => user?.permissions?.[k]));
+
+/** Where a Sub-Admin lands: the first tab they may open. */
+export const firstAdminTab = (user) =>
+    user?.role !== "sub_admin" ? ROUTES.ADMIN_DASHBOARD : (ADMIN_TAB_PERMS.find(([, perm]) => hasPerm(user, perm))?.[0] ?? "/admin/no-access");
+
 /** Default landing page for a signed-in user, by role. */
 export const homeForRole = (role) =>
     ADMIN_ROLES.includes(role)

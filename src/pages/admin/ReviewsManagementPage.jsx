@@ -33,6 +33,7 @@ import courseService from "@/services/courseService";
 import StarRating, { RatingInput } from "@/components/shared/StarRating";
 import { REVIEW_SOURCES, ADMIN_REVIEW_SOURCES } from "@/lib/reviewSources";
 import { useDebounce } from "@/hooks/useDebounce";
+import useCan from "@/lib/useCan";
 
 const PER_PAGE = 10;
 const STATUS_OPTIONS = [
@@ -53,6 +54,7 @@ const apiError = (err, fallback) =>
     err.response?.data?.errors?.[0] || err.response?.data?.message || err.message || fallback;
 
 export default function ReviewsManagementPage() {
+    const can = useCan();
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
@@ -149,13 +151,15 @@ export default function ReviewsManagementPage() {
                     >
                         <FileUp size={15} /> Import CSV
                     </Link>
-                    <button
-                        type="button"
-                        onClick={() => setEditing({})}
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover"
-                    >
-                        <Plus size={15} /> Add review
-                    </button>
+                    {can("can_manage_reviews") && (
+                        <button
+                            type="button"
+                            onClick={() => setEditing({})}
+                            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-action text-white text-ui font-semibold hover:bg-action-hover"
+                        >
+                            <Plus size={15} /> Add review
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -278,6 +282,7 @@ export default function ReviewsManagementPage() {
 
 // ─── One review ──────────────────────────────────────────────────────────────
 function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
+    const can = useCan();
     const isAdminEntered = r.source && r.source !== "platform";
     const src = REVIEW_SOURCES[r.source] || REVIEW_SOURCES.platform;
 
@@ -332,24 +337,25 @@ function ReviewRow({ review: r, onApprove, onHide, onEdit, onDelete }) {
             </div>
 
             <div className="flex items-center gap-1.5 lg:pt-0.5 pl-12 lg:pl-0 shrink-0">
-                {r.is_approved ? (
-                    <IconBtn
-                        title="Hide (unapprove)"
-                        onClick={onHide}
-                        className="text-amber-600 bg-amber-50 hover:bg-amber-100"
-                    >
-                        <XCircle size={15} />
-                    </IconBtn>
-                ) : (
-                    <IconBtn
-                        title="Approve"
-                        onClick={onApprove}
-                        className="text-emerald-600 bg-emerald-50 hover:bg-emerald-100"
-                    >
-                        <CheckCircle size={15} />
-                    </IconBtn>
-                )}
-                {isAdminEntered && (
+                {can("can_manage_reviews") &&
+                    (r.is_approved ? (
+                        <IconBtn
+                            title="Hide (unapprove)"
+                            onClick={onHide}
+                            className="text-amber-600 bg-amber-50 hover:bg-amber-100"
+                        >
+                            <XCircle size={15} />
+                        </IconBtn>
+                    ) : (
+                        <IconBtn
+                            title="Approve"
+                            onClick={onApprove}
+                            className="text-emerald-600 bg-emerald-50 hover:bg-emerald-100"
+                        >
+                            <CheckCircle size={15} />
+                        </IconBtn>
+                    ))}
+                {isAdminEntered && can("can_manage_reviews") && (
                     <IconBtn
                         title="Edit"
                         onClick={onEdit}

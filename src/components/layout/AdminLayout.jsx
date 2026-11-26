@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TwoFactorDialog from "@/components/security/TwoFactorDialog";
 import { useNewLeads } from "@/lib/newLeads";
 import { CountBadge } from "@/components/crm/RedDot";
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Link, Navigate, useLocation, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     LayoutDashboard,
@@ -41,23 +41,24 @@ import { logoutUser } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/shared/Logo";
 import NotificationsMenu from "@/components/shared/NotificationsMenu";
-import { ROLE_LABELS, TEAM_MANAGER_ROLES } from "@/config/app";
+import { ADMIN_TAB_PERMS, ROLE_LABELS, TEAM_MANAGER_ROLES, firstAdminTab, hasPerm, tabPerm } from "@/config/app";
 import IntegrationAlertBanner from "./IntegrationAlertBanner";
 import ThemeToggle from "./ThemeToggle";
 import { usePortalTheme } from "@/lib/portalTheme";
 
-// The menu, grouped by job (each group shows only the items this role can use)
+// The menu, grouped by job. Sub-Admins see the tabs ticked for them in Team → Permissions
+// (ADMIN_TAB_PERMS); `roles` marks tabs only those roles ever see.
 const ADMIN_NAV_GROUPS = [
     { label: "Overview", items: [{ label: "Dashboard", icon: LayoutDashboard, to: "/admin/dashboard" }] },
     {
         label: "CRM",
         items: [
-            { label: "Leads", icon: Contact, to: "/admin/leads", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
-            { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
-            { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
-            { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES, perm: ["can_access_crm", "can_assign_leads"] },
-            { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
-            { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports", roles: TEAM_MANAGER_ROLES, perm: "can_view_crm_reports" },
+            { label: "Leads", icon: Contact, to: "/admin/leads" },
+            { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant" },
+            { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups" },
+            { label: "Distribution", icon: Shuffle, to: "/admin/distribution" },
+            { label: "Sales", icon: TrendingUp, to: "/admin/sales" },
+            { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports" },
             { label: "Call recordings", icon: Mic, to: "/admin/call-recordings", roles: ["super_admin"] },
         ],
     },
@@ -68,7 +69,7 @@ const ADMIN_NAV_GROUPS = [
             { label: "Categories", icon: Tag, to: "/admin/categories" },
             { label: "Enrollments", icon: Users, to: "/admin/enrollments" },
             { label: "Assign Courses", icon: Gift, to: "/admin/assign-courses" },
-            { label: "Live batches", icon: CalendarDays, to: "/admin/live-batches", roles: TEAM_MANAGER_ROLES, perm: "can_manage_batches" },
+            { label: "Live batches", icon: CalendarDays, to: "/admin/live-batches" },
             { label: "Certificates", icon: Award, to: "/admin/certificates" },
             { label: "Reviews", icon: MessageSquare, to: "/admin/reviews" },
             { label: "Bulk Import", icon: FileUp, to: "/admin/import" },
@@ -79,14 +80,14 @@ const ADMIN_NAV_GROUPS = [
         items: [
             { label: "Payments", icon: CreditCard, to: "/admin/payments" },
             { label: "Discounts", icon: Percent, to: "/admin/discounts" },
-            { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
+            { label: "Lead discount links", icon: Percent, to: "/admin/crm-discount-links" },
         ],
     },
     {
         label: "Settings",
         items: [
             { label: "Users", icon: Users, to: "/admin/users" },
-            { label: "Team", icon: UserCog, to: "/admin/team", roles: TEAM_MANAGER_ROLES, perm: "can_manage_team" },
+            { label: "Team", icon: UserCog, to: "/admin/team" },
             { label: "Integrations", icon: Plug, to: "/admin/integrations", roles: TEAM_MANAGER_ROLES },
             { label: "Contact messages", icon: MessageSquare, to: "/admin/contact" },
         ],
@@ -99,6 +100,9 @@ export default function AdminLayout() {
     const location = useLocation();
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
+    // A Sub-Admin on a tab they aren't allowed (old link, permission just removed): go to their first allowed tab
+    const tabEntry = ADMIN_TAB_PERMS.find(([p]) => location.pathname === p || location.pathname.startsWith(`${p}/`));
+    const blockedTab = user?.role === "sub_admin" && tabEntry && !hasPerm(user, tabEntry[1]);
     const [theme, setTheme] = usePortalTheme();
     // Leads assigned to me that I haven't opened: red dot on the tab and on "Leads"
     const newLeads = useNewLeads(["super_admin", "admin"].includes(user?.role) || Boolean(user?.permissions?.can_access_crm));
@@ -118,12 +122,7 @@ export default function AdminLayout() {
     const groups = ADMIN_NAV_GROUPS.map((g) => ({
         ...g,
         // Sub-Admins also see the areas ticked for them in Team → Permissions
-        items: g.items.filter(
-            (item) =>
-                !item.roles ||
-                item.roles.includes(user?.role) ||
-                (item.perm && user?.role === "sub_admin" && [].concat(item.perm).every((k) => user?.permissions?.[k]))
-        ),
+        items: g.items.filter((item) => (item.roles ? item.roles.includes(user?.role) : !tabPerm(item.to) || hasPerm(user, tabPerm(item.to)))),
     })).filter((g) => g.items.length);
     const isActive = (to) => location.pathname === to || location.pathname.startsWith(`${to}/`);
     const current = groups.flatMap((g) => g.items.map((item) => ({ ...item, group: g.label }))).find((item) => isActive(item.to));
@@ -274,7 +273,7 @@ export default function AdminLayout() {
 
                 {/* Page content */}
                 <main className="admin-main flex-1 p-4 lg:p-6">
-                    <Outlet />
+                    {blockedTab ? <Navigate to={firstAdminTab(user)} replace /> : <Outlet />}
                 </main>
             </div>
             {security && <TwoFactorDialog suggest={security === "suggest"} onClose={() => setSecurity(null)} />}

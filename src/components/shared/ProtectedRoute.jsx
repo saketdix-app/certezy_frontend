@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ROUTES, homeForRole } from "@/config/app";
+import { ROUTES, firstAdminTab, homeForRole } from "@/config/app";
 
 /**
  * Guards private routes only. Public pages (home, courses, about, contact)
@@ -35,7 +35,7 @@ export function ProtectedRoute({ children, allowedRoles = [], perm, skipFirstLog
     // Sub-Admins reach Admin pages they have the permission for (Team → Permissions)
     const viaPermission = perm && user?.role === "sub_admin" && [].concat(perm).every((p) => user?.permissions?.[p]);
     if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role) && !viaPermission) {
-        return <Navigate to={homeForRole(user?.role)} replace />;
+        return <Navigate to={user?.role === "sub_admin" ? firstAdminTab(user) : homeForRole(user?.role)} replace />;
     }
 
     return children;
