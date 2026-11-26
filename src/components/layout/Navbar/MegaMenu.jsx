@@ -45,7 +45,7 @@ export default function MegaMenu({ onClose }) {
         // ── Backdrop ──────────────────────────────────────────
         <div className="fixed inset-0 z-50 top-[114px]" onClick={onClose}>
             {/* ── Panel ── */}
-            <div className="relative max-w-[1280px] mx-auto px-6" onClick={(e) => e.stopPropagation()}>
+            <div className="relative max-w-[1280px] mx-auto px-6" data-mega-panel onClick={(e) => e.stopPropagation()}>
                 <div
                     className="bg-white overflow-hidden"
                     style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
