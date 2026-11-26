@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import {
     AlertTriangle,
     CalendarClock,
+    CalendarRange,
     Columns3,
     LayoutGrid,
     List,
@@ -269,9 +270,19 @@ const EMPTY_ADV = {
     paid_from: "",
     paid_to: "",
     alert: "",
+    added: "",
     from: "",
     to: "",
 };
+
+// Quick "lead added" ranges; Custom shows two IST dates
+const ADDED_RANGES = [
+    ["", "Any time"],
+    ["1d", "1 day"],
+    ["3d", "3 days"],
+    ["7d", "1 week"],
+    ["custom", "Custom"],
+];
 
 const DEFAULT_COLUMNS = [
     "phone",
@@ -379,14 +390,27 @@ export default function LeadsBoard({ isAdmin }) {
     const shownColumns = workflowTab
         ? TAB_COLUMNS[stage].map((k) => ALL_COLUMNS.find((c) => c.key === k)).filter(Boolean)
         : COLUMNS.filter((c) => columns.includes(c.key) && (!c.admin || isAdmin));
-    const advCount = Object.values(adv).filter(Boolean).length;
+    // The "lead added" range sits in the toolbar, so it isn't counted on the Advanced filters button
+    const RANGE_KEYS = ["added", "from", "to"];
+    const advCount = Object.entries(adv).filter(([k, v]) => v && !RANGE_KEYS.includes(k)).length;
     const setA = (k) => (e) => {
         const v = e.target.type === "checkbox" ? (e.target.checked ? "1" : "") : e.target.value;
         setAdv((a) => ({ ...a, [k]: v }));
         setPage(1);
         setSelected([]);
     };
-    const advParams = Object.fromEntries(Object.entries(adv).filter(([, v]) => v !== ""));
+    const advParams = Object.fromEntries(
+        Object.entries(adv).filter(([k, v]) => v !== "" && !(k === "added" && v === "custom"))
+    );
+    // One range at a time: a quick range clears the custom dates, Custom clears the quick range
+    const [customRange, setCustomRange] = useState(false);
+    const pickAdded = (v) => {
+        setCustomRange(v === "custom");
+        setAdv((a) => ({ ...a, added: v === "custom" ? "" : v, ...(v === "custom" ? {} : { from: "", to: "" }) }));
+        setPage(1);
+        setSelected([]);
+    };
+    const addedPick = customRange || adv.from || adv.to ? "custom" : adv.added;
 
     // Filters as the API takes them (the list, and "select all matching")
     const filters = () => ({
@@ -585,6 +609,48 @@ export default function LeadsBoard({ isAdmin }) {
                         </option>
                     ))}
                 </select>
+                <div
+                    className="inline-flex flex-wrap items-center rounded-lg border border-slate-200 bg-surface p-0.5"
+                    role="group"
+                    aria-label="Lead added"
+                >
+                    <CalendarRange size={14} className="mx-1.5 text-slate-500" aria-hidden="true" />
+                    {ADDED_RANGES.map(([v, label]) => (
+                        <button
+                            key={v || "any"}
+                            type="button"
+                            onClick={() => pickAdded(v)}
+                            aria-pressed={addedPick === v}
+                            className={cn(
+                                "rounded-md px-2.5 py-1.5 text-ui font-semibold",
+                                addedPick === v ? "bg-action text-white" : "text-slate-700 hover:bg-slate-50"
+                            )}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+                {addedPick === "custom" && (
+                    <span className="inline-flex items-center gap-1.5">
+                        <input
+                            type="date"
+                            value={adv.from}
+                            max={adv.to || undefined}
+                            onChange={setA("from")}
+                            aria-label="Lead added from"
+                            className={cn(inputCls, "w-auto")}
+                        />
+                        <span className="text-slate-400">–</span>
+                        <input
+                            type="date"
+                            value={adv.to}
+                            min={adv.from || undefined}
+                            onChange={setA("to")}
+                            aria-label="Lead added to"
+                            className={cn(inputCls, "w-auto")}
+                        />
+                    </span>
+                )}
                 {isAdmin && (
                     <select
                         value={ownerId}
@@ -725,7 +791,7 @@ export default function LeadsBoard({ isAdmin }) {
                     showOwner={isAdmin || isCoordinator}
                     showCoordinator={!isCoordinator}
                     onClear={() => {
-                        setAdv(EMPTY_ADV);
+                        setAdv((a) => ({ ...EMPTY_ADV, added: a.added, from: a.from, to: a.to }));
                         setPage(1);
                     }}
                     onClose={() => setShowAdv(false)}
@@ -1287,7 +1353,6 @@ function AdvancedFilters({
                 {(all || stage === "course_done") && (
                     <Range label="Paid between" from="paid_from" to="paid_to" adv={adv} setA={setA} />
                 )}
-                <Range label="Lead added between" from="from" to="to" adv={adv} setA={setA} />
             </div>
         </section>
     );
