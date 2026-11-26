@@ -33,6 +33,7 @@ import {
     Plug,
     ShieldCheck,
     UsersRound,
+    Mic,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -57,6 +58,7 @@ const ADMIN_NAV_GROUPS = [
             { label: "Distribution", icon: Shuffle, to: "/admin/distribution", roles: TEAM_MANAGER_ROLES, perm: ["can_access_crm", "can_assign_leads"] },
             { label: "Sales", icon: TrendingUp, to: "/admin/sales", roles: TEAM_MANAGER_ROLES, perm: "can_access_crm" },
             { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports", roles: TEAM_MANAGER_ROLES, perm: "can_view_crm_reports" },
+            { label: "Call recordings", icon: Mic, to: "/admin/call-recordings", roles: ["super_admin"] },
         ],
     },
     {
