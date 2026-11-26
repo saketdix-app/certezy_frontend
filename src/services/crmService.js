@@ -89,6 +89,10 @@ const crmService = {
     reportCalls: (params) => api.get("/crm/reports/calls", { params }),
     reportFollowUps: (params) => api.get("/crm/reports/follow-ups", { params }),
     reportTeam: (params) => api.get("/crm/reports/team", { params }),
+    // Call recordings (Super Admins only)
+    listRecordings: (params) => api.get("/crm/recordings", { params }),
+    recordingLink: (id, params) => api.get(`/crm/recordings/${id}/link`, { params }),
+    deleteRecording: (id) => api.delete(`/crm/recordings/${id}`),
     saveSettings: (data) => api.put("/crm/settings", data),
     setRoundRobin: (enabled) => api.put("/crm/distribution/settings", { round_robin_enabled: enabled }),
     savePool: (id, data) => (id ? api.put(`/crm/distribution/pools/${id}`, data) : api.post("/crm/distribution/pools", data)),
