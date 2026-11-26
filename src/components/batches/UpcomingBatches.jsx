@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const MODE = { online: "Live online", classroom: "Classroom", hybrid: "Hybrid" };
 
 const fmtDay = (d) =>
-    d ? new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "";
+    d ? new Date(`${d}T00:00:00+05:30`).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "";
 const fmtPrice = (amount, currency) =>
     amount == null
         ? null
