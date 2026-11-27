@@ -34,6 +34,7 @@ import {
     ShieldCheck,
     UsersRound,
     Mic,
+    DatabaseBackup,
 } from "lucide-react";
 
 import { selectUser } from "@/features/auth/authSlice";
@@ -90,6 +91,7 @@ const ADMIN_NAV_GROUPS = [
             { label: "Team", icon: UserCog, to: "/admin/team" },
             { label: "Integrations", icon: Plug, to: "/admin/integrations", roles: TEAM_MANAGER_ROLES },
             { label: "Contact messages", icon: MessageSquare, to: "/admin/contact" },
+            { label: "Backups", icon: DatabaseBackup, to: "/admin/backups", roles: ["super_admin"] },
         ],
     },
 ];
