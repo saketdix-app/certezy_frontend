@@ -65,6 +65,7 @@ const TeamPage = lazy(() => import("@/pages/admin/TeamPage"));
 const DistributionPage = lazy(() => import("@/pages/admin/DistributionPage"));
 const CrmReportsPage = lazy(() => import("@/pages/admin/CrmReportsPage"));
 const CallRecordingsPage = lazy(() => import("@/pages/admin/CallRecordingsPage"));
+const BackupsPage = lazy(() => import("@/pages/admin/BackupsPage"));
 const IntegrationsPage = lazy(() => import("@/pages/admin/IntegrationsPage"));
 const ConsultantLayout = lazy(() => import("@/pages/consultant/ConsultantLayout"));
 const crmPage = (name) => lazy(() => import("@/pages/consultant/ConsultantPages").then((m) => ({ default: m[name] })));
@@ -343,6 +344,14 @@ export default function AppRoutes() {
                         element={
                             <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES}>
                                 <IntegrationsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="backups"
+                        element={
+                            <ProtectedRoute allowedRoles={["super_admin"]}>
+                                <BackupsPage />
                             </ProtectedRoute>
                         }
                     />
