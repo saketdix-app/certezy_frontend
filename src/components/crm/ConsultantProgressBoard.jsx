@@ -57,6 +57,12 @@ const CONTACT_FILTERS = [
     ["quiet", "No discussion for 7+ days"],
     ["never", "Never discussed"],
 ];
+/** Board numbers that open the consultant's leads already filtered */
+const FLAG_FILTERS = [
+    ["", "Any follow-up or payment"],
+    ["overdue", "Overdue follow-up"],
+    ["pay_due", "Payment due (exam done)"],
+];
 const SORTS = [
     ["", "Next follow-up first"],
     ["recent_discussion", "Latest discussion first"],
@@ -133,8 +139,23 @@ function SortHeader({ col, sort, onSort }) {
     );
 }
 
-function Num({ value, tone }) {
-    return <span className={cn("tabular-nums", value > 0 ? tone || "text-slate-800" : "text-slate-400")}>{value}</span>;
+function Num({ value, tone, onClick, label }) {
+    const cls = cn("tabular-nums", value > 0 ? tone || "text-slate-800" : "text-slate-400");
+    if (!onClick || !(value > 0)) return <span className={cls}>{value}</span>;
+    return (
+        <button
+            type="button"
+            onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+            }}
+            title={`Show these ${value} lead${value === 1 ? "" : "s"}`}
+            aria-label={label}
+            className={cn(cls, "rounded px-1 underline decoration-dotted underline-offset-4 hover:bg-white hover:decoration-solid focus-visible:outline-2 focus-visible:outline-action")}
+        >
+            {value}
+        </button>
+    );
 }
 
 function ConsultantTable({ rows, selectedId, onSelect, sort, onSort }) {
@@ -179,14 +200,24 @@ function ConsultantTable({ rows, selectedId, onSelect, sort, onSort }) {
                                 <td className="w-40 px-3 py-2.5">
                                     <StageBar stages={c.stages} total={c.total} />
                                 </td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.overdue} tone="text-red-600" /></td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.quiet_7d} tone="text-amber-600" /></td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.discussed_7d} /></td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <Num value={c.overdue} tone="text-red-600" onClick={() => onSelect(c.id, "overdue")} label={`Show ${c.name}'s ${c.overdue} overdue leads`} />
+                                </td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <Num value={c.quiet_7d} tone="text-amber-600" onClick={() => onSelect(c.id, "quiet")} label={`Show ${c.name}'s ${c.quiet_7d} quiet leads`} />
+                                </td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <Num value={c.discussed_7d} onClick={() => onSelect(c.id, "recent")} label={`Show ${c.name}'s ${c.discussed_7d} leads talked to in 7 days`} />
+                                </td>
                                 <td className="px-3 py-2.5 text-right">
-                                    <span className="font-semibold"><Num value={c.stages.course_done} tone="text-emerald-600" /></span>
+                                    <span className="font-semibold">
+                                        <Num value={c.stages.course_done} tone="text-emerald-600" onClick={() => onSelect(c.id, "course_done")} label={`Show ${c.name}'s ${c.stages.course_done} Course Done leads`} />
+                                    </span>
                                     <span className="block text-small text-slate-500">{c.conversion}%</span>
                                 </td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.payment_alerts} tone="text-red-600" /></td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <Num value={c.payment_alerts} tone="text-red-600" onClick={() => onSelect(c.id, "pay_due")} label={`Show ${c.name}'s ${c.payment_alerts} leads with payment due`} />
+                                </td>
                                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-small text-slate-600">
                                     {c.last_discussion_at ? `${ageOf(c.last_discussion_at)} ago` : <span className="text-slate-400">Never</span>}
                                 </td>
@@ -242,9 +273,11 @@ function LastDiscussion({ lead }) {
 }
 
 /** Leads of one consultant: stage tabs, discussion filter, latest discussion per lead. */
-function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, onOpen, reloadKey }) {
-    const [stage, setStage] = useState("");
-    const [contact, setContact] = useState("");
+function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, onOpen, reloadKey, show = "" }) {
+    // `show` = the board number that was clicked; the panel opens filtered to those leads
+    const [stage, setStage] = useState(show === "course_done" ? "course_done" : "");
+    const [contact, setContact] = useState(["quiet", "recent"].includes(show) ? show : "");
+    const [flag, setFlag] = useState(["overdue", "pay_due"].includes(show) ? show : "");
     const [sort, setSort] = useState("");
     const [search, setSearch] = useState("");
     const [query, setQuery] = useState("");
@@ -264,6 +297,10 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
                 owner_id: consultant.id,
                 stage: stage || undefined,
                 contact: contact || undefined,
+                follow_up: flag === "overdue" ? "overdue" : undefined,
+                alert: flag === "pay_due" ? "1" : undefined,
+                // With a filter on, "All" includes backlog leads too, so the list matches the board's number
+                with_backlog: flag || contact ? "1" : undefined,
                 sort: sort || undefined,
                 search: query || undefined,
                 page,
@@ -278,7 +315,7 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
         return () => {
             live = false;
         };
-    }, [consultant.id, stage, contact, sort, query, page, reloadKey]);
+    }, [consultant.id, stage, contact, flag, sort, query, page, reloadKey]);
 
     const reset = (fn) => (v) => {
         fn(v);
@@ -385,6 +422,18 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
                         className={cn(inputCls, "w-auto")}
                     >
                         {CONTACT_FILTERS.map(([v, l]) => (
+                            <option key={v} value={v}>
+                                {l}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={flag}
+                        onChange={(e) => reset(setFlag)(e.target.value)}
+                        aria-label="Follow-up or payment"
+                        className={cn(inputCls, "w-auto", flag && "border-action font-semibold text-slate-900")}
+                    >
+                        {FLAG_FILTERS.map(([v, l]) => (
                             <option key={v} value={v}>
                                 {l}
                             </option>
@@ -589,8 +638,9 @@ export default function ConsultantProgressBoard() {
     const pageRows = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
     const selectedId = Number(params.get("consultant")) || null;
     const selected = all.find((c) => c.id === selectedId) ?? null;
-    const select = (id) => {
-        setParams(id ? { consultant: String(id) } : {}, { replace: true });
+    const show = params.get("show") ?? "";
+    const select = (id, what) => {
+        setParams(id ? { consultant: String(id), ...(what && { show: what }) } : {}, { replace: true });
         if (id) setTimeout(() => document.getElementById("consultant-leads")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
     };
     // Previous / next consultant in the current order, for working through the team
@@ -724,10 +774,11 @@ export default function ConsultantProgressBoard() {
 
                     {selected ? (
                         <ConsultantLeads
-                            key={selected.id}
+                            key={`${selected.id}-${show}`}
+                            show={show}
                             consultant={selected}
                             consultants={all}
-                            onSwitch={select}
+                            onSwitch={(id) => select(id, show)} // keep the same filter while going through the team
                             prevId={idx > 0 ? rows[idx - 1].id : null}
                             nextId={idx >= 0 && idx < rows.length - 1 ? rows[idx + 1].id : null}
                             onOpen={setOpenId}
