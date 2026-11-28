@@ -19,6 +19,7 @@ import api from "./api";
  *   GET    /api/v1/enrollments/admin/courses      → courses that can be assigned (?search)
  *   GET    /api/v1/enrollments/admin/user/:userId → one user's courses + how each was granted
  *   POST   /api/v1/enrollments/admin/assign       → { user_id, course_ids[], note } — ₹0, no payment
+ *   POST   /api/v1/enrollments/admin/assign-bulk  → { user_ids[], emails[], course_ids[], note } — many students at once
  *   DELETE /api/v1/enrollments/admin/:id          → revoke a free (admin-assigned) enrollment
  */
 
@@ -46,6 +47,8 @@ const enrollmentService = {
     getUserEnrollments: (userId) => api.get(`/enrollments/admin/user/${userId}`),
     assignCourses: ({ userId, courseIds, note }) =>
         api.post("/enrollments/admin/assign", { user_id: userId, course_ids: courseIds, note }),
+    assignCoursesBulk: ({ userIds = [], emails = [], courseIds, note }) =>
+        api.post("/enrollments/admin/assign-bulk", { user_ids: userIds, emails, course_ids: courseIds, note }),
     revokeEnrollment: (enrollmentId) => api.delete(`/enrollments/admin/${enrollmentId}`),
 };
 
