@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
     Search,
     Filter,
-    DollarSign,
+    IndianRupee,
     TrendingUp,
     ChevronLeft,
     ChevronRight,
@@ -88,8 +88,9 @@ export default function PaymentsPage() {
             const failedCount = payments.filter((p) => p.status === "failed").length;
 
             setStats({
-                total_revenue_usd: apiStats.total_revenue_usd || "0.00",
-                total_sales: apiStats.total_sales || 0,
+                // Online payments on the website (offline CRM sales are on the dashboard)
+                online_revenue: Number(apiStats.online?.total ?? apiStats.total_revenue ?? 0),
+                total_sales: apiStats.online?.count ?? apiStats.total_sales ?? 0,
                 monthly_revenue: apiStats.monthly_revenue || "0.00",
                 successCount,
                 pendingCount,
@@ -100,7 +101,7 @@ export default function PaymentsPage() {
             console.error("Failed to load revenue stats:", err);
             // Set default stats to prevent UI break
             setStats({
-                total_revenue_usd: "0.00",
+                online_revenue: 0,
                 total_sales: 0,
                 monthly_revenue: "0.00",
                 successCount: 0,
@@ -189,19 +190,23 @@ export default function PaymentsPage() {
 
             {/* Stats Cards */}
             {stats && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4">
                     {[
                         ...(isSuper
                             ? [
                                   {
-                                      label: "Total Revenue",
-                                      value: `$${stats.total_revenue_usd}`,
-                                      icon: DollarSign,
+                                      label: "Online revenue",
+                                      value: new Intl.NumberFormat("en-IN", {
+                                          style: "currency",
+                                          currency: "INR",
+                                          maximumFractionDigits: 0,
+                                      }).format(stats.online_revenue),
+                                      icon: IndianRupee,
                                       bg: "#F0FDF4",
                                       color: "#16A34A",
                                   },
                                   {
-                                      label: "Total Sales",
+                                      label: "Online sales",
                                       value: stats.total_sales,
                                       icon: CheckCircle,
                                       bg: "#EAF2F9",
@@ -243,11 +248,11 @@ export default function PaymentsPage() {
                                 >
                                     <Icon size={20} style={{ color }} />
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-label font-bold text-slate-500 uppercase tracking-wider">
                                         {label}
                                     </p>
-                                    <p className="text-h1 font-extrabold text-slate-900 leading-none mt-0.5">
+                                    <p className="text-h2 font-extrabold text-slate-900 leading-tight mt-0.5 tabular-nums whitespace-nowrap">
                                         {value}
                                     </p>
                                 </div>
