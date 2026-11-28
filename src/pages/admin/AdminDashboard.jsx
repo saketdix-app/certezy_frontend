@@ -5,7 +5,8 @@ import {
     BookOpen,
     CreditCard,
     TrendingUp,
-    DollarSign,
+    IndianRupee,
+    Handshake,
     UserCheck,
     Star,
     AlertCircle,
@@ -21,13 +22,29 @@ import { selectUser } from "@/features/auth/authSlice";
 import { TEAM_MANAGER_ROLES } from "@/config/app";
 import ExamPipelineCard from "@/components/crm/ExamPipelineCard";
 
+/** "₹2,40,000" — whole rupees, Indian grouping; other currencies with their own symbol. */
+const fmtMoney = (amount, currency = "INR") =>
+    new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: currency || "INR",
+        maximumFractionDigits: Number(amount) % 1 ? 2 : 0,
+    }).format(Number(amount) || 0);
+/** Short form for chart labels: ₹2.4L, ₹1.2Cr, ₹45K */
+const fmtShort = (n) => {
+    if (n >= 1e7) return `₹${+(n / 1e7).toFixed(1)}Cr`;
+    if (n >= 1e5) return `₹${+(n / 1e5).toFixed(1)}L`;
+    if (n >= 1e3) return `₹${+(n / 1e3).toFixed(1)}K`;
+    return `₹${Math.round(n)}`;
+};
+
 // Analytics Card Component
-function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
+function AnalyticsCard({ title, value, sub, extra, icon, color = "blue" }) {
     const bgClasses = {
         blue: "bg-blue-50",
         green: "bg-green-50",
         purple: "bg-purple-50",
         orange: "bg-orange-50",
+        emerald: "bg-emerald-50",
     };
 
     const textClasses = {
@@ -35,62 +52,89 @@ function AnalyticsCard({ title, value, change, icon, color = "blue" }) {
         green: "text-green-700",
         purple: "text-purple-700",
         orange: "text-orange-700",
+        emerald: "text-emerald-700",
     };
 
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center justify-between">
-                <div>
+            <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
                     <p className="text-ui font-medium text-slate-600">{title}</p>
-                    <p className="text-h2 font-bold text-slate-900 mt-1">{value}</p>
-                    {change && (
-                        <p
-                            className={cn(
-                                "text-ui font-medium mt-2",
-                                change > 0 ? "text-green-600" : "text-red-600"
-                            )}
-                        >
-                            {change > 0 ? "+" : ""}
-                            {change}% from last month
-                        </p>
-                    )}
+                    <p className="text-h2 font-bold text-slate-900 mt-1 tabular-nums">{value}</p>
+                    {sub && <p className="text-ui font-medium mt-2 text-slate-600">{sub}</p>}
+                    {extra && <p className="text-small mt-1 text-slate-500">{extra}</p>}
                 </div>
                 <div
-                    className={cn("w-12 h-12 rounded-lg flex items-center justify-center", bgClasses[color])}
+                    className={cn(
+                        "w-12 h-12 shrink-0 rounded-lg flex items-center justify-center",
+                        bgClasses[color]
+                    )}
                 >
-                    {React.createElement(icon, { className: cn("w-6 h-6", textClasses[color]) })}
+                    {React.createElement(icon, { className: cn("w-6 h-6", textClasses[color]), "aria-hidden": true })}
                 </div>
             </div>
         </div>
     );
 }
 
-// Revenue Chart Component
-function RevenueChart({ data }) {
-    const maxRevenue = Math.max(...data.map((d) => d.revenue));
+const otherCurrencies = (list) =>
+    list?.length ? `Also ${list.map((o) => fmtMoney(o.total, o.currency)).join(", ")} (not included)` : null;
+
+// Revenue chart: online and offline sales per month (last 6 India-time months)
+function RevenueChart({ months }) {
+    const max = Math.max(0, ...months.flatMap((m) => [m.online, m.offline]));
+    const series = [
+        { key: "online", label: "Online", bar: "bg-blue-500", dot: "bg-blue-500" },
+        { key: "offline", label: "Offline sales", bar: "bg-emerald-500", dot: "bg-emerald-500" },
+    ];
 
     return (
         <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6">
-            <h3 className="text-h3 font-semibold text-slate-900 mb-4">Revenue Overview</h3>
-            <div className="h-64 flex items-end justify-between gap-2">
-                {data.map((item) => (
-                    <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
-                        <div className="w-full flex flex-col items-center">
-                            <div
-                                className="w-full bg-blue-500 rounded-t-lg transition-all duration-300 hover:bg-blue-600"
-                                style={{
-                                    height: `${(item.revenue / maxRevenue) * 100}%`,
-                                    minHeight: "20px",
-                                }}
-                            />
-                            <span className="text-small text-slate-600 mt-2">{item.month}</span>
-                        </div>
-                        <span className="text-small font-medium text-slate-900">
-                            ${item.revenue.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-h3 font-semibold text-slate-900">Revenue Overview</h3>
+                <div className="flex items-center gap-4 text-small text-slate-600">
+                    {series.map((s) => (
+                        <span key={s.key} className="inline-flex items-center gap-1.5">
+                            <span className={cn("h-2.5 w-2.5 rounded-sm", s.dot)} aria-hidden="true" />
+                            {s.label}
                         </span>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
+            {max === 0 ? (
+                <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-slate-200 text-center text-ui text-slate-500">
+                    No revenue in the last 6 months yet.
+                </div>
+            ) : (
+                <div className="flex h-64 items-end gap-3" role="list" aria-label="Revenue by month">
+                    {months.map((m) => (
+                        <div
+                            key={m.period}
+                            role="listitem"
+                            aria-label={`${m.month}: online ${fmtMoney(m.online)}, offline ${fmtMoney(m.offline)}`}
+                            className="flex h-full flex-1 flex-col items-center justify-end gap-2"
+                        >
+                            <div className="flex w-full flex-1 items-end justify-center gap-1">
+                                {series.map((s) => (
+                                    <div key={s.key} className="flex h-full w-1/2 max-w-[36px] flex-col items-center justify-end">
+                                        {m[s.key] > 0 && (
+                                            <span className="mb-1 text-[11px] font-medium text-slate-700 tabular-nums">
+                                                {fmtShort(m[s.key])}
+                                            </span>
+                                        )}
+                                        <div
+                                            title={`${s.label}: ${fmtMoney(m[s.key])}`}
+                                            className={cn("w-full rounded-t-md", s.bar)}
+                                            style={{ height: m[s.key] > 0 ? `max(4px, ${(m[s.key] / max) * 85}%)` : 0 }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <span className="text-small text-slate-600">{m.month}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
@@ -146,7 +190,7 @@ function RecentPaymentsTable({ payments }) {
                                 <td className="py-3 px-4 text-ui text-slate-900">{payment.user}</td>
                                 <td className="py-3 px-4 text-ui text-slate-900">{payment.course}</td>
                                 <td className="py-3 px-4 text-ui font-medium text-slate-900">
-                                    ${payment.amount}
+                                    {fmtMoney(payment.amount, payment.currency)}
                                 </td>
                                 <td className="py-3 px-4">{getStatusBadge(payment.status)}</td>
                                 <td className="py-3 px-4 text-ui text-slate-600">{payment.date}</td>
@@ -296,16 +340,10 @@ export default function AdminDashboard() {
         activeUsers: 0,
         totalCourses: 0,
         publishedCourses: 0,
-        totalRevenue: 0,
-        thisMonthRevenue: 0,
-        pendingReviews: 0,
-        pendingPayments: 0,
-        userGrowth: null,
-        activeUserGrowth: null,
-        revenueGrowth: null,
-        courseGrowth: null,
+        newUsersThisMonth: null,
+        newCoursesThisMonth: null,
     });
-    const [revenueData, setRevenueData] = useState([]);
+    const [revenue, setRevenue] = useState(null);
     const [recentPayments, setRecentPayments] = useState([]);
     const [pendingReviews, setPendingReviews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -350,39 +388,19 @@ export default function AdminDashboard() {
                     );
                 }
 
-                const monthlyRev = revenueData.monthly_revenue || dashboardStats.monthly_revenue || [];
-                const lastMonthEntry = monthlyRev.length ? monthlyRev[monthlyRev.length - 1] : null;
-
+                const n = (v) => (v == null ? null : Number(v));
                 setStats({
                     totalUsers: dashboardStats.totalUsers ?? dashboardStats.total_users ?? 0,
                     activeUsers: dashboardStats.activeUsers ?? dashboardStats.active_users ?? 0,
                     totalCourses: dashboardStats.totalCourses ?? dashboardStats.total_courses ?? 0,
                     publishedCourses:
                         dashboardStats.publishedCourses ?? dashboardStats.published_courses ?? 0,
-                    totalRevenue: Number(
-                        revenueData.total_revenue_usd ??
-                            revenueData.total_revenue ??
-                            dashboardStats.totalRevenue ??
-                            dashboardStats.total_revenue ??
-                            0
-                    ),
-                    thisMonthRevenue: Number(
-                        lastMonthEntry?.revenue ??
-                            dashboardStats.thisMonthRevenue ??
-                            dashboardStats.this_month_revenue ??
-                            0
-                    ),
-                    pendingReviews: dashboardStats.pendingReviews ?? dashboardStats.pending_reviews ?? 0,
-                    pendingPayments: dashboardStats.pendingPayments ?? dashboardStats.pending_payments ?? 0,
-                    userGrowth: dashboardStats.userGrowth ?? dashboardStats.user_growth ?? null,
-                    activeUserGrowth:
-                        dashboardStats.activeUserGrowth ?? dashboardStats.active_user_growth ?? null,
-                    revenueGrowth: dashboardStats.revenueGrowth ?? dashboardStats.revenue_growth ?? null,
-                    courseGrowth: dashboardStats.courseGrowth ?? dashboardStats.course_growth ?? null,
+                    newUsersThisMonth: n(dashboardStats.new_users_this_month),
+                    newCoursesThisMonth: n(dashboardStats.new_courses_this_month),
                 });
 
-                // Load revenue data for chart
-                setRevenueData(monthlyRev);
+                // Online and offline sales revenue (Super Admins only)
+                setRevenue(revenueData.online ? revenueData : null);
 
                 // 3. Load recent payments
                 try {
@@ -407,6 +425,7 @@ export default function AdminDashboard() {
                                 payment.courseName ||
                                 "Unknown Course",
                             amount: payment.amount || 0,
+                            currency: payment.currency || "INR",
                             status: payment.status || "unknown",
                             date: payment.created_at
                                 ? new Date(payment.created_at).toLocaleDateString()
@@ -512,37 +531,58 @@ export default function AdminDashboard() {
             </div>
 
             {/* Analytics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div
+                className={cn(
+                    "grid grid-cols-1 md:grid-cols-2 gap-6",
+                    isSuper ? "lg:grid-cols-3 2xl:grid-cols-5" : "lg:grid-cols-3"
+                )}
+            >
                 <AnalyticsCard
                     title="Total Users"
-                    value={stats.totalUsers.toLocaleString()}
-                    change={stats.userGrowth || null}
+                    value={stats.totalUsers.toLocaleString("en-IN")}
+                    sub={stats.newUsersThisMonth != null ? `+${stats.newUsersThisMonth.toLocaleString("en-IN")} this month` : null}
                     icon={Users}
                     color="blue"
                 />
                 <AnalyticsCard
                     title="Active Users"
-                    value={stats.activeUsers.toLocaleString()}
-                    change={stats.activeUserGrowth || null}
+                    value={stats.activeUsers.toLocaleString("en-IN")}
                     icon={UserCheck}
                     color="green"
                 />
                 {isSuper && (
                     <AnalyticsCard
-                        title="Total Revenue"
-                        value={new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                        }).format(stats.totalRevenue)}
-                        change={stats.revenueGrowth || null}
-                        icon={DollarSign}
+                        title="Online revenue"
+                        value={revenue ? fmtMoney(revenue.online.total) : "—"}
+                        sub={
+                            revenue &&
+                            `${fmtMoney(revenue.online.this_month)} this month · ${revenue.online.count.toLocaleString("en-IN")} ${revenue.online.count === 1 ? "payment" : "payments"}`
+                        }
+                        extra={revenue && otherCurrencies(revenue.online.other_currencies)}
+                        icon={IndianRupee}
                         color="purple"
+                    />
+                )}
+                {isSuper && (
+                    <AnalyticsCard
+                        title="Offline sales revenue"
+                        value={revenue ? fmtMoney(revenue.offline.total) : "—"}
+                        sub={
+                            revenue &&
+                            `${fmtMoney(revenue.offline.this_month)} this month · ${revenue.offline.count.toLocaleString("en-IN")} ${revenue.offline.count === 1 ? "lead" : "leads"}`
+                        }
+                        extra={
+                            revenue &&
+                            (otherCurrencies(revenue.offline.other_currencies) ?? "CRM leads: Payment Done or Course Done")
+                        }
+                        icon={Handshake}
+                        color="emerald"
                     />
                 )}
                 <AnalyticsCard
                     title="Published Courses"
                     value={stats.publishedCourses}
-                    change={stats.courseGrowth || null}
+                    sub={stats.newCoursesThisMonth ? `+${stats.newCoursesThisMonth} this month` : null}
                     icon={BookOpen}
                     color="orange"
                 />
@@ -555,7 +595,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     {isSuper ? (
-                        <RevenueChart data={revenueData} />
+                        <RevenueChart months={revenue?.months ?? []} />
                     ) : (
                         <div className="flex h-full min-h-[160px] items-center justify-center rounded-xl border border-dashed border-slate-300 p-6 text-center text-ui text-slate-500">
                             Revenue is visible to Super Admins only.
