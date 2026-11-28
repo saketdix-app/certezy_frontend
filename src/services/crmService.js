@@ -26,6 +26,10 @@ import api from "./api";
 const crmService = {
     dashboard: () => api.get("/crm/dashboard"),
     list: (params) => api.get("/crm/leads", { params }),
+    // Pipeline board (new design): { columns: [{ stage, count, totals, leads }], money_visible }
+    pipeline: (params) => api.get("/crm/leads/pipeline", { params }),
+    // Sales dashboard (new design): ?months=3|6|12&owner_id
+    salesDashboard: (params) => api.get("/crm/sales-dashboard", { params }),
     consultantProgress: () => api.get("/crm/consultants/progress"),
     get: (id) => api.get(`/crm/leads/${id}`),
     create: (data) => api.post("/crm/leads", data),
