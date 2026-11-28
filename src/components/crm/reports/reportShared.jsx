@@ -94,8 +94,55 @@ export function Hint({ text }) {
 }
 
 /**
+ * Cell colours for a quick read in meetings (theme colours, light and dark):
+ *  • "good" — more is better: green near the column's top (70%+), yellow in
+ *    the middle (35–70%), red at the bottom (under 35%, including 0).
+ *  • "pct"  — a percentage, more is better: green 70%+, yellow 40–69%, red under 40%.
+ *  • "bad"  — more is worse (missed, overdue…): 0 is green; the rest red, deeper as it grows.
+ *  • "load" — workload, neither good nor bad (leads received, follow-ups due): blue, deeper as it grows.
+ * A column where everyone has 0 isn't coloured.
+ */
+const TINT = {
+    green: "var(--color-emerald-500)",
+    yellow: "var(--color-amber-400)",
+    red: "var(--color-red-500)",
+    blue: "var(--color-action)",
+};
+const mix = (color, pct) => `color-mix(in srgb, ${color} ${Math.round(pct)}%, transparent)`;
+function heatColor(kind, value, max) {
+    const v = Number(value) || 0;
+    if (!kind || kind === true) kind = "load";
+    if (kind === "pct") return mix(v >= 70 ? TINT.green : v >= 40 ? TINT.yellow : TINT.red, v >= 70 ? 26 : v >= 40 ? 32 : 20);
+    if (!(max > 0)) return undefined;
+    const share = v / max;
+    if (kind === "good") return share >= 0.7 ? mix(TINT.green, 18 + share * 14) : share >= 0.35 ? mix(TINT.yellow, 30) : mix(TINT.red, 16 + (0.35 - share) * 20);
+    if (kind === "bad") return v === 0 ? mix(TINT.green, 14) : mix(TINT.red, 16 + share * 22);
+    return v ? mix(TINT.blue, 8 + share * 30) : undefined;
+}
+
+/** What the colours mean, under a coloured table. */
+function Swatch({ c, children }) {
+    return (
+        <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-sm" style={{ backgroundColor: mix(c, 40) }} aria-hidden="true" />
+            {children}
+        </span>
+    );
+}
+export function HeatLegend() {
+    return (
+        <p className="flex flex-wrap gap-x-4 gap-y-1 px-3 py-2 text-label text-slate-500">
+            <Swatch c={TINT.green}>Top of the team</Swatch>
+            <Swatch c={TINT.yellow}>Middle</Swatch>
+            <Swatch c={TINT.red}>Low, or a problem (missed, overdue)</Swatch>
+            <Swatch c={TINT.blue}>Workload (more or less, not good or bad)</Swatch>
+        </p>
+    );
+}
+
+/**
  * Sortable table with a totals row. columns: { key, label, hint, text(row), tone(row), heat, align, noTotal }.
- * heat: shade the cell by its share of the column's top value (a quick read in meetings).
+ * heat: "good" | "pct" | "bad" | "load" (see heatColor).
  */
 export function ReportTable({ columns, rows, totals, loading, empty = "No data for this period.", initialSort }) {
     const [sort, setSort] = useState(initialSort ?? null);
@@ -110,7 +157,8 @@ export function ReportTable({ columns, rows, totals, loading, empty = "No data f
             return sort.dir === "asc" ? d : -d;
         });
     }, [rows, sort, columns]);
-    const max = useMemo(() => Object.fromEntries(columns.filter((c) => c.heat).map((c) => [c.key, Math.max(1, ...rows.map((r) => Number(r[c.key]) || 0))])), [columns, rows]);
+    const max = useMemo(() => Object.fromEntries(columns.filter((c) => c.heat).map((c) => [c.key, Math.max(0, ...rows.map((r) => Number(r[c.key]) || 0))])), [columns, rows]);
+    const coloured = columns.some((c) => c.heat) && rows.length > 0;
     const click = (key) => setSort((s) => (s?.key === key ? { key, dir: s.dir === "desc" ? "asc" : "desc" } : { key, dir: "desc" }));
 
     return (
@@ -143,12 +191,12 @@ export function ReportTable({ columns, rows, totals, loading, empty = "No data f
                         <tr key={r.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/60">
                             {columns.map((c) => {
                                 const v = c.key === "_sr" ? i + 1 : c.text ? c.text(r) : r[c.key];
-                                const share = c.heat ? (Number(r[c.key]) || 0) / max[c.key] : 0;
+                                const bg = c.heat ? heatColor(c.heat, r[c.key], max[c.key]) : undefined;
                                 return (
                                     <td
                                         key={c.key}
                                         className={cn("px-3 py-2.5 tabular-nums", c.align === "left" ? "text-left" : "text-center", c.tone?.(r))}
-                                        style={c.heat && share ? { backgroundColor: `color-mix(in srgb, var(--color-action) ${Math.round(8 + share * 30)}%, transparent)` } : undefined}
+                                        style={bg ? { backgroundColor: bg } : undefined}
                                     >
                                         {v}
                                     </td>
@@ -176,6 +224,7 @@ export function ReportTable({ columns, rows, totals, loading, empty = "No data f
                     </tfoot>
                 )}
             </table>
+            {coloured && <HeatLegend />}
         </div>
     );
 }
