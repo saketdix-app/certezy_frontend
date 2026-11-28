@@ -9,6 +9,7 @@ import {
     ChevronRight,
     Trash2,
     UserRound,
+    Users,
     X,
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -16,6 +17,7 @@ import toast from "react-hot-toast";
 import authService from "@/services/authService";
 import enrollmentService from "@/services/enrollmentService";
 import { useDebounce } from "@/hooks/useDebounce";
+import BulkAssignCourses from "@/components/admin/BulkAssignCourses";
 import { cn } from "@/lib/utils";
 
 const PER_PAGE = 15;
@@ -265,9 +267,7 @@ function AssignPanel({ user, enrolledIds, onAssigned }) {
                                     onChange={() => toggle(c.id)}
                                 />
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-ui font-semibold text-slate-800 truncate">
-                                        {c.title}
-                                    </p>
+                                    <p className="text-ui font-semibold text-slate-800 truncate">{c.title}</p>
                                     <p className="text-label text-slate-500">
                                         {c.status === "draft" ? "Draft · " : ""}
                                         <span className="line-through">
@@ -494,64 +494,107 @@ export default function AssignCoursesPage() {
     };
 
     const enrolledIds = useMemo(() => new Set(enrollments.map((e) => e.course_id)), [enrollments]);
+    const bulk = params.get("mode") === "bulk";
+    const setMode = (m) =>
+        setParams(m === "bulk" ? { mode: "bulk" } : user ? { user: String(user.id) } : {}, { replace: true });
 
     return (
         <div className="p-4 sm:p-6 max-w-[1400px] mx-auto">
-            <div className="mb-6">
-                <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">
-                    Assign Free Courses
-                </h1>
-                <p className="text-ui text-slate-500 mt-1">
-                    Give any registered student free access to a course — no payment needed.
-                </p>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <h1 className="text-h2 font-extrabold text-slate-900 tracking-tight">
+                        Assign Free Courses
+                    </h1>
+                    <p className="text-ui text-slate-500 mt-1">
+                        {bulk
+                            ? "Give the same courses to many students at once, e.g. a corporate batch or a scholarship group."
+                            : "See one student's courses, give them more for free, or revoke a free one."}
+                    </p>
+                </div>
+                <div className="flex gap-1 rounded-xl bg-slate-100 p-1" role="tablist" aria-label="Assign to">
+                    {[
+                        ["one", "One student", UserRound],
+                        ["bulk", "Many students", Users],
+                    ].map(([k, label, Icon]) => {
+                        const on = (k === "bulk") === bulk;
+                        return (
+                            <button
+                                key={k}
+                                type="button"
+                                role="tab"
+                                aria-selected={on}
+                                onClick={() => setMode(k)}
+                                className={cn(
+                                    "flex items-center gap-1.5 rounded-lg px-4 py-2 text-ui font-bold",
+                                    on
+                                        ? "bg-surface text-slate-900 shadow-sm"
+                                        : "text-slate-500 hover:text-slate-700"
+                                )}
+                            >
+                                <Icon size={15} aria-hidden="true" /> {label}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-5 items-start">
-                <StudentList selectedId={user?.id} onSelect={selectUser} />
+            {bulk ? (
+                <BulkAssignCourses />
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-5 items-start">
+                    <StudentList selectedId={user?.id} onSelect={selectUser} />
 
-                {user ? (
-                    <div className="space-y-5 min-w-0">
-                        <Card className="flex items-center gap-3 px-5 py-4">
-                            <Avatar name={user.name} />
-                            <div className="min-w-0">
-                                <p className="text-ui font-extrabold text-slate-900 truncate">
-                                    {user.name}
-                                </p>
-                                <p className="text-small text-slate-500 truncate">{user.email}</p>
-                            </div>
-                            {user.role !== "student" && (
-                                <span className="ml-auto text-label font-bold text-action bg-action-soft px-2 py-1 rounded">
-                                    {user.role === "sub_admin" ? "Sub-admin" : "Admin"} · learner access for
-                                    testing
-                                </span>
-                            )}
-                        </Card>
-                        <AssignPanel
-                            key={user.id}
-                            user={user}
-                            enrolledIds={enrolledIds}
-                            onAssigned={() => loadEnrollments(user.id)}
-                        />
-                        <UserCourses
-                            user={user}
-                            enrollments={enrollments}
-                            loading={loadingEnr}
-                            onRevoke={handleRevoke}
-                        />
-                    </div>
-                ) : (
-                    <Card className="flex flex-col items-center justify-center text-center min-h-[520px] p-8">
-                        <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-                            <UserRound size={26} className="text-action" />
+                    {user ? (
+                        <div className="space-y-5 min-w-0">
+                            <Card className="flex items-center gap-3 px-5 py-4">
+                                <Avatar name={user.name} />
+                                <div className="min-w-0">
+                                    <p className="text-ui font-extrabold text-slate-900 truncate">
+                                        {user.name}
+                                    </p>
+                                    <p className="text-small text-slate-500 truncate">{user.email}</p>
+                                </div>
+                                {user.role !== "student" && (
+                                    <span className="ml-auto text-label font-bold text-action bg-action-soft px-2 py-1 rounded">
+                                        {user.role === "sub_admin" ? "Sub-admin" : "Admin"} · learner access
+                                        for testing
+                                    </span>
+                                )}
+                            </Card>
+                            <AssignPanel
+                                key={user.id}
+                                user={user}
+                                enrolledIds={enrolledIds}
+                                onAssigned={() => loadEnrollments(user.id)}
+                            />
+                            <UserCourses
+                                user={user}
+                                enrollments={enrollments}
+                                loading={loadingEnr}
+                                onRevoke={handleRevoke}
+                            />
                         </div>
-                        <p className="text-body font-extrabold text-slate-900 mb-1">Select a student</p>
-                        <p className="text-ui text-slate-500 max-w-xs">
-                            Search for a registered user on the left to see their courses and assign new ones
-                            for free.
-                        </p>
-                    </Card>
-                )}
-            </div>
+                    ) : (
+                        <Card className="flex flex-col items-center justify-center text-center min-h-[520px] p-8">
+                            <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
+                                <UserRound size={26} className="text-action" />
+                            </div>
+                            <p className="text-body font-extrabold text-slate-900 mb-1">Select a student</p>
+                            <p className="text-ui text-slate-500 max-w-xs">
+                                Search for a registered user on the left to see their courses and assign new
+                                ones for free.
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => setMode("bulk")}
+                                className="mt-5 inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-4 py-2 text-ui font-bold text-action hover:border-action"
+                            >
+                                <Users size={15} aria-hidden="true" /> Assign to many students at once
+                            </button>
+                        </Card>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
