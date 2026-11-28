@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Maximize2, Minimize2, Trophy } from "lucide-react";
 
 import crmService from "@/services/crmService";
+import { cn } from "@/lib/utils";
 import { ExportButton, Kpi, ReportFilters, ReportTable } from "./reportShared";
 import { defaultFilters, downloadCsv, fmtDay, fmtDur, useReport } from "./reportUtils";
 
@@ -34,39 +35,89 @@ const LEADERS = [
     ["payments", "Most payments"],
 ];
 
-/** Leads per day (bars) with connected calls (line). */
+const IST = "Asia/Kolkata";
+const dayParts = (day) => {
+    const d = new Date(`${day}T00:00:00+05:30`);
+    return {
+        week: d.toLocaleDateString("en-IN", { weekday: "short", timeZone: IST }),
+        date: d.toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: IST }),
+    };
+};
+const fmtCount = (v) => (v >= 10000 ? `${+(v / 1000).toFixed(1)}K` : v.toLocaleString("en-IN"));
+
+/** One metric per day, on its own scale, with the number on each bar. */
+function DayRow({ title, series, value, inner, barCls, innerCls, legend, showNumbers }) {
+    const max = Math.max(1, ...series.map(value));
+    return (
+        <div>
+            <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-small font-semibold text-slate-700">{title}</p>
+                {legend}
+            </div>
+            <div className="flex h-28 items-end gap-1 border-b border-slate-200">
+                {series.map((s) => {
+                    const v = value(s);
+                    const iv = inner ? inner(s) : 0;
+                    return (
+                        <div key={s.day} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end" title={`${fmtDay(s.day)}: ${v.toLocaleString("en-IN")} ${title.toLowerCase()}${inner ? ` (${iv.toLocaleString("en-IN")} connected)` : ""}`}>
+                            {showNumbers && (
+                                <span className={cn("mb-0.5 text-label font-semibold tabular-nums", v ? "text-slate-700" : "text-slate-300")}>{fmtCount(v)}</span>
+                            )}
+                            <div className={cn("relative w-full max-w-[56px] overflow-hidden rounded-t", barCls)} style={{ height: v ? `max(3px, ${(v / max) * 100}%)` : 0 }}>
+                                {inner && v > 0 && <div className={cn("absolute inset-x-0 bottom-0", innerCls)} style={{ height: `${(iv / v) * 100}%` }} />}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+function Dot({ cls }) {
+    return <span className={cn("h-2.5 w-2.5 rounded-sm", cls)} aria-hidden="true" />;
+}
+
+/** Day by day: leads received, and calls (connected inside), each on its own scale. */
 function Trend({ series }) {
     if (!series?.length) return null;
-    const max = Math.max(1, ...series.map((s) => Math.max(s.leads, s.connected)));
-    const W = 100 / series.length;
-    const line = series.map((s, i) => `${i * W + W / 2},${100 - (s.connected / max) * 92}`).join(" ");
+    const few = series.length <= 16;
+    const every = few ? 1 : Math.ceil(series.length / 10);
     return (
         <section className="rounded-xl border border-slate-200 bg-surface p-4">
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-body font-bold text-slate-900">Day by day</h3>
-                <p className="flex gap-4 text-small text-slate-500">
-                    <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm bg-brand-100" /> Leads received</span>
-                    <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 bg-action" /> Connected calls</span>
-                </p>
-            </div>
-            <div className="relative h-40" role="img" aria-label={series.map((s) => `${s.day}: ${s.leads} leads, ${s.connected} connected calls`).join("; ")}>
-                <div className="absolute inset-0 flex items-end gap-[3px]">
-                    {series.map((s) => (
-                        <div key={s.day} className="group relative flex h-full min-w-0 flex-1 flex-col justify-end">
-                            <div className="w-full rounded-t bg-brand-100" style={{ height: `${(s.leads / max) * 92}%` }} />
-                            <span className="pointer-events-none absolute -top-7 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-label text-white group-hover:block">
-                                {fmtDay(s.day)}: {s.leads} leads, {s.connected} connected
-                            </span>
-                        </div>
-                    ))}
+            <h3 className="mb-3 text-body font-bold text-slate-900">Day by day</h3>
+            <div className="space-y-4" role="img" aria-label={series.map((s) => `${fmtDay(s.day)}: ${s.leads} leads, ${s.calls} calls, ${s.connected} connected`).join("; ")}>
+                <DayRow title="Leads received" series={series} value={(s) => s.leads} barCls="bg-brand-200" showNumbers={few} />
+                <DayRow
+                    title="Calls"
+                    series={series}
+                    value={(s) => s.calls ?? s.connected}
+                    inner={(s) => s.connected}
+                    barCls="bg-blue-200"
+                    innerCls="bg-action"
+                    showNumbers={few}
+                    legend={
+                        <p className="flex gap-3 text-label text-slate-500">
+                            <span className="inline-flex items-center gap-1.5"><Dot cls="bg-blue-200" /> All calls</span>
+                            <span className="inline-flex items-center gap-1.5"><Dot cls="bg-action" /> Connected</span>
+                        </p>
+                    }
+                />
+                <div className="flex gap-1">
+                    {series.map((s, i) => {
+                        const p = dayParts(s.day);
+                        return (
+                            <div key={s.day} className="min-w-0 flex-1 text-center text-label leading-tight text-slate-500">
+                                {i % every === 0 && (
+                                    <>
+                                        {few && <span className="block font-semibold text-slate-700">{p.week}</span>}
+                                        <span className="block whitespace-nowrap">{p.date}</span>
+                                    </>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
-                <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-                    <polyline points={line} fill="none" stroke="var(--color-action)" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
-                </svg>
-            </div>
-            <div className="mt-1 flex justify-between text-label text-slate-500">
-                <span>{fmtDay(series[0].day)}</span>
-                <span>{fmtDay(series[series.length - 1].day)}</span>
             </div>
         </section>
     );
