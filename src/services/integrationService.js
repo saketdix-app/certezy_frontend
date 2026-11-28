@@ -28,6 +28,8 @@ const integrationService = {
     connect: (source, password) => api.post(`/integrations/${source}/connect`, { password }),
     finishConnect: (source, body) => api.post(`/integrations/${source}/oauth`, body),
     chooseConnect: (source, body) => api.post(`/integrations/${source}/oauth/choose`, body),
+    // Facebook with a Meta Business System User token (no 90-day re-login)
+    connectSystemUser: (token, password) => api.post("/integrations/meta/system-user", { token, password }),
 };
 
 export default integrationService;

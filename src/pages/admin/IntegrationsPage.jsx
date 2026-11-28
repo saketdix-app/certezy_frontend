@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { apiMessage, fmtDateTime, inputCls } from "@/lib/crm";
 import { selectUser } from "@/features/auth/authSlice";
 import AppReleaseCard from "@/components/admin/AppReleaseCard";
+import MetaSystemUserConnect from "@/components/admin/MetaSystemUserConnect";
 
 /**
  * Admin → Integrations (2.0 phase 7, PRD §8): Meta and LinkedIn lead forms
@@ -260,17 +261,24 @@ function ConnectionLine({ source, connection }) {
         : source === "meta"
           ? `${list.length > 1 ? `${list.length} Pages` : "Page"} ${quoted}`
           : `${list.length > 1 ? `${list.length} ad accounts` : "ad account"} ${quoted}`;
-    const renew =
-        source === "linkedin" && connection.expires_at
-            ? connection.auto_renew
-                ? " · renews automatically"
-                : ` · connect again before ${new Date(connection.expires_at).toLocaleDateString()}`
-            : "";
+    const systemUser = source === "meta" && connection.mode === "system_user";
+    const renew = systemUser
+        ? connection.renew_error
+            ? ` · couldn't renew (${connection.renew_error}); expires ${new Date(connection.token_expires_at).toLocaleDateString()}`
+            : connection.token_expires_at
+              ? " · renews automatically"
+              : " · never expires"
+        : source === "linkedin" && connection.expires_at
+          ? connection.auto_renew
+              ? " · renews automatically"
+              : ` · connect again before ${new Date(connection.expires_at).toLocaleDateString()}`
+          : "";
     return (
         <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-small text-emerald-800">
             <Link2 size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
             <span>
                 Connected to {what}
+                {systemUser ? ` through System User "${connection.system_user}"` : ""}
                 {connection.connected_by ? ` by ${connection.connected_by}` : ""}
                 {when ? ` on ${when}` : ""}
                 {renew}
@@ -827,6 +835,15 @@ export default function IntegrationsPage() {
 
                             <ConnectionLine source={i.source} connection={i.connection} />
                             {isSuper && i.oauth && <ConnectButton integration={i} />}
+                            {isSuper && i.source === "meta" && (
+                                <MetaSystemUserConnect
+                                    integration={i}
+                                    onDone={(data) => {
+                                        setConnectResult({ source: "meta", ...data });
+                                        load();
+                                    }}
+                                />
+                            )}
                             <IntegrationKeys integration={i} canEdit={isSuper} onSaved={load} />
                             {!i.configured && i.source !== "website" && (
                                 <p className="mt-2 flex gap-1.5 text-small text-amber-700">
