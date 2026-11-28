@@ -167,7 +167,7 @@ function RecentPaymentsTable({ payments }) {
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-h3 font-semibold text-slate-900">Recent Payments</h3>
                 <button
-                    onClick={() => navigate("payments")}
+                    onClick={() => navigate("/admin/payments")}
                     className="text-ui text-blue-600 hover:text-blue-700 font-medium"
                 >
                     View All

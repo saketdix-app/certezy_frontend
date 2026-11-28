@@ -137,6 +137,34 @@ function Num({ value, tone }) {
     return <span className={cn("tabular-nums", value > 0 ? tone || "text-slate-800" : "text-slate-400")}>{value}</span>;
 }
 
+/** The board's numbers a consultant's lead list can be narrowed to (`show` in the URL). */
+const FOCUS = {
+    overdue: "Overdue follow-ups",
+    quiet: "No discussion for 7+ days",
+    talked: "Talked in last 7 days",
+    pay_due: "Exam done, payment due",
+    course_done: "Course Done",
+};
+
+/** A board number: click it to see exactly those leads of that consultant. */
+function NumLink({ value, tone, onClick, label }) {
+    if (!(value > 0)) return <Num value={value} tone={tone} />;
+    return (
+        <button
+            type="button"
+            onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+            }}
+            title={`Show these ${value} leads`}
+            aria-label={label}
+            className="rounded px-1 underline decoration-dotted underline-offset-4 hover:bg-white hover:decoration-solid focus-visible:outline focus-visible:outline-2 focus-visible:outline-action"
+        >
+            <Num value={value} tone={tone} />
+        </button>
+    );
+}
+
 function ConsultantTable({ rows, selectedId, onSelect, sort, onSort }) {
     return (
         <>
@@ -179,14 +207,24 @@ function ConsultantTable({ rows, selectedId, onSelect, sort, onSort }) {
                                 <td className="w-40 px-3 py-2.5">
                                     <StageBar stages={c.stages} total={c.total} />
                                 </td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.overdue} tone="text-red-600" /></td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.quiet_7d} tone="text-amber-600" /></td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.discussed_7d} /></td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <NumLink value={c.overdue} tone="text-red-600" onClick={() => onSelect(c.id, "overdue")} label={`${c.name}: ${c.overdue} overdue follow-ups`} />
+                                </td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <NumLink value={c.quiet_7d} tone="text-amber-600" onClick={() => onSelect(c.id, "quiet")} label={`${c.name}: ${c.quiet_7d} leads quiet for 7+ days`} />
+                                </td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <NumLink value={c.discussed_7d} onClick={() => onSelect(c.id, "talked")} label={`${c.name}: ${c.discussed_7d} leads talked to in 7 days`} />
+                                </td>
                                 <td className="px-3 py-2.5 text-right">
-                                    <span className="font-semibold"><Num value={c.stages.course_done} tone="text-emerald-600" /></span>
+                                    <span className="font-semibold">
+                                        <NumLink value={c.stages.course_done} tone="text-emerald-600" onClick={() => onSelect(c.id, "course_done")} label={`${c.name}: ${c.stages.course_done} Course Done leads`} />
+                                    </span>
                                     <span className="block text-small text-slate-500">{c.conversion}%</span>
                                 </td>
-                                <td className="px-3 py-2.5 text-right font-semibold"><Num value={c.payment_alerts} tone="text-red-600" /></td>
+                                <td className="px-3 py-2.5 text-right font-semibold">
+                                    <NumLink value={c.payment_alerts} tone="text-red-600" onClick={() => onSelect(c.id, "pay_due")} label={`${c.name}: ${c.payment_alerts} payments due`} />
+                                </td>
                                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-small text-slate-600">
                                     {c.last_discussion_at ? `${ageOf(c.last_discussion_at)} ago` : <span className="text-slate-400">Never</span>}
                                 </td>
@@ -213,6 +251,7 @@ function ConsultantTable({ rows, selectedId, onSelect, sort, onSort }) {
                             <p className="mt-1.5 text-small text-slate-500">
                                 {c.total} leads · <span className={cn(c.overdue > 0 && "font-semibold text-red-600")}>{c.overdue} overdue</span> ·{" "}
                                 <span className={cn(c.quiet_7d > 0 && "font-semibold text-amber-600")}>{c.quiet_7d} quiet 7d+</span> · {c.stages.course_done} done
+                                {c.payment_alerts > 0 && <span className="font-semibold text-red-600"> · {c.payment_alerts} pay due</span>}
                             </p>
                         </button>
                     </li>
@@ -242,8 +281,10 @@ function LastDiscussion({ lead }) {
 }
 
 /** Leads of one consultant: stage tabs, discussion filter, latest discussion per lead. */
-function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, onOpen, reloadKey }) {
-    const [stage, setStage] = useState("");
+function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, onOpen, reloadKey, show }) {
+    // Opened from a board number: Course Done is a stage tab; the others are a focus filter
+    const [stage, setStage] = useState(show === "course_done" ? "course_done" : "");
+    const [focus, setFocus] = useState(FOCUS[show] && show !== "course_done" ? show : "");
     const [contact, setContact] = useState("");
     const [sort, setSort] = useState("");
     const [search, setSearch] = useState("");
@@ -264,6 +305,7 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
                 owner_id: consultant.id,
                 stage: stage || undefined,
                 contact: contact || undefined,
+                focus: focus || undefined,
                 sort: sort || undefined,
                 search: query || undefined,
                 page,
@@ -278,7 +320,7 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
         return () => {
             live = false;
         };
-    }, [consultant.id, stage, contact, sort, query, page, reloadKey]);
+    }, [consultant.id, stage, contact, focus, sort, query, page, reloadKey]);
 
     const reset = (fn) => (v) => {
         fn(v);
@@ -346,6 +388,28 @@ function ConsultantLeads({ consultant, consultants, onSwitch, prevId, nextId, on
                         </button>
                     </div>
                 </div>
+
+                {focus && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg bg-brand-50 px-3 py-2 text-ui text-slate-700">
+                        <span>
+                            Showing only: <strong className="text-slate-900">{FOCUS[focus]}</strong>
+                            {data && (
+                                <span className="text-slate-500">
+                                    {" "}
+                                    · {data.pagination?.total ?? data.leads.length}{" "}
+                                    {(data.pagination?.total ?? data.leads.length) === 1 ? "lead" : "leads"}
+                                </span>
+                            )}
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => reset(setFocus)("")}
+                            className="ml-auto inline-flex items-center gap-1 rounded-md border border-slate-200 bg-surface px-2 py-1 text-small font-semibold text-slate-600 hover:border-brand-300"
+                        >
+                            <X size={13} aria-hidden="true" /> Show all leads
+                        </button>
+                    </div>
+                )}
 
                 <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label="Stage">
                     {[["", "All"], ...STAGES.map(([k, l]) => [k, l])].map(([k, l]) => (
@@ -589,8 +653,9 @@ export default function ConsultantProgressBoard() {
     const pageRows = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
     const selectedId = Number(params.get("consultant")) || null;
     const selected = all.find((c) => c.id === selectedId) ?? null;
-    const select = (id) => {
-        setParams(id ? { consultant: String(id) } : {}, { replace: true });
+    const show = params.get("show") || "";
+    const select = (id, focusOn) => {
+        setParams(id ? { consultant: String(id), ...(FOCUS[focusOn] && { show: focusOn }) } : {}, { replace: true });
         if (id) setTimeout(() => document.getElementById("consultant-leads")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
     };
     // Previous / next consultant in the current order, for working through the team
@@ -724,7 +789,8 @@ export default function ConsultantProgressBoard() {
 
                     {selected ? (
                         <ConsultantLeads
-                            key={selected.id}
+                            key={`${selected.id}:${show}`}
+                            show={show}
                             consultant={selected}
                             consultants={all}
                             onSwitch={select}
