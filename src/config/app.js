@@ -137,6 +137,7 @@ export const ADMIN_TAB_PERMS = [
     ["/admin/follow-ups", "can_access_crm"],
     ["/admin/distribution", ["can_access_crm", "can_assign_leads"]],
     ["/admin/sales", ["can_access_crm", "can_view_sales"]],
+    ["/admin/sales-dashboard", ["can_access_crm", "can_view_sales"]],
     ["/admin/crm-reports", "can_view_crm_reports"],
     ["/admin/courses", "can_view_courses"],
     ["/admin/categories", "can_view_categories"],

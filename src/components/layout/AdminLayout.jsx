@@ -45,6 +45,8 @@ import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import { ADMIN_TAB_PERMS, ROLE_LABELS, TEAM_MANAGER_ROLES, firstAdminTab, hasPerm, tabPerm } from "@/config/app";
 import IntegrationAlertBanner from "./IntegrationAlertBanner";
 import ThemeToggle from "./ThemeToggle";
+import UiVersionToggle from "./UiVersionToggle";
+import { useNewUi } from "@/lib/uiVersion";
 import { usePortalTheme } from "@/lib/portalTheme";
 
 // The menu, grouped by job. Sub-Admins see the tabs ticked for them in Team → Permissions
@@ -58,6 +60,7 @@ const ADMIN_NAV_GROUPS = [
             { label: "By consultant", icon: UsersRound, to: "/admin/by-consultant" },
             { label: "Follow-ups", icon: CalendarClock, to: "/admin/follow-ups" },
             { label: "Distribution", icon: Shuffle, to: "/admin/distribution" },
+            { label: "Sales dashboard", icon: LayoutDashboard, to: "/admin/sales-dashboard", newUi: true },
             { label: "Sales", icon: TrendingUp, to: "/admin/sales" },
             { label: "CRM Reports", icon: BarChart3, to: "/admin/crm-reports" },
             { label: "Call recordings", icon: Mic, to: "/admin/call-recordings", roles: ["super_admin"] },
@@ -106,6 +109,7 @@ export default function AdminLayout() {
     const tabEntry = ADMIN_TAB_PERMS.find(([p]) => location.pathname === p || location.pathname.startsWith(`${p}/`));
     const blockedTab = user?.role === "sub_admin" && tabEntry && !hasPerm(user, tabEntry[1]);
     const [theme, setTheme] = usePortalTheme();
+    const newUi = useNewUi();
     // Leads assigned to me that I haven't opened: red dot on the tab and on "Leads"
     const newLeads = useNewLeads(["super_admin", "admin"].includes(user?.role) || Boolean(user?.permissions?.can_access_crm));
     // Two-step sign-in: settings, and a once-per-session suggestion for Super Admins without it
@@ -124,7 +128,7 @@ export default function AdminLayout() {
     const groups = ADMIN_NAV_GROUPS.map((g) => ({
         ...g,
         // Sub-Admins also see the areas ticked for them in Team → Permissions
-        items: g.items.filter((item) => (item.roles ? item.roles.includes(user?.role) : !tabPerm(item.to) || hasPerm(user, tabPerm(item.to)))),
+        items: g.items.filter((item) => (item.newUi && !newUi ? false : item.roles ? item.roles.includes(user?.role) : !tabPerm(item.to) || hasPerm(user, tabPerm(item.to)))),
     })).filter((g) => g.items.length);
     const isActive = (to) => location.pathname === to || location.pathname.startsWith(`${to}/`);
     const current = groups.flatMap((g) => g.items.map((item) => ({ ...item, group: g.label }))).find((item) => isActive(item.to));
@@ -265,6 +269,7 @@ export default function AdminLayout() {
                             <h1 className="truncate text-h3 font-bold text-slate-900">{current?.label ?? "Admin"}</h1>
                         </div>
                         <div className="flex items-center gap-3">
+                            <UiVersionToggle />
                             <ThemeToggle mode={theme} onChange={setTheme} />
                             <NotificationsMenu />
                         </div>

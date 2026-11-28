@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Award, BookOpenCheck, CalendarClock, LayoutDashboard, LogOut, MoreHorizontal, Percent, TrendingUp, Users } from "lucide-react";
+import { Award, BarChart3, BookOpenCheck, CalendarClock, LayoutDashboard, LogOut, MoreHorizontal, Percent, TrendingUp, Users } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
 import NotificationsMenu from "@/components/shared/NotificationsMenu";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import UiVersionToggle from "@/components/layout/UiVersionToggle";
+import { useNewUi } from "@/lib/uiVersion";
 import { usePortalTheme } from "@/lib/portalTheme";
 import { logoutUser, selectUser } from "@/features/auth/authSlice";
 import { useNewLeads } from "@/lib/newLeads";
@@ -18,6 +20,7 @@ const NAV = [
     { to: "/consultant/leads", label: "My Leads", icon: Users },
     { to: "/consultant/follow-ups", label: "Follow-ups", icon: CalendarClock },
     { to: "/consultant/sales", label: "Sales", icon: TrendingUp },
+    { to: "/consultant/dashboard", label: "Sales dashboard", icon: BarChart3, newUi: true },
     { to: "/consultant/discount-links", label: "Discount Links", icon: Percent },
     { to: "/consultant/course-assignments", label: "Course Assignments", icon: BookOpenCheck },
     { to: "/consultant/certificates", label: "Certificates", icon: Award },
@@ -39,7 +42,8 @@ export default function ConsultantLayout() {
     const [moreOpen, setMoreOpen] = useState(false);
     const [theme, setTheme] = usePortalTheme();
     const isCoordinator = user?.role === "exam_coordinator";
-    const NAV_ITEMS = isCoordinator ? EXAM_NAV : NAV;
+    const newUi = useNewUi();
+    const NAV_ITEMS = (isCoordinator ? EXAM_NAV : NAV).filter((n) => newUi || !n.newUi);
     // New leads assigned to me that I haven't opened: red dot on the tab and on "My Leads"
     const newLeads = useNewLeads(!isCoordinator);
     const dotFor = (to) => (to === "/consultant/leads" ? <CountBadge count={newLeads} label={`${newLeads} new leads assigned to you`} className="ml-auto" /> : null);
@@ -61,6 +65,7 @@ export default function ConsultantLayout() {
                     <span className="rounded bg-[#EAF2F9] px-1.5 py-0.5 text-label font-bold uppercase tracking-wider text-action-soft-ink">{isCoordinator ? "Exams" : "Sales"}</span>
                 </div>
                 <div className="flex items-center gap-3">
+                    <UiVersionToggle />
                     <ThemeToggle mode={theme} onChange={setTheme} />
                     <NotificationsMenu />
                     <span className="hidden text-ui text-slate-600 sm:inline">{user?.name}</span>

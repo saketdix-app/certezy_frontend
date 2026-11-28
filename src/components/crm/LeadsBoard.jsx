@@ -11,7 +11,9 @@ import {
     ArrowUpNarrowWide,
     CalendarClock,
     CalendarRange,
+    ChevronDown,
     Columns3,
+    KanbanSquare,
     LayoutGrid,
     List,
     Loader2,
@@ -35,6 +37,10 @@ import RedDot from "./RedDot";
 import ImportLeadsModal from "./ImportLeadsModal";
 import MoveLeadsModal from "./MoveLeadsModal";
 import { StageBadge } from "./crmShared";
+import PipelineBoard from "./PipelineBoard";
+import { Avatar, Card } from "./newUi";
+import { btnOutline, btnPrimary } from "@/lib/newUi";
+import { useNewUi } from "@/lib/uiVersion";
 import {
     EXAM_RESULT_LABEL,
     EXAM_STATUS,
@@ -382,6 +388,23 @@ export default function LeadsBoard({ isAdmin }) {
         setViewState(v);
         writePref("crm.leads.view", v);
     };
+    // New design: List or Board (pipeline), and rows per page
+    const newUi = useNewUi();
+    const [view2, setView2State] = useState(() => (readPref("crm.leads.view2", "list") === "board" ? "board" : "list"));
+    const setView2 = (v) => {
+        setView2State(v);
+        writePref("crm.leads.view2", v);
+    };
+    const [perPage, setPerPageState] = useState(() => {
+        const n = Number(readPref("crm.leads.perPage", 25));
+        return [25, 50, 100].includes(n) ? n : 25;
+    });
+    const setPerPage = (n) => {
+        setPerPageState(n);
+        writePref("crm.leads.perPage", n);
+        setPage(1);
+    };
+    const pageSize = newUi ? perPage : 25;
     const toggleColumn = (key) =>
         setColumnsState((cols) => {
             const next = cols.includes(key)
@@ -461,14 +484,14 @@ export default function LeadsBoard({ isAdmin }) {
                 sort: sort || undefined,
                 ...JSON.parse(advKey),
                 page,
-                limit: 25,
+                limit: pageSize,
             });
             setData(res.data);
         } catch (err) {
             toast.error(apiMessage(err, "Could not load leads"));
             setData({ leads: [], counts: {}, pagination: { totalPages: 1 } });
         }
-    }, [stage, search, source, ownerId, overdueOnly, newOnly, sort, advKey, page]);
+    }, [stage, search, source, ownerId, overdueOnly, newOnly, sort, advKey, page, pageSize]);
 
     const startLead = async (e, l) => {
         e.stopPropagation();
@@ -524,6 +547,494 @@ export default function LeadsBoard({ isAdmin }) {
         setSelected([]);
     };
     const toggle = (id) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+
+
+    const modals = (
+        <>
+            {adding && (
+                <AddLeadModal
+                    isAdmin={isAdmin}
+                    onClose={() => setAdding(false)}
+                    onCreated={(lead) => {
+                        load();
+                        setOpenId(lead.id);
+                    }}
+                    onOpenLead={setOpenId}
+                />
+            )}
+            {openId && (
+                <LeadDetailPanel
+                    key={`${openId}-${panelKey}`}
+                    leadId={openId}
+                    isAdmin={isAdmin}
+                    onClose={() => setOpenId(null)}
+                    onChanged={load}
+                    onMove={canAssign ? (id) => setMoving([id]) : undefined}
+                    onDelete={isSuperAdmin ? (id) => setDeleting([id]) : undefined}
+                />
+            )}
+            {importing && (
+                <ImportLeadsModal
+                    isManager={Boolean(isAdmin)}
+                    canAssign={canAssign}
+                    owners={owners}
+                    courses={courses}
+                    onClose={() => setImporting(false)}
+                    onDone={load}
+                />
+            )}
+            {deleting && (
+                <DeleteLeadsModal
+                    leadIds={deleting}
+                    names={(data?.leads ?? []).filter((l) => deleting.includes(l.id)).map((l) => l.name)}
+                    onClose={() => setDeleting(null)}
+                    onDeleted={(ids) => {
+                        setSelected((sel) => sel.filter((x) => !ids.includes(x)));
+                        if (ids.includes(openId)) setOpenId(null);
+                        load();
+                    }}
+                />
+            )}
+            {moving && (
+                <MoveLeadsModal
+                    leadIds={moving}
+                    onClose={() => setMoving(null)}
+                    onDone={() => {
+                        setSelected([]);
+                        load();
+                        setPanelKey((k) => k + 1); // reload the open lead
+                    }}
+                />
+            )}
+        </>
+    );
+
+    if (newUi) {
+        const board = view2 === "board";
+        const totalPages = data?.pagination?.totalPages ?? 1;
+        const tabs = isCoordinator
+            ? STAGES.filter(([k]) => WORKFLOW_STAGES.includes(k)).map(([k, l]) => [k, l, counts[k] ?? 0])
+            : [["", "All leads", allCount], ...STAGES.map(([k, l]) => [k, l, counts[k] ?? 0])];
+        const linkSelect =
+            "cursor-pointer appearance-none bg-transparent pr-4 text-ui font-semibold text-action outline-none hover:underline";
+        const chip = (on, tone = "action") =>
+            cn(
+                "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-small font-semibold",
+                on
+                    ? tone === "red"
+                        ? "border-red-300 bg-red-50 text-red-700"
+                        : "border-action bg-action-soft text-action-soft-ink"
+                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+            );
+        return (
+            <div>
+                <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                    <div className="min-w-0">
+                        <h1 className="text-h2 font-extrabold tracking-tight text-slate-900">
+                            {isAdmin ? "Leads" : isCoordinator ? "Exam Students" : "My Leads"}
+                        </h1>
+                        <p className="mt-0.5 text-small text-slate-500">
+                            {data ? `${(board ? total - (counts.backlog ?? 0) : data.pagination?.total ?? 0).toLocaleString("en-IN")} records` : "Loading…"}
+                        </p>
+                    </div>
+                    {!isCoordinator && (
+                        <div className="flex flex-wrap gap-2">
+                            {(me?.role !== "sub_admin" || me?.permissions?.can_import_leads) && (
+                                <button type="button" onClick={() => setImporting(true)} className={btnOutline}>
+                                    <Upload size={15} aria-hidden="true" /> Import
+                                </button>
+                            )}
+                            <button type="button" onClick={() => setAdding(true)} className={btnPrimary}>
+                                <Plus size={15} aria-hidden="true" /> Add lead
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <Card className="overflow-hidden">
+                    {/* Views: stage tabs (list) and the List / Board switch */}
+                    <div className="flex items-end justify-between gap-2 border-b border-slate-200 bg-slate-50 pl-2 pr-3 pt-2">
+                        <div className="flex min-w-0 gap-0.5 overflow-x-auto [scrollbar-width:thin]" role="tablist">
+                            {board ? (
+                                <span className="rounded-t-lg border border-b-0 border-slate-200 bg-surface px-4 py-2 text-ui font-bold text-slate-900">
+                                    Pipeline
+                                </span>
+                            ) : (
+                                tabs.map(([k, l, n]) => (
+                                    <button
+                                        key={k || "all"}
+                                        role="tab"
+                                        aria-selected={stage === k}
+                                        onClick={() => resetPage(setStage)(k)}
+                                        className={cn(
+                                            "shrink-0 whitespace-nowrap rounded-t-lg border border-b-0 px-3.5 py-2 text-ui",
+                                            stage === k
+                                                ? "border-slate-200 bg-surface font-bold text-slate-900 shadow-[inset_0_2px_0_var(--color-action)]"
+                                                : "border-transparent font-semibold text-slate-600 hover:bg-surface/60 hover:text-slate-900"
+                                        )}
+                                    >
+                                        {l} <span className="ml-1 text-small font-semibold text-slate-500">{n}</span>
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                        <div className="mb-1.5 inline-flex shrink-0 rounded-lg border border-slate-200 bg-surface p-0.5" role="group" aria-label="View">
+                            {[
+                                ["list", "List", List],
+                                ["board", "Board", KanbanSquare],
+                            ].map(([v, label, Icon]) => (
+                                <button
+                                    key={v}
+                                    type="button"
+                                    aria-pressed={view2 === v}
+                                    onClick={() => setView2(v)}
+                                    title={v === "board" ? "Pipeline board: drag leads between stages" : "List"}
+                                    className={cn(
+                                        "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-small font-semibold",
+                                        view2 === v ? "bg-action text-white" : "text-slate-600 hover:text-slate-900"
+                                    )}
+                                >
+                                    <Icon size={14} aria-hidden="true" /> {label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Filters as links */}
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-slate-200 px-4 py-2.5">
+                        {isAdmin && (
+                            <label className="relative inline-flex items-center">
+                                <select value={ownerId} onChange={(e) => resetPage(setOwnerId)(e.target.value)} className={linkSelect} aria-label="Lead owner">
+                                    <option value="">Lead owner: anyone</option>
+                                    <option value="unassigned">Unassigned</option>
+                                    {owners.map((o) => (
+                                        <option key={o.id} value={o.id}>
+                                            {o.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown size={13} className="pointer-events-none absolute right-0 text-action" aria-hidden="true" />
+                            </label>
+                        )}
+                        <label className="relative inline-flex items-center">
+                            <select value={source} onChange={(e) => resetPage(setSource)(e.target.value)} className={linkSelect} aria-label="Source">
+                                <option value="">Source: any</option>
+                                {SOURCES.map(([v, l]) => (
+                                    <option key={v} value={v}>
+                                        {l}
+                                    </option>
+                                ))}
+                            </select>
+                            <ChevronDown size={13} className="pointer-events-none absolute right-0 text-action" aria-hidden="true" />
+                        </label>
+                        <label className="relative inline-flex items-center">
+                            <select value={addedPick} onChange={(e) => pickAdded(e.target.value)} className={linkSelect} aria-label="Lead added">
+                                {ADDED_RANGES.map(([v, label]) => (
+                                    <option key={v || "any"} value={v}>
+                                        {v ? `Added: ${label}` : "Added: any time"}
+                                    </option>
+                                ))}
+                            </select>
+                            <ChevronDown size={13} className="pointer-events-none absolute right-0 text-action" aria-hidden="true" />
+                        </label>
+                        {addedPick === "custom" && (
+                            <span className="inline-flex items-center gap-1.5">
+                                <input type="date" value={adv.from} max={adv.to || undefined} onChange={setA("from")} aria-label="Lead added from" className={cn(inputCls, "w-auto py-1")} />
+                                <span className="text-slate-400">–</span>
+                                <input type="date" value={adv.to} min={adv.from || undefined} onChange={setA("to")} aria-label="Lead added to" className={cn(inputCls, "w-auto py-1")} />
+                            </span>
+                        )}
+                        {!isCoordinator && (
+                            <label className={chip(overdueOnly)}>
+                                <input type="checkbox" checked={overdueOnly} onChange={(e) => resetPage(setOverdueOnly)(e.target.checked)} className="sr-only" />
+                                <CalendarClock size={13} aria-hidden="true" /> Overdue follow-ups
+                            </label>
+                        )}
+                        {!isCoordinator && (
+                            <label className={chip(newOnly, "red")}>
+                                <input type="checkbox" checked={newOnly} onChange={(e) => resetPage(setNewOnly)(e.target.checked)} className="sr-only" />
+                                <RedDot label="" /> Not opened yet
+                            </label>
+                        )}
+                        {stage === "exam_scheduled" && !board && (
+                            <label className={chip(adv.alert === "1", "red")}>
+                                <input type="checkbox" checked={adv.alert === "1"} onChange={setA("alert")} className="sr-only" />
+                                <AlertTriangle size={13} aria-hidden="true" /> Exam done, payment due
+                            </label>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => setShowAdv((v) => !v)}
+                            aria-expanded={showAdv}
+                            className="inline-flex items-center gap-1.5 text-ui font-semibold text-action hover:underline"
+                        >
+                            <SlidersHorizontal size={14} aria-hidden="true" /> Advanced filters{advCount ? ` (${advCount})` : ""}
+                        </button>
+                    </div>
+
+                    {showAdv && (
+                        <div className="border-b border-slate-200 px-4 pt-4">
+                            <AdvancedFilters
+                                adv={adv}
+                                setA={setA}
+                                stage={board ? "" : stage}
+                                owners={owners.filter((o) => o.role === "consultant")}
+                                coordinators={coordinators}
+                                courses={courses}
+                                showOwner={isAdmin || isCoordinator}
+                                showCoordinator={!isCoordinator}
+                                onClear={() => {
+                                    setAdv((a) => ({ ...EMPTY_ADV, added: a.added, from: a.from, to: a.to }));
+                                    setPage(1);
+                                }}
+                                onClose={() => setShowAdv(false)}
+                            />
+                        </div>
+                    )}
+
+                    {/* Search and columns */}
+                    <div className="flex flex-wrap items-center gap-2 px-4 py-2.5">
+                        <div className="relative w-full sm:w-72">
+                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+                            <input
+                                value={search}
+                                onChange={(e) => resetPage(setSearch)(e.target.value)}
+                                placeholder="Search name, phone, email"
+                                aria-label="Search leads"
+                                className={cn(inputCls, "py-1.5 pl-9")}
+                            />
+                        </div>
+                        {!board && (
+                            <div className="ml-auto flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => resetPage(setSort)(sort === "oldest" ? "newest" : "oldest")}
+                                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-ui font-semibold text-slate-700 hover:border-action"
+                                >
+                                    {sort === "oldest" ? <ArrowUpNarrowWide size={14} aria-hidden="true" /> : <ArrowDownWideNarrow size={14} aria-hidden="true" />}
+                                    {sort === "oldest" ? "Oldest first" : sort === "newest" || !workflowTab ? "Newest first" : "Sort by added"}
+                                </button>
+                                {!workflowTab && (
+                                    <details className="relative">
+                                        <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-ui font-semibold text-slate-700 hover:border-action [&::-webkit-details-marker]:hidden">
+                                            <Columns3 size={14} aria-hidden="true" /> Edit columns
+                                        </summary>
+                                        <div className="absolute right-0 z-30 mt-1 w-52 rounded-xl border border-slate-200 bg-surface p-2 shadow-lg">
+                                            {COLUMNS.filter((c) => !c.admin || isAdmin).map((c) => (
+                                                <label key={c.key} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-ui text-slate-700 hover:bg-slate-50">
+                                                    <input type="checkbox" checked={columns.includes(c.key)} onChange={() => toggleColumn(c.key)} className="accent-action" />
+                                                    {c.label}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </details>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {isAdmin && selected.length > 0 && !board && (
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-y border-action/30 bg-action-soft px-4 py-2">
+                            <p className="flex flex-wrap items-center gap-x-3 text-ui font-semibold text-action-soft-ink">
+                                {selected.length} selected
+                                {data?.pagination?.total > selected.length && (
+                                    <button type="button" disabled={selectingAll} onClick={selectAllMatching} className="text-small font-semibold text-action hover:underline disabled:opacity-60">
+                                        {selectingAll ? "Selecting…" : `Select all ${data.pagination.total} matching`}
+                                    </button>
+                                )}
+                            </p>
+                            <div className="flex gap-2">
+                                <button type="button" onClick={() => setSelected([])} className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-small font-semibold">
+                                    Clear
+                                </button>
+                                {canAssign && (
+                                    <button type="button" onClick={() => setMoving(selected)} className="inline-flex items-center gap-1.5 rounded-lg bg-action px-3 py-1.5 text-small font-bold text-white">
+                                        <Shuffle size={13} aria-hidden="true" /> Assign / transfer
+                                    </button>
+                                )}
+                                {isSuperAdmin && (
+                                    <button type="button" onClick={() => setDeleting(selected)} className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-surface px-3 py-1.5 text-small font-bold text-red-700 hover:bg-red-50">
+                                        <Trash2 size={13} aria-hidden="true" /> Delete
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {board ? (
+                        <div className="border-t border-slate-200 p-3">
+                            <PipelineBoard
+                                filters={{ ...filters(), stage: undefined, sort: undefined }}
+                                isAdmin={isAdmin}
+                                onOpen={setOpenId}
+                                reloadKey={data}
+                            />
+                        </div>
+                    ) : !data ? (
+                        <div className="flex justify-center border-t border-slate-200 py-16">
+                            <Loader2 className="animate-spin text-slate-500" />
+                        </div>
+                    ) : !data.leads.length ? (
+                        <p className="border-t border-slate-200 py-14 text-center text-ui text-slate-500">
+                            {total ? "No leads match these filters." : "No leads yet. Add your first lead to get started."}
+                        </p>
+                    ) : (
+                        <div className="max-h-[70vh] overflow-auto border-t border-slate-200">
+                            <table className="w-full min-w-[720px] border-separate border-spacing-0 text-left text-ui">
+                                <thead className="sticky top-0 z-10">
+                                    <tr className="bg-slate-50 text-label font-bold uppercase tracking-wide text-slate-600">
+                                        {isAdmin && (
+                                            <th className="w-10 border-b border-slate-200 bg-slate-50 px-3 py-2.5">
+                                                <input
+                                                    type="checkbox"
+                                                    aria-label="Select all on this page"
+                                                    checked={data.leads.every((l) => selected.includes(l.id))}
+                                                    onChange={(e) =>
+                                                        setSelected((sel) =>
+                                                            e.target.checked
+                                                                ? [...new Set([...sel, ...data.leads.map((l) => l.id)])]
+                                                                : sel.filter((id) => !data.leads.some((l) => l.id === id))
+                                                        )
+                                                    }
+                                                    className="h-4 w-4 accent-action"
+                                                />
+                                            </th>
+                                        )}
+                                        <th className="sticky left-0 z-10 border-b border-r border-slate-200 bg-slate-50 px-3 py-2.5">Name</th>
+                                        {shownColumns.map((c) => (
+                                            <th key={c.key} className="whitespace-nowrap border-b border-r border-slate-200 bg-slate-50 px-3 py-2.5 last:border-r-0">
+                                                {c.key === "added" ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => resetPage(setSort)(sort === "oldest" ? "newest" : "oldest")}
+                                                        className="inline-flex items-center gap-1 uppercase hover:text-action"
+                                                        aria-label="Sort by when the lead was added"
+                                                    >
+                                                        {c.label}
+                                                        {sort === "oldest" ? <ArrowUpNarrowWide size={12} aria-hidden="true" /> : <ArrowDownWideNarrow size={12} aria-hidden="true" />}
+                                                    </button>
+                                                ) : (
+                                                    c.label
+                                                )}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.leads.map((l) => (
+                                        <tr
+                                            key={l.id}
+                                            onClick={() => setOpenId(l.id)}
+                                            className={cn(
+                                                "group cursor-pointer [&>td]:border-b [&>td]:border-slate-100",
+                                                l.payment_alert
+                                                    ? "bg-red-50 shadow-[inset_4px_0_0_#dc2626] hover:bg-red-100"
+                                                    : selected.includes(l.id)
+                                                      ? "bg-action-soft"
+                                                      : "hover:bg-action-soft/50"
+                                            )}
+                                            title={l.payment_alert ? "Exam done, payment due" : undefined}
+                                        >
+                                            {isAdmin && (
+                                                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                                                    <input type="checkbox" checked={selected.includes(l.id)} onChange={() => toggle(l.id)} aria-label={`Select ${l.name}`} className="h-4 w-4 accent-action" />
+                                                </td>
+                                            )}
+                                            <td className="sticky left-0 max-w-[260px] border-r !border-r-slate-100 bg-inherit px-3 py-2">
+                                                <span className="flex items-center gap-2.5">
+                                                    <Avatar name={l.name} size={28} />
+                                                    <span className="min-w-0">
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setOpenId(l.id);
+                                                            }}
+                                                            className="flex max-w-full items-center gap-1.5 truncate text-left font-bold text-action hover:underline"
+                                                        >
+                                                            {l.is_new && <RedDot label="New lead — not opened yet" />}
+                                                            <span className="truncate">{l.name}</span>
+                                                        </button>
+                                                        {l.payment_alert && (
+                                                            <span className="inline-flex items-center gap-1 text-label font-bold text-red-700">
+                                                                <AlertTriangle size={11} aria-hidden="true" /> Payment due
+                                                            </span>
+                                                        )}
+                                                        {l.stage === "backlog" && !isCoordinator && (
+                                                            <StartButton busy={starting === l.id} onClick={(e) => startLead(e, l)} />
+                                                        )}
+                                                    </span>
+                                                </span>
+                                            </td>
+                                            {shownColumns.map((c) => (
+                                                <td key={c.key} className="max-w-[240px] truncate whitespace-nowrap px-3 py-2 text-slate-700">
+                                                    {c.key === "owner" && l.owner_name ? (
+                                                        <span className="inline-flex items-center gap-1.5">
+                                                            <Avatar name={l.owner_name} size={20} /> {l.owner_name}
+                                                        </span>
+                                                    ) : (
+                                                        c.cell(l)
+                                                    )}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {/* Numbered pages and rows per page */}
+                    {!board && data?.leads?.length > 0 && (
+                        <div className="flex flex-wrap items-center justify-center gap-1 border-t border-slate-200 px-4 py-2.5 text-ui">
+                            <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="px-2 py-1 font-semibold text-action disabled:text-slate-400">
+                                ‹ Prev
+                            </button>
+                            {pageList(page, totalPages).map((p, i) =>
+                                p === "…" ? (
+                                    <span key={`gap${i}`} className="px-1 text-slate-400">
+                                        …
+                                    </span>
+                                ) : (
+                                    <button
+                                        key={p}
+                                        type="button"
+                                        aria-current={p === page ? "page" : undefined}
+                                        onClick={() => setPage(p)}
+                                        className={cn(
+                                            "min-w-8 rounded-md px-2 py-1 font-semibold",
+                                            p === page ? "border border-action bg-action-soft text-action-soft-ink" : "text-action hover:bg-action-soft"
+                                        )}
+                                    >
+                                        {p}
+                                    </button>
+                                )
+                            )}
+                            <button
+                                type="button"
+                                disabled={page >= totalPages}
+                                onClick={() => setPage((p) => p + 1)}
+                                className="px-2 py-1 font-semibold text-action disabled:text-slate-400"
+                            >
+                                Next ›
+                            </button>
+                            <label className="relative ml-3 inline-flex items-center">
+                                <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} className={linkSelect} aria-label="Rows per page">
+                                    {[25, 50, 100].map((n) => (
+                                        <option key={n} value={n}>
+                                            {n} per page
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown size={13} className="pointer-events-none absolute right-0 text-action" aria-hidden="true" />
+                            </label>
+                        </div>
+                    )}
+                </Card>
+                {modals}
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -1125,63 +1636,22 @@ export default function LeadsBoard({ isAdmin }) {
                 </div>
             )}
 
-            {adding && (
-                <AddLeadModal
-                    isAdmin={isAdmin}
-                    onClose={() => setAdding(false)}
-                    onCreated={(lead) => {
-                        load();
-                        setOpenId(lead.id);
-                    }}
-                    onOpenLead={setOpenId}
-                />
-            )}
-            {openId && (
-                <LeadDetailPanel
-                    key={`${openId}-${panelKey}`}
-                    leadId={openId}
-                    isAdmin={isAdmin}
-                    onClose={() => setOpenId(null)}
-                    onChanged={load}
-                    onMove={canAssign ? (id) => setMoving([id]) : undefined}
-                    onDelete={isSuperAdmin ? (id) => setDeleting([id]) : undefined}
-                />
-            )}
-            {importing && (
-                <ImportLeadsModal
-                    isManager={Boolean(isAdmin)}
-                    canAssign={canAssign}
-                    owners={owners}
-                    courses={courses}
-                    onClose={() => setImporting(false)}
-                    onDone={load}
-                />
-            )}
-            {deleting && (
-                <DeleteLeadsModal
-                    leadIds={deleting}
-                    names={(data?.leads ?? []).filter((l) => deleting.includes(l.id)).map((l) => l.name)}
-                    onClose={() => setDeleting(null)}
-                    onDeleted={(ids) => {
-                        setSelected((sel) => sel.filter((x) => !ids.includes(x)));
-                        if (ids.includes(openId)) setOpenId(null);
-                        load();
-                    }}
-                />
-            )}
-            {moving && (
-                <MoveLeadsModal
-                    leadIds={moving}
-                    onClose={() => setMoving(null)}
-                    onDone={() => {
-                        setSelected([]);
-                        load();
-                        setPanelKey((k) => k + 1); // reload the open lead
-                    }}
-                />
-            )}
+            {modals}
         </div>
     );
+}
+
+/** 1 … 4 5 6 … 20: the page numbers to show around the current one. */
+function pageList(page, total) {
+    const keep = new Set([1, total, page - 1, page, page + 1].filter((p) => p >= 1 && p <= total));
+    const out = [];
+    let last = 0;
+    for (const p of [...keep].sort((a, b) => a - b)) {
+        if (p - last > 1) out.push("…");
+        out.push(p);
+        last = p;
+    }
+    return out;
 }
 
 /** Backlog lead: start working it (→ Attempting Contact). */

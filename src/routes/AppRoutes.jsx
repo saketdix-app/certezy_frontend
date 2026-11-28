@@ -81,6 +81,7 @@ const ConsultantAssignmentsPage = crmPage("ConsultantAssignmentsPage");
 const ConsultantCertificatesPage = crmPage("ConsultantCertificatesPage");
 const AdminSalesPage = crmPage("AdminSalesPage");
 const AdminCrmDiscountsPage = crmPage("AdminCrmDiscountsPage");
+const SalesDashboardPage = lazy(() => import("@/components/crm/SalesDashboard"));
 const ContactPage = lazy(() => import("@/pages/admin/ContactPage"));
 const TestsPage = lazy(() => import("@/pages/admin/TestsPage"));
 const QuestionsPage = lazy(() => import("@/pages/admin/QuestionsPage"));
@@ -244,6 +245,7 @@ export default function AppRoutes() {
                     <Route path="leads" element={<ConsultantLeadsPage />} />
                     <Route path="follow-ups" element={<ConsultantFollowUpsPage />} />
                     <Route path="sales" element={<ConsultantSalesPage />} />
+                    <Route path="dashboard" element={<SalesDashboardPage />} />
                     <Route path="discount-links" element={<ConsultantDiscountsPage />} />
                     <Route path="course-assignments" element={<ConsultantAssignmentsPage />} />
                     <Route path="certificates" element={<ConsultantCertificatesPage />} />
@@ -319,6 +321,14 @@ export default function AppRoutes() {
                         element={
                             <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm={["can_access_crm", "can_view_sales"]}>
                                 <AdminSalesPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="sales-dashboard"
+                        element={
+                            <ProtectedRoute allowedRoles={TEAM_MANAGER_ROLES} perm={["can_access_crm", "can_view_sales"]}>
+                                <SalesDashboardPage isAdmin />
                             </ProtectedRoute>
                         }
                     />

@@ -365,3 +365,20 @@ html[data-portal-theme="dark"] :is(.bg-lime-600, .bg-lime-700, .hover\:bg-lime-6
         min-height: 36px;
     }
 }
+
+/* ── Chart series colours (Sales dashboard), fixed order; checked for
+   colour-blind separation on the light and dark surfaces ── */
+:root {
+    --chart-1: #2a78d6;
+    --chart-2: #eb6834;
+    --chart-3: #1baf7a;
+    --chart-4: #eda100;
+    --chart-5: #e87ba4;
+}
+html[data-portal-theme="dark"] {
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
+}
